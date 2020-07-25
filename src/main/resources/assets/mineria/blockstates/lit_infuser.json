@@ -1,0 +1,8 @@
+{
+    "variants" : {
+        "facing=north": { "model": "mineria:lit_infuser"},
+        "facing=south": { "model": "mineria:lit_infuser", "y": 180},
+        "facing=west":  { "model": "mineria:lit_infuser", "y": 270},
+        "facing=east":  { "model": "mineria:lit_infuser", "y": 90}
+    }
+}

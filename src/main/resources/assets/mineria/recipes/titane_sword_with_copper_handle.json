@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "i",
+        "i",
+        "/"
+    ],
+    "key": {
+        "i": {
+            "item": "mineria:titane_ingot"
+        },
+        "/": {
+            "item": "mineria:copper_stick"
+        }
+    },
+    "result": {
+        "item": "mineria:titane_sword_with_copper_handle",
+        "count": 1
+    }
+}

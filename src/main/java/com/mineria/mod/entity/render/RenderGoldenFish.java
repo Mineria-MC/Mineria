@@ -1,0 +1,29 @@
+package com.mineria.mod.entity.render;
+
+import com.mineria.mod.References;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderSilverfish;
+import net.minecraft.entity.monster.EntitySilverfish;
+import net.minecraft.util.ResourceLocation;
+
+public class RenderGoldenFish extends RenderSilverfish
+{
+	public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/entity/golden_fish.png");
+	
+	public RenderGoldenFish(RenderManager manager)
+	{
+		super(manager);
+	}
+	
+	@Override
+	protected ResourceLocation getEntityTexture(EntitySilverfish entity)
+	{
+		return TEXTURES;
+	}
+	
+	@Override
+	protected void applyRotations(EntitySilverfish entityLiving, float p_77043_2_, float rotationYaw, float partialTicks)
+	{
+		super.applyRotations(entityLiving, p_77043_2_, rotationYaw, partialTicks);
+	}
+}

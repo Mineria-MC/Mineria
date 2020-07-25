@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "mineria:items/compressed_lead_sword"
+    }
+}

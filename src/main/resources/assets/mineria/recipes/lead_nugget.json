@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "i"
+    ],
+    "key": {
+        "i": {
+            "item": "mineria:lead_ingot"
+        }
+    },
+    "result": {
+        "item": "mineria:lead_nugget",
+        "count": 9
+    }
+}

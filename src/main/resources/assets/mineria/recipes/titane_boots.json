@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "# #",
+        "# #"
+    ],
+    "key": {
+        "#": {
+            "item": "mineria:titane_ingot"
+        }
+    },
+    "result": {
+        "item": "mineria:titane_boots",
+        "count": 1
+    }
+}

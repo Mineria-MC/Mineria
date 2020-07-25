@@ -1,0 +1,13 @@
+{
+    "variants" :
+    {
+        "extracting=false,facing=north": { "model": "mineria:extractor"},
+        "extracting=false,facing=east": { "model": "mineria:extractor", "y": 90},
+        "extracting=false,facing=south": { "model": "mineria:extractor", "y": 180},
+        "extracting=false,facing=west": { "model": "mineria:extractor", "y": 270},
+        "extracting=true,facing=north": { "model": "mineria:extractor"},
+        "extracting=true,facing=east": { "model": "mineria:extractor", "y": 90},
+        "extracting=true,facing=south": { "model": "mineria:extractor", "y": 180},
+        "extracting=true,facing=west": { "model": "mineria:extractor", "y": 270}
+    }
+}

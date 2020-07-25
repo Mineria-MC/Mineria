@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#i#",
+        "igi",
+        "#i#"
+    ],
+    "key": {
+        "#": {
+            "item": "mineria:compressed_lead_ingot"
+        },
+        "i": {
+            "item": "minecraft:iron_ingot"
+        },
+        "g": {
+            "item": "minecraft:gold_ingot"
+        }
+    },
+    "result": {
+        "item": "mineria:titane_extractor",
+        "count": 1
+    }
+}

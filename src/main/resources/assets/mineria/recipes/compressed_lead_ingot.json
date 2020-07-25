@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "#S#",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "mineria:lead_ingot"
+        },
+        "S": {
+            "item": "mineria:lead_block"
+        }
+    },
+    "result": {
+        "item": "mineria:compressed_lead_ingot",
+        "count": 1
+    }
+}

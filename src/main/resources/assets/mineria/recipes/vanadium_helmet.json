@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "# #"
+    ],
+    "key": {
+        "#": {
+            "item": "mineria:vanadium_ingot"
+        }
+    },
+    "result": {
+        "item": "mineria:vanadium_helmet",
+        "count": 1
+    }
+}

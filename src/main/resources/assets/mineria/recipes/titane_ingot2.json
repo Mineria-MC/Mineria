@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "i"
+    ],
+    "key": {
+        "i": {
+            "item": "mineria:titane_block"
+        }
+    },
+    "result": {
+        "item": "mineria:titane_ingot",
+        "count": 9
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "i",
+        "i",
+        "/"
+    ],
+    "key": {
+        "i": {
+            "item": "mineria:lead_ingot"
+        },
+        "/": {
+            "item": "minecraft:stick"
+        }
+    },
+    "result": {
+        "item": "mineria:lead_sword",
+        "count": 1
+    }
+}

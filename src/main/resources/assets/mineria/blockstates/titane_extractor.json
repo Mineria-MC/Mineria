@@ -1,0 +1,8 @@
+{
+    "variants" : {
+        "facing=north": { "model": "mineria:titane_extractor"},
+        "facing=south": { "model": "mineria:titane_extractor", "y": 180},
+        "facing=west":  { "model": "mineria:titane_extractor", "y": 270},
+        "facing=east":  { "model": "mineria:titane_extractor", "y": 90}
+    }
+}

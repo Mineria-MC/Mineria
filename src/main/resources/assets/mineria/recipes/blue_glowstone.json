@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "iEi",
+        "EBE",
+        "iEi"
+    ],
+    "key": {
+        "i": {
+            "item": "mineria:vanadium_ingot"
+        },
+        "E": {
+            "item": "minecraft:dye",
+            "data": 4
+        },
+        "B": {
+            "item": "minecraft:glowstone"
+        }
+    },
+    "result": {
+        "item": "mineria:blue_glowstone",
+        "count": 1
+    }
+}

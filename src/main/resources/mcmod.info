@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mineria",
+  "name": "Mineria",
+  "description": "A demander a Mathys.",
+  "version": "1.1.0",
+  "mcversion": "${mcversion}",
+  "url": "https://mineria-update.fr",
+  "updateUrl": "https://www.curseforge.com/minecraft/mc-mods/mineria",
+  "authorList": ["Mathys_craft, Mr-lulu-51, LGatodu47"],
+  "credits": "Merci a LGatodu47 pour avoir recode le mod entier en source code (Merci a Mr-lulu-51 pour le workspace)",
+  "logoFile": "logo.png",
+  "screenshots": ["MineriaBlocks.png"],
+  "dependencies": []
+}
+]

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "iEi",
+        "EBE",
+        "iEi"
+    ],
+    "key": {
+        "i": {
+            "item": "mineria:silver_ingot"
+        },
+        "E": {
+            "item": "minecraft:emerald"
+        },
+        "B": {
+            "item": "mineria:lead_block"
+        }
+    },
+    "result": {
+        "item": "mineria:xp_block",
+        "count": 1
+    }
+}

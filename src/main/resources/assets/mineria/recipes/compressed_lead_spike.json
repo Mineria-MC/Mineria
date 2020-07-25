@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#B#"
+    ],
+    "key": {
+        "#": {
+            "item": "mineria:compressed_lead_sword"
+        },
+        "B": {
+            "item": "mineria:compressed_lead_block"
+        }
+    },
+    "result": {
+        "item": "mineria:compressed_lead_spike",
+        "count": 1
+    }
+}

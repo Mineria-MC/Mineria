@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "#S#",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "mineria:silver_ingot"
+        },
+        "S": {
+            "item": "minecraft:golden_apple",
+            "data": 0
+        }
+    },
+    "result": {
+        "item": "mineria:silver_apple",
+        "count": 1
+    }
+}
