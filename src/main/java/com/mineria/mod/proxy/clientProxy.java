@@ -1,9 +1,10 @@
 package com.mineria.mod.proxy;
 
-public class clientProxy extends serverProxy
+public class ClientProxy extends ServerProxy
 {	
 	@Override
-	public void register() {
-		
+	public void register()
+	{
+
 	}
 }
