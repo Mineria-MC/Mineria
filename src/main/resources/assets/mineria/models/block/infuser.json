@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "mineria:blocks/infuser_front",
+		"0": "mineria:blocks/infuser_front_off",
 		"1": "mineria:blocks/infuser_side",
-		"particle": "mineria:blocks/infuser_front"
+		"particle": "mineria:blocks/infuser_side"
 	},
 	"elements": [
 		{

@@ -129,11 +129,6 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
         this.titaneExtractorCustomName = name;
     }
 	
-	public static void registerFixesFurnace(DataFixer fixer)
-    {
-        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityTitaneExtractor.class, new String[] {"Items"}));
-    }
-	
 	public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
@@ -264,7 +259,15 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 	
 	private boolean canExtract()
 	{
-		if (((ItemStack)this.titaneExtactorItemStacks.get(0)).isEmpty() || ((ItemStack)this.titaneExtactorItemStacks.get(1)).isEmpty() || ((ItemStack)this.titaneExtactorItemStacks.get(2)).isEmpty())
+        ItemStack stack = ((ItemStack)this.titaneExtactorItemStacks.get(1));
+        NBTTagCompound compound = stack.getTagCompound();
+        if(compound == null || !compound.hasKey("BlockEntityTag", 10))
+        {
+            return false;
+        }
+        NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
+
+		if (((ItemStack)this.titaneExtactorItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.titaneExtactorItemStacks.get(2)).isEmpty() || compound1.getInteger("Water") <= 0)
 		{
 			return false;
 		}
@@ -302,7 +305,6 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 			ItemStack itemstack1 = this.titaneExtactorItemStacks.get(1);
 			ItemStack itemstack2 = TitaneExtractorRecipes.instance().getExtractingResult(itemstack, itemstack1);
 			ItemStack itemstack3 = this.titaneExtactorItemStacks.get(3);
-			ItemStack itemstack4 = new ItemStack(Items.BUCKET);
 			ItemStack itemstack5 = this.titaneExtactorItemStacks.get(2);
 
 			if (itemstack3.isEmpty())
@@ -315,9 +317,10 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 			}
 
 			itemstack.shrink(1);
-			itemstack1.shrink(1);
+            NBTTagCompound compound = itemstack1.getTagCompound();
+            NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
+            compound1.setInteger("Water", compound1.getInteger("Water") - 1);
             itemstack5.shrink(1);
-			this.titaneExtactorItemStacks.set(1, itemstack4.copy());
 		}
 	}
 	

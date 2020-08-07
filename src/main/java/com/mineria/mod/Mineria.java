@@ -23,7 +23,7 @@ public class Mineria
 	public static Mineria instance = new Mineria();
 	
 	//CreativeTabs
-	public static final CreativeTabs mineriaTab = new MineriaTab("mineria").setBackgroundImageName("item_search.png");
+	public static final CreativeTabs mineriaTab = new MineriaTab("mineria").setBackgroundImageName("");
 	
 	//Proxy
 	@SidedProxy(clientSide = References.CLIENT_PROXY, serverSide = References.SERVER_PROXY, modId = References.MODID)

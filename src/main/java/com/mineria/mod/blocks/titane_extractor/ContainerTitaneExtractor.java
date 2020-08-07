@@ -3,13 +3,17 @@ package com.mineria.mod.blocks.titane_extractor;
 import com.mineria.mod.blocks.infuser.TileEntityInfuser;
 import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorFuel;
 import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorOutput;
+import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
+import com.mineria.mod.items.ItemBlockBarrel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -110,40 +114,49 @@ public class ContainerTitaneExtractor extends Container
             if (index == 3)
             {
                 if(!this.mergeItemStack(itemstack1, 4, 40, true)) return ItemStack.EMPTY;
-                slot.onSlotChange(itemstack1, itemstack);
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
             else if (index != 0 && index != 1 && index != 2)
             {
-                Slot slot1 = (Slot)this.inventorySlots.get(index);
-
-                if (!TitaneExtractorRecipes.instance().getExtractingResult(itemstack1, slot1.getStack()).isEmpty())
+                if (!TitaneExtractorRecipes.instance().getExtractingResult(itemstack1, itemstack1).isEmpty())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(itemstack1.equals(new ItemStack(ItemsInit.filter)))
-                    {
-                        if(!this.mergeItemStack(itemstack1, 2, 3, false)) return ItemStack.EMPTY;
-                    }
-                    else if(itemstack1.equals(new ItemStack(ItemsInit.filter)))
-                    {
-                        if(!this.mergeItemStack(itemstack1, 2, 3, false)) return ItemStack.EMPTY;
-                    }
-                    else if(itemstack1.equals(new ItemStack(ItemsInit.filter)))
-                    {
-                        if(!this.mergeItemStack(itemstack1, 2, 3, false)) return ItemStack.EMPTY;
-                    }
-                    else if(index >= 4 && index < 31)
-                    {
-                        if(!this.mergeItemStack(itemstack1, 31, 40, false)) return ItemStack.EMPTY;
-                    }
-                    else if(index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 31, false))
+                }
+                else if(itemstack1.getItem().equals(new ItemStack(BlocksInit.mineral_sand).getItem()))
+                {
+                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
+                }
+                else if(itemstack1.getItem() instanceof ItemBlockBarrel)
+                {
+                    if (!this.mergeItemStack(itemstack1, 1, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (itemstack1.getItem().equals(ItemsInit.filter))
+                {
+                    if (!this.mergeItemStack(itemstack1, 2, 3, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (index >= 4 && index < 31)
+                {
+                    if (!this.mergeItemStack(itemstack1, 31, 40, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 31, false))
+                {
+                    return ItemStack.EMPTY;
                 }
             }
             else if (!this.mergeItemStack(itemstack1, 4, 40, false))

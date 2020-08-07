@@ -1,6 +1,5 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.blocks.titane_extractor.ContainerTitaneExtractor;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -380,7 +379,7 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
 
     public int getInfuseTime(ItemStack stack, ItemStack stack2)
     {
-        return 200;
+        return 2400;
     }
 
     public static boolean isItemFuel(ItemStack stack)
@@ -487,7 +486,6 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
             ItemStack itemstack1 = this.infuserItemStacks.get(1);
             ItemStack itemstack2 = InfuserRecipes.instance().getInfusingResult(itemstack, itemstack1);
             ItemStack itemstack3 = this.infuserItemStacks.get(3);
-            ItemStack itemstack4 = new ItemStack(Items.BUCKET);
 
             if (itemstack3.getItem() == ItemsInit.cup)
             {
@@ -496,14 +494,23 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
             }
 
             itemstack.shrink(1);
-            itemstack1.shrink(1);
-            this.infuserItemStacks.set(1, itemstack4.copy());
+            NBTTagCompound compound = itemstack1.getTagCompound();
+            NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
+            compound1.setInteger("Water", compound1.getInteger("Water") - 1);
         }
     }
 
     private boolean canInfuse()
     {
-        if (((ItemStack)this.infuserItemStacks.get(0)).isEmpty() || ((ItemStack)this.infuserItemStacks.get(1)).isEmpty() || ((ItemStack)this.infuserItemStacks.get(3)).isEmpty())
+        ItemStack stack = ((ItemStack)this.infuserItemStacks.get(1));
+        NBTTagCompound compound = stack.getTagCompound();
+        if(compound == null || !compound.hasKey("BlockEntityTag", 10))
+        {
+            return false;
+        }
+        NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
+
+        if (((ItemStack)this.infuserItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.infuserItemStacks.get(3)).isEmpty() || compound1.getInteger("Water") <= 0)
         {
             return false;
         }

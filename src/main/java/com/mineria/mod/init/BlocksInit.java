@@ -2,6 +2,8 @@ package com.mineria.mod.init;
 
 import com.mineria.mod.References;
 import com.mineria.mod.blocks.*;
+import com.mineria.mod.blocks.barrel.BlockBarrel;
+import com.mineria.mod.blocks.barrel.TileEntityBarrel;
 import com.mineria.mod.blocks.extractor.BlockExtractor;
 import com.mineria.mod.blocks.extractor.TileEntityExtractor;
 import com.mineria.mod.blocks.infuser.BlockInfuser;
@@ -10,6 +12,7 @@ import com.mineria.mod.blocks.titane_extractor.BlockTitaneExtractor;
 import com.mineria.mod.blocks.titane_extractor.TileEntityTitaneExtractor;
 import com.mineria.mod.blocks.xp_block.BlockXp;
 import com.mineria.mod.blocks.xp_block.TileEntityXpBlock;
+import com.mineria.mod.items.ItemBlockBarrel;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -65,6 +68,7 @@ public class BlocksInit {
 	public static Block compressed_lead_spike;
 	public static Block infested_netherrack;
 	public static Block xp_wall;
+	public static Block water_barrel;
 	
 	public static void init()
 	{
@@ -106,6 +110,7 @@ public class BlocksInit {
 		compressed_lead_spike = new BlockSpike("compressed_lead_spike", 2, Material.IRON, 2.5F, 2F, SoundType.METAL, 4F);
 		infested_netherrack = new BlockInfestedNetherrack("infested_netherrack", SoundType.STONE);
 		xp_wall = new BlockBase("xp_wall", 1, Material.IRON, 2.5F, 5F, SoundType.METAL);
+		water_barrel = new BlockBarrel();
 	}
 	
 	@SubscribeEvent
@@ -153,6 +158,8 @@ public class BlocksInit {
 		event.getRegistry().register(compressed_lead_spike);
 		event.getRegistry().register(infested_netherrack);
 		event.getRegistry().register(xp_wall);
+		event.getRegistry().register(water_barrel);
+		GameRegistry.registerTileEntity(TileEntityBarrel.class, References.MODID + ":tile_water_barrel");
 	}
 	
 	@SubscribeEvent
@@ -196,7 +203,8 @@ public class BlocksInit {
 				new ItemBlock(lead_spike).setRegistryName(lead_spike.getRegistryName()),
 				new ItemBlock(compressed_lead_spike).setRegistryName(compressed_lead_spike.getRegistryName()),
 				new ItemBlock(infested_netherrack).setRegistryName(infested_netherrack.getRegistryName()),
-				new ItemBlock(xp_wall).setRegistryName(xp_wall.getRegistryName())
+				new ItemBlock(xp_wall).setRegistryName(xp_wall.getRegistryName()),
+				new ItemBlockBarrel(water_barrel)
 						);
 	}
 	
@@ -241,6 +249,7 @@ public class BlocksInit {
 		registerRender(Item.getItemFromBlock(compressed_lead_spike));
 		registerRender(Item.getItemFromBlock(infested_netherrack));
 		registerRender(Item.getItemFromBlock(xp_wall));
+		registerRender(Item.getItemFromBlock(water_barrel));
 	}
 	
 	private static void registerRender(Item item)

@@ -65,7 +65,7 @@ public class GuiInfuser extends GuiContainer
 
         if (i == 0)
         {
-            i = 200;
+            i = 2400;
         }
 
         return this.tileInfuser.getField(0) * pixels / i;

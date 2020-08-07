@@ -1,7 +1,5 @@
 package com.mineria.mod.world.gen;
 
-import java.util.Random;
-
 import com.mineria.mod.init.BlocksInit;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
@@ -13,9 +11,10 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import java.util.Random;
+
 public class WorldGenCustomOres implements IWorldGenerator
 {
-	//Here we put our custom Ores to generate
 	private WorldGenerator copper_ore;
 	private WorldGenerator silver_ore;
 	private WorldGenerator lead_ore;
@@ -27,7 +26,6 @@ public class WorldGenCustomOres implements IWorldGenerator
 	
 	public WorldGenCustomOres()
 	{
-		Random rand = new Random();
 		copper_ore = new WorldGenMinable(BlocksInit.copper_ore.getDefaultState(), 7, BlockMatcher.forBlock(Blocks.STONE));
 		silver_ore = new WorldGenMinable(BlocksInit.silver_ore.getDefaultState(), 9, BlockMatcher.forBlock(Blocks.STONE));
 		lead_ore = new WorldGenMinable(BlocksInit.lead_ore.getDefaultState(), 9, BlockMatcher.forBlock(Blocks.STONE));

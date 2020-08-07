@@ -7,11 +7,11 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class CustomSoundsHandler
 {
-	public static SoundEvent RECORD_UNACCEPTABLE;
-	
+	public static SoundEvent sound;
+
 	public static void registerSounds()
 	{
-		RECORD_UNACCEPTABLE = registerSound("record.unacceptable");
+		sound = registerSound("a");
 	}
 	
 	private static SoundEvent registerSound(String name)

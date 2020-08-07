@@ -1,6 +1,5 @@
 package com.mineria.mod.blocks.xp_block.slots;
 
-import com.mineria.mod.init.ItemsInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

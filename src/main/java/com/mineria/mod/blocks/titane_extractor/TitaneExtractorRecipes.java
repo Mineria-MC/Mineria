@@ -24,7 +24,7 @@ public class TitaneExtractorRecipes
 	
 	private TitaneExtractorRecipes()
 	{
-		addExtractingRecipe(new ItemStack(Items.WATER_BUCKET), new ItemStack(BlocksInit.mineral_sand), new ItemStack(ItemsInit.titane_nugget));
+		addExtractingRecipe(new ItemStack(BlocksInit.water_barrel), new ItemStack(BlocksInit.mineral_sand), new ItemStack(ItemsInit.titane_nugget));
 	}
 	
 	public void addExtractingRecipe(ItemStack input, ItemStack input2, ItemStack stack)

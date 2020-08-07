@@ -4,21 +4,23 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+
 public class TitaneExtractorRecipe implements IRecipeWrapper
 {
-	private final ItemStack input;
+	private final List<ItemStack> inputs;
 	private final ItemStack output;
 	
-	public TitaneExtractorRecipe(ItemStack input, ItemStack output)
+	public TitaneExtractorRecipe(List<ItemStack> inputs, ItemStack output)
 	{
-		this.input = input;
+		this.inputs = inputs;
 		this.output = output;
 	}
 	
 	@Override
 	public void getIngredients(IIngredients ingredients)
 	{
-		ingredients.setInput(ItemStack.class, input);
+		ingredients.setInputs(ItemStack.class, inputs);
 		ingredients.setOutput(ItemStack.class, output);
 	}
 }

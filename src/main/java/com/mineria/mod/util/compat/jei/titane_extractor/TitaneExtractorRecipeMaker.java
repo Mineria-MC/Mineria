@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 
 import com.mineria.mod.blocks.titane_extractor.TitaneExtractorRecipes;
+import com.mineria.mod.init.BlocksInit;
+import com.mineria.mod.init.ItemsInit;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
@@ -28,7 +30,8 @@ public class TitaneExtractorRecipeMaker
 				ItemStack input1 = entry.getKey();
 				ItemStack input2 = ent.getKey();
 				ItemStack output = ent.getValue();
-				TitaneExtractorRecipe recipe = new TitaneExtractorRecipe(input1, output);
+				List<ItemStack> inputs = Lists.newArrayList(new ItemStack(BlocksInit.mineral_sand), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.filter));
+				TitaneExtractorRecipe recipe = new TitaneExtractorRecipe(inputs, output);
 				jeiRecipes.add(recipe);
 			}
 		}

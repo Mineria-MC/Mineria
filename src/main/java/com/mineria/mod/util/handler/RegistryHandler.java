@@ -8,6 +8,7 @@ import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.init.RecipesInit;
 import com.mineria.mod.util.compat.OreDictionaryCompat;
 import com.mineria.mod.world.gen.WorldGenCustomOres;
+import com.mineria.mod.world.gen.WorldGenCustomPlants;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -24,6 +25,7 @@ public class RegistryHandler
 		BlocksInit.init();
 		ItemsInit.init();
 		GameRegistry.registerWorldGenerator(new WorldGenCustomOres(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenCustomPlants(), 0);
 		EntityInit.registerEntities();
 	}
 	

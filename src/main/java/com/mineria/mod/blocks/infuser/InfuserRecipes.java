@@ -22,11 +22,11 @@ public class InfuserRecipes
 
     private InfuserRecipes()
     {
-        addExtractingRecipe(new ItemStack(BlocksInit.plantain), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemsInit.plantain_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.mint), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemsInit.mint_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.thyme), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemsInit.thyme_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.nettle), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemsInit.nettle_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.pulmonary), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemsInit.pulmonary_tea));
+        addExtractingRecipe(new ItemStack(BlocksInit.plantain), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.plantain_tea));
+        addExtractingRecipe(new ItemStack(BlocksInit.mint), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.mint_tea));
+        addExtractingRecipe(new ItemStack(BlocksInit.thyme), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.thyme_tea));
+        addExtractingRecipe(new ItemStack(BlocksInit.nettle), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.nettle_tea));
+        addExtractingRecipe(new ItemStack(BlocksInit.pulmonary), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.pulmonary_tea));
     }
 
     public void addExtractingRecipe(ItemStack input, ItemStack input2, ItemStack stack)

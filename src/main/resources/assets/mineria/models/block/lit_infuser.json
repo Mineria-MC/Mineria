@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "mineria:blocks/infuser_front",
 		"1": "mineria:blocks/infuser_side",
-		"particle": "mineria:blocks/infuser_front"
+		"particle": "mineria:blocks/infuser_side"
 	},
 	"elements": [
 		{

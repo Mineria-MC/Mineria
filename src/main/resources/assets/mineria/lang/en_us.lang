@@ -19,6 +19,7 @@ tile.lead_spike.name=Lead Spike
 tile.compressed_lead_spike.name=Compressed Lead Spike
 tile.infested_netherrack.name=Infested Netherrack
 tile.xp_wall.name=XP Wall
+tile.water_barrel.name=Water Barrel
 
 tile.xp_block.name=XP Block
 tile.titane_extractor.name=Titane Extractor
@@ -115,3 +116,5 @@ container.xp_block=XP Block
 gui.xp_block.give_xp=Give XP
 container.extractor=Extractor
 container.infuser=Infuser
+water_barrel.use=To use the barrel, you must place it down and right click on it with a water bucket to fill it
+tooltip.hold_shift=Hold SHIFT for more...

@@ -65,6 +65,8 @@ public class TitaneExtractorRecipeCategory extends AbstractTitaneExtractorRecipe
 	{
 		IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
 		stacks.init(input1, true, 9 - 8, 6 - 4);
+		stacks.init(input2, true, 40 - 8, 6 - 4);
+		stacks.init(filter, true, 23 - 8, 77 - 4);
 		stacks.init(output, false, 94 - 8, 46 - 4);
 		stacks.set(ingredients);
 	};

@@ -109,8 +109,7 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 	@Override
 	public void closeInventory(EntityPlayer player)
 	{
-		this.playerFound = false;
-		this.ticks = 0;
+
 	}
 
 	@Override
@@ -141,8 +140,6 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 	public void clear()
 	{
 		this.result = ItemStack.EMPTY;
-		this.playerFound = false;
-		this.ticks = 0;
 	}
 
 	@Override
@@ -217,10 +214,10 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 		}
 	}
 
-	public void setPlayer(EntityPlayer player)
+	public void setPlayer(EntityPlayer player, boolean state)
 	{
 		this.player = player;
-		this.playerFound = true;
+		this.playerFound = state;
 	}
 
 	@Override
