@@ -19,10 +19,18 @@ tile.lead_spike.name=Pic en Plomb
 tile.compressed_lead_spike.name=Pic en Plomb Compressé
 tile.infested_netherrack.name=Netherrack Infestée
 tile.xp_wall.name=Déco en XP
+tile.water_barrel.name=Barril d'Eau
 
 tile.xp_block.name=Block d'XP
 tile.titane_extractor.name=Extracteur à Titane
 tile.extractor.name=Extracteur
+tile.infuser.name=Infuseur
+
+tile.plantain.name=Plantain
+tile.mint.name=Menthe
+tile.thyme.name=Thym
+tile.nettle.name=Ortie
+tile.pulmonary.name=Pulmonaire
 
 #Items
 item.gold_stick.name=Bâton d'Or
@@ -89,6 +97,13 @@ item.titane_sword_with_silver_handle.name=Epée en Titane Avec un Manche en Arge
 item.titane_sword_with_gold_handle.name=Epée en Titane Avec un Manche en Or
 item.titane_sword_with_iron_handle.name=Epée en Titane Avec un Manche en Fer
 
+item.cup.name=Tasse Vide
+item.plantain_tea.name=Thé au Plantain
+item.mint_tea.name=Thé à la Menthe
+item.thyme_tea.name=Thé au Thym
+item.nettle_tea.name=Thé à l'Ortie
+item.pulmonary_tea.name=Thé à la Pulmonaire
+
 #Entities
 entity.golden_fish.name=Poisson d'Or
 
@@ -100,3 +115,6 @@ container.titane_extractor=Extracteur à Titane
 container.xp_block=Block d'XP
 gui.xp_block.give_xp=Donner XP
 container.extractor=Extracteur
+container.infuser=Infuseur
+water_barrel.use=Pour utiliser le barril, il vous faut le placer et faire click droit avec un seau d'eau pour le remplir
+tooltip.hold_shift=Appuyez sur SHIFT pour plus d'infos...

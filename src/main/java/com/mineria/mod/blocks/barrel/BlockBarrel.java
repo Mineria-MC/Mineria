@@ -78,16 +78,16 @@ public class BlockBarrel extends BlockContainer
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         boolean flag = false;
-        if(!worldIn.isRemote)
-        {
-            TileEntityBarrel te = (TileEntityBarrel)worldIn.getTileEntity(pos);
-            Item heldItem = playerIn.getHeldItemMainhand().getItem();
+        TileEntityBarrel te = (TileEntityBarrel)worldIn.getTileEntity(pos);
+        Item heldItem = playerIn.getHeldItemMainhand().getItem();
 
-            if(heldItem == Items.WATER_BUCKET)
+        if(heldItem == Items.WATER_BUCKET)
+        {
+            if(te.setWatetBucket())
             {
-                if(te.setWatetBucket())
+                worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                if(!worldIn.isRemote)
                 {
-                    worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
                     if(!playerIn.capabilities.isCreativeMode)
                     {
                         playerIn.getHeldItemMainhand().shrink(1);

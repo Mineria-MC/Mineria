@@ -6,6 +6,7 @@ import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.EntityInit;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.init.RecipesInit;
+import com.mineria.mod.network.GuiButtonPressedMessageHandler;
 import com.mineria.mod.util.compat.OreDictionaryCompat;
 import com.mineria.mod.world.gen.WorldGenCustomOres;
 import com.mineria.mod.world.gen.WorldGenCustomPlants;
@@ -27,6 +28,7 @@ public class RegistryHandler
 		GameRegistry.registerWorldGenerator(new WorldGenCustomOres(), 0);
 		GameRegistry.registerWorldGenerator(new WorldGenCustomPlants(), 0);
 		EntityInit.registerEntities();
+		Mineria.instance.addNetworkMessage(GuiButtonPressedMessageHandler.class, GuiButtonPressedMessageHandler.GUIButtonPressedMessage.class, Side.SERVER);
 	}
 	
 	public static void initRegistries(FMLInitializationEvent event)

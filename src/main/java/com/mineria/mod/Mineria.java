@@ -12,6 +12,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,11 +27,14 @@ public class Mineria
 	public static Mineria instance = new Mineria();
 	
 	//CreativeTabs
-	public static final CreativeTabs mineriaTab = new MineriaTab("mineria").setBackgroundImageName("");
+	public static final CreativeTabs mineriaTab = new MineriaTab("mineria").setBackgroundImageName("item_search.png");
 	
 	//Proxy
 	@SidedProxy(clientSide = References.CLIENT_PROXY, serverSide = References.SERVER_PROXY, modId = References.MODID)
 	public static ServerProxy proxy;
+
+	//PacketHandler
+	public static final SimpleNetworkWrapper PACKET_HANDLER = NetworkRegistry.INSTANCE.newSimpleChannel("mineria");
 	
 	//Pre-Initialization Event
 	@EventHandler
@@ -64,5 +71,14 @@ public class Mineria
 	public void clientPreInit(FMLPreInitializationEvent event)
 	{
 		RegistryHandler.clientRegistries(event);
+	}
+
+	private int messageID = 0;
+
+	public <T extends IMessage, V extends IMessage> void addNetworkMessage(Class<? extends IMessageHandler<T, V>> handler, Class<T> messageClass, Side... sides)
+	{
+		for (Side side : sides)
+			Mineria.PACKET_HANDLER.registerMessage(handler, messageClass, messageID, side);
+		messageID++;
 	}
 }

@@ -105,57 +105,55 @@ public class ContainerInfuser extends Container
             ItemStack stack1 = slot.getStack();
             stack = stack1.copy();
 
-            if(index == 3)
+            if(index == 2)
             {
-                if(!this.mergeItemStack(stack1, 4, 40, true)) return ItemStack.EMPTY;
+                if(!this.mergeItemStack(stack1, 3, 39, true)) return ItemStack.EMPTY;
                 slot.onSlotChange(stack1, stack);
             }
-            else if(index != 2 && index != 1 && index != 0)
+            else if(index != 1 && index != 0)
             {
-                Slot slot1 = (Slot)this.inventorySlots.get(index);
-
-                if(!InfuserRecipes.instance().getInfusingResult(stack1, slot1.getStack()).isEmpty())
+                if(!InfuserRecipes.instance().getInfusingResult(stack1, stack1).isEmpty())
                 {
                     if(!this.mergeItemStack(stack1, 0, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                    else if(TileEntityInfuser.isItemFuel(stack1))
-                    {
-                        if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-                    }
-                    else if(TileEntityInfuser.isItemFuel(stack1))
-                    {
-                        if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-                    }
-                    else if(TileEntityInfuser.isItemFuel(stack1))
-                    {
-                        if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
-                    }
-                    else if(index >= 4 && index < 31)
-                    {
-                        if(!this.mergeItemStack(stack1, 31, 40, false)) return ItemStack.EMPTY;
-                    }
-                    else if(index >= 31 && index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
+                }
+                else if(TileEntityInfuser.isItemFuel(stack1))
+                {
+                    if(!this.mergeItemStack(stack1, 3, 4, false)) return ItemStack.EMPTY;
+                }
+                else if (index >= 3 && index < 30)
+                {
+                    if (!this.mergeItemStack(stack1, 30, 39, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
+                else if (index >= 30 && index < 39 && !this.mergeItemStack(stack1, 3, 30, false))
+                {
+                    return ItemStack.EMPTY;
+                }
             }
-            else if(!this.mergeItemStack(stack1, 4, 40, false))
+            else if (!this.mergeItemStack(stack1, 3, 39, false))
             {
                 return ItemStack.EMPTY;
             }
-            if(stack1.isEmpty())
+
+            if (stack1.isEmpty())
             {
                 slot.putStack(ItemStack.EMPTY);
             }
             else
             {
                 slot.onSlotChanged();
-
             }
-            if(stack1.getCount() == stack.getCount()) return ItemStack.EMPTY;
+
+            if (stack1.getCount() == stack.getCount())
+            {
+                return ItemStack.EMPTY;
+            }
+
             slot.onTake(playerIn, stack1);
         }
         return stack;

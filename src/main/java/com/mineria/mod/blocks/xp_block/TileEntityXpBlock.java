@@ -3,27 +3,25 @@ package com.mineria.mod.blocks.xp_block;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
-public class TileEntityXpBlock extends TileEntity implements ISidedInventory, ITickable
+public class TileEntityXpBlock extends TileEntity implements ISidedInventory
 {
 	private String customName;
-	private ItemStack result = ItemStack.EMPTY;
-	private EntityPlayer player;
-	private boolean playerFound = false;
-	private int ticks;
-	
-	private NonNullList<ItemStack> xpBlockItemStacks = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
+
+	private final NonNullList<ItemStack> xpBlockItemStacks = NonNullList.withSize(1, ItemStack.EMPTY);
 	
 	@Override
 	public int getSizeInventory()
@@ -127,7 +125,7 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 	@Override
 	public void setField(int id, int value)
 	{
-		
+
 	}
 
 	@Override
@@ -139,7 +137,7 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 	@Override
 	public void clear()
 	{
-		this.result = ItemStack.EMPTY;
+
 	}
 
 	@Override
@@ -199,9 +197,20 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 		ItemStack stack1 = this.xpBlockItemStacks.get(0);
 		if (stack1.getCount() < this.getInventoryStackLimit())
 		{
-			if (player.experienceTotal > 0)
+			if(player.capabilities.isCreativeMode)
 			{
-				player.addExperience(-1);
+				if (stack1.isEmpty())
+				{
+					this.xpBlockItemStacks.set(0, stack.copy());
+				}
+				else if (stack1.getItem() == stack.getItem())
+				{
+					stack1.grow(1);
+				}
+			}
+			else if (player.experienceTotal > 0)
+			{
+				this.decreasePlayerExperience(1, player);
 				if (stack1.isEmpty())
 				{
 					this.xpBlockItemStacks.set(0, stack.copy());
@@ -214,23 +223,37 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory, IT
 		}
 	}
 
-	public void setPlayer(EntityPlayer player, boolean state)
+	private void decreasePlayerExperience(int amount, EntityPlayer player)
 	{
-		this.player = player;
-		this.playerFound = state;
+		player.experience -= (float)amount / (float)this.calcXpBarCap(player.experienceLevel - 1);
+		player.experienceTotal -= amount;
+
+		if(player.experience <= 0.0F)
+		{
+			player.experienceLevel -= 1;
+			player.experience = 1.0F;
+		}
 	}
 
-	@Override
-	public void update()
+	public int calcXpBarCap(int level)
 	{
-		if(playerFound)
+		if (level >= 30)
 		{
-			ticks++;
-			if (ticks >= 60)
-			{
-				ticks = 0;
-				this.spawnXp(this.player);
-			}
+			return 112 + (level - 30) * 9;
+		}
+		else
+		{
+			return level >= 15 ? 37 + (level - 15) * 5 : 7 + level * 2;
+		}
+	}
+
+	public static void executeProcedure(int x, int y, int z, World world, EntityPlayer player)
+	{
+		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+		if(tileEntity instanceof TileEntityXpBlock)
+		{
+			TileEntityXpBlock tile = (TileEntityXpBlock)tileEntity;
+			tile.spawnXp(player);
 		}
 	}
 }

@@ -23,21 +23,15 @@ public class XPOrbItem extends Item
 	{
 		ActionResult<ItemStack> actionr = super.onItemRightClick(world, entity, hand);
 		ItemStack itemstack = actionr.getResult();
-		int x = (int) entity.posX;
-		int y = (int) entity.posY;
-		int z = (int) entity.posZ;
 		
-		if (((entity instanceof EntityPlayer) ? ((EntityPlayer) entity).capabilities.isCreativeMode : false))
+		if (((EntityPlayer) entity).capabilities.isCreativeMode)
 		{
-			if (entity instanceof EntityPlayer)
-				((EntityPlayer) entity).addExperience((int) 1);
+			((EntityPlayer) entity).addExperience((int) 1);
 		}
-		
 		else
 		{
-			if (entity instanceof EntityPlayer)
-				((EntityPlayer) entity).addExperience((int) 1);
-				itemstack.shrink(1);
+			((EntityPlayer) entity).addExperience((int) 1);
+			itemstack.shrink(1);
 		}
 		return actionr;
 	}

@@ -27,9 +27,14 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = References.MODID)
 public class BlocksInit {
-	
+
+	public static final List<Block> blockList = new ArrayList<>();
+
 	//Ores
 	public static Block lead_ore;
 	public static Block titane_ore;
@@ -72,184 +77,76 @@ public class BlocksInit {
 	
 	public static void init()
 	{
+
 		//Ores
-		lead_ore = new OreBase("lead_ore", 2, Material.ROCK, 4F, 5F, SoundType.STONE);
-		titane_ore = new OreBase("titane_ore", 3, Material.ROCK, 6F, 10F, SoundType.STONE);
-		copper_ore = new OreBase("copper_ore", 1, Material.ROCK, 3F, 5F, SoundType.STONE);
-		lonsdaleite_ore = new OreBase("lonsdaleite_ore", 3, Material.ROCK, 6F, 10F, SoundType.STONE, 1, 2);
-		nether_gold_ore = new OreBase("nether_gold_ore", 2, Material.ROCK, 1.75F, 1F, SoundType.STONE);
-		silver_ore = new OreBase("silver_ore", 2, Material.ROCK, 3F, 5F, SoundType.STONE);
+		lead_ore = register(new OreBase("lead_ore", 2, Material.ROCK, 4F, 5F, SoundType.STONE));
+		titane_ore = register(new OreBase("titane_ore", 3, Material.ROCK, 6F, 10F, SoundType.STONE));
+		copper_ore = register(new OreBase("copper_ore", 1, Material.ROCK, 3F, 5F, SoundType.STONE));
+		lonsdaleite_ore = register(new OreBase("lonsdaleite_ore", 3, Material.ROCK, 6F, 10F, SoundType.STONE, 1, 2));
+		nether_gold_ore = register(new OreBase("nether_gold_ore", 2, Material.ROCK, 1.75F, 1F, SoundType.STONE));
+		silver_ore = register(new OreBase("silver_ore", 2, Material.ROCK, 3F, 5F, SoundType.STONE));
 		
 		//OreBlocks
-		lead_block = new OreBlockBase("lead_block", 2, Material.IRON, 6.5F, 20F, SoundType.METAL);
-		titane_block = new OreBlockBase("titane_block", 3, Material.IRON, 10F, 15F, SoundType.METAL);
-		copper_block = new OreBlockBase("copper_block", 1, Material.IRON, 5F, 10F, SoundType.METAL);
-		lonsdaleite_block = new LonsdaleiteBlock("lonsdaleite_block", 3, Material.IRON, 10F, 17.5F, SoundType.METAL);
-		silver_block = new OreBlockBase("silver_block", 2, Material.IRON, 5F, 10F, SoundType.METAL);
-		compressed_lead_block = new OreBlockBase("compressed_lead_block", 3, Material.IRON, 2.5F, 2F, SoundType.METAL);
+		lead_block = register(new OreBlockBase("lead_block", 2, Material.IRON, 6.5F, 20F, SoundType.METAL));
+		titane_block = register(new OreBlockBase("titane_block", 3, Material.IRON, 10F, 15F, SoundType.METAL));
+		copper_block = register(new OreBlockBase("copper_block", 1, Material.IRON, 5F, 10F, SoundType.METAL));
+		lonsdaleite_block = register(new LonsdaleiteBlock("lonsdaleite_block", 3, Material.IRON, 10F, 17.5F, SoundType.METAL));
+		silver_block = register(new OreBlockBase("silver_block", 2, Material.IRON, 5F, 10F, SoundType.METAL));
+		compressed_lead_block = register(new OreBlockBase("compressed_lead_block", 3, Material.IRON, 2.5F, 2F, SoundType.METAL));
 		
 		//Machines
-		xp_block = new BlockXp("xp_block", 1, Material.IRON, 2.5F, 5F, SoundType.METAL);
-		titane_extractor = new BlockTitaneExtractor("titane_extractor", false);
-		lit_titane_extractor = new BlockTitaneExtractor("lit_titane_extractor", true).setCreativeTab(null).setLightLevel(0.5F);
-		extractor = new BlockExtractor("extractor", 1, Material.IRON, 1F, 1F, SoundType.METAL);
-		infuser = new BlockInfuser("infuser", Material.IRON, false);
-		lit_infuser = new BlockInfuser("lit_infuser", Material.IRON, true).setCreativeTab(null).setLightLevel(0.5F);
+		xp_block = register(new BlockXp("xp_block", 1, Material.IRON, 2.5F, 5F, SoundType.METAL));
+		titane_extractor = register(new BlockTitaneExtractor("titane_extractor", false));
+		lit_titane_extractor = register(new BlockTitaneExtractor("lit_titane_extractor", true).setCreativeTab(null).setLightLevel(0.5F));
+		extractor = register(new BlockExtractor("extractor", 1, Material.IRON, 1F, 1F, SoundType.METAL));
+		infuser = register(new BlockInfuser("infuser", Material.IRON, false));
+		lit_infuser = register(new BlockInfuser("lit_infuser", Material.IRON, true).setLightLevel(0.5F));
 
 		//Plants
-		plantain = new PlantBase("plantain", Material.PLANTS, MapColor.GRASS);
-		mint = new PlantBase("mint", Material.PLANTS, MapColor.GRASS);
-		thyme = new PlantBase("thyme", Material.PLANTS, MapColor.GRASS);
-		nettle = new PlantBase("nettle", Material.PLANTS, MapColor.GRASS);
-		pulmonary = new PlantBase("pulmonary", Material.PLANTS, MapColor.GRASS);
+		plantain = register(new PlantBase("plantain", Material.PLANTS, MapColor.GRASS));
+		mint = register(new PlantBase("mint", Material.PLANTS, MapColor.GRASS));
+		thyme = register(new PlantBase("thyme", Material.PLANTS, MapColor.GRASS));
+		nettle = register(new PlantBase("nettle", Material.PLANTS, MapColor.GRASS));
+		pulmonary = register(new PlantBase("pulmonary", Material.PLANTS, MapColor.GRASS));
 
 		//Other
-		blue_glowstone = new BlockBlueGlowstone("blue_glowstone", 1, Material.GLASS, 0.3F, 0.3F, SoundType.GLASS, 15F);
-		mineral_sand = new BlockMineralSand("mineral_sand", 0, Material.SAND, 0.5F, 0.5F, SoundType.SAND);
-		lead_spike = new BlockSpike("lead_spike", 2, Material.IRON, 7F, 25F, SoundType.METAL, 2F);
-		compressed_lead_spike = new BlockSpike("compressed_lead_spike", 2, Material.IRON, 2.5F, 2F, SoundType.METAL, 4F);
-		infested_netherrack = new BlockInfestedNetherrack("infested_netherrack", SoundType.STONE);
-		xp_wall = new BlockBase("xp_wall", 1, Material.IRON, 2.5F, 5F, SoundType.METAL);
-		water_barrel = new BlockBarrel();
+		blue_glowstone = register(new BlockBlueGlowstone("blue_glowstone", 1, Material.GLASS, 0.3F, 0.3F, SoundType.GLASS, 15F));
+		mineral_sand = register(new BlockMineralSand("mineral_sand", 0, Material.SAND, 0.5F, 0.5F, SoundType.SAND));
+		lead_spike = register(new BlockSpike("lead_spike", 2, Material.IRON, 7F, 25F, SoundType.METAL, 2F));
+		compressed_lead_spike = register(new BlockSpike("compressed_lead_spike", 2, Material.IRON, 2.5F, 2F, SoundType.METAL, 4F));
+		infested_netherrack = register(new BlockInfestedNetherrack("infested_netherrack", SoundType.STONE));
+		xp_wall = register(new BlockBase("xp_wall", 1, Material.IRON, 2.5F, 5F, SoundType.METAL));
+		water_barrel = register(new BlockBarrel());
+	}
+
+	private static Block register(Block instance)
+	{
+		blockList.add(instance);
+		return instance;
 	}
 	
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
-		//Ores
-		event.getRegistry().register(lead_ore);
-		event.getRegistry().register(titane_ore);
-		event.getRegistry().register(copper_ore);
-		event.getRegistry().register(lonsdaleite_ore);
-		event.getRegistry().register(nether_gold_ore);
-		event.getRegistry().register(silver_ore);
-		
-		//OreBlocks
-		event.getRegistry().register(lead_block);
-		event.getRegistry().register(titane_block);
-		event.getRegistry().register(copper_block);
-		event.getRegistry().register(lonsdaleite_block);
-		event.getRegistry().register(silver_block);
-		event.getRegistry().register(compressed_lead_block);
-		
-		//Machines
-		event.getRegistry().register(xp_block);
+		blockList.forEach(block -> event.getRegistry().register(block));
 		GameRegistry.registerTileEntity(TileEntityXpBlock.class, References.MODID + ":tile_xp_block");
-		event.getRegistry().register(titane_extractor);
-		event.getRegistry().register(lit_titane_extractor);
 		GameRegistry.registerTileEntity(TileEntityTitaneExtractor.class, References.MODID + ":tile_titane_extractor");
-		event.getRegistry().register(extractor);
 		GameRegistry.registerTileEntity(TileEntityExtractor.class, References.MODID + ":tile_extractor");
-		event.getRegistry().register(infuser);
-		event.getRegistry().register(lit_infuser);
 		GameRegistry.registerTileEntity(TileEntityInfuser.class, References.MODID + ":tile_infuser");
-
-		//Plants
-		event.getRegistry().register(plantain);
-		event.getRegistry().register(mint);
-		event.getRegistry().register(thyme);
-		event.getRegistry().register(nettle);
-		event.getRegistry().register(pulmonary);
-
-		//Other
-		event.getRegistry().register(blue_glowstone);
-		event.getRegistry().register(mineral_sand);
-		event.getRegistry().register(lead_spike);
-		event.getRegistry().register(compressed_lead_spike);
-		event.getRegistry().register(infested_netherrack);
-		event.getRegistry().register(xp_wall);
-		event.getRegistry().register(water_barrel);
 		GameRegistry.registerTileEntity(TileEntityBarrel.class, References.MODID + ":tile_water_barrel");
 	}
 	
 	@SubscribeEvent
 	public static void registerItemBlocks(RegistryEvent.Register<Item> event)
 	{
-		event.getRegistry().registerAll(
-				//Ores
-				new ItemBlock(lead_ore).setRegistryName(lead_ore.getRegistryName()),
-				new ItemBlock(titane_ore).setRegistryName(titane_ore.getRegistryName()),
-				new ItemBlock(copper_ore).setRegistryName(copper_ore.getRegistryName()),
-				new ItemBlock(lonsdaleite_ore).setRegistryName(lonsdaleite_ore.getRegistryName()),
-				new ItemBlock(nether_gold_ore).setRegistryName(nether_gold_ore.getRegistryName()),
-				new ItemBlock(silver_ore).setRegistryName(silver_ore.getRegistryName()),
-				
-				//OreBlocks
-				new ItemBlock(lead_block).setRegistryName(lead_block.getRegistryName()),
-				new ItemBlock(titane_block).setRegistryName(titane_block.getRegistryName()),
-				new ItemBlock(copper_block).setRegistryName(copper_block.getRegistryName()),
-				new ItemBlock(lonsdaleite_block).setRegistryName(lonsdaleite_block.getRegistryName()),
-				new ItemBlock(silver_block).setRegistryName(silver_block.getRegistryName()),
-				new ItemBlock(compressed_lead_block).setRegistryName(compressed_lead_block.getRegistryName()),
-				
-				//Machines
-				new ItemBlock(xp_block).setRegistryName(xp_block.getRegistryName()),
-				new ItemBlock(titane_extractor).setRegistryName(titane_extractor.getRegistryName()),
-				new ItemBlock(lit_titane_extractor).setRegistryName(lit_titane_extractor.getRegistryName()),
-				new ItemBlock(extractor).setRegistryName(extractor.getRegistryName()),
-				new ItemBlock(infuser).setRegistryName(infuser.getRegistryName()),
-				new ItemBlock(lit_infuser).setRegistryName(lit_infuser.getRegistryName()),
-
-				//Plants
-				new ItemBlock(plantain).setRegistryName(plantain.getRegistryName()),
-				new ItemBlock(mint).setRegistryName(mint.getRegistryName()),
-				new ItemBlock(thyme).setRegistryName(thyme.getRegistryName()),
-				new ItemBlock(nettle).setRegistryName(nettle.getRegistryName()),
-				new ItemBlock(pulmonary).setRegistryName(pulmonary.getRegistryName()),
-
-				//Other
-				new ItemBlock(blue_glowstone).setRegistryName(blue_glowstone.getRegistryName()),
-				new ItemBlock(mineral_sand).setRegistryName(mineral_sand.getRegistryName()),
-				new ItemBlock(lead_spike).setRegistryName(lead_spike.getRegistryName()),
-				new ItemBlock(compressed_lead_spike).setRegistryName(compressed_lead_spike.getRegistryName()),
-				new ItemBlock(infested_netherrack).setRegistryName(infested_netherrack.getRegistryName()),
-				new ItemBlock(xp_wall).setRegistryName(xp_wall.getRegistryName()),
-				new ItemBlockBarrel(water_barrel)
-						);
+		blockList.stream().filter(block -> !(block instanceof BlockBarrel)).forEach(block -> event.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName())));
+		event.getRegistry().register(new ItemBlockBarrel(water_barrel));
 	}
 	
 	@SubscribeEvent
 	public static void registerRenders(ModelRegistryEvent event)
 	{
-		//Ores
-		registerRender(Item.getItemFromBlock(lead_ore));
-		registerRender(Item.getItemFromBlock(titane_ore));
-		registerRender(Item.getItemFromBlock(copper_ore));
-		registerRender(Item.getItemFromBlock(lonsdaleite_ore));
-		registerRender(Item.getItemFromBlock(nether_gold_ore));
-		registerRender(Item.getItemFromBlock(silver_ore));
-		
-		//OreBlocks
-		registerRender(Item.getItemFromBlock(lead_block));
-		registerRender(Item.getItemFromBlock(titane_block));
-		registerRender(Item.getItemFromBlock(copper_block));
-		registerRender(Item.getItemFromBlock(lonsdaleite_block));
-		registerRender(Item.getItemFromBlock(silver_block));
-		registerRender(Item.getItemFromBlock(compressed_lead_block));
-		
-		//Machines
-		registerRender(Item.getItemFromBlock(xp_block));
-		registerRender(Item.getItemFromBlock(titane_extractor));
-		registerRender(Item.getItemFromBlock(lit_titane_extractor));
-		registerRender(Item.getItemFromBlock(extractor));
-		registerRender(Item.getItemFromBlock(infuser));
-		registerRender(Item.getItemFromBlock(lit_infuser));
-
-		//Plants
-		registerRender(Item.getItemFromBlock(plantain));
-		registerRender(Item.getItemFromBlock(mint));
-		registerRender(Item.getItemFromBlock(thyme));
-		registerRender(Item.getItemFromBlock(nettle));
-		registerRender(Item.getItemFromBlock(pulmonary));
-
-		//Other
-		registerRender(Item.getItemFromBlock(blue_glowstone));
-		registerRender(Item.getItemFromBlock(mineral_sand));
-		registerRender(Item.getItemFromBlock(lead_spike));
-		registerRender(Item.getItemFromBlock(compressed_lead_spike));
-		registerRender(Item.getItemFromBlock(infested_netherrack));
-		registerRender(Item.getItemFromBlock(xp_wall));
-		registerRender(Item.getItemFromBlock(water_barrel));
+		blockList.forEach(block -> registerRender(Item.getItemFromBlock(block)));
 	}
 	
 	private static void registerRender(Item item)

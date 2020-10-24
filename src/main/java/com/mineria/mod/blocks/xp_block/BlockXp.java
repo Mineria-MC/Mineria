@@ -32,7 +32,6 @@ public class BlockXp extends BlockContainer
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         TileEntityXpBlock te = (TileEntityXpBlock)worldIn.getTileEntity(pos);
-        te.setPlayer(playerIn, true);
         if(!worldIn.isRemote)
 		{
             playerIn.openGui(Mineria.instance, References.GUI_XP_BLOCK, worldIn, pos.getX(), pos.getY(), pos.getZ());

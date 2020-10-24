@@ -37,7 +37,7 @@ public class BlockInfuser extends BlockContainer
         super(materialIn);
         setRegistryName(name);
         setUnlocalizedName(name);
-        setCreativeTab(Mineria.mineriaTab);
+        setCreativeTab(isActive ? null : Mineria.mineriaTab);
         setSoundType(SoundType.WOOD);
         setHardness(5.0F);
         setResistance(5.0F);

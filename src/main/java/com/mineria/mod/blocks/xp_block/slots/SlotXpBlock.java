@@ -18,7 +18,7 @@ public class SlotXpBlock extends Slot
 	
 	public boolean isItemValid(ItemStack stack)
     {
-        return true;
+        return false;
     }
 	
 	public ItemStack decrStackSize(int amount)
@@ -50,8 +50,8 @@ public class SlotXpBlock extends Slot
         this.removeCount = 0;
     }
 
-/*    public int getItemStackLimit(ItemStack stack)
+    public int getItemStackLimit(ItemStack stack)
     {
         return 16;
-    }*/
+    }
 }

@@ -80,10 +80,8 @@ public class WorldGenCustomPlants implements IWorldGenerator
 
         if(world.getBiome(chunkPos) == biome)
         {
-            //Chance is proportional. 100% = 2F of chance. 10% = 0.2F.
             if(rand.nextInt(200) <= chance)
             {
-
                 int i7 = rand.nextInt(16) + 4;
                 int l10 = rand.nextInt(16) + 4;
                 int j14 = world.getHeight(chunkPos.add(i7, 0, l10)).getY() + 32;

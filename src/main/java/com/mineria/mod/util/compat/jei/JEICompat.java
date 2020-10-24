@@ -1,6 +1,8 @@
 package com.mineria.mod.util.compat.jei;
 
+import com.mineria.mod.blocks.infuser.ContainerInfuser;
 import com.mineria.mod.blocks.infuser.GuiInfuser;
+import com.mineria.mod.blocks.titane_extractor.ContainerTitaneExtractor;
 import com.mineria.mod.blocks.titane_extractor.GuiTitaneExtractor;
 import com.mineria.mod.util.compat.jei.infuser.InfuserRecipeCategory;
 import com.mineria.mod.util.compat.jei.infuser.InfuserRecipeMaker;
@@ -37,7 +39,8 @@ public class JEICompat implements IModPlugin
 		registry.addRecipeClickArea(GuiTitaneExtractor.class, 77, 6, 85, 8, RecipeCategories.TITANE_EXTRACTOR);
 		registry.addRecipes(InfuserRecipeMaker.getRecipes(jeiHelpers), RecipeCategories.INFUSER);
 		registry.addRecipeClickArea(GuiInfuser.class, 88, 5, 40, 8, RecipeCategories.INFUSER);
-		//recipeTransfer.addRecipeTransferHandler(ContainerTitaneExtractor.class, RecipeCategories.TITANE_EXTRACTOR, 0, 2, 4, 36);
+		recipeTransfer.addRecipeTransferHandler(ContainerTitaneExtractor.class, RecipeCategories.TITANE_EXTRACTOR, 0, 3, 4, 36);
+		recipeTransfer.addRecipeTransferHandler(ContainerInfuser.class, RecipeCategories.INFUSER, 0, 3, 4, 36);
 	}
 	
 	public static String translateToLocal(String key)

@@ -7,11 +7,9 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class CustomSoundsHandler
 {
-	public static SoundEvent sound;
-
 	public static void registerSounds()
 	{
-		sound = registerSound("a");
+
 	}
 	
 	private static SoundEvent registerSound(String name)

@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 public class ContainerXpBlock extends Container
 {
 	private final TileEntityXpBlock tileXpBlock;
-	
 	private final World world;
 	private final BlockPos pos;
     private final EntityPlayer player;
@@ -50,6 +49,7 @@ public class ContainerXpBlock extends Container
         {
             this.clearContainer(playerIn, this.world, this.tileXpBlock);
         }
+        this.tileXpBlock.closeInventory(playerIn);
     }
     
     @Override
