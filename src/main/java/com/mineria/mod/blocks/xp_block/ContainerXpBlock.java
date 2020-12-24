@@ -1,28 +1,19 @@
 package com.mineria.mod.blocks.xp_block;
 
 import com.mineria.mod.blocks.xp_block.slots.SlotXpBlock;
-import com.mineria.mod.init.BlocksInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class ContainerXpBlock extends Container
 {
 	private final TileEntityXpBlock tileXpBlock;
-	private final World world;
-	private final BlockPos pos;
-    private final EntityPlayer player;
     
-    public ContainerXpBlock(InventoryPlayer playerInventory, TileEntityXpBlock xpBlockInv, World worldIn, BlockPos posIn)
+    public ContainerXpBlock(InventoryPlayer playerInventory, TileEntityXpBlock xpBlockInv)
     {
-    	this.world = worldIn;
-        this.pos = posIn;
-        this.player = playerInventory.player;
         this.tileXpBlock = xpBlockInv;
         addSlotToContainer(new SlotXpBlock(playerInventory.player, xpBlockInv, 0, 113, 21));
         
@@ -45,9 +36,9 @@ public class ContainerXpBlock extends Container
     {
         super.onContainerClosed(playerIn);
 
-        if (!this.world.isRemote)
+        if (!this.tileXpBlock.getWorld().isRemote)
         {
-            this.clearContainer(playerIn, this.world, this.tileXpBlock);
+            this.clearContainer(playerIn, this.tileXpBlock.getWorld(), this.tileXpBlock);
         }
         this.tileXpBlock.closeInventory(playerIn);
     }
@@ -61,14 +52,7 @@ public class ContainerXpBlock extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		if (this.world.getBlockState(this.pos).getBlock() != BlocksInit.xp_block)
-        {
-            return false;
-        }
-        else
-        {
-            return playerIn.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
-        }
+		return this.tileXpBlock.isUsableByPlayer(playerIn);
 	}
 	
 	@Override

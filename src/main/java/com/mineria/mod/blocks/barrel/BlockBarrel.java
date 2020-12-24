@@ -1,7 +1,7 @@
 package com.mineria.mod.blocks.barrel;
 
 import com.mineria.mod.Mineria;
-import com.mineria.mod.util.KeyboardHelper;
+import com.mineria.mod.util.handler.KeyboardHelper;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -33,15 +33,18 @@ import java.util.Random;
 @SuppressWarnings("deprecation")
 public class BlockBarrel extends BlockContainer
 {
-    public BlockBarrel()
+    private final int maxBuckets;
+
+    public BlockBarrel(String name, int maxBuckets)
     {
         super(Material.WOOD);
-        setRegistryName("water_barrel");
-        setUnlocalizedName("water_barrel");
+        setRegistryName(name);
+        setUnlocalizedName(name);
         setCreativeTab(Mineria.mineriaTab);
         setSoundType(SoundType.WOOD);
         setHardness(2.0F);
         setResistance(10.0F);
+        this.maxBuckets = maxBuckets;
     }
 
     @Override
@@ -77,7 +80,6 @@ public class BlockBarrel extends BlockContainer
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        boolean flag = false;
         TileEntityBarrel te = (TileEntityBarrel)worldIn.getTileEntity(pos);
         Item heldItem = playerIn.getHeldItemMainhand().getItem();
 
@@ -151,7 +153,7 @@ public class BlockBarrel extends BlockContainer
 
             if(nbttagcompound1.hasKey("Water"))
             {
-                tooltip.add(nbttagcompound1.getInteger("Water") + " Buckets / 8");
+                tooltip.add(nbttagcompound1.getInteger("Water") + " Buckets / " + this.maxBuckets);
             }
         }
         if(KeyboardHelper.isShiftKeyDown())
@@ -174,6 +176,6 @@ public class BlockBarrel extends BlockContainer
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new TileEntityBarrel();
+        return new TileEntityBarrel(this.maxBuckets);
     }
 }

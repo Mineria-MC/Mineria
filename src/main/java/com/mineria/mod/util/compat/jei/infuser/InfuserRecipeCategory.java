@@ -9,22 +9,23 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
 public class InfuserRecipeCategory extends AbstractInfuserRecipeCategory<InfuserRecipe>
 {
-    private static IDrawable icon;
-    private final IDrawable backround;
+    private final IDrawable icon;
+    private final IDrawable background;
     private final String name;
 
     public InfuserRecipeCategory(IGuiHelper helper)
     {
         super(helper);
-        backround = helper.createDrawable(TEXTURES, 8, 4, 159, 62);
+        background = helper.createDrawable(TEXTURES, 8, 4, 159, 62);
         icon = helper.createDrawableIngredient(new ItemStack(BlocksInit.infuser));
-        name = "Infuser";
+        name = I18n.format("container.infuser");
     }
 
     @Override
@@ -48,7 +49,7 @@ public class InfuserRecipeCategory extends AbstractInfuserRecipeCategory<Infuser
     @Override
     public IDrawable getBackground()
     {
-        return backround;
+        return background;
     }
 
     @Nullable

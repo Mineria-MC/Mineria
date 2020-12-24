@@ -170,7 +170,7 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory
 	
 	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
     {
-        return new ContainerXpBlock(playerInventory, this, world, pos);
+        return new ContainerXpBlock(playerInventory, this);
     }
 
 	@Override

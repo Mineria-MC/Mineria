@@ -484,7 +484,7 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
         {
             ItemStack itemstack = this.infuserItemStacks.get(0);
             ItemStack itemstack1 = this.infuserItemStacks.get(1);
-            ItemStack itemstack2 = InfuserRecipes.instance().getInfusingResult(itemstack, itemstack1);
+            ItemStack itemstack2 = InfuserRecipes.getInstance().getInfusingResult(itemstack, itemstack1);
             ItemStack itemstack3 = this.infuserItemStacks.get(3);
 
             if (itemstack3.getItem() == ItemsInit.cup)
@@ -510,13 +510,13 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
         }
         NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
 
-        if (((ItemStack)this.infuserItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.infuserItemStacks.get(3)).isEmpty() || compound1.getInteger("Water") <= 0)
+        if (((ItemStack)this.infuserItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.infuserItemStacks.get(3)).isEmpty() || compound1.getInteger("Water") == 0)
         {
             return false;
         }
         else
         {
-            ItemStack itemstack = InfuserRecipes.instance().getInfusingResult((ItemStack)this.infuserItemStacks.get(0), (ItemStack)this.infuserItemStacks.get(1));
+            ItemStack itemstack = InfuserRecipes.getInstance().getInfusingResult((ItemStack)this.infuserItemStacks.get(0), (ItemStack)this.infuserItemStacks.get(1));
 
             if (itemstack.isEmpty())
             {

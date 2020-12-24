@@ -5,9 +5,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotTitaneExtractorFuel extends Slot
+public class SlotTitaneExtractorFilter extends Slot
 {
-	public SlotTitaneExtractorFuel(IInventory inventoryIn, int index, int xPosition, int yPosition)
+	public SlotTitaneExtractorFilter(IInventory inventoryIn, int index, int xPosition, int yPosition)
 	{
 		super(inventoryIn, index, xPosition, yPosition);
 	}

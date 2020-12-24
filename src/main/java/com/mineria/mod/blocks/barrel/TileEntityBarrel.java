@@ -5,8 +5,18 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBarrel extends TileEntity
 {
+    private final int maxWaterBuckets;
     private int waterBuckets;
     private boolean destroyedByCreativePlayer;
+
+    public TileEntityBarrel(int maxWaterBuckets)
+    {
+        this.maxWaterBuckets = maxWaterBuckets;
+        if(maxWaterBuckets <= -1)
+        {
+            this.waterBuckets = -1;
+        }
+    }
 
     public boolean isEmpty()
     {
@@ -15,7 +25,7 @@ public class TileEntityBarrel extends TileEntity
 
     private boolean isFull()
     {
-        return this.waterBuckets == 8;
+        return this.waterBuckets == this.maxWaterBuckets;
     }
 
     @Override

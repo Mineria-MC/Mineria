@@ -9,6 +9,7 @@ public class MineriaTab extends CreativeTabs
 	public MineriaTab(String label)
 	{
 		super(label);
+		setBackgroundImageName("item_search.png");
 	}
 	
 	public ItemStack getTabIconItem()

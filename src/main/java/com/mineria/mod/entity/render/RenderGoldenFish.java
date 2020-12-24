@@ -20,10 +20,4 @@ public class RenderGoldenFish extends RenderSilverfish
 	{
 		return TEXTURES;
 	}
-	
-	@Override
-	protected void applyRotations(EntitySilverfish entityLiving, float p_77043_2_, float rotationYaw, float partialTicks)
-	{
-		super.applyRotations(entityLiving, p_77043_2_, rotationYaw, partialTicks);
-	}
 }

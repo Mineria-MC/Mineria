@@ -10,20 +10,19 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.util.TriConsumer;
 
 public class DrinkBase extends ItemFood
 {
-    private final PotionEffect effect;
-    private final PotionEffect effect2;
+    private final TriConsumer<ItemStack, World, EntityPlayer> consumer;
 
-    public DrinkBase(String name, PotionEffect effect)
+    public DrinkBase(String name, TriConsumer<ItemStack, World, EntityPlayer> consumer)
     {
         super(0, 0, false);
         setRegistryName(name);
@@ -31,20 +30,7 @@ public class DrinkBase extends ItemFood
         setCreativeTab(Mineria.mineriaTab);
         setMaxStackSize(1);
         setAlwaysEdible();
-        this.effect = effect;
-        this.effect2 = null;
-    }
-
-    public DrinkBase(String name, PotionEffect effect, PotionEffect effect2)
-    {
-        super(0, 0, false);
-        setRegistryName(name);
-        setUnlocalizedName(name);
-        setCreativeTab(Mineria.mineriaTab);
-        setMaxStackSize(1);
-        setAlwaysEdible();
-        this.effect = effect;
-        this.effect2 = effect2;
+        this.consumer = consumer;
     }
 
     @Override
@@ -62,14 +48,7 @@ public class DrinkBase extends ItemFood
     @Override
     protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)
     {
-        if(!worldIn.isRemote)
-        {
-            player.addPotionEffect(new PotionEffect(effect.getPotion(), effect.getDuration(), effect.getAmplifier(), effect.getIsAmbient(), effect.doesShowParticles()));
-            if(effect2 != null)
-            {
-                player.addPotionEffect(new PotionEffect(effect2.getPotion(), effect2.getDuration(), effect2.getAmplifier(), effect2.getIsAmbient(), effect2.doesShowParticles()));
-            }
-        }
+        this.consumer.accept(stack, worldIn, player);
     }
 
     @Override
@@ -101,6 +80,6 @@ public class DrinkBase extends ItemFood
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         playerIn.setActiveHand(handIn);
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
 }

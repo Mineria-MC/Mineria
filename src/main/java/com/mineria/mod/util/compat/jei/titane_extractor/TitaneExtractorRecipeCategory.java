@@ -9,6 +9,7 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 public class TitaneExtractorRecipeCategory extends AbstractTitaneExtractorRecipeCategory<TitaneExtractorRecipe>
@@ -22,7 +23,7 @@ public class TitaneExtractorRecipeCategory extends AbstractTitaneExtractorRecipe
 		super(helper);
 		backround = helper.createDrawable(TEXTURES, 8, 4, 160, 90);
 		icon = helper.createDrawableIngredient(new ItemStack(BlocksInit.titane_extractor));
-		name = "Titane Extractor";
+		name = I18n.format("container.titane_extractor");
 	}
 	
 	@Override

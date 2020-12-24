@@ -20,6 +20,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -66,6 +67,17 @@ public class BlocksInit {
 	public static Block nettle;
 	public static Block pulmonary;
 
+	//WoodCuts
+	public static Block cat_woodcut;
+	public static Block cow_woodcut;
+	public static Block deer_woodcut;
+	public static Block dog_woodcut;
+	public static Block donkey_woodcut;
+	public static Block goat_woodcut;
+	public static Block horse_woodcut;
+	public static Block rabbit_woodcut;
+	public static Block wolf_woodcut;
+
 	//Other
 	public static Block blue_glowstone;
 	public static Block mineral_sand;
@@ -74,6 +86,7 @@ public class BlocksInit {
 	public static Block infested_netherrack;
 	public static Block xp_wall;
 	public static Block water_barrel;
+	public static Block infinite_water_barrel;
 	
 	public static void init()
 	{
@@ -109,6 +122,17 @@ public class BlocksInit {
 		nettle = register(new PlantBase("nettle", Material.PLANTS, MapColor.GRASS));
 		pulmonary = register(new PlantBase("pulmonary", Material.PLANTS, MapColor.GRASS));
 
+		//WoodCuts
+		cat_woodcut = register(new BlockWoodCut("cat"));
+		cow_woodcut = register(new BlockWoodCut("cow"));
+		deer_woodcut = register(new BlockWoodCut("deer"));
+		dog_woodcut = register(new BlockWoodCut("dog"));
+		donkey_woodcut = register(new BlockWoodCut("donkey"));
+		goat_woodcut = register(new BlockWoodCut("goat"));
+		horse_woodcut = register(new BlockWoodCut("horse"));
+		rabbit_woodcut = register(new BlockWoodCut("rabbit"));
+		wolf_woodcut = register(new BlockWoodCut("wolf"));
+
 		//Other
 		blue_glowstone = register(new BlockBlueGlowstone("blue_glowstone", 1, Material.GLASS, 0.3F, 0.3F, SoundType.GLASS, 15F));
 		mineral_sand = register(new BlockMineralSand("mineral_sand", 0, Material.SAND, 0.5F, 0.5F, SoundType.SAND));
@@ -116,7 +140,8 @@ public class BlocksInit {
 		compressed_lead_spike = register(new BlockSpike("compressed_lead_spike", 2, Material.IRON, 2.5F, 2F, SoundType.METAL, 4F));
 		infested_netherrack = register(new BlockInfestedNetherrack("infested_netherrack", SoundType.STONE));
 		xp_wall = register(new BlockBase("xp_wall", 1, Material.IRON, 2.5F, 5F, SoundType.METAL));
-		water_barrel = register(new BlockBarrel());
+		water_barrel = register(new BlockBarrel("water_barrel", 8));
+		infinite_water_barrel = register(new BlockBarrel("infinite_water_barrel", -1));
 	}
 
 	private static Block register(Block instance)
@@ -129,11 +154,11 @@ public class BlocksInit {
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
 		blockList.forEach(block -> event.getRegistry().register(block));
-		GameRegistry.registerTileEntity(TileEntityXpBlock.class, References.MODID + ":tile_xp_block");
-		GameRegistry.registerTileEntity(TileEntityTitaneExtractor.class, References.MODID + ":tile_titane_extractor");
-		GameRegistry.registerTileEntity(TileEntityExtractor.class, References.MODID + ":tile_extractor");
-		GameRegistry.registerTileEntity(TileEntityInfuser.class, References.MODID + ":tile_infuser");
-		GameRegistry.registerTileEntity(TileEntityBarrel.class, References.MODID + ":tile_water_barrel");
+		GameRegistry.registerTileEntity(TileEntityXpBlock.class, new ResourceLocation(References.MODID, "tile_xp_block"));
+		GameRegistry.registerTileEntity(TileEntityTitaneExtractor.class, new ResourceLocation(References.MODID, "tile_titane_extractor"));
+		GameRegistry.registerTileEntity(TileEntityExtractor.class, new ResourceLocation(References.MODID, "tile_extractor"));
+		GameRegistry.registerTileEntity(TileEntityInfuser.class, new ResourceLocation(References.MODID, "tile_infuser"));
+		GameRegistry.registerTileEntity(TileEntityBarrel.class, new ResourceLocation(References.MODID, "tile_water_barrel"));
 	}
 	
 	@SubscribeEvent
@@ -141,6 +166,7 @@ public class BlocksInit {
 	{
 		blockList.stream().filter(block -> !(block instanceof BlockBarrel)).forEach(block -> event.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName())));
 		event.getRegistry().register(new ItemBlockBarrel(water_barrel));
+		event.getRegistry().register(new ItemBlockBarrel(infinite_water_barrel));
 	}
 	
 	@SubscribeEvent

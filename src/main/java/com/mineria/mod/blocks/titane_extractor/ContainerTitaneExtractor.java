@@ -1,7 +1,6 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.blocks.infuser.TileEntityInfuser;
-import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorFuel;
+import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorFilter;
 import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorOutput;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
@@ -12,8 +11,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,7 +27,7 @@ public class ContainerTitaneExtractor extends Container
     	this.tileTitaneExtractor = titaneExtractorInventory;
     	this.addSlotToContainer(new Slot(titaneExtractorInventory, 0, 10, 7));
 		this.addSlotToContainer(new Slot(titaneExtractorInventory, 1, 41, 7));
-		this.addSlotToContainer(new SlotTitaneExtractorFuel(titaneExtractorInventory, 2, 24, 78));
+		this.addSlotToContainer(new SlotTitaneExtractorFilter(titaneExtractorInventory, 2, 24, 78));
 		this.addSlotToContainer(new SlotTitaneExtractorOutput(playerInventory.player, titaneExtractorInventory, 3, 95, 47));
 		
 		for(int y = 0; y < 3; y++)
@@ -119,7 +116,7 @@ public class ContainerTitaneExtractor extends Container
             }
             else if (index != 0 && index != 1 && index != 2)
             {
-                if (!TitaneExtractorRecipes.instance().getExtractingResult(itemstack1, itemstack1).isEmpty())
+                if (!TitaneExtractorRecipes.getInstance().getExtractingResult(itemstack1, itemstack1).isEmpty())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 2, false))
                     {

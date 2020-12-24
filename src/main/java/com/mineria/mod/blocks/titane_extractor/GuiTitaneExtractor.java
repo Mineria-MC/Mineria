@@ -47,11 +47,11 @@ public class GuiTitaneExtractor extends GuiContainer
 		this.mc.getTextureManager().bindTexture(TEXTURES);
 		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 		
-		int l = this.getExtractLeftScaled(53);
+		int l = this.getExtractDownScaled(53);
 		this.drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 24, 201, 0, 36, l + 1);
 	}
 	
-	private int getExtractLeftScaled(int pixels)
+	private int getExtractDownScaled(int pixels)
 	{
 		int i = this.tileTitaneExtracting.getField(2);
 		int j = this.tileTitaneExtracting.getField(3);

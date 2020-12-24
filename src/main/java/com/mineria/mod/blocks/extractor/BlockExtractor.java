@@ -10,12 +10,12 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -86,8 +86,8 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 		IBlockState state = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		
-		if(active) worldIn.setBlockState(pos, BlocksInit.titane_extractor.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(EXTRACTING, true), 3);
-		else worldIn.setBlockState(pos, BlocksInit.titane_extractor.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(EXTRACTING, false), 3);
+		if(active) worldIn.setBlockState(pos, BlocksInit.extractor.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(EXTRACTING, true), 3);
+		else worldIn.setBlockState(pos, BlocksInit.extractor.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(EXTRACTING, false), 3);
 		
 		if(tileentity != null)
 		{
@@ -135,7 +135,7 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {FACING, EXTRACTING});
+		return new BlockStateContainer(this, FACING, EXTRACTING);
 	}
 	
 	@Override
@@ -152,11 +152,14 @@ public class BlockExtractor extends BlockBase implements ITileEntityProvider
 		return ((EnumFacing)state.getValue(FACING)).getIndex();
 	}
 	
-/*	@Override
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityTitaneExtractor tileentity = (TileEntityTitaneExtractor)worldIn.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity);
+		TileEntityExtractor tile = (TileEntityExtractor)worldIn.getTileEntity(pos);
+		tile.getInventory().toNonNullList().forEach(stack -> {
+			EntityItem item = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+			worldIn.spawnEntity(item);
+		});
 		super.breakBlock(worldIn, pos, state);
-	}*/
+	}
 }

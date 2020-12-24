@@ -23,11 +23,9 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		BlockPos pos = new BlockPos(x, y, z);
-		
 		if(ID == References.GUI_EXTRACTOR) return new ContainerExtractor(player.inventory, (TileEntityExtractor)world.getTileEntity(new BlockPos(x,y,z)));
 		if(ID == References.GUI_TITANE_EXTRACTOR) return new ContainerTitaneExtractor(player.inventory, (TileEntityTitaneExtractor)world.getTileEntity(new BlockPos(x,y,z)));
-		if(ID == References.GUI_XP_BLOCK) return new ContainerXpBlock(player.inventory, (TileEntityXpBlock)world.getTileEntity(new BlockPos(x,y,z)), world, pos);
+		if(ID == References.GUI_XP_BLOCK) return new ContainerXpBlock(player.inventory, (TileEntityXpBlock)world.getTileEntity(new BlockPos(x,y,z)));
 		if(ID == References.GUI_INFUSER) return new ContainerInfuser(player.inventory, (TileEntityInfuser) world.getTileEntity(new BlockPos(x,y,z)));
 		return null;
 	}
@@ -35,11 +33,9 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		BlockPos pos = new BlockPos(x, y, z);
-		
 		if(ID == References.GUI_EXTRACTOR) return new GuiExtractor(player.inventory, (TileEntityExtractor)world.getTileEntity(new BlockPos(x,y,z)));
 		if(ID == References.GUI_TITANE_EXTRACTOR) return new GuiTitaneExtractor(player.inventory, (TileEntityTitaneExtractor)world.getTileEntity(new BlockPos(x,y,z)));
-		if(ID == References.GUI_XP_BLOCK) return new GuiXpBlock(player.inventory, (TileEntityXpBlock)world.getTileEntity(new BlockPos(x,y,z)), world, pos);
+		if(ID == References.GUI_XP_BLOCK) return new GuiXpBlock(player.inventory, (TileEntityXpBlock)world.getTileEntity(new BlockPos(x,y,z)));
 		if(ID == References.GUI_INFUSER) return new GuiInfuser(player.inventory, (TileEntityInfuser) world.getTileEntity(new BlockPos(x,y,z)));
 		return null;
 	}

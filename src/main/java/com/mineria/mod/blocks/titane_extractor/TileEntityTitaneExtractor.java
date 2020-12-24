@@ -1,5 +1,6 @@
 package com.mineria.mod.blocks.titane_extractor;
 
+import com.mineria.mod.init.ItemsInit;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityTitaneExtractor extends TileEntity implements ITickable, ISidedInventory
 {
 	private static final int[] SLOTS_TOP = new int[] {0, 1};
-    private static final int[] SLOTS_BOTTOM = new int[] {2, 3};
+    private static final int[] SLOTS_BOTTOM = new int[] {3};
     private static final int[] SLOTS_SIDES = new int[] {2};
 	
 	private NonNullList<ItemStack> titaneExtactorItemStacks = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
@@ -45,7 +46,6 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 	private int extractTime;
     private int totalExtractTime;
     private String titaneExtractorCustomName;
-    private EntityPlayer player;
 	
 	@Override
 	public int getSizeInventory()
@@ -229,10 +229,6 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
                         flag1 = true;
                     }
                 }
-                else
-                {
-                    this.extractTime = 0;
-                }
             }
             else if (!this.isExtracting() && this.extractTime > 0)
             {
@@ -267,13 +263,13 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
         }
         NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
 
-		if (((ItemStack)this.titaneExtactorItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.titaneExtactorItemStacks.get(2)).isEmpty() || compound1.getInteger("Water") <= 0)
+		if (((ItemStack)this.titaneExtactorItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.titaneExtactorItemStacks.get(2)).isEmpty() || compound1.getInteger("Water") == 0)
 		{
 			return false;
 		}
 		else
 		{
-			ItemStack itemstack = TitaneExtractorRecipes.instance().getExtractingResult((ItemStack)this.titaneExtactorItemStacks.get(0), (ItemStack)this.titaneExtactorItemStacks.get(1));
+			ItemStack itemstack = TitaneExtractorRecipes.getInstance().getExtractingResult((ItemStack)this.titaneExtactorItemStacks.get(0), (ItemStack)this.titaneExtactorItemStacks.get(1));
 
 			if (itemstack.isEmpty())
 			{
@@ -303,7 +299,7 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 		{
 			ItemStack itemstack = this.titaneExtactorItemStacks.get(0);
 			ItemStack itemstack1 = this.titaneExtactorItemStacks.get(1);
-			ItemStack itemstack2 = TitaneExtractorRecipes.instance().getExtractingResult(itemstack, itemstack1);
+			ItemStack itemstack2 = TitaneExtractorRecipes.getInstance().getExtractingResult(itemstack, itemstack1);
 			ItemStack itemstack3 = this.titaneExtactorItemStacks.get(3);
 			ItemStack itemstack5 = this.titaneExtactorItemStacks.get(2);
 
@@ -420,16 +416,10 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
             }
         }
     }
-	
-	public static boolean isItemFuel(ItemStack stack)
-    {
-        return getItemBurnTime(stack) > 0;
-    }
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player)
 	{
-		this.player = player;
 		if (this.world.getTileEntity(this.pos) != this)
         {
             return false;
@@ -463,8 +453,7 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
         }
         else
         {
-            ItemStack itemstack = this.titaneExtactorItemStacks.get(2);
-            return isItemFuel(stack);
+            return stack.getItem().equals(ItemsInit.filter);
         }
 	}
 	
@@ -486,12 +475,7 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 	{
 		return this.isItemValidForSlot(index, itemStackIn);
 	}
-	
-	public String getGuiID()
-    {
-        return "mineria:titane_extractor";
-    }
-	
+
 	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
     {
         return new ContainerTitaneExtractor(playerInventory, this);
@@ -549,6 +533,6 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
     {
-        return false;
+        return true;
     }
 }

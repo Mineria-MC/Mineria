@@ -8,23 +8,22 @@ import com.google.common.collect.Table;
 
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class TitaneExtractorRecipes
 {
-	private static final TitaneExtractorRecipes EXTRACTING_BASE = new TitaneExtractorRecipes();
+	private static final TitaneExtractorRecipes INSTANCE = new TitaneExtractorRecipes();
 	
-	private final Table<ItemStack, ItemStack, ItemStack> extractingList = HashBasedTable.<ItemStack, ItemStack, ItemStack>create();
+	private final Table<ItemStack, ItemStack, ItemStack> extractingList = HashBasedTable.create();
 	
-	public static TitaneExtractorRecipes instance()
+	public static TitaneExtractorRecipes getInstance()
     {
-        return EXTRACTING_BASE;
+        return INSTANCE;
     }
 	
 	private TitaneExtractorRecipes()
 	{
-		addExtractingRecipe(new ItemStack(BlocksInit.water_barrel), new ItemStack(BlocksInit.mineral_sand), new ItemStack(ItemsInit.titane_nugget));
+		addExtractingRecipe(new ItemStack(BlocksInit.mineral_sand), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.titane_nugget));
 	}
 	
 	public void addExtractingRecipe(ItemStack input, ItemStack input2, ItemStack stack)
@@ -35,15 +34,15 @@ public class TitaneExtractorRecipes
 	
 	public ItemStack getExtractingResult(ItemStack input1, ItemStack input2) 
 	{
-		for(Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.extractingList.columnMap().entrySet()) 
+		for(Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.extractingList.rowMap().entrySet())
 		{
-			if(this.compareItemStacks(input1, (ItemStack)entry.getKey())) 
+			if(this.compareItemStacks(input1, entry.getKey()))
 			{
 				for(Entry<ItemStack, ItemStack> ent : entry.getValue().entrySet()) 
 				{
-					if(this.compareItemStacks(input2, (ItemStack)ent.getKey())) 
+					if(this.compareItemStacks(input2, ent.getKey()))
 					{
-						return (ItemStack)ent.getValue();
+						return ent.getValue();
 					}
 				}
 			}

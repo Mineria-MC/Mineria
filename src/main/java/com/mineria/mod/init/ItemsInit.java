@@ -10,7 +10,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -134,7 +133,7 @@ public class ItemsInit
 		cup = register(new CupItem("cup"));
 		water_bowl = (new WaterBowl("water_bowl"));
 		vanadium_ingot = register(new ItemBase("vanadium_ingot"));
-		vanadium_helmet = register(new VanadiumHelmet("vanadium_helmet", ItemsInit.VANADIUM, 1, EntityEquipmentSlot.HEAD));
+		vanadium_helmet = register(new ArmorBuilder(ItemsInit.VANADIUM, EntityEquipmentSlot.HEAD).onArmorTick((world, player, stack) -> player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build("vanadium_helmet"));
 		
 		//Copper
 		copper_ingot = register(new ItemBase("copper_ingot"));
@@ -158,14 +157,21 @@ public class ItemsInit
 		lonsdaleite_shovel = register(new ShovelBase("lonsdaleite_shovel", ItemsInit.LONSDALEITE));
 		lonsdaleite_sword = register(new SwordBase("lonsdaleite_sword", ItemsInit.LONSDALEITE));
 		lonsdaleite_hoe = register(new HoeBase("lonsdaleite_hoe", ItemsInit.LONSDALEITE));
-		lonsdaleite_boots = register(new ArmorBase("lonsdaleite_boots", ItemsInit.LONSDALEITEARMOR, 1, EntityEquipmentSlot.FEET));
-		lonsdaleite_leggings = register(new ArmorBase("lonsdaleite_leggings", ItemsInit.LONSDALEITEARMOR, 2, EntityEquipmentSlot.LEGS));
-		lonsdaleite_chestplate = register(new ArmorBase("lonsdaleite_chestplate", ItemsInit.LONSDALEITEARMOR, 1, EntityEquipmentSlot.CHEST));
-		lonsdaleite_helmet = register(new ArmorBase("lonsdaleite_helmet", ItemsInit.LONSDALEITEARMOR, 1, EntityEquipmentSlot.HEAD));
+		lonsdaleite_boots = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.FEET).build("lonsdaleite_boots"));
+		lonsdaleite_leggings = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.LEGS).build("lonsdaleite_leggings"));
+		lonsdaleite_chestplate = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.CHEST).build("lonsdaleite_chestplate"));
+		lonsdaleite_helmet = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.HEAD).build("lonsdaleite_helmet"));
 		
 		//Silver
 		silver_ingot = register(new ItemBase("silver_ingot"));
-		silver_apple = register(new FoodEffectBase("silver_apple", 4, 6.9F, false, new PotionEffect(MobEffects.REGENERATION, (20*20), 0, false, true), new PotionEffect(MobEffects.RESISTANCE, (90*20), 0, false, true), new PotionEffect(MobEffects.ABSORPTION, (40*20), 1, false, true)));
+		silver_apple = register(new FoodEffectBase("silver_apple", 4, 6.9F, false, (stack, world, player) -> {
+			if(!world.isRemote)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, (20 * 20), 0, false, true));
+				player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, (90 * 20), 0, false, true));
+				player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, (40*20), 1, false, true));
+			}
+		}));
 		silver_nugget = register(new ItemBase("silver_nugget"));
 		silver_stick = register(new ItemBase("silver_stick"));
 		silver_axe = register(new AxeBase("silver_axe", ItemsInit.SILVER, -3.0F, 8.0F));
@@ -173,10 +179,10 @@ public class ItemsInit
 		silver_shovel = register(new ShovelBase("silver_shovel", ItemsInit.SILVER));
 		silver_sword = register(new SwordBase("silver_sword", ItemsInit.SILVER));
 		silver_hoe = register(new HoeBase("silver_hoe", ItemsInit.SILVER));
-		silver_boots = register(new ArmorBase("silver_boots", ItemsInit.SILVERARMOR, 1, EntityEquipmentSlot.FEET));
-		silver_leggings = register(new ArmorBase("silver_leggings", ItemsInit.SILVERARMOR, 2, EntityEquipmentSlot.LEGS));
-		silver_chestplate = register(new ArmorBase("silver_chestplate", ItemsInit.SILVERARMOR, 1, EntityEquipmentSlot.CHEST));
-		silver_helmet = register(new ArmorBase("silver_helmet", ItemsInit.SILVERARMOR, 1, EntityEquipmentSlot.HEAD));
+		silver_boots = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.FEET).build("silver_boots"));
+		silver_leggings = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.LEGS).build("silver_leggings"));
+		silver_chestplate = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.CHEST).build("silver_chestplate"));
+		silver_helmet = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.HEAD).build("silver_helmet"));
 		
 		//Titane
 		titane_ingot = register(new ItemBase("titane_ingot"));
@@ -188,10 +194,10 @@ public class ItemsInit
 		titane_pickaxe = register(new PickaxeBase("titane_pickaxe", ItemsInit.TITANE));
 		titane_shovel = register(new ShovelBase("titane_shovel", ItemsInit.TITANE));
 		titane_sword = register(new SwordBase("titane_sword", ItemsInit.TITANE));
-		titane_boots = register(new ArmorBase("titane_boots", ItemsInit.TITANEARMOR, 1, EntityEquipmentSlot.FEET));
-		titane_leggings = register(new ArmorBase("titane_leggings", ItemsInit.TITANEARMOR, 2, EntityEquipmentSlot.LEGS));
-		titane_chestplate = register(new ArmorBase("titane_chestplate", ItemsInit.TITANEARMOR, 1, EntityEquipmentSlot.CHEST));
-		titane_helmet = register(new ArmorBase("titane_helmet", ItemsInit.TITANEARMOR, 1, EntityEquipmentSlot.HEAD));
+		titane_boots = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.FEET).build("titane_boots"));
+		titane_leggings = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.LEGS).build("titane_leggings"));
+		titane_chestplate = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.CHEST).build("titane_chestplate"));
+		titane_helmet = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.HEAD).build("titane_helmet"));
 		
 		//CustomsSword
 		titane_sword_with_copper_handle = register(new CustomWeapon("titane_sword_with_copper_handle", 6F, -2.2F, ItemsInit.TITANE, 4096));
@@ -200,11 +206,38 @@ public class ItemsInit
 		titane_sword_with_iron_handle = register(new CustomWeapon("titane_sword_with_iron_handle", 8.5F, -2.4F, ItemsInit.TITANE, 1024));
 
 		//Drinks
-		plantain_tea = register(new DrinkBase("plantain_tea", new PotionEffect(MobEffects.STRENGTH, 600, 1, true, true)));
-		mint_tea = register(new DrinkBase("mint_tea", new PotionEffect(MobEffects.SPEED, 1200, 2, true, true), new PotionEffect(MobEffects.JUMP_BOOST, 1200, 1, true, true)));
-		thyme_tea = register(new DrinkBase("thyme_tea", new PotionEffect(MobEffects.REGENERATION, 200, 2, true, true)));
-		nettle_tea = register(new DrinkBase("nettle_tea", new PotionEffect(MobEffects.ABSORPTION, 900, 0, true, true), new PotionEffect(MobEffects.REGENERATION, 100, 1, true, true)));
-		pulmonary_tea = register(new DrinkBase("pulmonary_tea", new PotionEffect(MobEffects.RESISTANCE, 600, 1, true, true)));
+		plantain_tea = register(new DrinkBase("plantain_tea", (stack, world, player) -> {
+			if(!world.isRemote)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 600, 1, true, true));
+			}
+		}));
+		mint_tea = register(new DrinkBase("mint_tea", (stack, world, player) -> {
+			if(!world.isRemote)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 1200, 2, true, true));
+				player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 1200, 1, true, true));
+			}
+		}));
+		thyme_tea = register(new DrinkBase("thyme_tea", (stack, world, player) -> {
+			if(!world.isRemote)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2, true, true));
+			}
+		}));
+		nettle_tea = register(new DrinkBase("nettle_tea", (stack, world, player) -> {
+			if(!world.isRemote)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 900, 0, true, true));
+				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100, 1, true, true));
+			}
+		}));
+		pulmonary_tea = register(new DrinkBase("pulmonary_tea", (stack, world, player) -> {
+			if(!world.isRemote)
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 600, 1, true, true));
+			}
+		}));
 
 		//Secret
 	}

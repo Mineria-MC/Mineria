@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class RecipesInit
 {
-	public static void init()
+	public static void registerFurnaceRecipes()
 	{
 		GameRegistry.addSmelting(ItemsInit.titane_ingot, new ItemStack(ItemsInit.vanadium_ingot, 1), 1.0F);
 		GameRegistry.addSmelting(BlocksInit.titane_ore, new ItemStack(ItemsInit.titane_ingot, 1), 1.0F);

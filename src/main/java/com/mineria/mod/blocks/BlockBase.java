@@ -14,8 +14,8 @@ public class BlockBase extends Block
 		setRegistryName(name);
 		setCreativeTab(Mineria.mineriaTab);
 		setHarvestLevel("pickaxe", harvestlevel);
-		this.setHardness(hardness);
-		this.setResistance(resistance);
-		this.setSoundType(sound);
+		setHardness(hardness);
+		setResistance(resistance);
+		setSoundType(sound);
 	}
 }

@@ -4,32 +4,31 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import java.util.Map;
 
 public class InfuserRecipes
 {
-    private static final InfuserRecipes EXTRACTING_BASE = new InfuserRecipes();
+    private static final InfuserRecipes INSTANCE = new InfuserRecipes();
 
-    private final Table<ItemStack, ItemStack, ItemStack> infuseList = HashBasedTable.<ItemStack, ItemStack, ItemStack>create();
+    private final Table<ItemStack, ItemStack, ItemStack> infuseList = HashBasedTable.create();
 
-    public static InfuserRecipes instance()
+    public static InfuserRecipes getInstance()
     {
-        return EXTRACTING_BASE;
+        return INSTANCE;
     }
 
     private InfuserRecipes()
     {
-        addExtractingRecipe(new ItemStack(BlocksInit.plantain), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.plantain_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.mint), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.mint_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.thyme), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.thyme_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.nettle), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.nettle_tea));
-        addExtractingRecipe(new ItemStack(BlocksInit.pulmonary), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.pulmonary_tea));
+        addInfusingRecipe(new ItemStack(BlocksInit.plantain), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.plantain_tea));
+        addInfusingRecipe(new ItemStack(BlocksInit.mint), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.mint_tea));
+        addInfusingRecipe(new ItemStack(BlocksInit.thyme), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.thyme_tea));
+        addInfusingRecipe(new ItemStack(BlocksInit.nettle), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.nettle_tea));
+        addInfusingRecipe(new ItemStack(BlocksInit.pulmonary), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.pulmonary_tea));
     }
 
-    public void addExtractingRecipe(ItemStack input, ItemStack input2, ItemStack stack)
+    public void addInfusingRecipe(ItemStack input, ItemStack input2, ItemStack stack)
     {
         if (getInfusingResult(input, input2) != ItemStack.EMPTY) return;
         this.infuseList.put(input, input2, stack);
@@ -37,15 +36,15 @@ public class InfuserRecipes
 
     public ItemStack getInfusingResult(ItemStack input1, ItemStack input2)
     {
-        for(Map.Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.infuseList.columnMap().entrySet())
+        for(Map.Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.infuseList.rowMap().entrySet())
         {
-            if(this.compareItemStacks(input2, (ItemStack)entry.getKey()))
+            if(this.compareItemStacks(input1, entry.getKey()))
             {
                 for(Map.Entry<ItemStack, ItemStack> ent : entry.getValue().entrySet())
                 {
-                    if(this.compareItemStacks(input1, (ItemStack)ent.getKey()))
+                    if(this.compareItemStacks(input2, ent.getKey()))
                     {
-                        return (ItemStack)ent.getValue();
+                        return ent.getValue();
                     }
                 }
             }

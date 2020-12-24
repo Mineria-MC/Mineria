@@ -8,17 +8,19 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiExtractor extends GuiContainer
 {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/gui/extractor/extractor.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/extractor/extractor.png");
 	private final InventoryPlayer player;
-	private final TileEntityExtractor tileentity;
-	protected final int xSize = 213;
-	protected final int ySize = 196;
+	private final TileEntityExtractor tile;
 	
 	public GuiExtractor(InventoryPlayer player, TileEntityExtractor tileentity)
 	{
 		super(new ContainerExtractor(player, tileentity));
+		this.xSize = 213;
+		this.ySize = 196;
+		this.guiLeft = -40;
+		this.guiTop = -10;
 		this.player = player;
-		this.tileentity = tileentity;
+		this.tile = tileentity;
 	}
 	
 	@Override
@@ -32,9 +34,9 @@ public class GuiExtractor extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
-		String tileName = this.tileentity.getDisplayName().getUnformattedText();
-		this.fontRenderer.drawString(tileName, (this.xSize / 2 - this.fontRenderer.getStringWidth(tileName) / 2) - 67, 3, 4210752);
-		this.fontRenderer.drawString(this.player.getDisplayName().getUnformattedText(), 122, this.ySize - 96 + 2, 4210752);
+		String tileName = this.tile.getDisplayName().getUnformattedText();
+		this.fontRenderer.drawString(tileName, (this.xSize / 2 - this.fontRenderer.getStringWidth(tileName) / 2) - 74, 6, 4210752);
+		this.fontRenderer.drawString(this.player.getDisplayName().getUnformattedText(), 116, 104, 4210752);
 	}
 	
 	@Override
@@ -43,5 +45,15 @@ public class GuiExtractor extends GuiContainer
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		this.mc.getTextureManager().bindTexture(TEXTURES);
 		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+
+		int l = this.getExtractDownScaled(53);
+		this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 35, 214, 0, 40, l + 1);
+	}
+
+	private int getExtractDownScaled(int pixels)
+	{
+		int i = this.tile.getField(0);
+		int j = this.tile.getField(1);
+		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
 }

@@ -33,7 +33,6 @@ public class EntityInit
 	private static void registerEntity(String name, Class<? extends Entity> entity, int id, int range, int color1, int color2)
 	{
 		EntityRegistry.registerModEntity(new ResourceLocation (References.MODID + ":" + name), entity, name, id, Mineria.instance, range, 1, true, color1, color2);
-		
 	}
 	
 	private static void copySpawns(final Class<? extends EntityLiving> classToAdd, final EnumCreatureType creatureTypeToAdd, final Class<? extends EntityLiving> classToCopy, final EnumCreatureType creatureTypeToCopy)

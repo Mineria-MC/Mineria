@@ -1,4 +1,4 @@
-package com.mineria.mod.util;
+package com.mineria.mod.util.handler;
 
 import org.lwjgl.input.Keyboard;
 

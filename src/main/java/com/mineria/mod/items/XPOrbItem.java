@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -19,20 +20,20 @@ public class XPOrbItem extends Item
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer entity, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
-		ActionResult<ItemStack> actionr = super.onItemRightClick(world, entity, hand);
-		ItemStack itemstack = actionr.getResult();
+		ItemStack stack = player.getHeldItem(hand);
 		
-		if (((EntityPlayer) entity).capabilities.isCreativeMode)
+		if ((player).capabilities.isCreativeMode)
 		{
-			((EntityPlayer) entity).addExperience((int) 1);
+			(player).addExperience(1);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
 		else
 		{
-			((EntityPlayer) entity).addExperience((int) 1);
-			itemstack.shrink(1);
+			(player).addExperience(1);
+			stack.shrink(1);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
-		return actionr;
 	}
 }
