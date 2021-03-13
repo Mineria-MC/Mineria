@@ -1,33 +1,8 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.Mineria;
-import com.mineria.mod.References;
-import com.mineria.mod.init.BlocksInit;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Random;
-
-public class BlockInfuser extends BlockContainer
+public class BlockInfuser// extends BlockContainer
 {
+    /*
     private static final PropertyDirection FACING = BlockHorizontal.FACING;
     private final boolean isInfusing;
     private static boolean keepInventory;
@@ -37,7 +12,7 @@ public class BlockInfuser extends BlockContainer
         super(materialIn);
         setRegistryName(name);
         setUnlocalizedName(name);
-        setCreativeTab(isActive ? null : Mineria.mineriaTab);
+        setCreativeTab(isActive ? null : Mineria.MINERIA_GROUP);
         setSoundType(SoundType.WOOD);
         setHardness(5.0F);
         setResistance(5.0F);
@@ -246,4 +221,5 @@ public class BlockInfuser extends BlockContainer
     {
         return new BlockStateContainer(this, new IProperty[] {FACING});
     }
+     */
 }

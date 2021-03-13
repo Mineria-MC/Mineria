@@ -1,13 +1,8 @@
 package com.mineria.mod.blocks.extractor;
 
-import com.mineria.mod.References;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-
-public class GuiExtractor extends GuiContainer
+public class GuiExtractor// extends GuiContainer
 {
+	/*
 	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/extractor/extractor.png");
 	private final InventoryPlayer player;
 	private final TileEntityExtractor tile;
@@ -56,4 +51,6 @@ public class GuiExtractor extends GuiContainer
 		int j = this.tile.getField(1);
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
+
+	 */
 }

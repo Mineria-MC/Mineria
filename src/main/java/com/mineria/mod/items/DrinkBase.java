@@ -1,85 +1,55 @@
 package com.mineria.mod.items;
 
-import com.mineria.mod.Mineria;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemFood;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
+import net.minecraft.item.UseAction;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.DrinkHelper;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.util.TriConsumer;
 
-public class DrinkBase extends ItemFood
+import java.util.function.Supplier;
+
+public class DrinkBase extends FoodEffectBase
 {
-    private final TriConsumer<ItemStack, World, EntityPlayer> consumer;
-
-    public DrinkBase(String name, TriConsumer<ItemStack, World, EntityPlayer> consumer)
+    public DrinkBase(Properties properties, Supplier<EffectInstance>... effects)
     {
-        super(0, 0, false);
-        setRegistryName(name);
-        setUnlocalizedName(name);
-        setCreativeTab(Mineria.mineriaTab);
-        setMaxStackSize(1);
-        setAlwaysEdible();
-        this.consumer = consumer;
+        super(properties, 0, 0, false, true, 32, effects);
     }
 
     @Override
-    public int getMaxItemUseDuration(ItemStack stack)
+    public UseAction getUseAction(ItemStack stack)
     {
-        return 32;
+        return UseAction.DRINK;
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack stack)
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving)
     {
-        return EnumAction.DRINK;
-    }
-
-    @Override
-    protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)
-    {
-        this.consumer.accept(stack, worldIn, player);
-    }
-
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
-    {
-        if (entityLiving instanceof EntityPlayer)
+        if (entityLiving instanceof ServerPlayerEntity)
         {
-            EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-            worldIn.playSound((EntityPlayer) null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-            entityplayer.getFoodStats().addStats(this, stack);
-            this.onFoodEaten(stack, worldIn, entityplayer);
-            entityplayer.addStat(StatList.getObjectUseStats(this));
-
-            if (entityplayer instanceof EntityPlayerMP)
-            {
-                CriteriaTriggers.CONSUME_ITEM.trigger((EntityPlayerMP)entityplayer, stack);
-            }
+            ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)entityLiving;
+            CriteriaTriggers.CONSUME_ITEM.trigger(serverplayerentity, stack);
+            serverplayerentity.addStat(Stats.ITEM_USED.get(this));
         }
 
-        if (entityLiving instanceof EntityPlayer && !((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+        if (entityLiving instanceof PlayerEntity && !((PlayerEntity)entityLiving).abilities.isCreativeMode)
         {
             stack.shrink(1);
         }
 
-        return stack.isEmpty() ? new ItemStack(ItemsInit.cup) : stack;
+        return stack.isEmpty() ? new ItemStack(ItemsInit.CUP) : stack;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
     {
-        playerIn.setActiveHand(handIn);
-        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+        return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
     }
 }

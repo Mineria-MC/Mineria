@@ -1,12 +1,8 @@
 package com.mineria.mod.blocks.titane_extractor.slots;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-
-public class SlotTitaneExtractorOutput extends Slot
+public class SlotTitaneExtractorOutput// extends Slot
 {
+    /*
 	private final EntityPlayer player;
     private int removeCount;
 	
@@ -49,4 +45,6 @@ public class SlotTitaneExtractorOutput extends Slot
         stack.onCrafting(this.player.world, this.player, this.removeCount);
         this.removeCount = 0;
     }
+
+     */
 }

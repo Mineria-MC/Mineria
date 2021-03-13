@@ -1,10 +1,8 @@
 package com.mineria.mod.blocks.barrel;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-
-public class TileEntityBarrel extends TileEntity
+public class TileEntityBarrel// extends TileEntity
 {
+    /*
     private final int maxWaterBuckets;
     private int waterBuckets;
     private boolean destroyedByCreativePlayer;
@@ -72,4 +70,6 @@ public class TileEntityBarrel extends TileEntity
     {
         return this.waterBuckets;
     }
+
+     */
 }

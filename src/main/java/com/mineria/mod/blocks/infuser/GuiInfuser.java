@@ -1,13 +1,8 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.References;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-
-public class GuiInfuser extends GuiContainer
+public class GuiInfuser// extends GuiContainer
 {
+    /*
     private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/gui/infuser/infuser_gui.png");
     private final InventoryPlayer player;
     private final TileEntityInfuser tileInfuser;
@@ -70,4 +65,5 @@ public class GuiInfuser extends GuiContainer
 
         return this.tileInfuser.getField(0) * pixels / i;
     }
+     */
 }

@@ -17,6 +17,6 @@ public class SlotExtractorFilter extends SlotItemHandler
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack)
     {
-        return stack.getItem().equals(ItemsInit.filter);
+        return stack.getItem().equals(ItemsInit.FILTER);
     }
 }

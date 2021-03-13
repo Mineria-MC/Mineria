@@ -1,12 +1,8 @@
 package com.mineria.mod.blocks.xp_block.slots;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-
-public class SlotXpBlock extends Slot
+public class SlotXpBlock// extends Slot
 {
+    /*
 	private final EntityPlayer player;
     private int removeCount;
 	
@@ -54,4 +50,6 @@ public class SlotXpBlock extends Slot
     {
         return 16;
     }
+
+     */
 }

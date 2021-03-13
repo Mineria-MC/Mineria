@@ -1,14 +1,8 @@
 package com.mineria.mod.util.compat.jei.infuser;
 
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.ingredients.VanillaTypes;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.item.ItemStack;
-
-import java.util.List;
-
-public class InfuserRecipe implements IRecipeWrapper
+public class InfuserRecipe// implements IRecipeWrapper
 {
+    /*
     private final List<ItemStack> inputs;
     private final ItemStack output;
 
@@ -24,4 +18,6 @@ public class InfuserRecipe implements IRecipeWrapper
         ingredients.setInputs(VanillaTypes.ITEM, inputs);
         ingredients.setOutput(VanillaTypes.ITEM, output);
     }
+
+     */
 }

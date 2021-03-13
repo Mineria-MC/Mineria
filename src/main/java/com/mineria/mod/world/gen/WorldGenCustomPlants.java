@@ -1,21 +1,8 @@
 package com.mineria.mod.world.gen;
 
-import com.mineria.mod.blocks.PlantBase;
-import com.mineria.mod.init.BlocksInit;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Biomes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.IChunkGenerator;
-import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.fml.common.IWorldGenerator;
-
-import java.util.Random;
-
-public class WorldGenCustomPlants implements IWorldGenerator
+public class WorldGenCustomPlants
 {
+    /*
     private WorldGenerator plantain;
 
     private WorldGenerator mint_plains;
@@ -100,5 +87,5 @@ public class WorldGenCustomPlants implements IWorldGenerator
                 }
             }
         }
-    }
+    }*/
 }

@@ -1,21 +1,8 @@
 package com.mineria.mod.util.compat.jei.infuser;
 
-import com.mineria.mod.References;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.util.compat.jei.RecipeCategories;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nullable;
-
-public class InfuserRecipeCategory extends AbstractInfuserRecipeCategory<InfuserRecipe>
+public class InfuserRecipeCategory// extends AbstractInfuserRecipeCategory<InfuserRecipe>
 {
+    /*
     private final IDrawable icon;
     private final IDrawable background;
     private final String name;
@@ -76,4 +63,6 @@ public class InfuserRecipeCategory extends AbstractInfuserRecipeCategory<Infuser
         stacks.init(output, false, 90 - 8, 34 - 4);
         stacks.set(ingredients);
     }
+
+     */
 }

@@ -1,17 +1,8 @@
 package com.mineria.mod.util.compat.jei.extractor;
 
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.ingredients.VanillaTypes;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-public class ExtractorRecipe implements IRecipeWrapper
+public class ExtractorRecipe// implements IRecipeWrapper
 {
+    /*
     private final List<ItemStack> inputs;
     private final Map<Integer, ItemStack> outputs;
 
@@ -53,4 +44,6 @@ public class ExtractorRecipe implements IRecipeWrapper
         ingredients.setInputs(VanillaTypes.ITEM, inputs);
         ingredients.setOutputs(VanillaTypes.ITEM, this.getOutputs());
     }
+
+     */
 }

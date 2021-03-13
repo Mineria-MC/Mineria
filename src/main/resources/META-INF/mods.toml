@@ -1,0 +1,61 @@
+# This is an example mods.toml file. It contains the data relating to the loading mods.
+# There are several mandatory fields (#mandatory), and many more that are optional (#optional).
+# The overall format is standard TOML format, v0.5.0.
+# Note that there are a couple of TOML lists in this file.
+# Find more information on toml format here:  https://github.com/toml-lang/toml
+
+modLoader="javafml"
+
+loaderVersion="[35,)"
+
+license="MIT License"
+
+#issueTrackerURL="http://my.issue.tracker/" #optional
+
+
+[[mods]]
+
+modId="mineria"
+
+version="1.1.0"
+
+displayName="Mineria"
+
+#updateJSONURL="http://myurl.me/" #optional
+
+displayURL="https://mineria-update.fr/" #optional
+
+logoFile="logo.png" #optional
+
+credits="Merci a LGatodu47 pour avoir recode le mod entier en source code" #optional
+
+authors="Mathys_craft, Mr-lulu-51, LGatodu47"
+
+description='''
+The main mod of Mineria, a Modded PVP-Faction server."
+'''
+
+[[dependencies.mineria]] #optional
+
+    modId="forge"
+
+    mandatory=true
+
+    versionRange="[35,)"
+
+    ordering="NONE"
+
+    side="BOTH"
+
+
+[[dependencies.mineria]]
+
+    modId="minecraft"
+
+    mandatory=true
+
+    versionRange="[1.16.4,1.17)"
+
+    ordering="NONE"
+
+    side="BOTH"

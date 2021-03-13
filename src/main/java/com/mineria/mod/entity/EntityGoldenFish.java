@@ -1,26 +1,8 @@
 package com.mineria.mod.entity;
 
-import java.util.Random;
-
-import com.mineria.mod.blocks.BlockInfestedNetherrack;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.util.handler.LootTableHandler;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.monster.EntitySilverfish;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-public class EntityGoldenFish extends EntitySilverfish
+public class EntityGoldenFish// extends EntitySilverfish
 {
+    /*
 	private AISummonGoldenFish summonGoldenFish;
 	
 	public EntityGoldenFish(World worldIn)
@@ -182,5 +164,5 @@ public class EntityGoldenFish extends EntitySilverfish
             }
         }
     }
-
+    */
 }

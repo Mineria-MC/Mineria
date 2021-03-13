@@ -1,17 +1,8 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.init.ItemsInit;
-import net.minecraft.item.ItemStack;
-
 public class TitaneExtractorRecipes
 {
+	/*
 	private static final TitaneExtractorRecipes INSTANCE = new TitaneExtractorRecipes();
 	
 	private final Table<ItemStack, ItemStack, ItemStack> extractingList = HashBasedTable.create();
@@ -52,11 +43,12 @@ public class TitaneExtractorRecipes
 	
 	private boolean compareItemStacks(ItemStack stack1, ItemStack stack2)
 	{
-		return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
+		return stack2.getItem() == stack1.getItem();
 	}
 	
 	public Table<ItemStack, ItemStack, ItemStack> getDualExtractingList()
 	{
 		return this.extractingList;
 	}
+	 */
 }

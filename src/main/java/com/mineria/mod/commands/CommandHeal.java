@@ -1,19 +1,8 @@
 package com.mineria.mod.commands;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
-
-import com.mineria.mod.References;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-
-public class CommandHeal extends CommandBase
+public class CommandHeal// extends CommandBase
 {
+	/*
 	private final List<String> aliases = Lists.newArrayList(References.MODID + "heal", "hl");
 	
 	@Override
@@ -53,4 +42,6 @@ public class CommandHeal extends CommandBase
 			((EntityPlayer) sender).setHealth(20.0F);
 		}
 	}
+
+	 */
 }

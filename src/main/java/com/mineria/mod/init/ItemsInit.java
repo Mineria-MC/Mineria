@@ -1,154 +1,108 @@
 package com.mineria.mod.init;
 
-import com.google.common.collect.Sets;
+import com.mineria.mod.Mineria;
 import com.mineria.mod.References;
 import com.mineria.mod.items.*;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-@Mod.EventBusSubscriber(modid = References.MODID)
+@SuppressWarnings("unused")
 public class ItemsInit
 {
-	public static final List<Item> itemList = new ArrayList<>();
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, References.MODID);
+
+	//Utils
+	private static final Item.Properties BASIC = new Item.Properties().group(Mineria.MINERIA_GROUP);
 
 	//Items
-	public static Item gold_stick;
-	public static Item iron_stick;
-	public static Item filter;
-	public static Item mineria_xp_orb;
-	public static Item cup;
-	public static Item water_bowl;
-	public static Item vanadium_ingot;
-	public static Item vanadium_helmet;
+	public static final Item GOLD_STICK = register("gold_stick", new MineriaItem());
+	public static final Item IRON_STICK = register("iron_stick", new MineriaItem());
+	public static final Item FILTER = register("filter", new Item(new Item.Properties().group(Mineria.MINERIA_GROUP).maxStackSize(4)));
+	public static final Item MINERIA_XP_ORB = register("mineria_xp_orb", new XPOrbItem());
+	public static final Item CUP = register("cup", new Item(new Item.Properties().group(Mineria.MINERIA_GROUP).maxStackSize(16)));
+	//public static final Item water_bowl = register("water_bowl", new ItemBase());
+	public static final Item VANADIUM_INGOT = register("vanadium_ingot", new MineriaItem());
+	public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, EquipmentSlotType.HEAD).onArmorTick((stack, world, player) -> player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
 	
 	//Copper
-	public static Item copper_ingot;
-	public static Item copper_bow;
-	public static Item copper_stick;
-	public static Item copper_sword;
+	public static final Item COPPER_INGOT = register("copper_ingot", new MineriaItem());
+	public static final Item copper_bow = register("copper_bow", new BowBase(new Item.Properties().group(Mineria.MINERIA_GROUP).maxDamage(528)));
+	public static final Item copper_stick = register("copper_stick", new MineriaItem());
+	public static final Item copper_sword = register("copper_sword", new SwordItem(MineriaItem.ItemTier.COPPER, 3, -2.4F, BASIC));
 	
 	//Lead
-	public static Item lead_ingot;
-	public static Item lead_sword;
-	public static Item lead_nugget;
-	public static Item compressed_lead_ingot;
-	public static Item compressed_lead_sword;
+	public static final Item lead_ingot = register("lead_ingot", new MineriaItem());
+	public static final Item lead_sword = register("lead_sword", new SwordItem(MineriaItem.ItemTier.LEAD, 3, -2.4F, BASIC));
+	public static final Item lead_nugget = register("lead_nugget", new MineriaItem());
+	public static final Item compressed_lead_ingot = register("compressed_lead_ingot", new MineriaItem());
+	public static final Item compressed_lead_sword = register("compressed_lead_sword", new SwordItem(MineriaItem.ItemTier.COMPRESSED_LEAD, 1, 1.8F, BASIC));
 	
 	//Lonsdaleite
-	public static Item lonsdaleite;
-	public static Item lonsdaleite_axe;
-	public static Item lonsdaleite_dagger;
-	public static Item lonsdaleite_double_axe;
-	public static Item lonsdaleite_pickaxe;
-	public static Item lonsdaleite_shovel;
-	public static Item lonsdaleite_sword;
-	public static Item lonsdaleite_hoe;
-	public static Item lonsdaleite_boots;
-	public static Item lonsdaleite_leggings;
-	public static Item lonsdaleite_chestplate;
-	public static Item lonsdaleite_helmet;
+	public static final Item lonsdaleite = register("lonsdaleite", new MineriaItem());
+	public static final Item lonsdaleite_axe = register("lonsdaleite_axe", new AxeItem(MineriaItem.ItemTier.LONSDALEITE, 8.0F, -3.6F, BASIC));
+	public static final Item lonsdaleite_dagger = register("lonsdaleite_dagger", new CustomWeaponItem(MineriaItem.ItemTier.LONSDALEITE, 7.5F, -1.75F, BASIC));
+	public static final Item lonsdaleite_double_axe = register("lonsdaleite_double_axe", new AxeItem(MineriaItem.ItemTier.LONSDALEITE, 13.5F - MineriaItem.ItemTier.LONSDALEITE.getAttackDamage(), -3.4F, BASIC));
+	public static final Item lonsdaleite_pickaxe = register("lonsdaleite_pickaxe", new PickaxeItem(MineriaItem.ItemTier.LONSDALEITE, 1, -2.8F, BASIC));
+	public static final Item lonsdaleite_shovel = register("lonsdaleite_shovel", new ShovelItem(MineriaItem.ItemTier.LONSDALEITE, 1.5F, -3.0F, BASIC));
+	public static final Item lonsdaleite_sword = register("lonsdaleite_sword", new SwordItem(MineriaItem.ItemTier.LONSDALEITE, 3, -2.4F, BASIC));
+	public static final Item lonsdaleite_hoe = register("lonsdaleite_hoe", new HoeItem(MineriaItem.ItemTier.LONSDALEITE, -4, 0F, BASIC));
+	public static final Item LONSDALEITE_BOOTS = register("lonsdaleite_boots", new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlotType.FEET).build());
+	public static final Item LONSDALEITE_LEGGINGS = register("lonsdaleite_leggings", new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlotType.LEGS).build());
+	public static final Item LONSDALEITE_CHESTPLATE = register("lonsdaleite_chestplate", new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlotType.CHEST).build());
+	public static final Item LONSDALEITE_HELMET = register("lonsdaleite_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlotType.HEAD).build());
 	
 	//Silver
-	public static Item silver_ingot;
-	public static Item silver_apple;
-	public static Item silver_nugget;
-	public static Item silver_stick;
-	public static Item silver_axe;
-	public static Item silver_pickaxe;
-	public static Item silver_shovel;
-	public static Item silver_sword;
-	public static Item silver_hoe;
-	public static Item silver_boots;
-	public static Item silver_leggings;
-	public static Item silver_chestplate;
-	public static Item silver_helmet;
+	public static final Item silver_ingot = register("silver_ingot", new MineriaItem());
+	public static final Item silver_apple = register("silver_apple", new MineriaItem());
+	public static final Item silver_nugget = register("silver_nugget", new MineriaItem());
+	public static final Item silver_stick = register("silver_stick", new MineriaItem());
+	public static final Item silver_axe = register("silver_axe", new MineriaItem());
+	public static final Item silver_pickaxe = register("silver_pickaxe", new MineriaItem());
+	public static final Item silver_shovel = register("silver_shovel", new MineriaItem());
+	public static final Item silver_sword = register("silver_sword", new MineriaItem());
+	public static final Item silver_hoe = register("silver_hoe", new MineriaItem());
+	public static final Item SILVER_BOOTS = register("silver_boots", new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlotType.FEET).build());
+	public static final Item SILVER_LEGGINGS = register("silver_leggings", new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlotType.LEGS).build());
+	public static final Item SILVER_CHESTPLATE = register("silver_chestplate", new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlotType.CHEST).build());
+	public static final Item SILVER_HELMET = register("silver_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlotType.HEAD).build());
 	
 	//Titane
-	public static Item titane_ingot;
-	public static Item titane_nugget;
-	public static Item titane_axe;
-	public static Item titane_dagger;
-	public static Item titane_double_axe;
-	public static Item titane_hoe;
-	public static Item titane_pickaxe;
-	public static Item titane_shovel;
-	public static Item titane_sword;
-	public static Item titane_boots;
-	public static Item titane_leggings;
-	public static Item titane_chestplate;
-	public static Item titane_helmet;
+	public static final Item titane_ingot = register("titane_ingot", new MineriaItem());
+	public static final Item titane_nugget = register("titane_nugget", new MineriaItem());
+	public static final Item titane_axe = register("titane_axe", new MineriaItem());
+	public static final Item titane_dagger = register("titane_dagger", new MineriaItem());
+	public static final Item titane_double_axe = register("titane_double_axe", new MineriaItem());
+	public static final Item titane_hoe = register("titane_hoe", new MineriaItem());
+	public static final Item titane_pickaxe = register("titane_pickaxe", new MineriaItem());
+	public static final Item titane_shovel = register("titane_shovel", new MineriaItem());
+	public static final Item titane_sword = register("titane_sword", new MineriaItem());
+	public static final Item TITANE_BOOTS = register("titane_boots", new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlotType.FEET).build());
+	public static final Item TITANE_LEGGINGS = register("titane_leggings", new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlotType.LEGS).build());
+	public static final Item TITANE_CHESTPLATE = register("titane_chestplate", new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlotType.CHEST).build());
+	public static final Item TITANE_HELMET = register("titane_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlotType.HEAD).build());
 	
 	//CustomSword
-	public static Item titane_sword_with_copper_handle;
-	public static Item titane_sword_with_silver_handle;
-	public static Item titane_sword_with_gold_handle;
-	public static Item titane_sword_with_iron_handle;
+	public static final Item titane_sword_with_copper_handle = register("titane_sword_with_copper_handle", new MineriaItem());
+	public static final Item titane_sword_with_silver_handle = register("titane_sword_with_silver_handle", new MineriaItem());
+	public static final Item titane_sword_with_gold_handle = register("titane_sword_with_gold_handle", new MineriaItem());
+	public static final Item titane_sword_with_iron_handle = register("titane_sword_with_iron_handle", new MineriaItem());
 
 	//Drinks
-	public static Item plantain_tea;
-	public static Item mint_tea;
-	public static Item thyme_tea;
-	public static Item nettle_tea;
-	public static Item pulmonary_tea;
+	public static final Item plantain_tea = register("plantain_tea", new DrinkBase(BASIC, () -> new EffectInstance(Effects.STRENGTH, 600, 1, true, true)));
+	public static final Item mint_tea = register("mint_tea", new DrinkBase(BASIC, () -> new EffectInstance(Effects.SPEED, 1200, 2, true, true), () -> new EffectInstance(Effects.JUMP_BOOST, 1200, 1, true, true)));
+	public static final Item thyme_tea = register("thyme_tea", new DrinkBase(BASIC, () -> new EffectInstance(Effects.REGENERATION, 200, 2, true, true)));
+	public static final Item nettle_tea = register("nettle_tea", new DrinkBase(BASIC, () -> new EffectInstance(Effects.ABSORPTION, 900, 0, true, true), () -> new EffectInstance(Effects.REGENERATION, 100, 1, true, true)));
+	public static final Item pulmonary_tea = register("pulmonary_tea", new DrinkBase(BASIC, () -> new EffectInstance(Effects.RESISTANCE, 600, 1, true, true)));;
 
 	//Secret
-	
-	//Tool Materials
-	public static final Item.ToolMaterial COPPER = EnumHelper.addToolMaterial("copper", 2, 187, 3.5F, 1.5F, 4);
-	public static final Item.ToolMaterial LEAD = EnumHelper.addToolMaterial("lead", 2, 294, 6.25F, 2.2F, 12);
-	public static final Item.ToolMaterial COMPRESSED_LEAD = EnumHelper.addToolMaterial("compressed_lead", 2, 576, 6.25F, 3.0F, 12);
-	public static final Item.ToolMaterial LONSDALEITE = EnumHelper.addToolMaterial("lonsdaleite", 3, 3460, 20.0F, 7.0F, 8);
-	public static final Item.ToolMaterial SILVER = EnumHelper.addToolMaterial("silver", 2, 621, 7.0F, 2.6F, 16);
-	public static final Item.ToolMaterial TITANE = Objects.requireNonNull(EnumHelper.addToolMaterial("titane", 3, 2048, 12.0F, 4.0F, 12));
 
-	//Armor Materials
-	public static final ArmorMaterial LONSDALEITEARMOR = Objects.requireNonNull(EnumHelper.addArmorMaterial("lonsdaleite_armor", References.MODID + ":lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 4.0F));
-	public static final ArmorMaterial SILVERARMOR = EnumHelper.addArmorMaterial("silver_armor", References.MODID + ":silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.5F);
-	public static final ArmorMaterial TITANEARMOR = EnumHelper.addArmorMaterial("titane_armor", References.MODID + ":titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F);
-	public static final ArmorMaterial VANADIUM = EnumHelper.addArmorMaterial("vanadium", References.MODID + ":vanadium", 37, new int[]{0, 0, 0, 4}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 0.0F);
-	
-	public static void init()
-	{
-		//Items
-		gold_stick = register(new ItemBase("gold_stick"));
-		iron_stick = register(new ItemBase("iron_stick"));
-		filter = register(new ItemFilter("filter"));
+		/*
 		mineria_xp_orb = register(new XPOrbItem("mineria_xp_orb"));
-		cup = register(new CupItem("cup"));
-		water_bowl = (new WaterBowl("water_bowl"));
-		vanadium_ingot = register(new ItemBase("vanadium_ingot"));
-		vanadium_helmet = register(new ArmorBuilder(ItemsInit.VANADIUM, EntityEquipmentSlot.HEAD).onArmorTick((world, player, stack) -> player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build("vanadium_helmet"));
-		
-		//Copper
-		copper_ingot = register(new ItemBase("copper_ingot"));
-		copper_bow = register(new BowBase("copper_bow"));
-		copper_stick = register(new ItemBase("copper_stick"));
-		copper_sword = register(new SwordBase("copper_sword", ItemsInit.COPPER));
-		
-		//Lead
-		lead_ingot = register(new ItemBase("lead_ingot"));
-		lead_sword = register(new SwordBase("lead_sword", ItemsInit.LEAD));
-		lead_nugget = register(new ItemBase("lead_nugget"));
-		compressed_lead_ingot = register(new ItemBase("compressed_lead_ingot"));
-		compressed_lead_sword = register(new SwordBase("compressed_lead_sword", ItemsInit.COMPRESSED_LEAD));
-		
-		//Lonsdaleite
+
 		lonsdaleite = register(new ItemBase("lonsdaleite"));
 		lonsdaleite_axe = register(new AxeBase("lonsdaleite_axe", ItemsInit.LONSDALEITE, -3.0F, 8.0F));
 		lonsdaleite_dagger = register(new CustomWeapon("lonsdaleite_dagger", 7.5F, -1.75F, ItemsInit.LONSDALEITE));
@@ -161,8 +115,7 @@ public class ItemsInit
 		lonsdaleite_leggings = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.LEGS).build("lonsdaleite_leggings"));
 		lonsdaleite_chestplate = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.CHEST).build("lonsdaleite_chestplate"));
 		lonsdaleite_helmet = register(new ArmorBuilder(ItemsInit.LONSDALEITEARMOR, EntityEquipmentSlot.HEAD).build("lonsdaleite_helmet"));
-		
-		//Silver
+
 		silver_ingot = register(new ItemBase("silver_ingot"));
 		silver_apple = register(new FoodEffectBase("silver_apple", 4, 6.9F, false, (stack, world, player) -> {
 			if(!world.isRemote)
@@ -183,8 +136,7 @@ public class ItemsInit
 		silver_leggings = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.LEGS).build("silver_leggings"));
 		silver_chestplate = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.CHEST).build("silver_chestplate"));
 		silver_helmet = register(new ArmorBuilder(ItemsInit.SILVERARMOR, EntityEquipmentSlot.HEAD).build("silver_helmet"));
-		
-		//Titane
+
 		titane_ingot = register(new ItemBase("titane_ingot"));
 		titane_nugget = register(new ItemBase("titane_nugget"));
 		titane_axe = register(new AxeBase("titane_axe", ItemsInit.TITANE, -3.0F, 8.0F));
@@ -198,70 +150,16 @@ public class ItemsInit
 		titane_leggings = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.LEGS).build("titane_leggings"));
 		titane_chestplate = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.CHEST).build("titane_chestplate"));
 		titane_helmet = register(new ArmorBuilder(ItemsInit.TITANEARMOR, EntityEquipmentSlot.HEAD).build("titane_helmet"));
-		
-		//CustomsSword
+
 		titane_sword_with_copper_handle = register(new CustomWeapon("titane_sword_with_copper_handle", 6F, -2.2F, ItemsInit.TITANE, 4096));
 		titane_sword_with_silver_handle = register(new CustomWeapon("titane_sword_with_silver_handle", 3F, -1F, ItemsInit.TITANE, 2048));
 		titane_sword_with_gold_handle = register(new CustomWeapon("titane_sword_with_gold_handle", 8.5F, -3F, ItemsInit.TITANE, 2048));
 		titane_sword_with_iron_handle = register(new CustomWeapon("titane_sword_with_iron_handle", 8.5F, -2.4F, ItemsInit.TITANE, 1024));
+		*/
 
-		//Drinks
-		plantain_tea = register(new DrinkBase("plantain_tea", (stack, world, player) -> {
-			if(!world.isRemote)
-			{
-				player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 600, 1, true, true));
-			}
-		}));
-		mint_tea = register(new DrinkBase("mint_tea", (stack, world, player) -> {
-			if(!world.isRemote)
-			{
-				player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 1200, 2, true, true));
-				player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 1200, 1, true, true));
-			}
-		}));
-		thyme_tea = register(new DrinkBase("thyme_tea", (stack, world, player) -> {
-			if(!world.isRemote)
-			{
-				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 2, true, true));
-			}
-		}));
-		nettle_tea = register(new DrinkBase("nettle_tea", (stack, world, player) -> {
-			if(!world.isRemote)
-			{
-				player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 900, 0, true, true));
-				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 100, 1, true, true));
-			}
-		}));
-		pulmonary_tea = register(new DrinkBase("pulmonary_tea", (stack, world, player) -> {
-			if(!world.isRemote)
-			{
-				player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 600, 1, true, true));
-			}
-		}));
-
-		//Secret
-	}
-
-	private static Item register(Item instance)
+	private static Item register(String name, Item instance)
 	{
-		itemList.add(instance);
+		ITEMS.register(name, () -> instance);
 		return instance;
-	}
-	
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event)
-	{
-		itemList.forEach(item -> event.getRegistry().register(item));
-	}
-	
-	@SubscribeEvent
-	public static void registerRenders(ModelRegistryEvent event)
-	{
-		itemList.forEach(ItemsInit::registerRender);
-	}
-	
-	private static void registerRender(Item item)
-	{
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
 	}
 }

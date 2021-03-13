@@ -1,24 +1,8 @@
 package com.mineria.mod.blocks.xp_block;
 
-import com.mineria.mod.init.ItemsInit;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-
-public class TileEntityXpBlock extends TileEntity implements ISidedInventory
+public class TileEntityXpBlock// extends TileEntity implements ISidedInventory
 {
+	/*
 	private String customName;
 
 	private final NonNullList<ItemStack> xpBlockItemStacks = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -193,7 +177,7 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory
 	
 	public void spawnXp(EntityPlayer player)
 	{
-		ItemStack stack = new ItemStack(ItemsInit.mineria_xp_orb);
+		ItemStack stack = new ItemStack(ItemsInit.MINERIA_XP_ORB);
 		ItemStack stack1 = this.xpBlockItemStacks.get(0);
 		if (stack1.getCount() < this.getInventoryStackLimit())
 		{
@@ -256,4 +240,6 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory
 			tile.spawnXp(player);
 		}
 	}
+
+	 */
 }

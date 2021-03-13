@@ -1,38 +1,9 @@
 package com.mineria.mod.blocks.barrel;
 
-import com.mineria.mod.Mineria;
-import com.mineria.mod.util.handler.KeyboardHelper;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.EnumPushReaction;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-
 @SuppressWarnings("deprecation")
-public class BlockBarrel extends BlockContainer
+public class BlockBarrel// extends BlockContainer
 {
+    /*
     private final int maxBuckets;
 
     public BlockBarrel(String name, int maxBuckets)
@@ -40,7 +11,7 @@ public class BlockBarrel extends BlockContainer
         super(Material.WOOD);
         setRegistryName(name);
         setUnlocalizedName(name);
-        setCreativeTab(Mineria.mineriaTab);
+        setCreativeTab(Mineria.MINERIA_GROUP);
         setSoundType(SoundType.WOOD);
         setHardness(2.0F);
         setResistance(10.0F);
@@ -178,4 +149,6 @@ public class BlockBarrel extends BlockContainer
     {
         return new TileEntityBarrel(this.maxBuckets);
     }
+    
+     */
 }

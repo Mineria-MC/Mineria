@@ -1,15 +1,8 @@
 package com.mineria.mod.util.compat.jei.infuser;
 
-import com.mineria.mod.References;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.util.ResourceLocation;
-
-public abstract class AbstractInfuserRecipeCategory<T extends IRecipeWrapper> implements IRecipeCategory<T>
+public abstract class AbstractInfuserRecipeCategory//<T extends IRecipeWrapper> implements IRecipeCategory<T>
 {
+    /*
     protected static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/gui/infuser/infuser_gui.png");
 
     protected static final int input1 = 0;
@@ -29,4 +22,6 @@ public abstract class AbstractInfuserRecipeCategory<T extends IRecipeWrapper> im
         IDrawableStatic staticAnimation = helper.createDrawable(TEXTURES, 176, 0, 26, 13);
         animatedBubles = helper.createAnimatedDrawable(staticAnimation, 2400, IDrawableAnimated.StartDirection.LEFT, false);
     }
+
+     */
 }

@@ -1,22 +1,8 @@
 package com.mineria.mod.blocks.extractor;
 
-import com.mineria.mod.blocks.extractor.slots.SlotExtractorFilter;
-import com.mineria.mod.blocks.extractor.slots.SlotExtractorOutput;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.init.ItemsInit;
-import com.mineria.mod.items.ItemBlockBarrel;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-
-public class ContainerExtractor extends Container
+public class ContainerExtractor// extends Container
 {
+	/*
 	private final TileEntityExtractor tileentity;
 	private int extractTime, totalExtractTime;
 	
@@ -119,7 +105,7 @@ public class ContainerExtractor extends Container
 						return ItemStack.EMPTY;
 					}
 				}
-				else if (itemstack1.getItem().equals(ItemsInit.filter))
+				else if (itemstack1.getItem().equals(ItemsInit.FILTER))
 				{
 					if (!this.mergeItemStack(itemstack1, 2, 3, false))
 					{
@@ -162,4 +148,6 @@ public class ContainerExtractor extends Container
 
 		return itemstack;
     }
+
+	 */
 }

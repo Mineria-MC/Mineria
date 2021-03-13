@@ -1,16 +1,8 @@
 package com.mineria.mod.world.gen;
 
-import com.mineria.mod.blocks.PlantBase;
-import com.mineria.mod.init.BlocksInit;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
-
-import java.util.Random;
-
-public class WorldGenCustomPlant extends WorldGenerator
+public class WorldGenCustomPlant
 {
+    /*
     private IBlockState state;
     private PlantBase plant;
 
@@ -75,4 +67,5 @@ public class WorldGenCustomPlant extends WorldGenerator
         }
         return 1;
     }
+     */
 }

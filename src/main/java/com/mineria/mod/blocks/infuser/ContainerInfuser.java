@@ -1,18 +1,8 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.blocks.infuser.slots.InfuserFuelSlot;
-import com.mineria.mod.blocks.infuser.slots.InfuserOutputSlot;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class ContainerInfuser extends Container
+public class ContainerInfuser// extends Container
 {
+    /*
     private final TileEntityInfuser tileInfuser;
     private int infuseTime;
     private int totalInfuseTime;
@@ -158,4 +148,6 @@ public class ContainerInfuser extends Container
         }
         return stack;
     }
+
+     */
 }

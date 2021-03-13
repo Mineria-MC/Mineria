@@ -1,21 +1,8 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorFilter;
-import com.mineria.mod.blocks.titane_extractor.slots.SlotTitaneExtractorOutput;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.init.ItemsInit;
-import com.mineria.mod.items.ItemBlockBarrel;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class ContainerTitaneExtractor extends Container
+public class ContainerTitaneExtractor// extends Container
 {
+    /*
 	private final TileEntityTitaneExtractor tileTitaneExtractor;
     private int extractTime;
     private int totalExtractTime;
@@ -137,7 +124,7 @@ public class ContainerTitaneExtractor extends Container
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (itemstack1.getItem().equals(ItemsInit.filter))
+                else if (itemstack1.getItem().equals(ItemsInit.FILTER))
                 {
                     if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {
@@ -179,5 +166,5 @@ public class ContainerTitaneExtractor extends Container
         }
 
         return itemstack;
-    }
+    }*/
 }

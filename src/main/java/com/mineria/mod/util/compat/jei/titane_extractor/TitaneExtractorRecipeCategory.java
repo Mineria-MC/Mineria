@@ -1,19 +1,8 @@
 package com.mineria.mod.util.compat.jei.titane_extractor;
 
-import com.mineria.mod.References;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.util.compat.jei.RecipeCategories;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-
-public class TitaneExtractorRecipeCategory extends AbstractTitaneExtractorRecipeCategory<TitaneExtractorRecipe>
+public class TitaneExtractorRecipeCategory// extends AbstractTitaneExtractorRecipeCategory<TitaneExtractorRecipe>
 {
+	/*
 	private static IDrawable icon;
 	private final IDrawable backround;
 	private final String name;
@@ -71,4 +60,6 @@ public class TitaneExtractorRecipeCategory extends AbstractTitaneExtractorRecipe
 		stacks.init(output, false, 94 - 8, 46 - 4);
 		stacks.set(ingredients);
 	};
+
+	 */
 }

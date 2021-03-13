@@ -1,18 +1,8 @@
 package com.mineria.mod.blocks.xp_block;
 
-import com.mineria.mod.References;
-import com.mineria.mod.network.GuiButtonPressedMessageHandler;
-import com.mineria.mod.util.handler.MineriaPacketHandler;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-
-public class GuiXpBlock extends GuiContainer
+public class GuiXpBlock// extends GuiContainer
 {
+	/*
 	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/xp_block/xp_block_gui.png");
 	public final EntityPlayer player;
 	private final String buttonText = I18n.format("gui.xp_block.give_xp");
@@ -63,4 +53,5 @@ public class GuiXpBlock extends GuiContainer
 	{
 		MineriaPacketHandler.PACKET_HANDLER.sendToServer(new GuiButtonPressedMessageHandler.GUIButtonPressedMessage(button.id, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()));
 	}
+	*/
 }

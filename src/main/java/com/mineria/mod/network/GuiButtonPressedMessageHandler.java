@@ -1,15 +1,8 @@
 package com.mineria.mod.network;
 
-import com.mineria.mod.blocks.xp_block.TileEntityXpBlock;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButtonPressedMessageHandler.GUIButtonPressedMessage, IMessage>
+public class GuiButtonPressedMessageHandler// implements IMessageHandler<GuiButtonPressedMessageHandler.GUIButtonPressedMessage, IMessage>
 {
+    /*
     @Override
     public IMessage onMessage(GUIButtonPressedMessage message, MessageContext context)
     {
@@ -64,4 +57,5 @@ public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButton
             z = buf.readInt();
         }
     }
+     */
 }

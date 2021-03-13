@@ -1,18 +1,8 @@
 package com.mineria.mod.blocks.extractor;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.init.ItemsInit;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 public class ExtractorRecipes
 {
+	/*
 	private static final ExtractorRecipes INSTANCE = new ExtractorRecipes();
 	private final Table<ItemStack, ItemStack, Map<Integer, ItemStack>> extractingList = HashBasedTable.create();
 	
@@ -25,7 +15,7 @@ public class ExtractorRecipes
 	{
 		addExtractingRecipe(new ItemStack(BlocksInit.mineral_sand), new ItemStack(BlocksInit.water_barrel),
 				addToMap(1, new ItemStack(ItemsInit.lonsdaleite), addToMap(10, new ItemStack(Items.DIAMOND), addToMap(100, new ItemStack(Items.GOLD_INGOT),
-						addToMap(120, new ItemStack(ItemsInit.silver_ingot), addToMap(300, new ItemStack(ItemsInit.copper_ingot),
+						addToMap(120, new ItemStack(ItemsInit.silver_ingot), addToMap(300, new ItemStack(ItemsInit.COPPER_INGOT),
 								addToMap(600, new ItemStack(ItemsInit.lead_ingot), addToMap(800, new ItemStack(Items.IRON_INGOT), new HashMap<>()))))))));
 	}
 
@@ -69,4 +59,6 @@ public class ExtractorRecipes
 	{
 		return this.extractingList;
 	}
+
+	 */
 }

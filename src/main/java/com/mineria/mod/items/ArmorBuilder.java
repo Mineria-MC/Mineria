@@ -1,33 +1,29 @@
 package com.mineria.mod.items;
 
 import com.mineria.mod.Mineria;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.util.TriConsumer;
 
 public class ArmorBuilder
 {
-    private final ItemArmor.ArmorMaterial material;
-    private final EntityEquipmentSlot slot;
-    private final int renderIndex;
-    private CreativeTabs tab = Mineria.mineriaTab;
+    private final IArmorMaterial material;
+    private final EquipmentSlotType slot;
+    private ItemGroup group = Mineria.MINERIA_GROUP;
     private boolean hasEffect = false;
-    private TriConsumer<World, EntityPlayer, ItemStack> function = (world, player, stack) -> {};
+    private TriConsumer<ItemStack, World, PlayerEntity> function = (world, player, stack) -> {};
 
-    public ArmorBuilder(ItemArmor.ArmorMaterial material, EntityEquipmentSlot slot)
+    public ArmorBuilder(IArmorMaterial material, EquipmentSlotType slot)
     {
         this.material = material;
         this.slot = slot;
-        this.renderIndex = slot == EntityEquipmentSlot.LEGS ? 2 : 1;
     }
 
-    public ArmorBuilder setCreativeTab(CreativeTabs tab)
+    public ArmorBuilder setCreativeTab(ItemGroup group)
     {
-        this.tab = tab;
+        this.group = group;
         return this;
     }
 
@@ -37,27 +33,24 @@ public class ArmorBuilder
         return this;
     }
 
-    public ArmorBuilder onArmorTick(TriConsumer<World, EntityPlayer, ItemStack> function)
+    public ArmorBuilder onArmorTick(TriConsumer<ItemStack, World, PlayerEntity> function)
     {
         this.function = function;
         return this;
     }
 
-    public ItemArmor build(String name)
+    public ArmorItem build()
     {
-        return new BuiltArmor(this, name);
+        return new BuiltArmor(this);
     }
 
-    private static class BuiltArmor extends ItemArmor
+    private static class BuiltArmor extends ArmorItem
     {
         private final ArmorBuilder builder;
 
-        public BuiltArmor(ArmorBuilder builder, String name)
+        public BuiltArmor(ArmorBuilder builder)
         {
-            super(builder.material, builder.renderIndex, builder.slot);
-            setRegistryName(name);
-            setUnlocalizedName(name);
-            setCreativeTab(builder.tab);
+            super(builder.material, builder.slot, new Item.Properties().group(builder.group));
             this.builder = builder;
         }
 
@@ -68,9 +61,9 @@ public class ArmorBuilder
         }
 
         @Override
-        public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
+        public void onArmorTick(ItemStack stack, World world, PlayerEntity player)
         {
-            builder.function.accept(world, player, itemStack);
+            builder.function.accept(stack, world, player);
         }
     }
 }

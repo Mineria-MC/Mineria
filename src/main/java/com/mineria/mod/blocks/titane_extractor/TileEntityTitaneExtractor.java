@@ -1,40 +1,8 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.init.ItemsInit;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBoat;
-import net.minecraft.item.ItemDoor;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.datafix.FixTypes;
-import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class TileEntityTitaneExtractor extends TileEntity implements ITickable, ISidedInventory
+public class TileEntityTitaneExtractor// extends TileEntity implements ITickable, ISidedInventory
 {
+    /*
 	private static final int[] SLOTS_TOP = new int[] {0, 1};
     private static final int[] SLOTS_BOTTOM = new int[] {3};
     private static final int[] SLOTS_SIDES = new int[] {2};
@@ -453,7 +421,7 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
         }
         else
         {
-            return stack.getItem().equals(ItemsInit.filter);
+            return stack.getItem().equals(ItemsInit.FILTER);
         }
 	}
 	
@@ -535,4 +503,6 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable, 
     {
         return true;
     }
+
+     */
 }

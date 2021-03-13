@@ -1,30 +1,8 @@
 package com.mineria.mod.blocks;
 
-import com.mineria.mod.Mineria;
-import com.mineria.mod.init.BlocksInit;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.EnumPlantType;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.Random;
-
-public class PlantBase extends Block implements IPlantable
+public class PlantBase// extends Block implements IPlantable
 {
+    /*
     protected static final AxisAlignedBB PLANT_AABB = new AxisAlignedBB(0.30000001192092896D, 0.0D, 0.30000001192092896D, 0.699999988079071D, 0.6000000238418579D, 0.699999988079071D);
 
     public PlantBase(String name, Material blockMaterialIn, MapColor blockMapColorIn)
@@ -34,7 +12,7 @@ public class PlantBase extends Block implements IPlantable
         setUnlocalizedName(name);
         this.setSoundType(SoundType.PLANT);
         this.setTickRandomly(true);
-        this.setCreativeTab(Mineria.mineriaTab);
+        this.setCreativeTab(Mineria.MINERIA_GROUP);
     }
 
     @Override
@@ -133,4 +111,6 @@ public class PlantBase extends Block implements IPlantable
     {
         return BlockFaceShape.UNDEFINED;
     }
+
+     */
 }

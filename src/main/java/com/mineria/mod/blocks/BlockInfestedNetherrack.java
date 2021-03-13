@@ -1,28 +1,14 @@
 package com.mineria.mod.blocks;
 
-import com.mineria.mod.Mineria;
-import com.mineria.mod.entity.EntityGoldenFish;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSilverfish;
-import net.minecraft.block.BlockStoneBrick;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import java.util.Random;
-
-public class BlockInfestedNetherrack extends Block
+public class BlockInfestedNetherrack// extends Block
 {
+	/*
 	public BlockInfestedNetherrack(String name, SoundType sound)
 	{
 		super(Material.CLAY);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Mineria.mineriaTab);
+		setCreativeTab(Mineria.MINERIA_GROUP);
 		setHardness(0.0F);
 		this.setSoundType(sound);
 		this.setDefaultState(this.blockState.getBaseState());
@@ -56,4 +42,6 @@ public class BlockInfestedNetherrack extends Block
         Block block = blockState.getBlock();
         return blockState == Blocks.NETHERRACK.getDefaultState();
     }
+
+	 */
 }

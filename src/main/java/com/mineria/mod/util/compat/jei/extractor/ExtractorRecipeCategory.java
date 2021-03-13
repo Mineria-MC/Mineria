@@ -1,21 +1,8 @@
 package com.mineria.mod.util.compat.jei.extractor;
 
-import com.mineria.mod.References;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.util.compat.jei.RecipeCategories;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nullable;
-
-public class ExtractorRecipeCategory extends AbstractExtractorRecipeCategory<ExtractorRecipe>
+public class ExtractorRecipeCategory// extends AbstractExtractorRecipeCategory<ExtractorRecipe>
 {
+    /*
     private final IDrawable icon;
     private final IDrawable background;
     private final String name;
@@ -88,4 +75,6 @@ public class ExtractorRecipeCategory extends AbstractExtractorRecipeCategory<Ext
         });
         stacks.set(ingredients);
     }
+
+     */
 }

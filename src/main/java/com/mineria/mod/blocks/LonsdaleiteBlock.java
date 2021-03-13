@@ -1,25 +1,14 @@
 package com.mineria.mod.blocks;
 
-import com.mineria.mod.Mineria;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class LonsdaleiteBlock extends Block
+public class LonsdaleiteBlock// extends Block
 {
+	/*
 	public LonsdaleiteBlock(String name, int harvestlevel, Material materialIn, float hardness, float resistance, SoundType sound)
 	{
 		super(materialIn);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(Mineria.mineriaTab);
+		setCreativeTab(Mineria.MINERIA_GROUP);
 		setHarvestLevel("pickaxe", harvestlevel);
 		setHardness(hardness);
 		setResistance(resistance);
@@ -62,4 +51,6 @@ public class LonsdaleiteBlock extends Block
 
 		return block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
+
+	 */
 }

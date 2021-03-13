@@ -1,48 +1,34 @@
 package com.mineria.mod.items;
 
-import com.mineria.mod.Mineria;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemFood;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.item.Food;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import org.apache.logging.log4j.util.TriConsumer;
+import net.minecraft.potion.EffectInstance;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class FoodEffectBase extends ItemFood
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+public class FoodEffectBase extends Item
 {
-	private final TriConsumer<ItemStack, World, EntityPlayer> consumer;
+	private final int useDuration;
 
-	public FoodEffectBase(String name, int amount, float saturation, boolean isWolfFood, TriConsumer<ItemStack, World, EntityPlayer> consumer)
+	public FoodEffectBase(Item.Properties properties, int hunger, float saturation, boolean isWolfFood, boolean alwaysEdible, int useDuration, Supplier<EffectInstance>... effects)
 	{
-		super(amount, saturation, isWolfFood);
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setAlwaysEdible();
-		setCreativeTab(Mineria.mineriaTab);
-		this.consumer = consumer;
+		super(properties.food(new Food.Builder().hunger(hunger).saturation(saturation).build()));
+		ObfuscationReflectionHelper.setPrivateValue(Food.class, this.getFood(), isWolfFood, "meat");
+		ObfuscationReflectionHelper.setPrivateValue(Food.class, this.getFood(), alwaysEdible, "canEatWhenFull");
+		List<Pair<Supplier<EffectInstance>, Float>> effectslist = Arrays.stream(effects).map((effect) -> Pair.of(effect, 1F)).collect(Collectors.toList());
+		ObfuscationReflectionHelper.setPrivateValue(Food.class, this.getFood(), effectslist, "effects");
+		this.useDuration = useDuration;
 	}
-	
+
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack)
+	public int getUseDuration(ItemStack stack)
 	{
-		return 16;
-	}
-	
-	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
-    {
-        return EnumAction.EAT;
-    }
-	
-	@Override
-	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)
-	{
-		/*if(!worldIn.isRemote)
-		{
-			player.addPotionEffect(new PotionEffect(effect1.getPotion(), effect1.getDuration(), effect1.getAmplifier(), effect1.getIsAmbient(), effect1.doesShowParticles()));
-			player.addPotionEffect(new PotionEffect(effect2.getPotion(), effect2.getDuration(), effect2.getAmplifier(), effect2.getIsAmbient(), effect2.doesShowParticles()));
-			player.addPotionEffect(new PotionEffect(effect3.getPotion(), effect3.getDuration(), effect3.getAmplifier(), effect3.getIsAmbient(), effect3.doesShowParticles()));
-		}*/
-		consumer.accept(stack, worldIn, player);
+		return this.useDuration;
 	}
 }

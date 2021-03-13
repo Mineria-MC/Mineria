@@ -1,28 +1,9 @@
 package com.mineria.mod.util.compat.jei;
 
-import com.mineria.mod.blocks.extractor.ContainerExtractor;
-import com.mineria.mod.blocks.extractor.GuiExtractor;
-import com.mineria.mod.blocks.infuser.ContainerInfuser;
-import com.mineria.mod.blocks.infuser.GuiInfuser;
-import com.mineria.mod.blocks.titane_extractor.ContainerTitaneExtractor;
-import com.mineria.mod.blocks.titane_extractor.GuiTitaneExtractor;
-import com.mineria.mod.util.compat.jei.extractor.ExtractorRecipeCategory;
-import com.mineria.mod.util.compat.jei.extractor.ExtractorRecipeMaker;
-import com.mineria.mod.util.compat.jei.infuser.InfuserRecipeCategory;
-import com.mineria.mod.util.compat.jei.infuser.InfuserRecipeMaker;
-import com.mineria.mod.util.compat.jei.titane_extractor.TitaneExtractorRecipeCategory;
-import com.mineria.mod.util.compat.jei.titane_extractor.TitaneExtractorRecipeMaker;
-import mezz.jei.api.*;
-import mezz.jei.api.ingredients.IIngredientRegistry;
-import mezz.jei.api.recipe.IRecipeCategoryRegistration;
-import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
-import net.minecraft.util.text.translation.I18n;
-
-import java.util.IllegalFormatException;
-
-@JEIPlugin
-public class JEICompat implements IModPlugin
+//@JEIPlugin
+public class JEICompat// implements IModPlugin
 {
+	/*
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry)
 	{
@@ -69,4 +50,6 @@ public class JEICompat implements IModPlugin
 			return "Format error: " + s;
 		}
 	}
+
+	 */
 }

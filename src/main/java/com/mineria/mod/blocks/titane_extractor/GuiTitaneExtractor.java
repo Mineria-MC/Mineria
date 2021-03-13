@@ -1,16 +1,9 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.References;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-@SideOnly(Side.CLIENT)
-public class GuiTitaneExtractor extends GuiContainer
+//@SideOnly(Side.CLIENT)
+public class GuiTitaneExtractor// extends GuiContainer
 {
+	/*
 	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/gui/titane_extractor/titane_extractor.png");
 	private final InventoryPlayer player;
 	private final TileEntityTitaneExtractor tileTitaneExtracting;
@@ -57,4 +50,6 @@ public class GuiTitaneExtractor extends GuiContainer
 		int j = this.tileTitaneExtracting.getField(3);
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
+
+	 */
 }

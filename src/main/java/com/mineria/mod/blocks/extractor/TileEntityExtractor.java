@@ -1,25 +1,8 @@
 package com.mineria.mod.blocks.extractor;
 
-import com.mineria.mod.util.handler.CustomItemStackHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-
-import java.util.*;
-
-public class TileEntityExtractor extends TileEntity implements ITickable
+public class TileEntityExtractor// extends TileEntity implements ITickable
 {
+	/*
 	private final CustomItemStackHandler handler = new CustomItemStackHandler(10);
 
 	private String customName;
@@ -277,4 +260,6 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 	{
 		return this.handler;
 	}
+
+	 */
 }

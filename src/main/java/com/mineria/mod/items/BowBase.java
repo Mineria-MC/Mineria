@@ -1,41 +1,37 @@
 package com.mineria.mod.items;
 
-import com.mineria.mod.Mineria;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemArrow;
-import net.minecraft.item.ItemBow;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
+import net.minecraft.item.Items;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
-public class BowBase extends ItemBow
+public class BowBase extends BowItem
 {
-	public BowBase(String name)
+	public BowBase(Properties properties)
 	{
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(Mineria.mineriaTab);
-		this.setMaxDamage(528);
+		super(properties);
 	}
 	
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
+	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft)
 	{
-		if (entityLiving instanceof EntityPlayer)
+		if (entityLiving instanceof PlayerEntity)
 		{
-			EntityPlayer entityplayer = (EntityPlayer)entityLiving;
-			boolean flag = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
-			ItemStack itemstack = this.findAmmo(entityplayer);
+			PlayerEntity playerentity = (PlayerEntity)entityLiving;
+			boolean flag = playerentity.abilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
+			ItemStack itemstack = playerentity.findAmmo(stack);
 
-			int i = this.getMaxItemUseDuration(stack) - timeLeft;
-			i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, entityplayer, i, !itemstack.isEmpty() || flag);
+			int i = this.getUseDuration(stack) - timeLeft;
+			i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, worldIn, playerentity, i, !itemstack.isEmpty() || flag);
 			if (i < 0) return;
 
 			if (!itemstack.isEmpty() || flag)
@@ -46,67 +42,59 @@ public class BowBase extends ItemBow
 				}
 
 				float f = getArrowVelocity(i);
-
-				if ((double)f >= 0.1D)
+				if (!((double)f < 0.1D))
 				{
-					boolean flag1 = entityplayer.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemArrow && ((ItemArrow) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer));
-
+					boolean flag1 = playerentity.abilities.isCreativeMode || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, stack, playerentity));
 					if (!worldIn.isRemote)
 					{
-						ItemArrow itemarrow = (ItemArrow)(itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW);
-						EntityArrow entityarrow = itemarrow.createArrow(worldIn, itemstack, entityplayer);
-						entityarrow = this.customizeArrow(entityarrow);
-						entityarrow.setDamage(4.0D);
-						entityarrow.setKnockbackStrength(1);
-						entityarrow.shoot(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
-
-						if (f == 1.0F)
-						{
-							entityarrow.setIsCritical(true);
+						ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
+						AbstractArrowEntity abstractarrowentity = arrowitem.createArrow(worldIn, itemstack, playerentity);
+						abstractarrowentity = customArrow(abstractarrowentity);
+						abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+						if (f == 1.0F) {
+							abstractarrowentity.setIsCritical(true);
 						}
 
 						int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
-
 						if (j > 0)
 						{
-							entityarrow.setDamage(entityarrow.getDamage() + (double)j * 0.5D + 0.5D);
+							abstractarrowentity.setDamage(abstractarrowentity.getDamage() + (double)j * 0.5D + 0.5D);
 						}
 
 						int k = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, stack);
-
 						if (k > 0)
 						{
-							entityarrow.setKnockbackStrength(k + 1);
+							abstractarrowentity.setKnockbackStrength(k);
 						}
 
 						if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0)
 						{
-							entityarrow.setFire(100);
+							abstractarrowentity.setFire(100);
 						}
 
-						stack.damageItem(1, entityplayer);
+						stack.damageItem(1, playerentity, (p_220009_1_) -> {
+							p_220009_1_.sendBreakAnimation(playerentity.getActiveHand());
+						});
 
-						if (flag1 || entityplayer.capabilities.isCreativeMode && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW))
+						if (flag1 || playerentity.abilities.isCreativeMode && (itemstack.getItem() == Items.SPECTRAL_ARROW || itemstack.getItem() == Items.TIPPED_ARROW))
 						{
-							entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
+							abstractarrowentity.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
 						}
 
-						worldIn.spawnEntity(entityarrow);
+						worldIn.addEntity(abstractarrowentity);
 					}
 
-					worldIn.playSound(null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-
-					if (!flag1 && !entityplayer.capabilities.isCreativeMode)
+					worldIn.playSound((PlayerEntity)null, playerentity.getPosX(), playerentity.getPosY(), playerentity.getPosZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+					if (!flag1 && !playerentity.abilities.isCreativeMode)
 					{
 						itemstack.shrink(1);
-
 						if (itemstack.isEmpty())
 						{
-							entityplayer.inventory.deleteStack(itemstack);
+							playerentity.inventory.deleteStack(itemstack);
 						}
 					}
 
-					entityplayer.addStat(StatList.getObjectUseStats(this));
+					playerentity.addStat(Stats.ITEM_USED.get(this));
 				}
 			}
 		}

@@ -1,21 +1,8 @@
 package com.mineria.mod.world.gen;
 
-import com.mineria.mod.init.BlocksInit;
-import net.minecraft.block.state.pattern.BlockMatcher;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.IChunkGenerator;
-import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.fml.common.IWorldGenerator;
-
-import java.util.Random;
-
-public class WorldGenCustomOres implements IWorldGenerator
+public class WorldGenCustomOres
 {
-	private WorldGenerator copper_ore;
+	/*private WorldGenerator copper_ore;
 	private WorldGenerator silver_ore;
 	private WorldGenerator lead_ore;
 	private WorldGenerator titane_ore;
@@ -28,7 +15,7 @@ public class WorldGenCustomOres implements IWorldGenerator
 	{
 		copper_ore = new WorldGenMinable(BlocksInit.copper_ore.getDefaultState(), 7, BlockMatcher.forBlock(Blocks.STONE));
 		silver_ore = new WorldGenMinable(BlocksInit.silver_ore.getDefaultState(), 9, BlockMatcher.forBlock(Blocks.STONE));
-		lead_ore = new WorldGenMinable(BlocksInit.lead_ore.getDefaultState(), 9, BlockMatcher.forBlock(Blocks.STONE));
+		lead_ore = new WorldGenMinable(BlocksInit.LEAD_ORE.getDefaultState(), 9, BlockMatcher.forBlock(Blocks.STONE));
 		titane_ore = new WorldGenMinable(BlocksInit.titane_ore.getDefaultState(), 6, BlockMatcher.forBlock(Blocks.STONE));
 		lonsdaleite_ore = new WorldGenMinable(BlocksInit.lonsdaleite_ore.getDefaultState(), 3, BlockMatcher.forBlock(Blocks.STONE));
 		nether_gold_ore = new WorldGenMinable(BlocksInit.nether_gold_ore.getDefaultState(), 12, BlockMatcher.forBlock(Blocks.NETHERRACK));
@@ -62,5 +49,5 @@ public class WorldGenCustomOres implements IWorldGenerator
 			
 			gen.generate(world, rand, new BlockPos(x, y, z));
 		}
-	}
+	}*/
 }

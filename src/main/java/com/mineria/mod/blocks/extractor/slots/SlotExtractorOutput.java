@@ -1,16 +1,16 @@
 package com.mineria.mod.blocks.extractor.slots;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotExtractorOutput extends SlotItemHandler
 {
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private int removeCount;
 
-    public SlotExtractorOutput(EntityPlayer player, IItemHandler inventoryIn, int index, int xPosition, int yPosition)
+    public SlotExtractorOutput(PlayerEntity player, IItemHandler inventoryIn, int index, int xPosition, int yPosition)
     {
         super(inventoryIn, index, xPosition, yPosition);
         this.player = player;
@@ -31,7 +31,7 @@ public class SlotExtractorOutput extends SlotItemHandler
         return super.decrStackSize(amount);
     }
 
-    public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack)
+    public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack)
     {
         this.onCrafting(stack);
         super.onTake(thePlayer, stack);

@@ -1,15 +1,8 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import com.mineria.mod.init.BlocksInit;
-import com.mineria.mod.init.ItemsInit;
-import net.minecraft.item.ItemStack;
-
-import java.util.Map;
-
 public class InfuserRecipes
 {
+    /*
     private static final InfuserRecipes INSTANCE = new InfuserRecipes();
 
     private final Table<ItemStack, ItemStack, ItemStack> infuseList = HashBasedTable.create();
@@ -61,4 +54,6 @@ public class InfuserRecipes
     {
         return this.infuseList;
     }
+
+     */
 }

@@ -1,34 +1,8 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.init.ItemsInit;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.datafix.FixTypes;
-import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class TileEntityInfuser extends TileEntity implements ISidedInventory, ITickable
+public class TileEntityInfuser // extends TileEntity implements ISidedInventory, ITickable
 {
+    /*
     private static final int[] SLOTS_TOP = new int[] {0};
     private static final int[] SLOTS_MIDDLE = new int[] {1, 3};
     private static final int[] SLOTS_SIDES = new int[] {2};
@@ -487,7 +461,7 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
             ItemStack itemstack2 = InfuserRecipes.getInstance().getInfusingResult(itemstack, itemstack1);
             ItemStack itemstack3 = this.infuserItemStacks.get(3);
 
-            if (itemstack3.getItem() == ItemsInit.cup)
+            if (itemstack3.getItem() == ItemsInit.CUP)
             {
                 itemstack3.shrink(1);
                 this.infuserItemStacks.set(3, itemstack2.copy());
@@ -530,7 +504,7 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
                 {
                     return false;
                 }
-                else if (itemstack1.equals(new ItemStack(ItemsInit.cup)))
+                else if (itemstack1.equals(new ItemStack(ItemsInit.CUP)))
                 {
                     return true;
                 }
@@ -545,4 +519,6 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
     {
         this.infuserItemStacks.clear();
     }
+
+     */
 }

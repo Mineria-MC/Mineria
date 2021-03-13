@@ -1,19 +1,17 @@
 package com.mineria.mod.init;
 
-import com.mineria.mod.Mineria;
 import com.mineria.mod.References;
-import com.mineria.mod.entity.EntityGoldenFish;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraft.entity.EntityType;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntityInit
 {
+	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, References.MODID);
+
+
+
+	/*
 	public static void registerEntities()
 	{
 		registerEntity("golden_fish", EntityGoldenFish.class, References.ENTITY_GOLDEN_FISH, 10, 12888340, 12852517);
@@ -46,5 +44,5 @@ public class EntityInit
 			biome.getSpawnableList(creatureTypeToAdd).add(new Biome.SpawnListEntry(classToAdd, spawnListEntry.itemWeight, spawnListEntry.minGroupCount, spawnListEntry.maxGroupCount))
 			);
 		}
-	}
+	}*/
 }

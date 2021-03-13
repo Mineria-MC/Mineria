@@ -1,15 +1,8 @@
 package com.mineria.mod.blocks.xp_block;
 
-import com.mineria.mod.blocks.xp_block.slots.SlotXpBlock;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-
-public class ContainerXpBlock extends Container
+public class ContainerXpBlock// extends Container
 {
+    /*
 	private final TileEntityXpBlock tileXpBlock;
     
     public ContainerXpBlock(InventoryPlayer playerInventory, TileEntityXpBlock xpBlockInv)
@@ -130,4 +123,6 @@ public class ContainerXpBlock extends Container
 
         return itemstack;
     }
+
+     */
 }
