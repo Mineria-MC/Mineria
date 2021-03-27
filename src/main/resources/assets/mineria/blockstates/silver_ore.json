@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:silver_ore" }
+        "": { "model": "mineria:block/silver_ore" }
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:plantain"
+  },
+  "output": {
+    "item": "mineria:plantain_tea"
+  }
+}

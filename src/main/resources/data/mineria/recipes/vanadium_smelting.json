@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "mineria:titane_ingot"
+  },
+  "result": "mineria:vanadium_ingot",
+  "experience": 2,
+  "cookingtime": 200
+}

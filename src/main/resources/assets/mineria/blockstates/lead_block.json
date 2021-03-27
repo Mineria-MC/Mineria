@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:lead_block" }
+        "": { "model": "mineria:block/lead_block" }
     }
 }

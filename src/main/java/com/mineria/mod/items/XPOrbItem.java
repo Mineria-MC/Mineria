@@ -24,7 +24,7 @@ public class XPOrbItem extends Item
 		if (player.abilities.isCreativeMode)
 		{
 			player.giveExperiencePoints(1);
-			return new ActionResult<>(ActionResultType.SUCCESS, stack);
+			return new ActionResult<>(ActionResultType.CONSUME, stack);
 		}
 		else
 		{

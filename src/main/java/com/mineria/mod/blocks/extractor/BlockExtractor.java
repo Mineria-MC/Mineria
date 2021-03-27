@@ -1,5 +1,8 @@
 package com.mineria.mod.blocks.extractor;
 
+/**
+ * The extractor will come in the 1.2 update so I let it's code commented
+ */
 public class BlockExtractor// extends BlockBase implements ITileEntityProvider
 {
 	/*

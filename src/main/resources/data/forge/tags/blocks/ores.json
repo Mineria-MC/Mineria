@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:lead_ore",
+    "mineria:copper_ore",
+    "mineria:titane_ore",
+    "mineria:lonsdaleite_ore",
+    "mineria:nether_gold_ore",
+    "mineria:silver_ore"
+  ]
+}

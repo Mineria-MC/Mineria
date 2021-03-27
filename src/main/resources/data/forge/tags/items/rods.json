@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:gold_stick",
+    "mineria:iron_stick",
+    "mineria:copper_stick",
+    "mineria:silver_stick"
+  ]
+}

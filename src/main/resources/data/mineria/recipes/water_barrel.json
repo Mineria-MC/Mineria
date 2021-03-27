@@ -6,64 +6,23 @@
     "#_#"
   ],
   "key": {
-    "#": [
-      {
-        "item": "minecraft:planks",
-        "data": 0
-      },
-      {
-        "item": "minecraft:planks",
-        "data": 1
-      },
-      {
-        "item": "minecraft:planks",
-        "data": 2
-      },
-      {
-        "item": "minecraft:planks",
-        "data": 3
-      },
-      {
-        "item": "minecraft:planks",
-        "data": 4
-      },
-      {
-        "item": "minecraft:planks",
-        "data": 5
-      }
-    ],
-    "_": [
-      {
-        "item": "minecraft:wooden_slab",
-        "data": 0
-      },
-      {
-        "item": "minecraft:wooden_slab",
-        "data": 1
-      },
-      {
-        "item": "minecraft:wooden_slab",
-        "data": 2
-      },
-      {
-        "item": "minecraft:wooden_slab",
-        "data": 3
-      },
-      {
-        "item": "minecraft:wooden_slab",
-        "data": 4
-      },
-      {
-        "item": "minecraft:wooden_slab",
-        "data": 5
-      }
-    ],
+    "#": {
+      "tag": "minecraft:planks"
+    },
+    "_": {
+      "tag": "minecraft:wooden_slabs"
+    },
     "B": {
       "item": "minecraft:bucket"
     }
   },
   "result": {
     "item": "mineria:water_barrel",
-    "count": 1
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Water": 0
+      }
+    }
   }
 }

@@ -1,61 +1,56 @@
 package com.mineria.mod.network;
 
-public class GuiButtonPressedMessageHandler// implements IMessageHandler<GuiButtonPressedMessageHandler.GUIButtonPressedMessage, IMessage>
+import com.mineria.mod.blocks.xp_block.XpBlockTileEntity;
+import com.mineria.mod.util.IMessageHandler;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.UUID;
+import java.util.function.Supplier;
+
+public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButtonPressedMessageHandler.GuiButtonPressedMessage>
 {
-    /*
     @Override
-    public IMessage onMessage(GUIButtonPressedMessage message, MessageContext context)
+    public void onMessage(GuiButtonPressedMessage message, Supplier<NetworkEvent.Context> ctx)
     {
-        EntityPlayerMP entity = context.getServerHandler().player;
-        entity.getServerWorld().addScheduledTask(() -> {
-            int buttonID = message.buttonID;
-            int x = message.x;
-            int y = message.y;
-            int z = message.z;
-            World world = entity.world;
-            if (!world.isBlockLoaded(new BlockPos(x, y, z)))
+        ServerPlayerEntity player = ctx.get().getSender();
+        player.getServer().deferTask(() -> {
+            World world = player.world;
+            if (!world.isBlockLoaded(message.pos))
                 return;
-            if (buttonID == 0)
+            if (message.buttonID == 0)
             {
-                TileEntityXpBlock.executeProcedure(x, y, z, world, entity);
+                XpBlockTileEntity.executeProcedure(message.pos, world, player);
             }
         });
-        return null;
     }
 
-    public static class GUIButtonPressedMessage implements IMessage
+    @Override
+    public void encode(GuiButtonPressedMessage message, PacketBuffer buf)
     {
-        int buttonID, x, y, z;
+        buf.writeBlockPos(message.pos);
+        buf.writeInt(message.buttonID);
+    }
 
-        public GUIButtonPressedMessage()
-        {
-        }
+    @Override
+    public GuiButtonPressedMessage decode(PacketBuffer buf)
+    {
+        return new GuiButtonPressedMessage(buf.readBlockPos(), buf.readInt());
+    }
 
-        public GUIButtonPressedMessage(int buttonID, int x, int y, int z)
+    public static class GuiButtonPressedMessage
+    {
+        private final BlockPos pos;
+        private final int buttonID;
+
+        public GuiButtonPressedMessage(BlockPos pos, int buttonID)
         {
             this.buttonID = buttonID;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        @Override
-        public void toBytes(io.netty.buffer.ByteBuf buf)
-        {
-            buf.writeInt(buttonID);
-            buf.writeInt(x);
-            buf.writeInt(y);
-            buf.writeInt(z);
-        }
-
-        @Override
-        public void fromBytes(io.netty.buffer.ByteBuf buf)
-        {
-            buttonID = buf.readInt();
-            x = buf.readInt();
-            y = buf.readInt();
-            z = buf.readInt();
+            this.pos = pos;
         }
     }
-     */
 }

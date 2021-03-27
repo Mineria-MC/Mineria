@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:nettle"
+  },
+  "output": {
+    "item": "mineria:nettle_tea"
+  }
+}

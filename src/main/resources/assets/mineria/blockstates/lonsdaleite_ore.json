@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:lonsdaleite_ore" }
+        "": { "model": "mineria:block/lonsdaleite_ore" }
     }
 }

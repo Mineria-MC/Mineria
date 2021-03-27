@@ -1,18 +1,22 @@
 package com.mineria.mod.blocks.infuser.slots;
 
-public class InfuserFuelSlot// extends Slot
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nonnull;
+
+public class InfuserFuelSlot extends SlotItemHandler
 {
-    /*
-    public InfuserFuelSlot(IInventory inventoryIn, int index, int xPosition, int yPosition)
+    public InfuserFuelSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition)
     {
-        super(inventoryIn, index, xPosition, yPosition);
+        super(itemHandler, index, xPosition, yPosition);
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack)
+    public boolean isItemValid(@Nonnull ItemStack stack)
     {
-         return TileEntityInfuser.isItemFuel(stack);
+        return ForgeHooks.getBurnTime(stack) > 0;
     }
-
-     */
 }

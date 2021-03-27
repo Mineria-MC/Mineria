@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:xp_block" }
+        "": { "model": "mineria:block/xp_block" }
     }
 }

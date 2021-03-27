@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:compressed_lead_block" }
+        "": { "model": "mineria:block/compressed_lead_block" }
     }
 }

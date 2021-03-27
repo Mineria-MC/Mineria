@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:copper_block" }
+        "": { "model": "mineria:block/copper_block" }
     }
 }

@@ -10,8 +10,7 @@
             "item": "mineria:vanadium_ingot"
         },
         "E": {
-            "item": "minecraft:dye",
-            "data": 4
+            "item": "minecraft:lapis_lazuli"
         },
         "B": {
             "item": "minecraft:glowstone"

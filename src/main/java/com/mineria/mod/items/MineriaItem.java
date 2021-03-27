@@ -24,17 +24,17 @@ public class MineriaItem extends Item
 	@Override
 	public boolean hasEffect(ItemStack stack)
 	{
-		return this == ItemsInit.lonsdaleite;
+		return this == ItemsInit.LONSDALEITE;
 	}
 
 	public enum ItemTier implements IItemTier
 	{
 		COPPER(187, 3.5F, 1.5F, 2, 4, () -> Ingredient.fromItems(ItemsInit.COPPER_INGOT)),
-		LEAD(294, 6.25F, 2.2F, 2, 12, () -> Ingredient.fromItems(ItemsInit.lead_ingot)),
-		COMPRESSED_LEAD(576, 6.25F, 3.0F, 2, 12, () -> Ingredient.fromItems(ItemsInit.compressed_lead_ingot)),
-		LONSDALEITE(3460, 20.0F, 7.0F, 3,8, () -> Ingredient.fromItems(ItemsInit.lonsdaleite)),
-		SILVER(621, 7.0F, 2.6F, 2, 16, () -> Ingredient.fromItems(ItemsInit.silver_ingot)),
-		TITANE(2048, 12.0F, 4.0F, 3, 12, () -> Ingredient.fromItems(ItemsInit.titane_ingot))
+		LEAD(294, 6.25F, 2.2F, 2, 12, () -> Ingredient.fromItems(ItemsInit.LEAD_INGOT)),
+		COMPRESSED_LEAD(576, 6.25F, 3.0F, 2, 12, () -> Ingredient.fromItems(ItemsInit.COMPRESSED_LEAD_INGOT)),
+		LONSDALEITE(3460, 20.0F, 7.0F, 3,8, () -> Ingredient.fromItems(ItemsInit.LONSDALEITE)),
+		SILVER(621, 7.0F, 2.6F, 2, 16, () -> Ingredient.fromItems(ItemsInit.SILVER_INGOT)),
+		TITANE(2048, 12.0F, 4.0F, 3, 12, () -> Ingredient.fromItems(ItemsInit.TITANE_INGOT))
 		;
 
 		private final int maxUses;
@@ -93,10 +93,10 @@ public class MineriaItem extends Item
 
 	public enum ArmorMaterial implements IArmorMaterial
 	{
-		LONSDALEITE("lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.lonsdaleite), 4.0F, 3.0F),
-		SILVER("silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, Ingredient.fromItems(ItemsInit.silver_ingot), 0.5F, 0F),
-		TITANE("titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.titane_ingot), 1.0F, 0.5F),
-		VANADIUM("vanadium", 37, new int[]{0, 0, 0, 4}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.VANADIUM_INGOT), 0.0F, 0.0F)
+		LONSDALEITE("lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.LONSDALEITE), 4.0F, 0.3F),
+		SILVER("silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, Ingredient.fromItems(ItemsInit.SILVER_INGOT), 0.5F, 0F),
+		TITANE("titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.TITANE_INGOT), 1.0F, 0.05F),
+		VANADIUM("vanadium", 37, new int[]{0, 0, 0, 4}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.VANADIUM_INGOT), 0.0F, 0F)
 		;
 
 		private final String name;

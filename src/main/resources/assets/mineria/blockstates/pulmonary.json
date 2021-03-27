@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:pulmonary" }
+        "": { "model": "mineria:block/pulmonary" }
     }
 }

@@ -1,3 +1,6 @@
 {
-    "parent": "mineria:block/mint"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "mineria:blocks/mint"
+    }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:pulmonary"
+  },
+  "output": {
+    "item": "mineria:pulmonary_tea"
+  }
+}

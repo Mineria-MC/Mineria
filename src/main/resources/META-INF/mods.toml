@@ -6,7 +6,7 @@
 
 modLoader="javafml"
 
-loaderVersion="[35,)"
+loaderVersion="[34,)"
 
 license="MIT License"
 
@@ -27,7 +27,7 @@ displayURL="https://mineria-update.fr/" #optional
 
 logoFile="logo.png" #optional
 
-credits="Merci a LGatodu47 pour avoir recode le mod entier en source code" #optional
+credits="Source code by LGatodu47" #optional
 
 authors="Mathys_craft, Mr-lulu-51, LGatodu47"
 
@@ -41,7 +41,7 @@ The main mod of Mineria, a Modded PVP-Faction server."
 
     mandatory=true
 
-    versionRange="[35,)"
+    versionRange="[34,)"
 
     ordering="NONE"
 
@@ -54,7 +54,7 @@ The main mod of Mineria, a Modded PVP-Faction server."
 
     mandatory=true
 
-    versionRange="[1.16.4,1.17)"
+    versionRange="[1.16.3,1.17)"
 
     ordering="NONE"
 

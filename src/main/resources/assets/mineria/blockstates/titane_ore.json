@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:titane_ore" }
+        "": { "model": "mineria:block/titane_ore" }
     }
 }

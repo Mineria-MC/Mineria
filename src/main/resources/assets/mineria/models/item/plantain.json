@@ -1,3 +1,6 @@
 {
-    "parent": "mineria:block/plantain"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "mineria:blocks/plantain"
+    }
 }

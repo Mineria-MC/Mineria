@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:lead_nugget",
+    "mineria:silver_nugget",
+    "mineria:titane_nugget"
+  ]
+}

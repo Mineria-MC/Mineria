@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mineria:plantain" }
+        "": { "model": "mineria:block/plantain" }
     }
 }
