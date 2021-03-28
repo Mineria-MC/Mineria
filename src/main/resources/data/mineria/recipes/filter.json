@@ -7,7 +7,7 @@
     ],
     "key": {
         "#": {
-            "item": "mineria:copper_ingot"
+            "tag": "forge:ingots/copper"
         },
         "S": {
             "item": "minecraft:string"

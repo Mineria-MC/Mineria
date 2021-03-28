@@ -1,6 +1,5 @@
 package com.mineria.mod.items;
 
-import com.mineria.mod.Mineria;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,9 +10,12 @@ import net.minecraft.world.World;
 
 public class XPOrbItem extends Item
 {
-	public XPOrbItem()
+	private final int xpValue;
+
+	public XPOrbItem(int xpValue, Item.Properties properties)
 	{
-		super(new Item.Properties().group(Mineria.MINERIA_GROUP).maxStackSize(16));
+		super(properties.maxStackSize(16));
+		this.xpValue = xpValue;
 	}
 
 	@Override
@@ -23,14 +25,20 @@ public class XPOrbItem extends Item
 
 		if (player.abilities.isCreativeMode)
 		{
-			player.giveExperiencePoints(1);
+			player.giveExperiencePoints(xpValue);
 			return new ActionResult<>(ActionResultType.CONSUME, stack);
 		}
 		else
 		{
-			player.giveExperiencePoints(1);
+			player.giveExperiencePoints(xpValue);
 			stack.shrink(1);
 			return new ActionResult<>(ActionResultType.CONSUME, stack);
 		}
+	}
+
+	@Override
+	public boolean hasEffect(ItemStack stack)
+	{
+		return this.xpValue == 64;
 	}
 }

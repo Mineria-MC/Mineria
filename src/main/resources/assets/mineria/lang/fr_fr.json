@@ -36,7 +36,10 @@
   "item.mineria.gold_stick": "Bâton en Or",
   "item.mineria.iron_stick": "Bâton en Fer",
   "item.mineria.filter": "Filtre",
-  "item.mineria.mineria_xp_orb": "Orbe d'XP",
+  "item.mineria.xp_orb": "Orbe d'XP",
+  "item.mineria.compressed_xp_orb": "Orbe d'XP Compressée",
+  "item.mineria.super_compressed_xp_orb": "Orbe d'XP Super Compressée",
+  "item.mineria.super_duper_compressed_xp_orb": "Orbe d'XP Supra Méga Compressée",
   "item.mineria.vanadium_ingot": "Lingot de Vanadium",
   "item.mineria.vanadium_helmet": "Casque en Vanadium",
 

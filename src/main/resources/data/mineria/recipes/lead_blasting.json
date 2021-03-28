@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "mineria:lead_ore"
+  },
+  "result": "mineria:lead_ingot",
+  "experience": 1,
+  "cookingtime": 100
+}

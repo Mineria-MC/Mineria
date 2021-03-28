@@ -9,6 +9,7 @@ import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 
@@ -42,7 +43,7 @@ public class MineriaItem extends Item
 		private final float attackDamage;
 		private final int harvestLevel;
 		private final int enchantability;
-		private final Ingredient repairItem;
+		private final LazyValue<Ingredient> repairItem;
 
 		ItemTier(int maxUses, float efficiency, float attackDamage, int harvestLevel, int enchantability, Supplier<Ingredient> ingredientSupplier)
 		{
@@ -51,7 +52,7 @@ public class MineriaItem extends Item
 			this.attackDamage = attackDamage;
 			this.harvestLevel = harvestLevel;
 			this.enchantability = enchantability;
-			this.repairItem = ingredientSupplier.get();
+			this.repairItem = new LazyValue<>(ingredientSupplier);
 		}
 
 		@Override
@@ -87,16 +88,16 @@ public class MineriaItem extends Item
 		@Override
 		public Ingredient getRepairMaterial()
 		{
-			return repairItem;
+			return repairItem.getValue();
 		}
 	}
 
 	public enum ArmorMaterial implements IArmorMaterial
 	{
-		LONSDALEITE("lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.LONSDALEITE), 4.0F, 0.3F),
-		SILVER("silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, Ingredient.fromItems(ItemsInit.SILVER_INGOT), 0.5F, 0F),
-		TITANE("titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.TITANE_INGOT), 1.0F, 0.05F),
-		VANADIUM("vanadium", 37, new int[]{0, 0, 0, 4}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, Ingredient.fromItems(ItemsInit.VANADIUM_INGOT), 0.0F, 0F)
+		LONSDALEITE("lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, () -> Ingredient.fromItems(ItemsInit.LONSDALEITE), 4.0F, 0.3F),
+		SILVER("silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, () -> Ingredient.fromItems(ItemsInit.SILVER_INGOT), 0.5F, 0F),
+		TITANE("titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, () -> Ingredient.fromItems(ItemsInit.TITANE_INGOT), 1.0F, 0.05F),
+		VANADIUM("vanadium", 37, new int[]{0, 0, 0, 4}, 10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, () -> Ingredient.fromItems(ItemsInit.VANADIUM_INGOT), 0.0F, 0F)
 		;
 
 		private final String name;
@@ -104,18 +105,18 @@ public class MineriaItem extends Item
 		private final int[] damageReductionAmount;
 		private final int enchantability;
 		private final SoundEvent equipmentSound;
-		private final Ingredient repaireMaterial;
+		private final LazyValue<Ingredient> repairMaterial;
 		private final float toughness;
 		private final float knockbackResistance;
 
-		ArmorMaterial(String name, int durability, int[] damageReductionAmount, int enchantability, SoundEvent equipmentSound, Ingredient repaireMaterial, float toughness, float knockbackResistance)
+		ArmorMaterial(String name, int durability, int[] damageReductionAmount, int enchantability, SoundEvent equipmentSound, Supplier<Ingredient> repairMaterial, float toughness, float knockbackResistance)
 		{
 			this.name = References.MODID + ":" + name;
 			this.durability = durability;
 			this.damageReductionAmount = damageReductionAmount;
 			this.enchantability = enchantability;
 			this.equipmentSound = equipmentSound;
-			this.repaireMaterial = repaireMaterial;
+			this.repairMaterial = new LazyValue<>(repairMaterial);
 			this.toughness = toughness;
 			this.knockbackResistance = knockbackResistance;
 		}
@@ -147,7 +148,7 @@ public class MineriaItem extends Item
 		@Override
 		public Ingredient getRepairMaterial()
 		{
-			return repaireMaterial;
+			return repairMaterial.getValue();
 		}
 
 		@Override

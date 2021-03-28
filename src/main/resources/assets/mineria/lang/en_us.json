@@ -36,7 +36,10 @@
   "item.mineria.gold_stick": "Gold Stick",
   "item.mineria.iron_stick": "Iron Stick",
   "item.mineria.filter": "Filter",
-  "item.mineria.mineria_xp_orb": "XP Orb",
+  "item.mineria.xp_orb": "XP Orb",
+  "item.mineria.compressed_xp_orb": "Compressed XP Orb",
+  "item.mineria.super_compressed_xp_orb": "Super Compressed XP Orb",
+  "item.mineria.super_duper_compressed_xp_orb": "Super Duper Compressed XP Orb",
   "item.mineria.vanadium_ingot": "Vanadium Ingot",
   "item.mineria.vanadium_helmet": "Vanadium Helmet",
 

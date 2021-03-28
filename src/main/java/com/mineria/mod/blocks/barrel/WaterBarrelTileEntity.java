@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class WaterBarrelTileEntity extends TileEntity
 {
-    private final int maxWaterBuckets;
+    private int maxWaterBuckets;
     private int waterBuckets;
     private boolean destroyedByCreativePlayer;
 
@@ -31,6 +31,7 @@ public class WaterBarrelTileEntity extends TileEntity
     {
         super.read(state, nbt);
         this.waterBuckets = nbt.getInt("Water");
+        this.maxWaterBuckets = nbt.getInt("MaxWater");
     }
 
     @Override
@@ -38,17 +39,23 @@ public class WaterBarrelTileEntity extends TileEntity
     {
         super.write(compound);
         compound.putInt("Water", this.waterBuckets);
+        compound.putInt("MaxWater", this.maxWaterBuckets);
         return compound;
     }
 
     public boolean isEmpty()
     {
-        return this.waterBuckets <= 0;
+        return this.waterBuckets == 0;
     }
 
     private boolean isFull()
     {
         return this.waterBuckets == this.maxWaterBuckets;
+    }
+
+    private boolean isInfinite()
+    {
+        return this.maxWaterBuckets <= -1;
     }
 
     public boolean isDestroyedByCreativePlayer()
@@ -66,11 +73,27 @@ public class WaterBarrelTileEntity extends TileEntity
         return !this.isDestroyedByCreativePlayer() || !this.isEmpty();
     }
 
+    public int getWaterBuckets()
+    {
+        return waterBuckets;
+    }
+
     public boolean increaseWaterBuckets()
     {
         if(!isFull())
         {
             ++this.waterBuckets;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean decreaseWaterBuckets()
+    {
+        if(!isEmpty())
+        {
+            if(!isInfinite())
+                --this.waterBuckets;
             return true;
         }
         return false;

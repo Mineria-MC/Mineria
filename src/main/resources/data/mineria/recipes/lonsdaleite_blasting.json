@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "mineria:lonsdaleite_ore"
+  },
+  "result": "mineria:lonsdaleite",
+  "experience": 10,
+  "cookingtime": 100
+}

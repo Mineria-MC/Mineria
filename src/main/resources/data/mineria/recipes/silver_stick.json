@@ -6,7 +6,7 @@
     ],
     "key": {
         "#": {
-            "item": "mineria:silver_ingot"
+            "tag": "forge:ingots/silver"
         }
     },
     "result": {

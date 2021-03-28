@@ -19,7 +19,10 @@ public class ItemsInit
 	public static final Item GOLD_STICK = register("gold_stick", new MineriaItem());
 	public static final Item IRON_STICK = register("iron_stick", new MineriaItem());
 	public static final Item FILTER = register("filter", new Item(defaultProperties().maxStackSize(4)));
-	public static final Item MINERIA_XP_ORB = register("mineria_xp_orb", new XPOrbItem());
+	public static final Item XP_ORB = register("xp_orb", new XPOrbItem(1, defaultProperties()));
+	public static final Item COMPRESSED_XP_ORB = register("compressed_xp_orb", new XPOrbItem(4, defaultProperties().rarity(Rarity.UNCOMMON)));
+	public static final Item SUPER_COMPRESSED_XP_ORB = register("super_compressed_xp_orb", new XPOrbItem(16, defaultProperties().rarity(Rarity.RARE)));
+	public static final Item SUPER_DUPER_COMPRESSED_XP_ORB = register("super_duper_compressed_xp_orb", new XPOrbItem(64, defaultProperties().rarity(Rarity.EPIC)));
 	public static final Item CUP = register("cup", new Item(defaultProperties().maxStackSize(16)));
 	public static final Item VANADIUM_INGOT = register("vanadium_ingot", new MineriaItem());
 	public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, EquipmentSlotType.HEAD).onArmorTick((stack, world, player) -> player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, (12 * 20), 0, false, false))).build());

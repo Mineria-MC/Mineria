@@ -17,7 +17,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -63,7 +62,56 @@ public class WaterBarrelBlock extends Block
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        WaterBarrelTileEntity te = (WaterBarrelTileEntity)worldIn.getTileEntity(pos);
+        if(!worldIn.isRemote)
+        {
+            TileEntity tileAtPos = worldIn.getTileEntity(pos);
+
+            if(tileAtPos instanceof WaterBarrelTileEntity)
+            {
+                WaterBarrelTileEntity tile = (WaterBarrelTileEntity) tileAtPos;
+                Item heldItem = player.getHeldItem(handIn).getItem();
+
+                if(heldItem.equals(Items.WATER_BUCKET))
+                {
+                    if(tile.increaseWaterBuckets())
+                    {
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        if(!player.abilities.isCreativeMode)
+                        {
+                            player.getHeldItem(handIn).shrink(1);
+                            player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
+                        }
+
+                        return ActionResultType.SUCCESS;
+                    }
+                }
+                else if(heldItem.equals(Items.BUCKET))
+                {
+                    if(tile.decreaseWaterBuckets())
+                    {
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+                        if(!player.abilities.isCreativeMode)
+                        {
+                            player.getHeldItem(handIn).shrink(1);
+                            ItemStack stackToAdd = new ItemStack(Items.WATER_BUCKET);
+                            if(!player.addItemStackToInventory(stackToAdd))
+                                player.dropItem(stackToAdd, false);
+                        }
+
+                        return ActionResultType.SUCCESS;
+                    }
+                }
+                else
+                    player.sendStatusMessage(new StringTextComponent(tile.getWaterBuckets() == 0 ? "There is no Water stored." :
+                            (tile.getWaterBuckets() > 1 ? "There are " + tile.getWaterBuckets() + " Water Buckets." : "There is 1 Water Bucket stored"))
+                            .mergeStyle(TextFormatting.AQUA), true);
+            }
+        }
+
+        return ActionResultType.SUCCESS;
+
+        /*WaterBarrelTileEntity te = (WaterBarrelTileEntity)worldIn.getTileEntity(pos);
         Item heldItem = player.getHeldItem(handIn).getItem();
 
         if(heldItem == Items.WATER_BUCKET)
@@ -83,7 +131,7 @@ public class WaterBarrelBlock extends Block
                 return ActionResultType.SUCCESS;
             }
         }
-        return ActionResultType.PASS;
+        return ActionResultType.PASS;*/
     }
 
     @Override

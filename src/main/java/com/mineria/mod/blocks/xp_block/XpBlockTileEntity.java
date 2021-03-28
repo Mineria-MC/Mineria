@@ -39,9 +39,9 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity
         return 16;
     }
 
-    public void spawnXp(PlayerEntity player)
+    private void spawnXp(PlayerEntity player)
     {
-        ItemStack stack = new ItemStack(ItemsInit.MINERIA_XP_ORB);
+        ItemStack stack = new ItemStack(ItemsInit.XP_ORB);
         ItemStack stack1 = this.inventory.getStackInSlot(0);
         if (stack1.getCount() < this.getInventoryStackLimit())
         {

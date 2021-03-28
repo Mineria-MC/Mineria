@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "mineria:titane_ore"
+  },
+  "result": "mineria:titane_ingot",
+  "experience": 3,
+  "cookingtime": 100
+}
