@@ -1,149 +1,31 @@
 package com.mineria.mod.blocks.xp_block;
 
 import com.mineria.mod.init.ItemsInit;
+import com.mineria.mod.util.CustomItemStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntityXpBlock extends TileEntity implements ISidedInventory
+import javax.annotation.Nullable;
+
+public class TileEntityXpBlock extends TileEntity
 {
+	private final CustomItemStackHandler inventory = new CustomItemStackHandler(1);
+
 	private String customName;
 
-	private final NonNullList<ItemStack> xpBlockItemStacks = NonNullList.withSize(1, ItemStack.EMPTY);
-	
-	@Override
-	public int getSizeInventory()
-	{
-		return 1;
-	}
-
-	@Override
-	public boolean isEmpty()
-	{
-		for (ItemStack itemstack : this.xpBlockItemStacks)
-        {
-            if (!itemstack.isEmpty())
-            {
-                return false;
-            }
-        }
-
-        return true;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index)
-	{
-		return this.xpBlockItemStacks.get(index);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count)
-	{
-		return ItemStackHelper.getAndSplit(this.xpBlockItemStacks, index, count);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index)
-	{
-		return ItemStackHelper.getAndRemove(this.xpBlockItemStacks, index);
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack)
-	{
-		ItemStack itemstack = this.xpBlockItemStacks.get(index);
-		boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
-		this.xpBlockItemStacks.set(index, stack);
-
-		if (stack.getCount() > this.getInventoryStackLimit())
-		{
-			stack.setCount(this.getInventoryStackLimit());
-		}
-
-		if (index == 0 && !flag)
-		{
-			this.markDirty();
-		}
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 16;
-	}
-
-	@Override
 	public boolean isUsableByPlayer(EntityPlayer player)
 	{
-		if (this.world.getTileEntity(this.pos) != this)
-        {
-            return false;
-        }
-        else
-        {
-            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
-        }
-	}
-
-	@Override
-	public void openInventory(EntityPlayer player)
-	{
-
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player)
-	{
-
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack)
-	{
-		return true;
-	}
-
-	@Override
-	public int getField(int id)
-	{
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value)
-	{
-
-	}
-
-	@Override
-	public int getFieldCount()
-	{
-		return 0;
-	}
-
-	@Override
-	public void clear()
-	{
-
-	}
-
-	@Override
-	public String getName()
-	{
-		return this.hasCustomName() ? this.customName : "container.xp_block";
+		return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 	
 	@Override
@@ -152,108 +34,105 @@ public class TileEntityXpBlock extends TileEntity implements ISidedInventory
 		return this.hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation("container.xp_block");
 	}
 
-	@Override
 	public boolean hasCustomName()
 	{
 		return this.customName != null && !this.customName.isEmpty();
 	}
 	
-	public void setName(String name)
+	public void setCustomName(String name)
     {
         this.customName = name;
     }
-	
-	public String getGuiID()
-    {
-        return "mineria:xp_block";
-    }
-	
-	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
-    {
-        return new ContainerXpBlock(playerInventory, this);
-    }
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side)
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
-		return new int[0];
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Nullable
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		return false;
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) this.inventory;
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
+	public CustomItemStackHandler getInventory()
 	{
-		return false;
+		return inventory;
 	}
-	
-	public void spawnXp(EntityPlayer player)
+
+	private void spawnXp(EntityPlayer player)
 	{
-		ItemStack stack = new ItemStack(ItemsInit.mineria_xp_orb);
-		ItemStack stack1 = this.xpBlockItemStacks.get(0);
-		if (stack1.getCount() < this.getInventoryStackLimit())
+		ItemStack result = new ItemStack(ItemsInit.XP_ORB);
+		ItemStack output = this.inventory.getStackInSlot(0);
+		if (output.getCount() < 16)
 		{
 			if(player.capabilities.isCreativeMode)
 			{
-				if (stack1.isEmpty())
+				if (output.isEmpty())
 				{
-					this.xpBlockItemStacks.set(0, stack.copy());
+					this.inventory.setStackInSlot(0, result.copy());
 				}
-				else if (stack1.getItem() == stack.getItem())
+				else if (output.getItem() == result.getItem())
 				{
-					stack1.grow(1);
+					output.grow(1);
 				}
 			}
 			else if (player.experienceTotal > 0)
 			{
-				this.decreasePlayerExperience(1, player);
-				if (stack1.isEmpty())
+				giveExperiencePoints(-1, player);
+				if (output.isEmpty())
 				{
-					this.xpBlockItemStacks.set(0, stack.copy());
+					this.inventory.setStackInSlot(0, result.copy());
 				}
-				else if (stack1.getItem() == stack.getItem())
+				else if (output.getItem() == result.getItem())
 				{
-					stack1.grow(1);
+					output.grow(1);
 				}
 			}
 		}
 	}
 
-	private void decreasePlayerExperience(int amount, EntityPlayer player)
+	private static void giveExperiencePoints(int amount, EntityPlayer player)
 	{
-		player.experience -= (float)amount / (float)this.calcXpBarCap(player.experienceLevel - 1);
-		player.experienceTotal -= amount;
+		player.addScore(amount);
+		player.experience += (float)amount / (float)player.xpBarCap();
+		player.experienceTotal = MathHelper.clamp(player.experienceTotal + amount, 0, Integer.MAX_VALUE);
 
-		if(player.experience <= 0.0F)
+		while(player.experience < 0.0F)
 		{
-			player.experienceLevel -= 1;
-			player.experience = 1.0F;
+			float f = player.experience * (float)player.xpBarCap();
+			if (player.experienceLevel > 0)
+			{
+				player.addExperienceLevel(-1);
+				player.experience = 1.0F + f / (float)player.xpBarCap();
+			}
+			else
+			{
+				player.addExperienceLevel(-1);
+				player.experience = 0.0F;
+			}
+		}
+
+		while(player.experience >= 1.0F)
+		{
+			player.experience = (player.experience - 1.0F) * (float)player.xpBarCap();
+			player.addExperienceLevel(1);
+			player.experience /= (float)player.xpBarCap();
 		}
 	}
 
-	public int calcXpBarCap(int level)
+	public static void execute(int actionID, BlockPos pos, World world, EntityPlayer player)
 	{
-		if (level >= 30)
+		if(actionID == 0)
 		{
-			return 112 + (level - 30) * 9;
-		}
-		else
-		{
-			return level >= 15 ? 37 + (level - 15) * 5 : 7 + level * 2;
-		}
-	}
+			TileEntity tile = world.getTileEntity(pos);
 
-	public static void executeProcedure(int x, int y, int z, World world, EntityPlayer player)
-	{
-		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-		if(tileEntity instanceof TileEntityXpBlock)
-		{
-			TileEntityXpBlock tile = (TileEntityXpBlock)tileEntity;
-			tile.spawnXp(player);
+			if(tile instanceof TileEntityXpBlock)
+				((TileEntityXpBlock)tile).spawnXp(player);
 		}
 	}
 }

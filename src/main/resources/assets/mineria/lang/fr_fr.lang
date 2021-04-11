@@ -105,7 +105,7 @@ item.nettle_tea.name=Thé à l'Ortie
 item.pulmonary_tea.name=Thé à la Pulmonaire
 
 #Entities
-entity.golden_fish.name=Poisson d'Or
+entity.golden_silverfish.name=Poisson d'Argent Doré
 
 #CreativeTabs
 itemGroup.mineria=Mineria
@@ -117,4 +117,14 @@ gui.xp_block.give_xp=Donner XP
 container.extractor=Extracteur
 container.infuser=Infuseur
 water_barrel.use=Pour utiliser le barril, il vous faut le placer et faire click droit avec un seau d'eau pour le remplir
-tooltip.hold_shift=Appuyez sur SHIFT pour plus d'infos...
+
+tile.cat_woodcut.name=Cat Woodcut
+tile.cow_woodcut.name=Cow Woodcut
+tile.deer_woodcut.name=Deer Woodcut
+tile.dog_woodcut.name=Dog Woodcut
+tile.donkey_woodcut.name=Donkey Woodcut
+tile.goat_woodcut.name=Goat Woodcut
+tile.horse_woodcut.name=Horse Woodcut
+tile.rabbit_woodcut.name=Rabbit Woodcut
+tile.wolf_woodcut.name=Wolf Woodcut
+tile.infinite_water_barrel.name=§dInfinite Water Barreltooltip.hold_shift=Appuyez sur SHIFT pour plus d'infos...

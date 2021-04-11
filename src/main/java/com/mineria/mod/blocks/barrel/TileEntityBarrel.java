@@ -1,21 +1,39 @@
 package com.mineria.mod.blocks.barrel;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBarrel extends TileEntity
 {
-    private final int maxWaterBuckets;
+    private int maxWaterBuckets;
     private int waterBuckets;
     private boolean destroyedByCreativePlayer;
 
+    public TileEntityBarrel()
+    {
+    }
+
     public TileEntityBarrel(int maxWaterBuckets)
     {
-        this.maxWaterBuckets = maxWaterBuckets;
-        if(maxWaterBuckets <= -1)
-        {
-            this.waterBuckets = -1;
-        }
+        this.maxWaterBuckets = maxWaterBuckets < 0 ? -1 : maxWaterBuckets;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound)
+    {
+        super.readFromNBT(compound);
+        this.waterBuckets = compound.getInteger("Water");
+        this.maxWaterBuckets = compound.getInteger("MaxWater");
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    {
+        super.writeToNBT(compound);
+        compound.setInteger("Water", this.waterBuckets);
+        compound.setInteger("MaxWater", this.maxWaterBuckets);
+        return compound;
     }
 
     public boolean isEmpty()
@@ -28,19 +46,9 @@ public class TileEntityBarrel extends TileEntity
         return this.waterBuckets == this.maxWaterBuckets;
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound compound)
+    private boolean isInfinite()
     {
-        super.readFromNBT(compound);
-        this.waterBuckets = compound.getInteger("Water");
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
-    {
-        super.writeToNBT(compound);
-        compound.setInteger("Water", this.waterBuckets);
-        return compound;
+        return this.waterBuckets < 0;
     }
 
     public boolean isDestroyedByCreativePlayer()
@@ -55,14 +63,26 @@ public class TileEntityBarrel extends TileEntity
 
     public boolean shouldDrop()
     {
-        return !this.isDestroyedByCreativePlayer() || !this.isEmpty();
+        return !this.isDestroyedByCreativePlayer() || !this.isEmpty() && !this.isInfinite();
     }
 
-    public boolean setWatetBucket()
+    public boolean increaseWaterBuckets()
     {
         if(!isFull())
         {
-            ++this.waterBuckets;
+            if(!isInfinite())
+                ++this.waterBuckets;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean decreaseWaterBuckets()
+    {
+        if(!isEmpty())
+        {
+            if(!isInfinite())
+                --waterBuckets;
             return true;
         }
         return false;
@@ -71,5 +91,24 @@ public class TileEntityBarrel extends TileEntity
     public int getWaterBuckets()
     {
         return this.waterBuckets;
+    }
+
+    public static boolean checkWaterFromStack(ItemStack barrel)
+    {
+        NBTTagCompound stackTag = barrel.getTagCompound();
+        if(stackTag == null || !stackTag.hasKey("BlockEntityTag", 10))
+            return false;
+        NBTTagCompound blockEntityTag = stackTag.getCompoundTag("BlockEntityTag");
+        if(!blockEntityTag.hasKey("Water"))
+            return false;
+        return blockEntityTag.getInteger("Water") != 0;
+    }
+
+    public static void decreaseWaterFromStack(ItemStack barrel)
+    {
+        NBTTagCompound stackTag = barrel.getTagCompound();
+        NBTTagCompound blockEntityTag = stackTag.getCompoundTag("BlockEntityTag");
+        int water = blockEntityTag.getInteger("Water");
+        blockEntityTag.setInteger("Water", water < 0 ? water : --water);
     }
 }

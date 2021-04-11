@@ -7,15 +7,13 @@ import net.minecraft.block.material.Material;
 
 public class BlockMineralSand extends BlockFalling
 {
-	public BlockMineralSand(String name, int harvestlevel, Material materialIn, float hardness, float resistance, SoundType sound)
+	public BlockMineralSand()
 	{
-		super(materialIn);
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(Mineria.mineriaTab);
-		setHarvestLevel("shovel", harvestlevel);
-		this.setHardness(hardness);
-		this.setResistance(resistance);
-		this.setSoundType(sound);
+		super(Material.SAND);
+		setCreativeTab(Mineria.MINERIA_TAB);
+		setHarvestLevel("shovel", 0);
+		setHardness(0.5F);
+		setResistance(0.5F);
+		setSoundType(SoundType.SAND);
 	}
 }

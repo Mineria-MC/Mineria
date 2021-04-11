@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiExtractor extends GuiContainer
 {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/extractor/extractor.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/extractor.png");
 	private final InventoryPlayer player;
 	private final TileEntityExtractor tile;
 	
@@ -46,14 +46,14 @@ public class GuiExtractor extends GuiContainer
 		this.mc.getTextureManager().bindTexture(TEXTURES);
 		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
-		int l = this.getExtractDownScaled(53);
-		this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 35, 214, 0, 40, l + 1);
+		int extractAnimation = this.getExtractDownScaled(53);
+		this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 35, 214, 0, 40, extractAnimation + 1);
 	}
 
 	private int getExtractDownScaled(int pixels)
 	{
-		int i = this.tile.getField(0);
-		int j = this.tile.getField(1);
-		return j != 0 && i != 0 ? i * pixels / j : 0;
+		int extractTime = this.tile.getField(0);
+		int maxExtractTime = this.tile.getField(1);
+		return maxExtractTime != 0 && extractTime != 0 ? extractTime * pixels / maxExtractTime : 0;
 	}
 }

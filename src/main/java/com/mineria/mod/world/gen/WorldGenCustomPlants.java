@@ -1,6 +1,6 @@
 package com.mineria.mod.world.gen;
 
-import com.mineria.mod.blocks.PlantBase;
+import com.mineria.mod.blocks.MineriaBlockPlant;
 import com.mineria.mod.init.BlocksInit;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Biomes;
@@ -16,65 +16,68 @@ import java.util.Random;
 
 public class WorldGenCustomPlants implements IWorldGenerator
 {
-    private WorldGenerator plantain;
+    private final WorldGenerator plantain;
 
-    private WorldGenerator mint_plains;
-    private WorldGenerator mint_forest;
-    private WorldGenerator mint_jungle;
+    private final WorldGenerator mint_plains;
+    private final WorldGenerator mint_forest;
+    private final WorldGenerator mint_jungle;
 
-    private WorldGenerator thyme_plains;
-    private WorldGenerator thyme_savanna;
-    private WorldGenerator thyme_mountain;
+    private final WorldGenerator thyme_plains;
+    private final WorldGenerator thyme_savanna;
+    private final WorldGenerator thyme_mountain;
 
-    private WorldGenerator nettle_plains;
-    private WorldGenerator nettle_forest;
-    private WorldGenerator nettle_jungle;
+    private final WorldGenerator nettle_plains;
+    private final WorldGenerator nettle_forest;
+    private final WorldGenerator nettle_jungle;
 
-    private WorldGenerator pulmonary_plains;
-    private WorldGenerator pulmonary_forest;
+    private final WorldGenerator pulmonary_plains;
+    private final WorldGenerator pulmonary_forest;
 
     public WorldGenCustomPlants()
     {
-        plantain = new WorldGenCustomPlant((PlantBase)BlocksInit.plantain);
+        plantain = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.PLANTAIN);
 
-        mint_plains = new WorldGenCustomPlant((PlantBase)BlocksInit.mint);
-        mint_forest = new WorldGenCustomPlant((PlantBase)BlocksInit.mint);
-        mint_jungle = new WorldGenCustomPlant((PlantBase)BlocksInit.mint);
+        mint_plains = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.MINT);
+        mint_forest = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.MINT);
+        mint_jungle = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.MINT);
 
-        thyme_plains = new WorldGenCustomPlant((PlantBase)BlocksInit.thyme);
-        thyme_savanna = new WorldGenCustomPlant((PlantBase)BlocksInit.thyme);
-        thyme_mountain = new WorldGenCustomPlant((PlantBase)BlocksInit.thyme);
+        thyme_plains = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.THYME);
+        thyme_savanna = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.THYME);
+        thyme_mountain = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.THYME);
 
-        nettle_plains = new WorldGenCustomPlant((PlantBase)BlocksInit.nettle);
-        nettle_forest = new WorldGenCustomPlant((PlantBase)BlocksInit.nettle);
-        nettle_jungle = new WorldGenCustomPlant((PlantBase)BlocksInit.nettle);
+        nettle_plains = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.NETTLE);
+        nettle_forest = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.NETTLE);
+        nettle_jungle = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.NETTLE);
 
-        pulmonary_plains = new WorldGenCustomPlant((PlantBase)BlocksInit.pulmonary);
-        pulmonary_forest = new WorldGenCustomPlant((PlantBase)BlocksInit.pulmonary);
+        pulmonary_plains = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.PULMONARY);
+        pulmonary_forest = new PlantWorldGenerator((MineriaBlockPlant)BlocksInit.PULMONARY);
     }
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
     {
-        if(world.provider.getDimension() == 0) runGenerator(plantain, world, random, chunkX, chunkZ, 100, Biomes.PLAINS);
+        if(world.provider.getDimension() == 0)
+        {
+            runGenerator(plantain, world, random, chunkX, chunkZ, 100, Biomes.PLAINS);
 
-        if(world.provider.getDimension() == 0) runGenerator(mint_plains, world, random, chunkX, chunkZ, 60, Biomes.PLAINS);
-        if(world.provider.getDimension() == 0) runGenerator(mint_forest, world, random, chunkX, chunkZ, 30, Biomes.FOREST);
-        if(world.provider.getDimension() == 0) runGenerator(mint_jungle, world, random, chunkX, chunkZ, 10, Biomes.JUNGLE);
+            runGenerator(mint_plains, world, random, chunkX, chunkZ, 60, Biomes.PLAINS);
+            runGenerator(mint_forest, world, random, chunkX, chunkZ, 30, Biomes.FOREST);
+            runGenerator(mint_jungle, world, random, chunkX, chunkZ, 10, Biomes.JUNGLE);
 
-        if(world.provider.getDimension() == 0) runGenerator(thyme_plains, world, random, chunkX, chunkZ, 20, Biomes.PLAINS);
-        if(world.provider.getDimension() == 0) runGenerator(thyme_savanna, world, random, chunkX, chunkZ, 70, Biomes.SAVANNA);
-        if(world.provider.getDimension() == 0) runGenerator(thyme_mountain, world, random, chunkX, chunkZ, 10, Biomes.EXTREME_HILLS);
+            runGenerator(thyme_plains, world, random, chunkX, chunkZ, 20, Biomes.PLAINS);
+            runGenerator(thyme_savanna, world, random, chunkX, chunkZ, 70, Biomes.SAVANNA);
+            runGenerator(thyme_mountain, world, random, chunkX, chunkZ, 10, Biomes.EXTREME_HILLS);
 
-        if(world.provider.getDimension() == 0) runGenerator(nettle_plains, world, random, chunkX, chunkZ, 5, Biomes.PLAINS);
-        if(world.provider.getDimension() == 0) runGenerator(nettle_forest, world, random, chunkX, chunkZ, 25, Biomes.FOREST);
-        if(world.provider.getDimension() == 0) runGenerator(nettle_jungle, world, random, chunkX, chunkZ, 70, Biomes.JUNGLE);
+            runGenerator(nettle_plains, world, random, chunkX, chunkZ, 5, Biomes.PLAINS);
+            runGenerator(nettle_forest, world, random, chunkX, chunkZ, 25, Biomes.FOREST);
+            runGenerator(nettle_jungle, world, random, chunkX, chunkZ, 70, Biomes.JUNGLE);
 
-        if(world.provider.getDimension() == 0) runGenerator(pulmonary_plains, world, random, chunkX, chunkZ, 80, Biomes.FOREST);
-        if(world.provider.getDimension() == 0) runGenerator(pulmonary_forest, world, random, chunkX, chunkZ, 20, Biomes.PLAINS);
+            runGenerator(pulmonary_plains, world, random, chunkX, chunkZ, 80, Biomes.FOREST);
+            runGenerator(pulmonary_forest, world, random, chunkX, chunkZ, 20, Biomes.PLAINS);
+        }
     }
 
-    public void runGenerator(WorldGenerator gen, World world, Random rand, int chunkX, int chunkZ, int chance, Biome biome)
+    private static void runGenerator(WorldGenerator gen, World world, Random rand, int chunkX, int chunkZ, int chance, Biome biome)
     {
         BlockPos chunkPos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 
@@ -82,20 +85,20 @@ public class WorldGenCustomPlants implements IWorldGenerator
         {
             if(rand.nextInt(200) <= chance)
             {
-                int i7 = rand.nextInt(16) + 4;
-                int l10 = rand.nextInt(16) + 4;
-                int j14 = world.getHeight(chunkPos.add(i7, 0, l10)).getY() + 32;
+                int x = rand.nextInt(16) + 4;
+                int z = rand.nextInt(16) + 4;
+                int y = world.getHeight(chunkPos.add(x, 0, z)).getY() + 32;
 
-                if (j14 > 0)
+                if (y > 0)
                 {
-                    int k17 = rand.nextInt(j14);
-                    BlockPos blockpos1 = chunkPos.add(i7, k17, l10);
-                    PlantBase plant = ((WorldGenCustomPlant)gen).getPlant();
+                    int randY = rand.nextInt(y);
+                    BlockPos genPos = chunkPos.add(x, randY, z);
+                    MineriaBlockPlant plant = ((PlantWorldGenerator)gen).getPlant();
 
                     if (plant.getDefaultState().getMaterial() != Material.AIR)
                     {
-                        ((WorldGenCustomPlant)gen).setGeneratedPlant(plant);
-                        ((WorldGenCustomPlant)gen).generate(world, rand, blockpos1);
+                        ((PlantWorldGenerator)gen).setGeneratedPlant(plant);
+                        gen.generate(world, rand, genPos);
                     }
                 }
             }

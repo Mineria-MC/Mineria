@@ -1,10 +1,6 @@
 package com.mineria.mod.blocks;
 
-import com.mineria.mod.Mineria;
-import com.mineria.mod.entity.EntityGoldenFish;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSilverfish;
-import net.minecraft.block.BlockStoneBrick;
+import com.mineria.mod.entity.EntityGoldenSilverfish;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -15,17 +11,11 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BlockInfestedNetherrack extends Block
+public class BlockInfestedNetherrack extends MineriaBlock
 {
-	public BlockInfestedNetherrack(String name, SoundType sound)
+	public BlockInfestedNetherrack()
 	{
-		super(Material.CLAY);
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(Mineria.mineriaTab);
-		setHardness(0.0F);
-		this.setSoundType(sound);
-		this.setDefaultState(this.blockState.getBaseState());
+		super(Material.CLAY, 0, 0, -1, SoundType.STONE);
 	}
 
 	@Override
@@ -39,10 +29,11 @@ public class BlockInfestedNetherrack extends Block
 	{
 		if(!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops"))
 		{
-			EntityGoldenFish entitygoldenfish = new EntityGoldenFish(worldIn);
-			entitygoldenfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
-			worldIn.spawnEntity(entitygoldenfish);
-			entitygoldenfish.spawnExplosionParticle();
+			EntityGoldenSilverfish goldenSilverfish = new EntityGoldenSilverfish(worldIn);
+
+			goldenSilverfish.setLocationAndAngles(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 0.0F, 0.0F);
+			worldIn.spawnEntity(goldenSilverfish);
+			goldenSilverfish.spawnExplosionParticle();
 		}
 	}
 
@@ -53,7 +44,6 @@ public class BlockInfestedNetherrack extends Block
 
 	public static boolean canContainSilverfish(IBlockState blockState)
     {
-        Block block = blockState.getBlock();
         return blockState == Blocks.NETHERRACK.getDefaultState();
     }
 }

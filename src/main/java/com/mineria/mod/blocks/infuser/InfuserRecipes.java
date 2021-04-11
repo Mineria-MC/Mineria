@@ -1,18 +1,17 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.item.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class InfuserRecipes
 {
     private static final InfuserRecipes INSTANCE = new InfuserRecipes();
 
-    private final Table<ItemStack, ItemStack, ItemStack> infuseList = HashBasedTable.create();
+    private final Map<ItemStack, ItemStack> infuseList = new HashMap<>();
 
     public static InfuserRecipes getInstance()
     {
@@ -21,32 +20,26 @@ public class InfuserRecipes
 
     private InfuserRecipes()
     {
-        addInfusingRecipe(new ItemStack(BlocksInit.plantain), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.plantain_tea));
-        addInfusingRecipe(new ItemStack(BlocksInit.mint), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.mint_tea));
-        addInfusingRecipe(new ItemStack(BlocksInit.thyme), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.thyme_tea));
-        addInfusingRecipe(new ItemStack(BlocksInit.nettle), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.nettle_tea));
-        addInfusingRecipe(new ItemStack(BlocksInit.pulmonary), new ItemStack(BlocksInit.water_barrel), new ItemStack(ItemsInit.pulmonary_tea));
+        addInfusingRecipe(new ItemStack(BlocksInit.PLANTAIN), new ItemStack(ItemsInit.PLANTAIN_TEA));
+        addInfusingRecipe(new ItemStack(BlocksInit.MINT), new ItemStack(ItemsInit.MINT_TEA));
+        addInfusingRecipe(new ItemStack(BlocksInit.THYME), new ItemStack(ItemsInit.THYME_TEA));
+        addInfusingRecipe(new ItemStack(BlocksInit.NETTLE), new ItemStack(ItemsInit.NETTLE_TEA));
+        addInfusingRecipe(new ItemStack(BlocksInit.PULMONARY), new ItemStack(ItemsInit.PULMONARY_TEA));
     }
 
-    public void addInfusingRecipe(ItemStack input, ItemStack input2, ItemStack stack)
+    public void addInfusingRecipe(ItemStack input, ItemStack result)
     {
-        if (getInfusingResult(input, input2) != ItemStack.EMPTY) return;
-        this.infuseList.put(input, input2, stack);
+        if (getInfusingResult(input) != ItemStack.EMPTY) return;
+        this.infuseList.put(input, result);
     }
 
-    public ItemStack getInfusingResult(ItemStack input1, ItemStack input2)
+    public ItemStack getInfusingResult(ItemStack input)
     {
-        for(Map.Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.infuseList.rowMap().entrySet())
+        for(Map.Entry<ItemStack, ItemStack> entry : infuseList.entrySet())
         {
-            if(this.compareItemStacks(input1, entry.getKey()))
+            if(compareItemStacks(input, entry.getKey()))
             {
-                for(Map.Entry<ItemStack, ItemStack> ent : entry.getValue().entrySet())
-                {
-                    if(this.compareItemStacks(input2, ent.getKey()))
-                    {
-                        return ent.getValue();
-                    }
-                }
+                return entry.getValue();
             }
         }
         return ItemStack.EMPTY;
@@ -57,7 +50,7 @@ public class InfuserRecipes
         return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
     }
 
-    public Table<ItemStack, ItemStack, ItemStack> getDualInfuseList()
+    public Map<ItemStack, ItemStack> getDualInfuseList()
     {
         return this.infuseList;
     }

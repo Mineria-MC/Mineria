@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderGoldenFish extends RenderSilverfish
 {
-	public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/entity/golden_fish.png");
+	public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/entity/golden_silverfish.png");
 	
 	public RenderGoldenFish(RenderManager manager)
 	{

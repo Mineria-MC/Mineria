@@ -1,181 +1,42 @@
 package com.mineria.mod.blocks.infuser;
 
+import com.mineria.mod.blocks.barrel.TileEntityBarrel;
 import com.mineria.mod.init.ItemsInit;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import com.mineria.mod.util.CustomItemStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.datafix.FixTypes;
-import net.minecraft.util.datafix.walkers.ItemStackDataLists;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntityInfuser extends TileEntity implements ISidedInventory, ITickable
+import static net.minecraft.tileentity.TileEntityFurnace.getItemBurnTime;
+
+public class TileEntityInfuser extends TileEntity implements ITickable
 {
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_MIDDLE = new int[] {1, 3};
-    private static final int[] SLOTS_SIDES = new int[] {2};
+    private final CustomItemStackHandler inventory = new CustomItemStackHandler(4);
 
     private int burnTime;
     private int currentBurnTime;
     private int infuseTime;
-    private int totalInfuseTime;
+    //2400
+    private int totalInfuseTime = 200;
+    private String customName;
 
-    private String infuserCustomName;
-
-    private NonNullList<ItemStack> infuserItemStacks = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
-
-    @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        if (side == EnumFacing.WEST)
-        {
-            return SLOTS_MIDDLE;
-        }
-        else
-        {
-            return side == EnumFacing.UP ? SLOTS_TOP : SLOTS_SIDES;
-        }
-    }
-
-    @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
-    {
-        return this.isItemValidForSlot(index, itemStackIn);
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-    {
-        return false;
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return infuserItemStacks.size();
-    }
-
-    @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.infuserItemStacks)
-        {
-            if (!itemstack.isEmpty())
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index)
-    {
-        return this.infuserItemStacks.get(index);
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
-        return ItemStackHelper.getAndSplit(this.infuserItemStacks, index, count);
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
-        return ItemStackHelper.getAndRemove(this.infuserItemStacks, index);
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
-        ItemStack itemstack = this.infuserItemStacks.get(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
-        this.infuserItemStacks.set(index, stack);
-
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
-            stack.setCount(this.getInventoryStackLimit());
-        }
-
-        if (index == 0 && index + 1 == 1 && !flag)
-        {
-            ItemStack stack1 = (ItemStack)this.infuserItemStacks.get(index + 1);
-            this.totalInfuseTime = this.getInfuseTime(stack, stack1);
-            this.infuseTime = 0;
-            this.markDirty();
-        }
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 64;
-    }
-
-    @Override
     public boolean isUsableByPlayer(EntityPlayer player)
     {
-        if (this.world.getTileEntity(this.pos) != this)
-        {
-            return false;
-        }
-        else
-        {
-            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
-        }
+        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
-    @Override
-    public void openInventory(EntityPlayer player)
-    {
-
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player)
-    {
-
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack)
-    {
-        if (index == 3)
-        {
-            return stack == new ItemStack(Items.BOWL);
-        }
-        else if (index != 2)
-        {
-            return true;
-        }
-        else
-        {
-            ItemStack itemstack = this.infuserItemStacks.get(2);
-            return isItemFuel(stack);
-        }
-    }
-
-    @Override
     public int getField(int id)
     {
         switch (id)
@@ -193,7 +54,6 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
         }
     }
 
-    @Override
     public void setField(int id, int value)
     {
         switch (id)
@@ -213,183 +73,53 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
     }
 
     @Override
-    public int getFieldCount()
-    {
-        return 4;
-    }
-
-    @Override
-    public String getName()
-    {
-        return this.hasCustomName() ? this.infuserCustomName : "container.infuser";
-    }
-
-    @Override
     public ITextComponent getDisplayName()
     {
-        return this.hasCustomName() ? new TextComponentString(this.infuserCustomName) : new TextComponentTranslation("container.infuser");
+        return this.hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation("container.infuser");
     }
 
-    @Override
     public boolean hasCustomName()
     {
-        return this.infuserCustomName != null && !this.infuserCustomName.isEmpty();
+        return this.customName != null && !this.customName.isEmpty();
     }
 
-    public void setCustomInventoryName(String name)
+    public void setCustomName(String customName)
     {
-        this.infuserCustomName = name;
-    }
-
-    public static void registerFixesFurnace(DataFixer fixer)
-    {
-        fixer.registerWalker(FixTypes.BLOCK_ENTITY, new ItemStackDataLists(TileEntityInfuser.class, new String[] {"Items"}));
+        this.customName = customName;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        this.infuserItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, this.infuserItemStacks);
+        this.inventory.deserializeNBT(compound.getCompoundTag("Inventory"));
         this.burnTime = compound.getInteger("BurnTime");
         this.infuseTime = compound.getInteger("InfuseTime");
         this.totalInfuseTime = compound.getInteger("InfuseTimeTotal");
-        this.currentBurnTime = getItemBurnTime(this.infuserItemStacks.get(2));
+        this.currentBurnTime = getItemBurnTime(this.inventory.getStackInSlot(2));
 
         if (compound.hasKey("CustomName", 8))
-        {
-            this.infuserCustomName = compound.getString("CustomName");
-        }
+            this.customName = compound.getString("CustomName");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        compound.setInteger("BurnTime", (short)this.burnTime);
-        compound.setInteger("InfuseTime", (short)this.infuseTime);
-        compound.setInteger("InfuseTimeTotal", (short)this.totalInfuseTime);
-        ItemStackHelper.saveAllItems(compound, this.infuserItemStacks);
+        compound.setInteger("BurnTime", this.burnTime);
+        compound.setInteger("InfuseTime", this.infuseTime);
+        compound.setInteger("InfuseTimeTotal", this.totalInfuseTime);
+        compound.setTag("Inventory", this.inventory.serializeNBT());
 
         if (this.hasCustomName())
-        {
-            compound.setString("CustomName", this.infuserCustomName);
-        }
+            compound.setString("CustomName", this.customName);
 
         return compound;
-    }
-
-    public static int getItemBurnTime(ItemStack stack)
-    {
-        if (stack.isEmpty())
-        {
-            return 0;
-        }
-        else
-        {
-            int burnTime = net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack);
-            if (burnTime >= 0) return burnTime;
-            Item item = stack.getItem();
-
-            if (item == Item.getItemFromBlock(Blocks.WOODEN_SLAB))
-            {
-                return 150;
-            }
-            else if (item == Item.getItemFromBlock(Blocks.WOOL))
-            {
-                return 100;
-            }
-            else if (item == Item.getItemFromBlock(Blocks.CARPET))
-            {
-                return 67;
-            }
-            else if (item == Item.getItemFromBlock(Blocks.LADDER))
-            {
-                return 300;
-            }
-            else if (item == Item.getItemFromBlock(Blocks.WOODEN_BUTTON))
-            {
-                return 100;
-            }
-            else if (Block.getBlockFromItem(item).getDefaultState().getMaterial() == Material.WOOD)
-            {
-                return 300;
-            }
-            else if (item == Item.getItemFromBlock(Blocks.COAL_BLOCK))
-            {
-                return 16000;
-            }
-            else if (item instanceof ItemTool && "WOOD".equals(((ItemTool)item).getToolMaterialName()))
-            {
-                return 200;
-            }
-            else if (item instanceof ItemSword && "WOOD".equals(((ItemSword)item).getToolMaterialName()))
-            {
-                return 200;
-            }
-            else if (item instanceof ItemHoe && "WOOD".equals(((ItemHoe)item).getMaterialName()))
-            {
-                return 200;
-            }
-            else if (item == Items.STICK)
-            {
-                return 100;
-            }
-            else if (item != Items.BOW && item != Items.FISHING_ROD)
-            {
-                if (item == Items.SIGN)
-                {
-                    return 200;
-                }
-                else if (item == Items.COAL)
-                {
-                    return 1600;
-                }
-                else if (item == Items.LAVA_BUCKET)
-                {
-                    return 20000;
-                }
-                else if (item != Item.getItemFromBlock(Blocks.SAPLING) && item != Items.BOWL)
-                {
-                    if (item == Items.BLAZE_ROD)
-                    {
-                        return 2400;
-                    }
-                    else if (item instanceof ItemDoor && item != Items.IRON_DOOR)
-                    {
-                        return 200;
-                    }
-                    else
-                    {
-                        return item instanceof ItemBoat ? 400 : 0;
-                    }
-                }
-                else
-                {
-                    return 100;
-                }
-            }
-            else
-            {
-                return 300;
-            }
-        }
-    }
-
-    public int getInfuseTime(ItemStack stack, ItemStack stack2)
-    {
-        return 2400;
     }
 
     public static boolean isItemFuel(ItemStack stack)
     {
         return getItemBurnTime(stack) > 0;
-    }
-
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
-    {
-        return new ContainerInfuser(playerInventory, this);
     }
 
     public boolean isInfusing()
@@ -398,7 +128,7 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
     }
 
     @SideOnly(Side.CLIENT)
-    public static boolean isInfusing(IInventory inventory)
+    public static boolean isInfusing(TileEntityInfuser inventory)
     {
         return inventory.getField(0) > 0;
     }
@@ -406,38 +136,38 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
     @Override
     public void update()
     {
-        boolean flag = this.isInfusing();
-        boolean flag1 = false;
+        boolean alreadyInfusing = this.isInfusing();
+        boolean dirty = false;
 
         if (this.isInfusing())
-        {
             --this.burnTime;
-        }
 
         if (!this.world.isRemote)
         {
-            ItemStack itemstack = this.infuserItemStacks.get(2);
+            ItemStack input = this.inventory.getStackInSlot(0);
+            ItemStack barrel = this.inventory.getStackInSlot(1);
+            ItemStack fuelStack = this.inventory.getStackInSlot(2);
 
-            if (this.isInfusing() || !itemstack.isEmpty() && !((ItemStack)this.infuserItemStacks.get(0)).isEmpty() || !((ItemStack)this.infuserItemStacks.get(1)).isEmpty())
+            if (this.isInfusing() || !fuelStack.isEmpty() && !input.isEmpty() || !barrel.isEmpty())
             {
                 if (!this.isInfusing() && this.canInfuse())
                 {
-                    this.burnTime = getItemBurnTime(itemstack);
+                    this.burnTime = getItemBurnTime(fuelStack);
                     this.currentBurnTime = this.burnTime;
 
                     if (this.isInfusing())
                     {
-                        flag1 = true;
+                        dirty = true;
 
-                        if (!itemstack.isEmpty())
+                        if (!fuelStack.isEmpty())
                         {
-                            Item item = itemstack.getItem();
-                            itemstack.shrink(1);
+                            Item fuel = fuelStack.getItem();
+                            fuelStack.shrink(1);
 
-                            if (itemstack.isEmpty())
+                            if (fuelStack.isEmpty())
                             {
-                                ItemStack item1 = item.getContainerItem(itemstack);
-                                this.infuserItemStacks.set(2, item1);
+                                ItemStack result = fuel.getContainerItem(fuelStack);
+                                this.inventory.setStackInSlot(2, result);
                             }
                         }
                     }
@@ -450,29 +180,26 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
                     if (this.infuseTime == this.totalInfuseTime)
                     {
                         this.infuseTime = 0;
-                        this.totalInfuseTime = this.getInfuseTime(this.infuserItemStacks.get(0), this.infuserItemStacks.get(1));
                         this.infuseItem();
-                        flag1 = true;
+                        dirty = true;
                     }
                 }
                 else
-                {
                     this.infuseTime = 0;
-                }
             }
             else if (!this.isInfusing() && this.infuseTime > 0)
             {
                 this.infuseTime = MathHelper.clamp(this.infuseTime - 2, 0, this.totalInfuseTime);
             }
 
-            if (flag != this.isInfusing())
+            if (alreadyInfusing != this.isInfusing())
             {
-                flag1 = true;
+                dirty = true;
                 BlockInfuser.setState(this.isInfusing(), this.world, this.pos);
             }
         }
 
-        if (flag1)
+        if (dirty)
         {
             this.markDirty();
         }
@@ -482,67 +209,73 @@ public class TileEntityInfuser extends TileEntity implements ISidedInventory, IT
     {
         if (this.canInfuse())
         {
-            ItemStack itemstack = this.infuserItemStacks.get(0);
-            ItemStack itemstack1 = this.infuserItemStacks.get(1);
-            ItemStack itemstack2 = InfuserRecipes.getInstance().getInfusingResult(itemstack, itemstack1);
-            ItemStack itemstack3 = this.infuserItemStacks.get(3);
+            ItemStack input = this.inventory.getStackInSlot(0);
+            ItemStack barrel = this.inventory.getStackInSlot(1);
+            ItemStack result = InfuserRecipes.getInstance().getInfusingResult(input);
+            ItemStack output = this.inventory.getStackInSlot(3);
 
-            if (itemstack3.getItem() == ItemsInit.cup)
+            if (output.getItem() == ItemsInit.CUP)
             {
-                itemstack3.shrink(1);
-                this.infuserItemStacks.set(3, itemstack2.copy());
+                output.shrink(1);
+                this.inventory.setStackInSlot(3, result.copy());
             }
 
-            itemstack.shrink(1);
-            NBTTagCompound compound = itemstack1.getTagCompound();
-            NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
-            compound1.setInteger("Water", compound1.getInteger("Water") - 1);
+            input.shrink(1);
+            TileEntityBarrel.decreaseWaterFromStack(barrel);
         }
     }
 
     private boolean canInfuse()
     {
-        ItemStack stack = ((ItemStack)this.infuserItemStacks.get(1));
-        NBTTagCompound compound = stack.getTagCompound();
-        if(compound == null || !compound.hasKey("BlockEntityTag", 10))
-        {
-            return false;
-        }
-        NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
+        ItemStack input = this.inventory.getStackInSlot(0);
+        ItemStack barrel = this.inventory.getStackInSlot(1);
+        ItemStack output = this.inventory.getStackInSlot(3);
+        boolean hasWater = TileEntityBarrel.checkWaterFromStack(barrel);
 
-        if (((ItemStack)this.infuserItemStacks.get(0)).isEmpty() || stack.isEmpty() || ((ItemStack)this.infuserItemStacks.get(3)).isEmpty() || compound1.getInteger("Water") == 0)
+        if (input.isEmpty() || barrel.isEmpty() || output.isEmpty() || !hasWater)
         {
             return false;
         }
         else
         {
-            ItemStack itemstack = InfuserRecipes.getInstance().getInfusingResult((ItemStack)this.infuserItemStacks.get(0), (ItemStack)this.infuserItemStacks.get(1));
+            ItemStack result = InfuserRecipes.getInstance().getInfusingResult(input);
 
-            if (itemstack.isEmpty())
+            if (result.isEmpty())
             {
                 return false;
             }
             else
             {
-                ItemStack itemstack1 = (ItemStack)this.infuserItemStacks.get(3);
-
-                if(itemstack1.getCount() != 1)
+                if(output.getCount() != 1)
                 {
                     return false;
                 }
-                else if (itemstack1.equals(new ItemStack(ItemsInit.cup)))
+                else if (output.equals(new ItemStack(ItemsInit.CUP)))
                 {
                     return true;
                 }
-                int res = itemstack1.getCount() + itemstack.getCount();
-                return res <= getInventoryStackLimit() && res <= itemstack1.getMaxStackSize();
+                int res = output.getCount() + result.getCount();
+                return res <= 64 && res <= output.getMaxStackSize();
             }
         }
     }
 
     @Override
-    public void clear()
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        this.infuserItemStacks.clear();
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    {
+        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this.inventory;
+        return super.getCapability(capability, facing);
+    }
+
+    public CustomItemStackHandler getInventory()
+    {
+        return inventory;
     }
 }

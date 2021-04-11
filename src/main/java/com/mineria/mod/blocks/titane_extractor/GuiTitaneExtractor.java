@@ -11,17 +11,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTitaneExtractor extends GuiContainer
 {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/gui/titane_extractor/titane_extractor.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/titane_extractor.png");
 	private final InventoryPlayer player;
-	private final TileEntityTitaneExtractor tileTitaneExtracting;
-	protected final int xSize = 200;
-	protected final int	ySize = 200;
+	private final TileEntityTitaneExtractor tile;
 	
-	public GuiTitaneExtractor(InventoryPlayer player, TileEntityTitaneExtractor tileentity)
+	public GuiTitaneExtractor(InventoryPlayer player, TileEntityTitaneExtractor tile)
 	{
-		super(new ContainerTitaneExtractor(player, tileentity));
+		super(new ContainerTitaneExtractor(player, tile));
 		this.player = player;
-		this.tileTitaneExtracting = tileentity;
+		this.tile = tile;
+		this.xSize = 200;
+		this.ySize = 200;
 	}
 	
 	@Override
@@ -35,8 +35,8 @@ public class GuiTitaneExtractor extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
-		String s = this.tileTitaneExtracting.getDisplayName().getUnformattedText();
-		this.fontRenderer.drawString(s, (this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2 + 20), 7, 4210752);
+		String name = this.tile.getDisplayName().getUnformattedText();
+		this.fontRenderer.drawString(name, (this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 + 20), 7, 4210752);
 		this.fontRenderer.drawString(this.player.getDisplayName().getUnformattedText(), 132, this.ySize - 116 + 2, 4210752);
 	}
 	
@@ -47,14 +47,14 @@ public class GuiTitaneExtractor extends GuiContainer
 		this.mc.getTextureManager().bindTexture(TEXTURES);
 		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 		
-		int l = this.getExtractDownScaled(53);
-		this.drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 24, 201, 0, 36, l + 1);
+		int extractAnimation = this.getExtractDownScaled(53);
+		this.drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 24, 201, 0, 36, extractAnimation + 1);
 	}
 	
 	private int getExtractDownScaled(int pixels)
 	{
-		int i = this.tileTitaneExtracting.getField(2);
-		int j = this.tileTitaneExtracting.getField(3);
-		return j != 0 && i != 0 ? i * pixels / j : 0;
+		int extractTime = this.tile.getField(0);
+		int totalExtractTime = this.tile.getField(1);
+		return totalExtractTime != 0 && extractTime != 0 ? extractTime * pixels / totalExtractTime : 0;
 	}
 }

@@ -1,7 +1,11 @@
 package com.mineria.mod.blocks.extractor;
 
-import com.mineria.mod.util.handler.CustomItemStackHandler;
+import com.mineria.mod.blocks.barrel.TileEntityBarrel;
+import com.mineria.mod.init.ItemsInit;
+import com.mineria.mod.util.CustomItemStackHandler;
+import com.mineria.mod.util.MineriaUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,14 +16,23 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class TileEntityExtractor extends TileEntity implements ITickable
 {
+	public static final Map<Integer, ItemStack> RECIPE_OUTPUTS = MineriaUtils.make(new HashMap<>(), map -> {
+		map.put(800, new ItemStack(Items.IRON_INGOT));
+		map.put(600, new ItemStack(ItemsInit.LEAD_INGOT));
+		map.put(300, new ItemStack(ItemsInit.COPPER_INGOT));
+		map.put(120, new ItemStack(ItemsInit.SILVER_INGOT));
+		map.put(100, new ItemStack(Items.GOLD_INGOT));
+		map.put(10, new ItemStack(Items.DIAMOND));
+		map.put(1, new ItemStack(ItemsInit.LONSDALEITE));
+	});
+
 	private final CustomItemStackHandler handler = new CustomItemStackHandler(10);
 
 	private String customName;
@@ -27,14 +40,14 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 	private int totalExtractTime = 200;
 	
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
 	{
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this.handler;
 		return super.getCapability(capability, facing);
@@ -83,17 +96,11 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 	{
 		return this.extractTime > 0;
 	}
-
-	@SideOnly(Side.CLIENT)
-	public static boolean isExtracting(TileEntityExtractor te)
-	{
-		return te.getField(0) > 0;
-	}
 	
 	@Override
 	public void update()
 	{
-		boolean flag = this.isExtracting();
+		boolean alreadyExtracting = this.isExtracting();
 		boolean dirty = false;
 
 		if (!this.world.isRemote)
@@ -114,7 +121,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 				this.extractTime = MathHelper.clamp(this.extractTime - 2, 0, this.totalExtractTime);
 			}
 
-			if (flag != this.isExtracting())
+			if (alreadyExtracting != this.isExtracting())
 			{
 				dirty = true;
 				BlockExtractor.setState(this.isExtracting(), this.world, this.pos);
@@ -129,50 +136,40 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 	
 	private boolean canExtract()
 	{
-		ItemStack stack = (this.handler.getStackInSlot(1));
-		NBTTagCompound compound = stack.getTagCompound();
-		if(compound == null || !compound.hasKey("BlockEntityTag", 10))
-		{
-			return false;
-		}
-		NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
+		ItemStack input = this.handler.getStackInSlot(0);
+		ItemStack barrel = this.handler.getStackInSlot(1);
+		ItemStack filter = this.handler.getStackInSlot(2);
+		boolean hasWater = TileEntityBarrel.checkWaterFromStack(barrel);
 
-		if ((this.handler.getStackInSlot(0)).isEmpty() || stack.isEmpty() || (this.handler.getStackInSlot(2)).isEmpty() || compound1.getInteger("Water") == 0)
+		if (input.isEmpty() || barrel.isEmpty() || filter.isEmpty() || !hasWater)
 		{
 			return false;
 		}
 		else
 		{
-			Map<Integer, ItemStack> outputs = ExtractorRecipes.getInstance().getExtractingResult(this.handler.getStackInSlot(0), this.handler.getStackInSlot(1));
+			Map<Integer, ItemStack> outputs = RECIPE_OUTPUTS;
 
-			if(outputs.isEmpty())
+			for(int index = 3; index < this.handler.getSlots(); index++)
 			{
-				return false;
-			}
-			else
-			{
-				for(int i = 3; i < this.handler.getSlots(); i++)
+				ItemStack output = this.handler.getStackInSlot(index);
+				ItemStack result = getOutputStackFromSlot(index, outputs);
+
+				if(output.isEmpty())
 				{
-					ItemStack stack1 = this.handler.getStackInSlot(i);
-					ItemStack output = this.getOutputStackFromSlot(i, outputs);
-
-					if(stack1.isEmpty())
-					{
-						continue;
-					}
-					else if (!stack1.isItemEqual(output))
-					{
-						return false;
-					}
-
-					int res = stack1.getCount() + output.getCount();
-					if(!(res <= 64 && res <= stack1.getMaxStackSize()))
-					{
-						return false;
-					}
+					continue;
 				}
-				return true;
+				else if (!output.isItemEqual(result))
+				{
+					return false;
+				}
+
+				int res = output.getCount() + result.getCount();
+				if(!(res <= 64 && res <= output.getMaxStackSize()))
+				{
+					return false;
+				}
 			}
+			return true;
 		}
 	}
 
@@ -180,11 +177,14 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 	{
 		if (this.canExtract())
 		{
-			ItemStack stack = this.handler.getStackInSlot(0);
-			ItemStack stack1 = this.handler.getStackInSlot(1);
-			Map<Integer, ItemStack> outputs = ExtractorRecipes.getInstance().getExtractingResult(stack, stack1);
+			ItemStack input = this.handler.getStackInSlot(0);
+			ItemStack barrel = this.handler.getStackInSlot(1);
+			ItemStack filter = this.handler.getStackInSlot(2);
+			Map<Integer, ItemStack> outputs = RECIPE_OUTPUTS;
 
-			for(int i = 0; i < 2; i++)
+			final int multiplier = 2;
+
+			for(int i = 0; i < multiplier; i++)
 			{
 				for(Map.Entry<Integer, ItemStack> entry : outputs.entrySet())
 				{
@@ -193,45 +193,41 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 
 					if (chance <= entry.getKey())
 					{
-						ItemStack output = entry.getValue();
-						ItemStack stack3 = this.handler.getStackInSlot(this.getOutputIndexFromStack(output, outputs));
+						ItemStack result = entry.getValue();
+						ItemStack output = this.handler.getStackInSlot(getOutputIndexFromStack(result, outputs));
 
-						if(stack3.getCount() + output.getCount() > 64)
+						if(output.getCount() + result.getCount() > 64)
 						{
 							continue;
 						}
-						if (stack3.isEmpty())
+						if (output.isEmpty())
 						{
-							this.handler.setStackInSlot(this.getOutputIndexFromStack(output, outputs), output.copy());
+							this.handler.setStackInSlot(getOutputIndexFromStack(result, outputs), result.copy());
 						}
-						else if (stack3.getItem() == output.getItem())
+						else if (output.getItem() == result.getItem())
 						{
-							stack3.grow(output.getCount());
+							output.grow(result.getCount());
 						}
 					}
 				}
 			}
 
-			//stack.shrink(1);
-			//NBTTagCompound compound = stack1.getTagCompound();
-			//NBTTagCompound compound1 = compound.getCompoundTag("BlockEntityTag");
-			//compound1.setInteger("Water", compound1.getInteger("Water") - 1);
-			//stack2.shrink(1);
+			input.shrink(1);
+			TileEntityBarrel.decreaseWaterFromStack(barrel);
+			filter.shrink(1);
 		}
 	}
 
-	private ItemStack getOutputStackFromSlot(int slotId, Map<Integer, ItemStack> map)
+	private static ItemStack getOutputStackFromSlot(int slotId, Map<Integer, ItemStack> map)
 	{
-        List<Integer> ints = new ArrayList<>();
-        map.forEach((key, value) -> ints.add(key));
+        List<Integer> ints = new ArrayList<>(map.keySet());
         ints.sort(Comparator.reverseOrder());
         return map.get(ints.get(slotId - 3));
 	}
 
-	private int getOutputIndexFromStack(ItemStack stack, Map<Integer, ItemStack> map)
+	private static int getOutputIndexFromStack(ItemStack stack, Map<Integer, ItemStack> map)
 	{
-        List<Integer> ints = new ArrayList<>();
-        map.forEach((key, value) -> ints.add(key));
+        List<Integer> ints = new ArrayList<>(map.keySet());
         ints.sort(Comparator.reverseOrder());
         for(Map.Entry<Integer, ItemStack> entry : map.entrySet())
         {

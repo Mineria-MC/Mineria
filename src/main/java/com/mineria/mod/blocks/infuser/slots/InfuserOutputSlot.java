@@ -1,13 +1,13 @@
 package com.mineria.mod.blocks.infuser.slots;
 
 import com.mineria.mod.init.ItemsInit;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class InfuserOutputSlot extends Slot
+public class InfuserOutputSlot extends SlotItemHandler
 {
-    public InfuserOutputSlot(IInventory inventoryIn, int index, int xPosition, int yPosition)
+    public InfuserOutputSlot(IItemHandler inventoryIn, int index, int xPosition, int yPosition)
     {
         super(inventoryIn, index, xPosition, yPosition);
     }
@@ -15,6 +15,6 @@ public class InfuserOutputSlot extends Slot
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        return stack.isItemEqual(new ItemStack(ItemsInit.cup));
+        return stack.isItemEqual(new ItemStack(ItemsInit.CUP));
     }
 }

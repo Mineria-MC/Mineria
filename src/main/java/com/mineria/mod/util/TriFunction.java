@@ -3,6 +3,7 @@ package com.mineria.mod.util;
 import java.util.Objects;
 import java.util.function.Function;
 
+@FunctionalInterface
 public interface TriFunction<T, U, E, R>
 {
     R apply(T t, U u, E e);

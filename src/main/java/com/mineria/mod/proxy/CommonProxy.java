@@ -5,13 +5,11 @@ import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.EntityInit;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.init.RecipesInit;
-import com.mineria.mod.util.compat.OreDictionaryCompat;
-import com.mineria.mod.util.handler.GuiHandler;
-import com.mineria.mod.util.handler.MineriaPacketHandler;
-import com.mineria.mod.world.gen.WorldGenCustomOres;
-import com.mineria.mod.world.gen.WorldGenCustomPlants;
+import com.mineria.mod.util.GameRegistryHandler;
+import com.mineria.mod.util.MineriaOreDictionary;
+import com.mineria.mod.util.GuiHandler;
+import com.mineria.mod.util.MineriaPacketHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
@@ -19,17 +17,17 @@ public class CommonProxy
     {
         BlocksInit.init();
         ItemsInit.init();
-        GameRegistry.registerWorldGenerator(new WorldGenCustomOres(), 0);
-        GameRegistry.registerWorldGenerator(new WorldGenCustomPlants(), 0);
+        GameRegistryHandler.registerTileEntities();
+        GameRegistryHandler.registerWorldGenerators();
         EntityInit.registerEntities();
         MineriaPacketHandler.registerNetworkMessagesMessages();
     }
 
     public void init()
     {
-        NetworkRegistry.INSTANCE.registerGuiHandler(Mineria.instance, new GuiHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(Mineria.INSTANCE, new GuiHandler());
         RecipesInit.registerFurnaceRecipes();
-        OreDictionaryCompat.registerOre();
+        MineriaOreDictionary.registerOres();
     }
 
     public void postInit()

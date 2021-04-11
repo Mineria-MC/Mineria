@@ -1,8 +1,12 @@
 {
     "variants" : {
-        "facing=north": { "model": "mineria:infuser"},
-        "facing=south": { "model": "mineria:infuser", "y": 180},
-        "facing=west":  { "model": "mineria:infuser", "y": 270},
-        "facing=east":  { "model": "mineria:infuser", "y": 90}
+        "facing=north,infusing=false": { "model": "mineria:infuser"},
+        "facing=south,infusing=false": { "model": "mineria:infuser", "y": 180},
+        "facing=west,infusing=false":  { "model": "mineria:infuser", "y": 270},
+        "facing=east,infusing=false":  { "model": "mineria:infuser", "y": 90},
+        "facing=north,infusing=true": { "model": "mineria:lit_infuser"},
+        "facing=south,infusing=true": { "model": "mineria:lit_infuser", "y": 180},
+        "facing=west,infusing=true":  { "model": "mineria:lit_infuser", "y": 270},
+        "facing=east,infusing=true":  { "model": "mineria:lit_infuser", "y": 90}
     }
 }

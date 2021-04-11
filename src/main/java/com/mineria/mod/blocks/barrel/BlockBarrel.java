@@ -1,8 +1,10 @@
 package com.mineria.mod.blocks.barrel;
 
-import com.mineria.mod.Mineria;
-import com.mineria.mod.util.handler.KeyboardHelper;
-import net.minecraft.block.BlockContainer;
+import com.mineria.mod.blocks.MineriaBlock;
+import com.mineria.mod.util.KeyboardHelper;
+import com.mineria.mod.util.MineriaUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -13,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +24,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,38 +36,14 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
-public class BlockBarrel extends BlockContainer
+public class BlockBarrel extends MineriaBlock implements ITileEntityProvider
 {
     private final int maxBuckets;
 
-    public BlockBarrel(String name, int maxBuckets)
+    public BlockBarrel(int maxBuckets)
     {
-        super(Material.WOOD);
-        setRegistryName(name);
-        setUnlocalizedName(name);
-        setCreativeTab(Mineria.mineriaTab);
-        setSoundType(SoundType.WOOD);
-        setHardness(2.0F);
-        setResistance(10.0F);
+        super(Material.WOOD, new BlockProperties().hardnessAndResistance(2, 10).creativeTab(null).sounds(SoundType.WOOD).harvestLevel(0, "axe"));
         this.maxBuckets = maxBuckets;
-    }
-
-    @Override
-    public boolean isFullBlock(IBlockState state)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
     }
 
     @SideOnly(Side.CLIENT)
@@ -78,45 +59,72 @@ public class BlockBarrel extends BlockContainer
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        TileEntityBarrel te = (TileEntityBarrel)worldIn.getTileEntity(pos);
-        Item heldItem = playerIn.getHeldItemMainhand().getItem();
-
-        if(heldItem == Items.WATER_BUCKET)
+        if(!worldIn.isRemote)
         {
-            if(te.setWatetBucket())
+            TileEntity tileAtPos = worldIn.getTileEntity(pos);
+
+            if(tileAtPos instanceof TileEntityBarrel)
             {
-                worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-                if(!worldIn.isRemote)
+                TileEntityBarrel tile = (TileEntityBarrel) tileAtPos;
+                Item heldItem = player.getHeldItem(hand).getItem();
+
+                if(heldItem.equals(Items.WATER_BUCKET))
                 {
-                    if(!playerIn.capabilities.isCreativeMode)
+                    if(tile.increaseWaterBuckets())
                     {
-                        playerIn.getHeldItemMainhand().shrink(1);
-                        playerIn.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BUCKET));
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        if(!player.capabilities.isCreativeMode)
+                        {
+                            player.getHeldItem(hand).shrink(1);
+                            player.setHeldItem(hand, new ItemStack(Items.BUCKET));
+                        }
                     }
+                }
+                else if(heldItem.equals(Items.BUCKET))
+                {
+                    if(tile.decreaseWaterBuckets())
+                    {
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+                        if(!player.capabilities.isCreativeMode)
+                        {
+                            player.getHeldItem(hand).shrink(1);
+                            ItemStack stackToAdd = new ItemStack(Items.WATER_BUCKET);
+                            if(!player.addItemStackToInventory(stackToAdd))
+                                player.dropItem(stackToAdd, false);
+                        }
+                    }
+                }
+                else
+                {
+                    ITextComponent text = new TextComponentString(tile.getWaterBuckets() == 0 ? "There is no Water stored." : (tile.getWaterBuckets() > 1 ? "There are " + tile.getWaterBuckets() + " Water Buckets." : "There is 1 Water Bucket stored"));
+                    text.setStyle(text.getStyle().setColor(TextFormatting.AQUA));
+                    player.sendStatusMessage(text, true);
                 }
             }
         }
+
         return true;
     }
 
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity tile = worldIn.getTileEntity(pos);
 
-        if(te instanceof TileEntityBarrel)
+        if(tile instanceof TileEntityBarrel)
         {
-            TileEntityBarrel tileEntity = (TileEntityBarrel)te;
+            TileEntityBarrel barrel = (TileEntityBarrel)tile;
 
-            if(tileEntity.shouldDrop())
+            if(barrel.shouldDrop())
             {
-                ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
-                NBTTagCompound compound = new NBTTagCompound();
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                compound.setTag("BlockEntityTag", ((TileEntityBarrel) te).writeToNBT(nbttagcompound1));
-                stack.setTagCompound(compound);
+                ItemStack stack = new ItemStack(this);
+                NBTTagCompound stackTag = new NBTTagCompound();
+                NBTTagCompound blockEntityTag = new NBTTagCompound();
+                stackTag.setTag("BlockEntityTag", barrel.writeToNBT(blockEntityTag));
+                stack.setTagCompound(stackTag);
 
                 spawnAsEntity(worldIn, pos, stack);
             }
@@ -135,9 +143,10 @@ public class BlockBarrel extends BlockContainer
     {
         if (worldIn.getTileEntity(pos) instanceof TileEntityBarrel)
         {
-            TileEntityBarrel tileEntity = (TileEntityBarrel)worldIn.getTileEntity(pos);
-            tileEntity.setDestroyedByCreativePlayer(player.capabilities.isCreativeMode);
+            TileEntityBarrel barrel = (TileEntityBarrel)worldIn.getTileEntity(pos);
+            barrel.setDestroyedByCreativePlayer(player.capabilities.isCreativeMode);
         }
+        super.onBlockHarvested(worldIn, pos, state, player);
     }
 
     @SideOnly(Side.CLIENT)
@@ -145,16 +154,15 @@ public class BlockBarrel extends BlockContainer
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced)
     {
         super.addInformation(stack, player, tooltip, advanced);
-        NBTTagCompound nbttagcompound = stack.getTagCompound();
+        NBTTagCompound stackTag = stack.getTagCompound();
 
-        if(nbttagcompound != null && nbttagcompound.hasKey("BlockEntityTag", 10))
+        if(stackTag != null && stackTag.hasKey("BlockEntityTag", 10))
         {
-            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("BlockEntityTag");
+            NBTTagCompound blockEntityTag = stackTag.getCompoundTag("BlockEntityTag");
 
-            if(nbttagcompound1.hasKey("Water"))
-            {
-                tooltip.add(nbttagcompound1.getInteger("Water") + " Buckets / " + this.maxBuckets);
-            }
+            if(blockEntityTag.hasKey("Water"))
+                if(blockEntityTag.getInteger("Water") >= 0)
+                    tooltip.add(blockEntityTag.getInteger("Water") + " " + I18n.format("water_barrel.buckets") + " / " + this.maxBuckets);
         }
         if(KeyboardHelper.isShiftKeyDown())
         {
@@ -177,5 +185,27 @@ public class BlockBarrel extends BlockContainer
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
         return new TileEntityBarrel(this.maxBuckets);
+    }
+
+    public static class ItemBlockBarrel extends ItemBlock
+    {
+        private final int maxBuckets;
+
+        public ItemBlockBarrel(Block block, int maxBuckets)
+        {
+            super(block);
+            setMaxStackSize(1);
+            this.maxBuckets = maxBuckets;
+        }
+
+        @Override
+        public ItemStack getDefaultInstance()
+        {
+            NBTTagCompound stackTag = new NBTTagCompound();
+            NBTTagCompound blockEntityTag = new NBTTagCompound();
+            blockEntityTag.setInteger("Water", this.maxBuckets < 0 ? -1 : 0);
+            stackTag.setTag("BlockEntityTag", blockEntityTag);
+            return MineriaUtils.make(new ItemStack(this), stack -> stack.setTagCompound(stackTag));
+        }
     }
 }

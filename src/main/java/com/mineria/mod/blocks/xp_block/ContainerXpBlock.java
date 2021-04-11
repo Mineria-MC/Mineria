@@ -1,21 +1,25 @@
 package com.mineria.mod.blocks.xp_block;
 
 import com.mineria.mod.blocks.xp_block.slots.SlotXpBlock;
+import com.mineria.mod.util.CustomItemStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class ContainerXpBlock extends Container
 {
-	private final TileEntityXpBlock tileXpBlock;
+	private final TileEntityXpBlock tile;
     
-    public ContainerXpBlock(InventoryPlayer playerInventory, TileEntityXpBlock xpBlockInv)
+    public ContainerXpBlock(InventoryPlayer playerInventory, TileEntityXpBlock tile)
     {
-        this.tileXpBlock = xpBlockInv;
-        addSlotToContainer(new SlotXpBlock(playerInventory.player, xpBlockInv, 0, 113, 21));
+        this.tile = tile;
+        addSlotToContainer(new SlotXpBlock(tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null), 0, 113, 21));
         
         for(int y = 0; y < 3; y++)
 		{
@@ -35,12 +39,21 @@ public class ContainerXpBlock extends Container
     public void onContainerClosed(EntityPlayer playerIn)
     {
         super.onContainerClosed(playerIn);
-
-        if (!this.tileXpBlock.getWorld().isRemote)
+        if (!this.tile.getWorld().isRemote)
         {
-            this.clearContainer(playerIn, this.tileXpBlock.getWorld(), this.tileXpBlock);
+            CustomItemStackHandler handler = tile.getInventory();
+            ItemStack previousStack = handler.getStackInSlot(0);
+            handler.setStackInSlot(0, ItemStack.EMPTY);
+
+            if (!playerIn.isEntityAlive() || playerIn instanceof EntityPlayerMP && ((EntityPlayerMP)playerIn).hasDisconnected())
+            {
+                playerIn.dropItem(previousStack, false);
+            }
+            else
+            {
+                playerIn.inventory.placeItemBackInInventory(tile.getWorld(), previousStack);
+            }
         }
-        this.tileXpBlock.closeInventory(playerIn);
     }
     
     @Override
@@ -52,66 +65,47 @@ public class ContainerXpBlock extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return this.tileXpBlock.isUsableByPlayer(playerIn);
-	}
-	
-	@Override
-	public void addListener(IContainerListener listener)
-    {
-        super.addListener(listener);
-        listener.sendAllWindowProperties(this, this.tileXpBlock);
-    }
-	
-	@Override
-	public void detectAndSendChanges()
-	{
-		super.detectAndSendChanges();
+		return this.tile.isUsableByPlayer(playerIn);
 	}
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack stackToTransfer = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(0);
 
         if (slot != null && slot.getHasStack())
         {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            ItemStack slotStack = slot.getStack();
+            stackToTransfer = slotStack.copy();
 
             if (index == 0)
             {
-                if (!this.mergeItemStack(itemstack1, 1, 37, true))
-                {
+                if (!this.mergeItemStack(slotStack, 1, 37, true))
                     return ItemStack.EMPTY;
-                }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onSlotChange(slotStack, stackToTransfer);
             }
-            else if (this.mergeItemStack(itemstack1, 0, 1, false)) //Forge Fix Shift Clicking in beacons with stacks larger then 1.
+            else if (this.mergeItemStack(slotStack, 0, 1, false))
             {
                 return ItemStack.EMPTY;
             }
             else if (index >= 1 && index < 28)
             {
-                if (!this.mergeItemStack(itemstack1, 28, 37, false))
-                {
+                if (!this.mergeItemStack(slotStack, 28, 37, false))
                     return ItemStack.EMPTY;
-                }
             }
             else if (index >= 28 && index < 37)
             {
-                if (!this.mergeItemStack(itemstack1, 1, 28, false))
-                {
+                if (!this.mergeItemStack(slotStack, 1, 28, false))
                     return ItemStack.EMPTY;
-                }
             }
-            else if (!this.mergeItemStack(itemstack1, 1, 37, false))
+            else if (!this.mergeItemStack(slotStack, 1, 37, false))
             {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty())
+            if (slotStack.isEmpty())
             {
                 slot.putStack(ItemStack.EMPTY);
             }
@@ -120,14 +114,14 @@ public class ContainerXpBlock extends Container
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.getCount() == itemstack.getCount())
+            if (slotStack.getCount() == stackToTransfer.getCount())
             {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(playerIn, itemstack1);
+            slot.onTake(playerIn, slotStack);
         }
 
-        return itemstack;
+        return stackToTransfer;
     }
 }

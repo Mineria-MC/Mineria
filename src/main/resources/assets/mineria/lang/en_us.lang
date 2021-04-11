@@ -48,6 +48,9 @@ item.gold_stick.name=Gold Stick
 item.iron_stick.name=Iron Stick
 item.filter.name=Filter
 item.mineria_xp_orb.name=XP Orb
+item.mineria_compressed_xp_orb.name=Compressed XP Orb
+item.mineria_super_compressed_xp_orb.name=Super Compressed XP Orb
+item.mineria_super_duper_compressed_xp_orb.name=Super Duper Compressed XP Orb
 item.vanadium_ingot.name=Vanadium Ingot
 item.vanadium_helmet.name=Vanadium Helmet
 
@@ -116,7 +119,7 @@ item.nettle_tea.name=Nettle Tea
 item.pulmonary_tea.name=Pulmonary Tea
 
 #Entities
-entity.golden_fish.name=Golden Fish
+entity.golden_silverfish.name=Golden Silverfish
 
 #CreativeTabs
 itemGroup.mineria=Mineria
@@ -128,4 +131,6 @@ gui.xp_block.give_xp=Give XP
 container.extractor=Extractor
 container.infuser=Infuser
 water_barrel.use=To use the barrel, you must place it down and right click on it with a water bucket to fill it
+
 tooltip.hold_shift=Hold SHIFT for more...
+water_barrel.buckets=Buckets

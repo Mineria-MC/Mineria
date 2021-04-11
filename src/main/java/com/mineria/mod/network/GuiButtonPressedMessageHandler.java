@@ -1,6 +1,8 @@
 package com.mineria.mod.network;
 
 import com.mineria.mod.blocks.xp_block.TileEntityXpBlock;
+import com.mineria.mod.util.GuiHandler;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -8,38 +10,40 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButtonPressedMessageHandler.GUIButtonPressedMessage, IMessage>
+public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButtonPressedMessageHandler.GuiButtonPressedMessage, IMessage>
 {
     @Override
-    public IMessage onMessage(GUIButtonPressedMessage message, MessageContext context)
+    public IMessage onMessage(GuiButtonPressedMessage message, MessageContext context)
     {
-        EntityPlayerMP entity = context.getServerHandler().player;
-        entity.getServerWorld().addScheduledTask(() -> {
-            int buttonID = message.buttonID;
-            int x = message.x;
-            int y = message.y;
-            int z = message.z;
-            World world = entity.world;
-            if (!world.isBlockLoaded(new BlockPos(x, y, z)))
+        EntityPlayerMP player = context.getServerHandler().player;
+        player.getServerWorld().addScheduledTask(() -> {
+            BlockPos pos = new BlockPos(message.x, message.y, message.z);
+            World world = player.world;
+            if (!world.isBlockLoaded(pos))
                 return;
-            if (buttonID == 0)
+            switch (message.guiID)
             {
-                TileEntityXpBlock.executeProcedure(x, y, z, world, entity);
+                case GuiHandler.GUI_XP_BLOCK:
+                    TileEntityXpBlock.execute(message.buttonID, pos, world, player);
+                    break;
+                default:
+                    break;
             }
         });
         return null;
     }
 
-    public static class GUIButtonPressedMessage implements IMessage
+    public static class GuiButtonPressedMessage implements IMessage
     {
-        int buttonID, x, y, z;
+        private int guiID, buttonID, x, y, z;
 
-        public GUIButtonPressedMessage()
+        public GuiButtonPressedMessage()
         {
         }
 
-        public GUIButtonPressedMessage(int buttonID, int x, int y, int z)
+        public GuiButtonPressedMessage(int guiID, int buttonID, int x, int y, int z)
         {
+            this.guiID = guiID;
             this.buttonID = buttonID;
             this.x = x;
             this.y = y;
@@ -47,8 +51,9 @@ public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButton
         }
 
         @Override
-        public void toBytes(io.netty.buffer.ByteBuf buf)
+        public void toBytes(ByteBuf buf)
         {
+            buf.writeInt(guiID);
             buf.writeInt(buttonID);
             buf.writeInt(x);
             buf.writeInt(y);
@@ -56,8 +61,9 @@ public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButton
         }
 
         @Override
-        public void fromBytes(io.netty.buffer.ByteBuf buf)
+        public void fromBytes(ByteBuf buf)
         {
+            guiID = buf.readInt();
             buttonID = buf.readInt();
             x = buf.readInt();
             y = buf.readInt();

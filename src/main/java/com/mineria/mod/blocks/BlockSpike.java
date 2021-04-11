@@ -15,15 +15,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockSpike extends BlockBase
+public class BlockSpike extends MineriaBlock
 {
 	protected static final AxisAlignedBB SPIKE_COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.7375D, 1.0D);
     protected static final AxisAlignedBB SPIKE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.8D, 1.0D);
 	private final float attackDamage;
 	
-	public BlockSpike(String name, int harvestlevel, Material materialIn, float hardness, float resistance, SoundType sound, float attackDamage)
+	public BlockSpike(float hardness, float resistance, float attackDamage)
 	{
-		super(name, harvestlevel, materialIn, hardness, resistance, sound);
+		super(Material.IRON, hardness, resistance, 2, SoundType.METAL);
 		this.attackDamage = attackDamage;
 	}
 	
@@ -42,7 +42,7 @@ public class BlockSpike extends BlockBase
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		entityIn.attackEntityFrom(DamageSource.GENERIC, this.attackDamage);
+		entityIn.attackEntityFrom(new DamageSource("onSpike"), this.attackDamage);
 	}
 	
 	@Override

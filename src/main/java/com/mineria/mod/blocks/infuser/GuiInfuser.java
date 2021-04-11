@@ -8,14 +8,14 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiInfuser extends GuiContainer
 {
-    private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID + ":textures/gui/infuser/infuser_gui.png");
+    private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/infuser.png");
     private final InventoryPlayer player;
-    private final TileEntityInfuser tileInfuser;
+    private final TileEntityInfuser tile;
 
-    public GuiInfuser(InventoryPlayer player, TileEntityInfuser tileInfuser)
+    public GuiInfuser(InventoryPlayer player, TileEntityInfuser tile)
     {
-        super(new ContainerInfuser(player, tileInfuser));
-        this.tileInfuser = tileInfuser;
+        super(new ContainerInfuser(player, tile));
+        this.tile = tile;
         this.player = player;
     }
 
@@ -30,7 +30,7 @@ public class GuiInfuser extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        String s = this.tileInfuser.getDisplayName().getUnformattedText();
+        String s = this.tile.getDisplayName().getUnformattedText();
         this.fontRenderer.drawString(s, (this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2 + 20), 5, 4210752);
         this.fontRenderer.drawString(this.player.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
@@ -42,32 +42,32 @@ public class GuiInfuser extends GuiContainer
         this.mc.getTextureManager().bindTexture(TEXTURES);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
-        if (TileEntityInfuser.isInfusing(this.tileInfuser))
+        if (TileEntityInfuser.isInfusing(this.tile))
         {
-            int k = this.getBurnLeftScaled(13);
-            this.drawTexturedModalRect(this.guiLeft + 149, this.guiTop + 36 + 12 - k, 202, 12 - k, 14, k + 1);
+            int burnAnimation = this.getBurnLeftScaled(13);
+            this.drawTexturedModalRect(this.guiLeft + 149, this.guiTop + 36 + 12 - burnAnimation, 202, 12 - burnAnimation, 14, burnAnimation + 1);
         }
 
-        int l = this.getInfuseProgressScaled(26);
-        this.drawTexturedModalRect(this.guiLeft + 64, this.guiTop + 36, 176, 0, l + 1, 13);
+        int infuseAnimation = this.getInfuseProgressScaled(26);
+        this.drawTexturedModalRect(this.guiLeft + 64, this.guiTop + 36, 176, 0, infuseAnimation + 1, 13);
     }
 
     private int getInfuseProgressScaled(int pixels)
     {
-        int i = this.tileInfuser.getField(2);
-        int j = this.tileInfuser.getField(3);
-        return j != 0 && i != 0 ? i * pixels / j : 0;
+        int infuseTime = this.tile.getField(2);
+        int totalInfuseTime = this.tile.getField(3);
+        return totalInfuseTime != 0 && infuseTime != 0 ? infuseTime * pixels / totalInfuseTime : 0;
     }
 
     private int getBurnLeftScaled(int pixels)
     {
-        int i = this.tileInfuser.getField(1);
+        int currentBurnTime = this.tile.getField(1);
 
-        if (i == 0)
+        if (currentBurnTime == 0)
         {
-            i = 2400;
+            currentBurnTime = 2400;
         }
 
-        return this.tileInfuser.getField(0) * pixels / i;
+        return this.tile.getField(0) * pixels / currentBurnTime;
     }
 }

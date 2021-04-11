@@ -2,7 +2,10 @@ package com.mineria.mod.blocks.xp_block;
 
 import com.mineria.mod.Mineria;
 import com.mineria.mod.References;
+import com.mineria.mod.blocks.MineriaBlock;
+import com.mineria.mod.util.GuiHandler;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -14,28 +17,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockXp extends BlockContainer
+public class BlockXp extends MineriaBlock implements ITileEntityProvider
 {
-	public BlockXp(String name, int harvestlevel, Material materialIn, float hardness, float resistance, SoundType sound)
+	public BlockXp()
 	{
-		super(materialIn);
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(Mineria.mineriaTab);
-		setHarvestLevel("pickaxe", harvestlevel);
-		this.setHardness(hardness);
-		this.setResistance(resistance);
-		this.setSoundType(sound);
+		super(Material.IRON, 2.5F, 5, 1, SoundType.METAL);
 	}
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        TileEntityXpBlock te = (TileEntityXpBlock)worldIn.getTileEntity(pos);
         if(!worldIn.isRemote)
-		{
-            playerIn.openGui(Mineria.instance, References.GUI_XP_BLOCK, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        }
+            playerIn.openGui(Mineria.INSTANCE, GuiHandler.GUI_XP_BLOCK, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 	

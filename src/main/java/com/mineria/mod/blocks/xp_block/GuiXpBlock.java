@@ -2,29 +2,28 @@ package com.mineria.mod.blocks.xp_block;
 
 import com.mineria.mod.References;
 import com.mineria.mod.network.GuiButtonPressedMessageHandler;
-import com.mineria.mod.util.handler.MineriaPacketHandler;
+import com.mineria.mod.util.GuiHandler;
+import com.mineria.mod.util.MineriaPacketHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiXpBlock extends GuiContainer
 {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/xp_block/xp_block_gui.png");
-	public final EntityPlayer player;
-	private final String buttonText = I18n.format("gui.xp_block.give_xp");
-	private final TileEntityXpBlock tileEntity;
-	protected final int xSize = 178;
-	protected final int	ySize = 139;
+	private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/xp_block.png");
+	private final TileEntityXpBlock tile;
+	private final String buttonText;
 	
-	public GuiXpBlock(InventoryPlayer playerInv, TileEntityXpBlock xpBlockInv)
+	public GuiXpBlock(InventoryPlayer playerInv, TileEntityXpBlock tile)
 	{
-		super(new ContainerXpBlock(playerInv, xpBlockInv));
-		this.player = playerInv.player;
-		this.tileEntity = xpBlockInv;
+		super(new ContainerXpBlock(playerInv, tile));
+		this.tile = tile;
+		this.buttonText = I18n.format("gui.xp_block.give_xp");
+		this.xSize = 178;
+		this.ySize = 139;
 	}
 
 	@Override
@@ -61,6 +60,6 @@ public class GuiXpBlock extends GuiContainer
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		MineriaPacketHandler.PACKET_HANDLER.sendToServer(new GuiButtonPressedMessageHandler.GUIButtonPressedMessage(button.id, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()));
+		MineriaPacketHandler.PACKET_HANDLER.sendToServer(new GuiButtonPressedMessageHandler.GuiButtonPressedMessage(GuiHandler.GUI_XP_BLOCK,button.id, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()));
 	}
 }

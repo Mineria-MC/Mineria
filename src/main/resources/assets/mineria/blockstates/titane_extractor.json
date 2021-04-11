@@ -1,8 +1,12 @@
 {
     "variants" : {
-        "facing=north": { "model": "mineria:titane_extractor"},
-        "facing=south": { "model": "mineria:titane_extractor", "y": 180},
-        "facing=west":  { "model": "mineria:titane_extractor", "y": 270},
-        "facing=east":  { "model": "mineria:titane_extractor", "y": 90}
+        "extracting=false,facing=north": { "model": "mineria:titane_extractor"},
+        "extracting=false,facing=south": { "model": "mineria:titane_extractor", "y": 180},
+        "extracting=false,facing=west":  { "model": "mineria:titane_extractor", "y": 270},
+        "extracting=false,facing=east":  { "model": "mineria:titane_extractor", "y": 90},
+        "extracting=true,facing=north": { "model": "mineria:lit_titane_extractor"},
+        "extracting=true,facing=south": { "model": "mineria:lit_titane_extractor", "y": 180},
+        "extracting=true,facing=west":  { "model": "mineria:lit_titane_extractor", "y": 270},
+        "extracting=true,facing=east":  { "model": "mineria:lit_titane_extractor", "y": 90}
     }
 }
