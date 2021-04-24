@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "potions=0": { "model": "mineria:golden_water_barrel_potions_empty" },
+    "potions=1": { "model": "mineria:golden_water_barrel_potions_1" },
+    "potions=2": { "model": "mineria:golden_water_barrel_potions_2" },
+    "potions=3": { "model": "mineria:golden_water_barrel_potions_3" },
+    "potions=4": { "model": "mineria:golden_water_barrel_potions_full" }
+  }
+}

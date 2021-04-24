@@ -1,6 +1,6 @@
 package com.mineria.mod.blocks.extractor;
 
-import com.mineria.mod.blocks.barrel.TileEntityBarrel;
+import com.mineria.mod.blocks.barrel.AbstractTileEntityWaterBarrel;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.util.CustomItemStackHandler;
 import com.mineria.mod.util.MineriaUtils;
@@ -139,7 +139,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 		ItemStack input = this.handler.getStackInSlot(0);
 		ItemStack barrel = this.handler.getStackInSlot(1);
 		ItemStack filter = this.handler.getStackInSlot(2);
-		boolean hasWater = TileEntityBarrel.checkWaterFromStack(barrel);
+		boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(barrel);
 
 		if (input.isEmpty() || barrel.isEmpty() || filter.isEmpty() || !hasWater)
 		{
@@ -213,7 +213,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 			}
 
 			input.shrink(1);
-			TileEntityBarrel.decreaseWaterFromStack(barrel);
+			AbstractTileEntityWaterBarrel.decreaseFluidFromStack(barrel);
 			filter.shrink(1);
 		}
 	}

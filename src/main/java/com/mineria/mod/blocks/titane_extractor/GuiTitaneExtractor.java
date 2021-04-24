@@ -35,6 +35,7 @@ public class GuiTitaneExtractor extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		String name = this.tile.getDisplayName().getUnformattedText();
 		this.fontRenderer.drawString(name, (this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 + 20), 7, 4210752);
 		this.fontRenderer.drawString(this.player.getDisplayName().getUnformattedText(), 132, this.ySize - 116 + 2, 4210752);

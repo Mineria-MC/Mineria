@@ -1,6 +1,6 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.blocks.barrel.TileEntityBarrel;
+import com.mineria.mod.blocks.barrel.AbstractTileEntityWaterBarrel;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.util.CustomItemStackHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -221,7 +221,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable
             }
 
             input.shrink(1);
-            TileEntityBarrel.decreaseWaterFromStack(barrel);
+            AbstractTileEntityWaterBarrel.decreaseFluidFromStack(barrel);
         }
     }
 
@@ -230,7 +230,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable
         ItemStack input = this.inventory.getStackInSlot(0);
         ItemStack barrel = this.inventory.getStackInSlot(1);
         ItemStack output = this.inventory.getStackInSlot(3);
-        boolean hasWater = TileEntityBarrel.checkWaterFromStack(barrel);
+        boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(barrel);
 
         if (input.isEmpty() || barrel.isEmpty() || output.isEmpty() || !hasWater)
         {

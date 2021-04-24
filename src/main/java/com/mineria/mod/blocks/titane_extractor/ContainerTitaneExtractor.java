@@ -1,6 +1,6 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.blocks.barrel.BlockBarrel;
+import com.mineria.mod.blocks.barrel.AbstractBlockWaterBarrel;
 import com.mineria.mod.blocks.titane_extractor.slots.SlotFilter;
 import com.mineria.mod.blocks.titane_extractor.slots.SlotOutput;
 import com.mineria.mod.init.BlocksInit;
@@ -108,7 +108,7 @@ public class ContainerTitaneExtractor extends Container
                         return ItemStack.EMPTY;
                     }
                 }
-                else if(stack1.getItem() instanceof BlockBarrel.ItemBlockBarrel)
+                else if(stack1.getItem() instanceof AbstractBlockWaterBarrel.ItemBlockBarrel)
                 {
                     if (!this.mergeItemStack(stack1, 1, 2, false))
                     {

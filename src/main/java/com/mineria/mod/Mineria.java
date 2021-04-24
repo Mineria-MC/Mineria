@@ -1,5 +1,6 @@
 package com.mineria.mod;
 
+import com.mineria.mod.blocks.barrel.AbstractBlockWaterBarrel;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.proxy.CommonProxy;
 import com.mineria.mod.proxy.ServerProxy;
@@ -15,8 +16,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @Mod(modid = References.MODID, name = References.NAME, version = References.VERSION, acceptedMinecraftVersions = References.MC_VERSION)
@@ -89,9 +93,11 @@ public class Mineria
 		public void displayAllRelevantItems(NonNullList<ItemStack> items)
 		{
 			super.displayAllRelevantItems(items);
-			//Here we're manually adding these two items because they have custom Compound tags
-			items.add(Item.getItemFromBlock(BlocksInit.WATER_BARREL).getDefaultInstance());
-			items.add(Item.getItemFromBlock(BlocksInit.INFINITE_WATER_BARREL).getDefaultInstance());
+			//We're adding the barrels with custom NBT Tags
+			items.addAll(ForgeRegistries.ITEMS.getValuesCollection().stream()
+					.filter(AbstractBlockWaterBarrel.ItemBlockBarrel.class::isInstance)
+					.map(Item::getDefaultInstance)
+					.collect(Collectors.toList()));
 		}
 	}
 }

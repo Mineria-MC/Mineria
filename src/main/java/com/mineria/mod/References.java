@@ -8,6 +8,4 @@ public class References
 	public static final String MC_VERSION = "1.12.2";
 	public static final String CLIENT_PROXY = "com.mineria.mod.proxy.ClientProxy";
 	public static final String SERVER_PROXY = "com.mineria.mod.proxy.ServerProxy";
-
-	public static final int GUI_XP_BLOCK = 3;
 }

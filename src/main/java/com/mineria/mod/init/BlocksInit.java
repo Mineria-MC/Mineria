@@ -2,7 +2,11 @@ package com.mineria.mod.init;
 
 import com.mineria.mod.References;
 import com.mineria.mod.blocks.*;
-import com.mineria.mod.blocks.barrel.BlockBarrel;
+import com.mineria.mod.blocks.barrel.AbstractBlockWaterBarrel;
+import com.mineria.mod.blocks.barrel.BlockWaterBarrel;
+import com.mineria.mod.blocks.barrel.copper.BlockCopperWaterBarrel;
+import com.mineria.mod.blocks.barrel.golden.BlockGoldenWaterBarrel;
+import com.mineria.mod.blocks.barrel.iron.BlockIronFluidBarrel;
 import com.mineria.mod.blocks.extractor.BlockExtractor;
 import com.mineria.mod.blocks.infuser.BlockInfuser;
 import com.mineria.mod.blocks.titane_extractor.BlockTitaneExtractor;
@@ -23,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = References.MODID)
 public final class BlocksInit
 {
@@ -69,15 +74,18 @@ public final class BlocksInit
 	public static final Block COMPRESSED_LEAD_SPIKE = register("compressed_lead_spike", new BlockSpike(7, 25, 4));
 	public static final Block INFESTED_NETHERRACK = register("infested_netherrack", new BlockInfestedNetherrack());
 	public static final Block XP_WALL = register("xp_wall", new MineriaBlock(Material.IRON, 2.5F, 5, 1, SoundType.METAL));
-	public static final Block WATER_BARREL = register("water_barrel", new BlockBarrel(8), (barrel) -> new BlockBarrel.ItemBlockBarrel(barrel, 8));
-	public static final Block INFINITE_WATER_BARREL = register("infinite_water_barrel", new BlockBarrel(-1), (barrel) -> new BlockBarrel.ItemBlockBarrel(barrel, -1));
+	public static final Block WATER_BARREL = register("water_barrel", new BlockWaterBarrel(8), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
+	public static final Block INFINITE_WATER_BARREL = register("infinite_water_barrel", new BlockWaterBarrel(-1), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
+	public static final Block COPPER_WATER_BARREL = register("copper_water_barrel", new BlockCopperWaterBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
+	public static final Block IRON_FLUID_BARREL = register("iron_fluid_barrel", new BlockIronFluidBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
+	public static final Block GOLDEN_WATER_BARREL = register("golden_water_barrel", new BlockGoldenWaterBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
 
 	private static Block register(String name, Block instance)
 	{
 		return register(name, instance, ItemBlock::new);
 	}
 
-	private static Block register(String name, Block instance, Function<Block, ItemBlock> itemBlockBuilder)
+	private static <T extends Block> T register(String name, T instance, Function<T, ItemBlock> itemBlockBuilder)
 	{
 		UNREGISTERED.put(instance.setRegistryName(name).setUnlocalizedName(name), (ItemBlock) itemBlockBuilder.apply(instance).setRegistryName(name).setUnlocalizedName(name));
 		return instance;

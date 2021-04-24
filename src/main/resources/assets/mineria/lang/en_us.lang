@@ -31,6 +31,9 @@ tile.infested_netherrack.name=Infested Netherrack
 tile.xp_wall.name=XP Wall
 tile.water_barrel.name=Water Barrel
 tile.infinite_water_barrel.name=§dInfinite Water Barrel
+tile.copper_water_barrel.name=Copper Water Barrel
+tile.iron_fluid_barrel.name=Iron Fluid Barrel
+tile.golden_water_barrel.name=Golden Water Barrel
 
 tile.xp_block.name=XP Block
 tile.titane_extractor.name=Titane Extractor
@@ -124,13 +127,21 @@ entity.golden_silverfish.name=Golden Silverfish
 #CreativeTabs
 itemGroup.mineria=Mineria
 
-#Other
+#Containers & Guis
 container.titane_extractor=Titane Extractor
 container.xp_block=XP Block
-gui.xp_block.give_xp=Give XP
+container.copper_water_barrel=Copper Water Barrel
+container.golden_water_barrel=Golden Water Barrel
 container.extractor=Extractor
 container.infuser=Infuser
-water_barrel.use=To use the barrel, you must place it down and right click on it with a water bucket to fill it
+gui.xp_block.give_xp=Give XP
 
+#Tooltips
 tooltip.hold_shift=Hold SHIFT for more...
-water_barrel.buckets=Buckets
+tooltip.water_barrel.buckets=Buckets
+tooltip.water_barrel.use=To use the barrel, you must place it down and right click on it with a water bucket to fill it.
+tooltip.water_barrel.ability=Ability
+tooltip.water_barrel.small_inventory_ability=This barrel has a small inventory of 8 slots.
+tooltip.water_barrel.view_capacity=Sneak + Click to see the capacity of the barrel.
+tooltip.water_barrel.store_lava=This barrel can store any fluid, but only one at a time.
+tooltip.water_barrel.store_potions=This barrel has an inventory that can only store potions and teas.

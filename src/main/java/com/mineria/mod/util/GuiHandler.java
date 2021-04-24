@@ -1,5 +1,11 @@
 package com.mineria.mod.util;
 
+import com.mineria.mod.blocks.barrel.copper.ContainerCopperWaterBarrel;
+import com.mineria.mod.blocks.barrel.copper.GuiCopperWaterBarrel;
+import com.mineria.mod.blocks.barrel.copper.TileEntityCopperWaterBarrel;
+import com.mineria.mod.blocks.barrel.golden.ContainerGoldenWaterBarrel;
+import com.mineria.mod.blocks.barrel.golden.GuiGoldenWaterBarrel;
+import com.mineria.mod.blocks.barrel.golden.TileEntityGoldenWaterBarrel;
 import com.mineria.mod.blocks.extractor.ContainerExtractor;
 import com.mineria.mod.blocks.extractor.GuiExtractor;
 import com.mineria.mod.blocks.extractor.TileEntityExtractor;
@@ -24,6 +30,8 @@ public class GuiHandler implements IGuiHandler
 	public static final int GUI_EXTRACTOR = 2;
 	public static final int GUI_XP_BLOCK = 3;
 	public static final int GUI_INFUSER = 4;
+	public static final int GUI_COPPER_BARREL = 5;
+	public static final int GUI_GOLDEN_BARREL = 6;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -41,6 +49,10 @@ public class GuiHandler implements IGuiHandler
 					return new ContainerXpBlock(player.inventory, (TileEntityXpBlock) tile);
 				case GUI_INFUSER:
 					return new ContainerInfuser(player.inventory, (TileEntityInfuser) tile);
+				case GUI_COPPER_BARREL:
+					return new ContainerCopperWaterBarrel(player.inventory, (TileEntityCopperWaterBarrel) tile);
+				case GUI_GOLDEN_BARREL:
+					return new ContainerGoldenWaterBarrel(player.inventory, (TileEntityGoldenWaterBarrel) tile);
 			}
 		}
 		return null;
@@ -62,6 +74,10 @@ public class GuiHandler implements IGuiHandler
 					return new GuiXpBlock(player.inventory, (TileEntityXpBlock) tile);
 				case GUI_INFUSER:
 					return new GuiInfuser(player.inventory, (TileEntityInfuser) tile);
+				case GUI_COPPER_BARREL:
+					return new GuiCopperWaterBarrel(player.inventory, (TileEntityCopperWaterBarrel) tile);
+				case GUI_GOLDEN_BARREL:
+					return new GuiGoldenWaterBarrel(player.inventory, (TileEntityGoldenWaterBarrel) tile);
 			}
 		}
 		return null;

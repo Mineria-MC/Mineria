@@ -1,6 +1,6 @@
 package com.mineria.mod.blocks.infuser;
 
-import com.mineria.mod.blocks.barrel.BlockBarrel;
+import com.mineria.mod.blocks.barrel.AbstractBlockWaterBarrel;
 import com.mineria.mod.blocks.infuser.slots.FuelSlot;
 import com.mineria.mod.blocks.infuser.slots.InfuserOutputSlot;
 import com.mineria.mod.init.ItemsInit;
@@ -110,7 +110,7 @@ public class ContainerInfuser extends Container
                     if(!this.mergeItemStack(slotStack, 0, 1, false))
                         return ItemStack.EMPTY;
                 }
-                else if(slotStack.getItem() instanceof BlockBarrel.ItemBlockBarrel)
+                else if(slotStack.getItem() instanceof AbstractBlockWaterBarrel.ItemBlockBarrel)
                 {
                     if(!this.mergeItemStack(slotStack, 1, 2, false))
                         return ItemStack.EMPTY;
