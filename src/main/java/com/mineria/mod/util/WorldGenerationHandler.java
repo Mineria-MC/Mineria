@@ -66,7 +66,7 @@ public class WorldGenerationHandler
         settings.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.withConfiguration(
                 new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(state), new SimpleBlockPlacer()).tries(64).build())
         .withPlacement(Features.Placements.VEGETATION_PLACEMENT).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
-                .chance(Math.abs(chance - 99)).range(16).func_242731_b(2));
+                .chance(Math.abs(chance - 99)).range(16).count(2));
     }
 
     private static void generateOres(BiomeLoadingEvent event)
@@ -94,6 +94,6 @@ public class WorldGenerationHandler
     {
         settings.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(fillerType, state, veinSize))
                 .withPlacement(Placement.RANGE.configure(new TopSolidRangeConfig(minHeight, 0, maxHeight)))
-                .square().func_242731_b(amount));
+                .square().count(amount));
     }
 }

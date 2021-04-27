@@ -71,8 +71,7 @@ public class MineriaBow extends BowItem
 						AbstractArrowEntity arrowEntity = arrow.createArrow(world, ammo, player);
 						// arrowEntity = customArrow(arrowEntity);	Useless
 
-						//shootArrow
-						arrowEntity.func_234612_a_(player, player.rotationPitch, player.rotationYaw, 0.0F, velocity * 3.0F, 1.0F);
+						arrowEntity.setDirectionAndMovement(player, player.rotationPitch, player.rotationYaw, 0.0F, velocity * 3.0F, 1.0F);
 
 						if (velocity == this.velocityMultiplier) {
 							arrowEntity.setIsCritical(true);
