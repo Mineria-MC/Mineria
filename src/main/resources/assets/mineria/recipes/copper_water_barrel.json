@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PPP",
+    "BcB",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "#PLANKS"
+    },
+    "B": {
+      "item": "mineria:water_barrel"
+    },
+    "c": {
+      "item": "#COPPER"
+    }
+  },
+  "result": {
+    "item": "mineria:copper_water_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Capacity": 16
+      }
+    }
+  }
+}

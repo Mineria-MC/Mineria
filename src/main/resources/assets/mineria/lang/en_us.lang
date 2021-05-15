@@ -13,16 +13,6 @@ tile.lonsdaleite_block.name=Lonsdaleite Block
 tile.silver_block.name=Silver Block
 tile.compressed_lead_block.name=Compressed Lead Block
 
-tile.cat_woodcut.name=Cat Woodcut
-tile.cow_woodcut.name=Cow Woodcut
-tile.deer_woodcut.name=Deer Woodcut
-tile.dog_woodcut.name=Dog Woodcut
-tile.donkey_woodcut.name=Donkey Woodcut
-tile.goat_woodcut.name=Goat Woodcut
-tile.horse_woodcut.name=Horse Woodcut
-tile.rabbit_woodcut.name=Rabbit Woodcut
-tile.wolf_woodcut.name=Wolf Woodcut
-
 tile.blue_glowstone.name=Blue Glowstone
 tile.mineral_sand.name=Mineral Sand
 tile.lead_spike.name=Lead Spike
@@ -34,6 +24,8 @@ tile.infinite_water_barrel.name=§dInfinite Water Barrel
 tile.copper_water_barrel.name=Copper Water Barrel
 tile.iron_fluid_barrel.name=Iron Fluid Barrel
 tile.golden_water_barrel.name=Golden Water Barrel
+tile.diamond_fluid_barrel.name=Diamond Fluid Barrel
+tile.tnt_barrel.name=TNT Barrel
 
 tile.xp_block.name=XP Block
 tile.titane_extractor.name=Titane Extractor
@@ -131,7 +123,9 @@ itemGroup.mineria=Mineria
 container.titane_extractor=Titane Extractor
 container.xp_block=XP Block
 container.copper_water_barrel=Copper Water Barrel
+container.iron_fluid_barrel=Iron Fluid Barrel
 container.golden_water_barrel=Golden Water Barrel
+container.diamond_fluid_barrel=Diamond Fluid Barrel
 container.extractor=Extractor
 container.infuser=Infuser
 gui.xp_block.give_xp=Give XP

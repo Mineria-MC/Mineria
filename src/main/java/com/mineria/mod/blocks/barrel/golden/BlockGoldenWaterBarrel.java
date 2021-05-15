@@ -9,13 +9,16 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -27,7 +30,7 @@ import java.util.List;
 
 public class BlockGoldenWaterBarrel extends AbstractBlockWaterBarrel
 {
-    private static final PropertyInteger POTIONS = PropertyInteger.create("potions", 0, 4);
+    protected static final PropertyInteger POTIONS = PropertyInteger.create("potions", 0, 4);
 
     public BlockGoldenWaterBarrel()
     {
@@ -101,5 +104,41 @@ public class BlockGoldenWaterBarrel extends AbstractBlockWaterBarrel
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, POTIONS);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+        TileEntity tile = worldIn.getTileEntity(pos);
+
+        if(tile instanceof TileEntityGoldenWaterBarrel)
+            ((TileEntityGoldenWaterBarrel)tile).reloadBlockState();
+    }
+
+    public static class ItemBlockBarrel extends AbstractBlockWaterBarrel.ItemBlockBarrel<BlockGoldenWaterBarrel>
+    {
+        public ItemBlockBarrel(BlockGoldenWaterBarrel barrel)
+        {
+            super(barrel);
+            this.addPropertyOverride(new ResourceLocation("potions"), (stack, world, entity) -> {
+                if(stack.getTagCompound() != null)
+                {
+                    if(stack.getTagCompound().hasKey("BlockEntityTag"))
+                    {
+                        NBTTagCompound blockEntityTag = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+                        if(blockEntityTag.hasKey("Potions"))
+                            return blockEntityTag.getInteger("Potions");
+                    }
+                }
+                return 0;
+            });
+        }
+
+        @Override
+        protected NBTTagCompound writeAdditional(NBTTagCompound blockEntityTag)
+        {
+            blockEntityTag.setInteger("Potions", 0);
+            return blockEntityTag;
+        }
     }
 }

@@ -82,17 +82,32 @@ public class ContainerGoldenWaterBarrel extends Container
             ItemStack slotStack = slot.getStack();
             stackToTransfer = slotStack.copy();
 
-            if (index < 9)
+            if(index < 20)
             {
-                if (!this.mergeItemStack(slotStack, 9, this.inventorySlots.size(), true))
-                {
+                if (!this.mergeItemStack(slotStack, 20, this.inventorySlots.size(), true))
                     return ItemStack.EMPTY;
+
+                slot.onSlotChange(slotStack, stackToTransfer);
+            }
+            else
+            {
+                if(slotStack.getItem() instanceof ItemDrink || slotStack.getItem().equals(ItemsInit.CUP))
+                {
+                    if(!this.mergeItemStack(slotStack, 0, 4, false))
+                        return ItemStack.EMPTY;
+                }
+                else if(slotStack.getItem() instanceof ItemPotion || slotStack.getItem() instanceof ItemGlassBottle)
+                {
+                    if(!this.mergeItemStack(slotStack, 4, 20, false))
+                        return ItemStack.EMPTY;
+                }
+                else if(index < 45)
+                {
+                    if(!this.mergeItemStack(slotStack, this.inventorySlots.size() - 9, this.inventorySlots.size(), false))
+                        return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(slotStack, 0, 9, false))
-            {
-                return ItemStack.EMPTY;
-            }
+
 
             if (slotStack.isEmpty())
             {
@@ -102,6 +117,13 @@ public class ContainerGoldenWaterBarrel extends Container
             {
                 slot.onSlotChanged();
             }
+
+            if (slotStack.getCount() == stackToTransfer.getCount())
+            {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerIn, slotStack);
         }
 
         return stackToTransfer;

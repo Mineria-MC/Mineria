@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "normal": { "model": "mineria:diamond_fluid_barrel" }
+  }
+}

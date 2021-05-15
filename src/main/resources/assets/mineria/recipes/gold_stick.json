@@ -1,12 +1,12 @@
 {
-    "type": "minecraft:crafting_shaped",
+    "type": "forge:ore_shaped",
     "pattern": [
         "#",
         "#"
     ],
     "key": {
         "#": {
-            "item": "minecraft:gold_ingot"
+            "item": "#GOLD"
         }
     },
     "result": {

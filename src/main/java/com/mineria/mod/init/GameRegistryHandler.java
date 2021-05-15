@@ -3,6 +3,7 @@ package com.mineria.mod.init;
 import com.mineria.mod.References;
 import com.mineria.mod.blocks.barrel.TileEntityWaterBarrel;
 import com.mineria.mod.blocks.barrel.copper.TileEntityCopperWaterBarrel;
+import com.mineria.mod.blocks.barrel.diamond.TileEntityDiamondFluidBarrel;
 import com.mineria.mod.blocks.barrel.golden.TileEntityGoldenWaterBarrel;
 import com.mineria.mod.blocks.barrel.iron.TileEntityIronFluidBarrel;
 import com.mineria.mod.blocks.extractor.TileEntityExtractor;
@@ -14,7 +15,7 @@ import com.mineria.mod.world.gen.WorldGenCustomPlants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class GameRegistryHandler
+public final class GameRegistryHandler
 {
     public static void registerTileEntities()
     {
@@ -26,6 +27,7 @@ public class GameRegistryHandler
         GameRegistry.registerTileEntity(TileEntityCopperWaterBarrel.class, new ResourceLocation(References.MODID, "copper_water_barrel"));
         GameRegistry.registerTileEntity(TileEntityIronFluidBarrel.class, new ResourceLocation(References.MODID, "iron_fluid_barrel"));
         GameRegistry.registerTileEntity(TileEntityGoldenWaterBarrel.class, new ResourceLocation(References.MODID, "golden_water_barrel"));
+        //GameRegistry.registerTileEntity(TileEntityDiamondFluidBarrel.class, new ResourceLocation(References.MODID, "diamond_fluid_barrel"));
     }
 
     public static void registerWorldGenerators()

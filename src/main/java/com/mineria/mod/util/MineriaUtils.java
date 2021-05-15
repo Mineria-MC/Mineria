@@ -27,4 +27,12 @@ public class MineriaUtils
             action.accept(obj);
         return test;
     }
+
+    public static <T, V extends T> boolean doIfInstance(T obj, Class<V> clazz, Consumer<V> action)
+    {
+        boolean instance = clazz.isInstance(obj);
+        if(instance)
+            action.accept(clazz.cast(obj));
+        return instance;
+    }
 }

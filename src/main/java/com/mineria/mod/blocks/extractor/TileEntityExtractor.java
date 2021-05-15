@@ -137,22 +137,21 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 	private boolean canExtract()
 	{
 		ItemStack input = this.handler.getStackInSlot(0);
-		ItemStack barrel = this.handler.getStackInSlot(1);
+		ItemStack waterSource = this.handler.getStackInSlot(1);
 		ItemStack filter = this.handler.getStackInSlot(2);
-		boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(barrel);
+		boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(waterSource);
 
-		if (input.isEmpty() || barrel.isEmpty() || filter.isEmpty() || !hasWater)
+		if (input.isEmpty() || waterSource.isEmpty() || filter.isEmpty() || !hasWater)
 		{
 			return false;
 		}
 		else
 		{
-			Map<Integer, ItemStack> outputs = RECIPE_OUTPUTS;
 
 			for(int index = 3; index < this.handler.getSlots(); index++)
 			{
 				ItemStack output = this.handler.getStackInSlot(index);
-				ItemStack result = getOutputStackFromSlot(index, outputs);
+				ItemStack result = getOutputStackFromSlot(index, RECIPE_OUTPUTS);
 
 				if(output.isEmpty())
 				{
@@ -178,7 +177,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 		if (this.canExtract())
 		{
 			ItemStack input = this.handler.getStackInSlot(0);
-			ItemStack barrel = this.handler.getStackInSlot(1);
+			ItemStack waterSource = this.handler.getStackInSlot(1);
 			ItemStack filter = this.handler.getStackInSlot(2);
 			Map<Integer, ItemStack> outputs = RECIPE_OUTPUTS;
 
@@ -213,7 +212,7 @@ public class TileEntityExtractor extends TileEntity implements ITickable
 			}
 
 			input.shrink(1);
-			AbstractTileEntityWaterBarrel.decreaseFluidFromStack(barrel);
+			this.handler.setStackInSlot(1, AbstractTileEntityWaterBarrel.decreaseFluidFromStack(waterSource));
 			filter.shrink(1);
 		}
 	}

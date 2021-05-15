@@ -1,0 +1,33 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PgP",
+    "bIb",
+    "PgP"
+  ],
+  "key": {
+    "P": {
+      "item": "#PLANKS"
+    },
+    "I": {
+      "item": "mineria:iron_fluid_barrel"
+    },
+    "g": {
+      "item": "#GOLD"
+    },
+    "b": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "mineria:golden_water_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Potions": 0,
+        "Capacity": 32
+      }
+    }
+  }
+}

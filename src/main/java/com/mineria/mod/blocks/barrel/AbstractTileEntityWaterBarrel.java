@@ -1,5 +1,6 @@
 package com.mineria.mod.blocks.barrel;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -106,13 +107,16 @@ public abstract class AbstractTileEntityWaterBarrel extends TileEntity
         return blockEntityTag.getInteger("Buckets") != 0;
     }
 
-    public static boolean checkWaterFromStack(ItemStack barrel)
+    public static boolean checkWaterFromStack(ItemStack waterSource)
     {
-        if(checkFluidFromStack(barrel))
+        if(waterSource.getItem().equals(Items.WATER_BUCKET))
+            return true;
+
+        if(checkFluidFromStack(waterSource))
         {
-            if(barrel.getItem().getRegistryName().getResourcePath().equals("iron_barrel"))
+            if(waterSource.getItem().getRegistryName().getResourcePath().equals("iron_barrel"))
             {
-                NBTTagCompound stackTag = barrel.getTagCompound();
+                NBTTagCompound stackTag = waterSource.getTagCompound();
                 NBTTagCompound blockEntityTag = stackTag.getCompoundTag("BlockEntityTag");
                 return blockEntityTag.hasKey("StoredFluid") && blockEntityTag.getString("StoredFluid").equals(FluidRegistry.WATER.getName());
             }
@@ -121,13 +125,15 @@ public abstract class AbstractTileEntityWaterBarrel extends TileEntity
         return false;
     }
 
-    public static void decreaseFluidFromStack(ItemStack barrel)
+    public static ItemStack decreaseFluidFromStack(ItemStack waterSource)
     {
-        NBTTagCompound stackTag = barrel.getTagCompound();
+        if(waterSource.getItem().equals(Items.WATER_BUCKET))
+            return new ItemStack(Items.BUCKET);
+
+        NBTTagCompound stackTag = waterSource.getTagCompound();
         NBTTagCompound blockEntityTag = stackTag.getCompoundTag("BlockEntityTag");
         int fluidBuckets = blockEntityTag.getInteger("Buckets");
         blockEntityTag.setInteger("Buckets", fluidBuckets < 0 ? fluidBuckets : --fluidBuckets);
+        return waterSource;
     }
-
-
 }

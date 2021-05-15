@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "PiP",
+    "iCi",
+    "PiP"
+  ],
+  "key": {
+    "P": {
+      "item": "#PLANKS"
+    },
+    "C": {
+      "item": "mineria:copper_water_barrel"
+    },
+    "i": {
+      "item": "#IRON"
+    }
+  },
+  "result": {
+    "item": "mineria:iron_fluid_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Capacity": 24
+      }
+    }
+  }
+}

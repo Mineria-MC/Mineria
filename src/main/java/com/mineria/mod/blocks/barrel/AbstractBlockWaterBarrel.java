@@ -24,6 +24,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -41,12 +42,12 @@ import java.util.Random;
 @SuppressWarnings("deprecation")
 public abstract class AbstractBlockWaterBarrel extends MineriaBlock implements ITileEntityProvider
 {
-    protected final int capacity;
+    protected final int initialCapacity;
 
-    public AbstractBlockWaterBarrel(int capacity, float hardness, float resistance, int harvestLevel)
+    public AbstractBlockWaterBarrel(int initialCapacity, float hardness, float resistance, int harvestLevel)
     {
         super(Material.WOOD, new BlockProperties().hardnessAndResistance(hardness, resistance).creativeTab(null).sounds(SoundType.WOOD).harvestLevel(harvestLevel, "axe"));
-        this.capacity = capacity;
+        this.initialCapacity = initialCapacity;
     }
 
     @SideOnly(Side.CLIENT)
@@ -161,6 +162,12 @@ public abstract class AbstractBlockWaterBarrel extends MineriaBlock implements I
     }
 
     @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+    {
+        return Item.getItemFromBlock(this).getDefaultInstance();
+    }
+
+    @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
     {
         if (worldIn.getTileEntity(pos) instanceof AbstractTileEntityWaterBarrel)
@@ -182,9 +189,9 @@ public abstract class AbstractBlockWaterBarrel extends MineriaBlock implements I
         {
             NBTTagCompound blockEntityTag = stackTag.getCompoundTag("BlockEntityTag");
 
-            if(blockEntityTag.hasKey("Buckets"))
+            if(blockEntityTag.hasKey("Buckets") && blockEntityTag.hasKey("Capacity"))
                 if(blockEntityTag.getInteger("Buckets") >= 0)
-                    tooltip.add(blockEntityTag.getInteger("Buckets") + " " + I18n.format("tooltip.water_barrel.buckets") + " / " + this.capacity);
+                    tooltip.add(blockEntityTag.getInteger("Buckets") + " " + I18n.format("tooltip.water_barrel.buckets") + " / " + blockEntityTag.getInteger("Capacity"));
         }
         if(KeyboardHelper.isShiftKeyDown())
         {
@@ -219,8 +226,8 @@ public abstract class AbstractBlockWaterBarrel extends MineriaBlock implements I
         {
             NBTTagCompound stackTag = new NBTTagCompound();
             NBTTagCompound blockEntityTag = new NBTTagCompound();
-            blockEntityTag.setInteger("Buckets", this.barrel.capacity < 0 ? -1 : 0);
-            blockEntityTag.setInteger("Capacity", this.barrel.capacity);
+            blockEntityTag.setInteger("Buckets", this.barrel.initialCapacity < 0 ? -1 : 0);
+            blockEntityTag.setInteger("Capacity", this.barrel.initialCapacity);
             stackTag.setTag("BlockEntityTag", writeAdditional(blockEntityTag));
             return MineriaUtils.make(new ItemStack(this), stack -> stack.setTagCompound(stackTag));
         }
@@ -228,6 +235,12 @@ public abstract class AbstractBlockWaterBarrel extends MineriaBlock implements I
         protected NBTTagCompound writeAdditional(NBTTagCompound blockEntityTag)
         {
             return blockEntityTag;
+        }
+
+        @Override
+        public int getItemBurnTime(ItemStack itemStack)
+        {
+            return 0;
         }
     }
 }

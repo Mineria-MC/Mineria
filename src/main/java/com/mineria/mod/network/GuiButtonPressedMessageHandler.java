@@ -21,14 +21,8 @@ public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButton
             World world = player.world;
             if (!world.isBlockLoaded(pos))
                 return;
-            switch (message.guiID)
-            {
-                case GuiHandler.GUI_XP_BLOCK:
-                    TileEntityXpBlock.execute(message.buttonID, pos, world, player);
-                    break;
-                default:
-                    break;
-            }
+            if(message.guiID == GuiHandler.GUI_XP_BLOCK)
+                TileEntityXpBlock.execute(message.buttonID, pos, world, player);
         });
         return null;
     }

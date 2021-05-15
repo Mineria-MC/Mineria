@@ -1,0 +1,12 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "mineria:blocks/diamond_fluid_barrel_bottom",
+    "up": "mineria:blocks/diamond_fluid_barrel_top",
+    "down": "mineria:blocks/diamond_fluid_barrel_bottom",
+    "north": "mineria:blocks/diamond_fluid_barrel_side",
+    "east": "mineria:blocks/diamond_fluid_barrel_side",
+    "south": "mineria:blocks/diamond_fluid_barrel_side",
+    "west": "mineria:blocks/diamond_fluid_barrel_side"
+  }
+}

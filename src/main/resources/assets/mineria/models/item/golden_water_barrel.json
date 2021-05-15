@@ -1,3 +1,35 @@
 {
-  "parent": "mineria:block/golden_water_barrel_potions_empty"
+  "parent": "mineria:block/golden_water_barrel_potions_empty",
+  "overrides": [
+    {
+      "predicate": {
+        "potions": 0
+      },
+      "model": "mineria:item/golden_water_barrel_0"
+    },
+    {
+      "predicate": {
+        "potions": 1
+      },
+      "model": "mineria:item/golden_water_barrel_1"
+    },
+    {
+      "predicate": {
+        "potions": 2
+      },
+      "model": "mineria:item/golden_water_barrel_2"
+    },
+    {
+      "predicate": {
+        "potions": 3
+      },
+      "model": "mineria:item/golden_water_barrel_3"
+    },
+    {
+      "predicate": {
+        "potions": 4
+      },
+      "model": "mineria:item/golden_water_barrel_4"
+    }
+  ]
 }

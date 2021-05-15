@@ -14,11 +14,11 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public final class EntityInit
 {
-	public static final int ENTITY_GOLDEN_FISH = 354;
+	public static final int ENTITY_GOLDEN_SILVERFISH = Mineria.CONFIG.entityGoldenSilverfish;
 
 	public static void registerEntities()
 	{
-		registerEntity("golden_silverfish", EntityGoldenSilverfish.class, ENTITY_GOLDEN_FISH, 10, 12888340, 12852517);
+		registerEntity("golden_silverfish", EntityGoldenSilverfish.class, ENTITY_GOLDEN_SILVERFISH, 10, 12888340, 12852517);
 		addSpawns();
 	}
 	

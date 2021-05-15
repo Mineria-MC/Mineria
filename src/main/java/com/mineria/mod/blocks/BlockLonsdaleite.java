@@ -1,6 +1,7 @@
 package com.mineria.mod.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -17,6 +18,12 @@ public class BlockLonsdaleite extends MineriaBlockMetal
 	}
 
 	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
+	}
+
+	@Override
 	public boolean isTranslucent(IBlockState state)
 	{
 		return true;
@@ -25,22 +32,23 @@ public class BlockLonsdaleite extends MineriaBlockMetal
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
-		return true;
+		return false;
 	}
 
 	@Override
 	public BlockRenderLayer getBlockLayer()
 	{
-		return BlockRenderLayer.CUTOUT_MIPPED;
+		return BlockRenderLayer.TRANSLUCENT;
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
-		Block block = iblockstate.getBlock();
+		IBlockState state = blockAccess.getBlockState(pos.offset(side));
+		Block block = state.getBlock();
 
-		if (blockState != iblockstate)
+		if (blockState != state)
 		{
 			return true;
 		}

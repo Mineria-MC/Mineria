@@ -28,8 +28,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable
     private int burnTime;
     private int currentBurnTime;
     private int infuseTime;
-    //2400
-    private int totalInfuseTime = 200;
+    private int totalInfuseTime = 2400;
     private String customName;
 
     public boolean isUsableByPlayer(EntityPlayer player)
@@ -210,7 +209,7 @@ public class TileEntityInfuser extends TileEntity implements ITickable
         if (this.canInfuse())
         {
             ItemStack input = this.inventory.getStackInSlot(0);
-            ItemStack barrel = this.inventory.getStackInSlot(1);
+            ItemStack waterSource = this.inventory.getStackInSlot(1);
             ItemStack result = InfuserRecipes.getInstance().getInfusingResult(input);
             ItemStack output = this.inventory.getStackInSlot(3);
 
@@ -221,18 +220,18 @@ public class TileEntityInfuser extends TileEntity implements ITickable
             }
 
             input.shrink(1);
-            AbstractTileEntityWaterBarrel.decreaseFluidFromStack(barrel);
+            this.inventory.setStackInSlot(1, AbstractTileEntityWaterBarrel.decreaseFluidFromStack(waterSource));
         }
     }
 
     private boolean canInfuse()
     {
         ItemStack input = this.inventory.getStackInSlot(0);
-        ItemStack barrel = this.inventory.getStackInSlot(1);
+        ItemStack waterSource = this.inventory.getStackInSlot(1);
         ItemStack output = this.inventory.getStackInSlot(3);
-        boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(barrel);
+        boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(waterSource);
 
-        if (input.isEmpty() || barrel.isEmpty() || output.isEmpty() || !hasWater)
+        if (input.isEmpty() || waterSource.isEmpty() || output.isEmpty() || !hasWater)
         {
             return false;
         }

@@ -7,6 +7,7 @@ import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
@@ -104,7 +105,7 @@ public class ContainerExtractor extends Container
 					if (!this.mergeItemStack(slotStack, 0, 1, false))
 						return ItemStack.EMPTY;
 				}
-				else if(slotStack.getItem() instanceof AbstractBlockWaterBarrel.ItemBlockBarrel)
+				else if(slotStack.getItem() instanceof AbstractBlockWaterBarrel.ItemBlockBarrel || slotStack.getItem().equals(Items.WATER_BUCKET))
 				{
 					if (!this.mergeItemStack(slotStack, 1, 2, false))
 						return ItemStack.EMPTY;

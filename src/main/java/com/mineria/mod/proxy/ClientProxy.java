@@ -9,6 +9,7 @@ public class ClientProxy extends CommonProxy
     {
         super.preInit();
         RenderHandler.registerEntityRenders();
+        RenderHandler.registerTileEntityRenderers();
     }
 
     @Override

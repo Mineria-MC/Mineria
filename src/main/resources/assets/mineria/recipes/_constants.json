@@ -1,0 +1,57 @@
+[
+  {
+    "name": "IRON",
+    "ingredient": [
+      {
+        "type": "forge:ore_dict",
+        "ore": "ingotRefinedIron"
+      },
+      {
+        "type": "forge:ore_dict",
+        "ore": "ingotIron"
+      }
+    ]
+  },
+  {
+    "name": "GOLD",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
+    }
+  },
+  {
+    "name": "DIAMOND",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    }
+  },
+  {
+    "name": "COPPER",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
+    }
+  },
+  {
+    "name": "SILVER",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSilver"
+    }
+  },
+  {
+    "name": "PLANKS",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "plankWood"
+    }
+  },
+  {
+    "name": "WOOD_SLAB",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "slabWood"
+    }
+  }
+]

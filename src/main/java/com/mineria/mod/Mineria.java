@@ -4,6 +4,7 @@ import com.mineria.mod.blocks.barrel.AbstractBlockWaterBarrel;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.proxy.CommonProxy;
 import com.mineria.mod.proxy.ServerProxy;
+import com.mineria.mod.util.MineriaConfiguration;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,48 +21,57 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @Mod(modid = References.MODID, name = References.NAME, version = References.VERSION, acceptedMinecraftVersions = References.MC_VERSION)
 public class Mineria
 {
-	//Logger
+	// Logger
 	public static final Logger LOGGER = LogManager.getLogger();
 
-	//Instance
+	// Instance
 	@Instance
 	public static Mineria INSTANCE = new Mineria();
 	
-	//CreativeTabs
+	// CreativeTabs
 	public static final CreativeTabs MINERIA_TAB = new CreativeTab();
+
+	// Config
+	public static final MineriaConfiguration CONFIG = new MineriaConfiguration();
+
+	// Config File
+	public static File configDirectory;
 	
-	//Proxy
+	// Proxy
 	@SidedProxy(clientSide = References.CLIENT_PROXY, serverSide = References.SERVER_PROXY, modId = References.MODID)
 	public static CommonProxy proxy;
 	
-	//Pre-Initialization Event
+	// Pre-Initialization Event
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		configDirectory = new File(event.getModConfigurationDirectory(), References.MODID);
+		CONFIG.setupConfig();
 		proxy.preInit();
 	}
 	
-	//Initialization Event
+	// Initialization Event
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
 		proxy.init();
 	}
 	
-	//Post-Initialization Event
+	// Post-Initialization Event
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
 	}
 	
-	//Server Starting Event
+	// Server Starting Event
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event)
 	{

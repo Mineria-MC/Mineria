@@ -7,6 +7,7 @@ import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
@@ -85,61 +86,61 @@ public class ContainerTitaneExtractor extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
-        ItemStack stack = ItemStack.EMPTY;
+        ItemStack stackToTransfer = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
-            ItemStack stack1 = slot.getStack();
-            stack = stack1.copy();
+            ItemStack slotStack = slot.getStack();
+            stackToTransfer = slotStack.copy();
 
             if (index == 3)
             {
-                if(!this.mergeItemStack(stack1, 4, 40, true)) return ItemStack.EMPTY;
+                if(!this.mergeItemStack(slotStack, 4, 40, true)) return ItemStack.EMPTY;
 
-                slot.onSlotChange(stack1, stack);
+                slot.onSlotChange(slotStack, stackToTransfer);
             }
             else if (index != 0 && index != 1 && index != 2)
             {
-                if(stack1.getItem().equals(new ItemStack(BlocksInit.MINERAL_SAND).getItem()))
+                if(slotStack.getItem().equals(new ItemStack(BlocksInit.MINERAL_SAND).getItem()))
                 {
-                    if (!this.mergeItemStack(stack1, 0, 1, false))
+                    if (!this.mergeItemStack(slotStack, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if(stack1.getItem() instanceof AbstractBlockWaterBarrel.ItemBlockBarrel)
+                else if(slotStack.getItem() instanceof AbstractBlockWaterBarrel.ItemBlockBarrel || slotStack.getItem().equals(Items.WATER_BUCKET))
                 {
-                    if (!this.mergeItemStack(stack1, 1, 2, false))
+                    if (!this.mergeItemStack(slotStack, 1, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (stack1.getItem().equals(ItemsInit.FILTER))
+                else if (slotStack.getItem().equals(ItemsInit.FILTER))
                 {
-                    if (!this.mergeItemStack(stack1, 2, 3, false))
+                    if (!this.mergeItemStack(slotStack, 2, 3, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (index < 31)
                 {
-                    if (!this.mergeItemStack(stack1, 31, 40, false))
+                    if (!this.mergeItemStack(slotStack, 31, 40, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index < 40 && !this.mergeItemStack(stack1, 4, 31, false))
+                else if (index < 40 && !this.mergeItemStack(slotStack, 4, 31, false))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(stack1, 4, 40, false))
+            else if (!this.mergeItemStack(slotStack, 4, 40, false))
             {
                 return ItemStack.EMPTY;
             }
 
-            if (stack1.isEmpty())
+            if (slotStack.isEmpty())
             {
                 slot.putStack(ItemStack.EMPTY);
             }
@@ -148,14 +149,14 @@ public class ContainerTitaneExtractor extends Container
                 slot.onSlotChanged();
             }
 
-            if (stack1.getCount() == stack.getCount())
+            if (slotStack.getCount() == stackToTransfer.getCount())
             {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(playerIn, stack1);
+            slot.onTake(playerIn, slotStack);
         }
 
-        return stack;
+        return stackToTransfer;
     }
 }

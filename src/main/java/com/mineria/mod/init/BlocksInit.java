@@ -5,6 +5,7 @@ import com.mineria.mod.blocks.*;
 import com.mineria.mod.blocks.barrel.AbstractBlockWaterBarrel;
 import com.mineria.mod.blocks.barrel.BlockWaterBarrel;
 import com.mineria.mod.blocks.barrel.copper.BlockCopperWaterBarrel;
+import com.mineria.mod.blocks.barrel.diamond.BlockDiamondFluidBarrel;
 import com.mineria.mod.blocks.barrel.golden.BlockGoldenWaterBarrel;
 import com.mineria.mod.blocks.barrel.iron.BlockIronFluidBarrel;
 import com.mineria.mod.blocks.extractor.BlockExtractor;
@@ -12,6 +13,7 @@ import com.mineria.mod.blocks.infuser.BlockInfuser;
 import com.mineria.mod.blocks.titane_extractor.BlockTitaneExtractor;
 import com.mineria.mod.blocks.xp_block.BlockXp;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGlass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -64,9 +66,6 @@ public final class BlocksInit
 	public static final Block NETTLE = register("nettle", new MineriaBlockPlant(MapColor.GRASS));
 	public static final Block PULMONARY = register("pulmonary", new MineriaBlockPlant(MapColor.GRASS));
 
-	//WoodCuts
-	
-
 	//Other
 	public static final Block BLUE_GLOWSTONE = register("blue_glowstone", new BlockBlueGlowstone());
 	public static final Block MINERAL_SAND = register("mineral_sand", new BlockMineralSand());
@@ -78,7 +77,9 @@ public final class BlocksInit
 	public static final Block INFINITE_WATER_BARREL = register("infinite_water_barrel", new BlockWaterBarrel(-1), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
 	public static final Block COPPER_WATER_BARREL = register("copper_water_barrel", new BlockCopperWaterBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
 	public static final Block IRON_FLUID_BARREL = register("iron_fluid_barrel", new BlockIronFluidBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
-	public static final Block GOLDEN_WATER_BARREL = register("golden_water_barrel", new BlockGoldenWaterBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
+	public static final Block GOLDEN_WATER_BARREL = register("golden_water_barrel", new BlockGoldenWaterBarrel(), BlockGoldenWaterBarrel.ItemBlockBarrel::new);
+	//public static final Block DIAMOND_FLUID_BARREL = register("diamond_fluid_barrel", new BlockDiamondFluidBarrel(), AbstractBlockWaterBarrel.ItemBlockBarrel::new);
+	public static final Block TNT_BARREL = register("tnt_barrel", new BlockTNTBarrel());
 
 	private static Block register(String name, Block instance)
 	{

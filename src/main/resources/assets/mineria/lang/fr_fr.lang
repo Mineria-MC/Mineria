@@ -1,4 +1,4 @@
-#Blocks
+# Blocks
 tile.lead_ore.name=Minerai de Plomb
 tile.titane_ore.name=Minerai de Titane
 tile.copper_ore.name=Minerai de Cuivre
@@ -19,7 +19,13 @@ tile.lead_spike.name=Pic en Plomb
 tile.compressed_lead_spike.name=Pic en Plomb Compressé
 tile.infested_netherrack.name=Netherrack Infestée
 tile.xp_wall.name=Déco en XP
-tile.water_barrel.name=Barril d'Eau
+tile.water_barrel.name=Baril d'Eau
+tile.infinite_water_barrel.name=§dBarril d'Eau Infini
+tile.copper_water_barrel.name=Baril d'Eau en Cuivre
+tile.iron_fluid_barrel.name=Baril de Fluides en Fer
+tile.golden_water_barrel.name=Baril d'Eau en Or
+tile.diamond_fluid_barrel.name=Baril de Fluides en Diamant
+tile.tnt_barrel.name=Baril de TNT
 
 tile.xp_block.name=Block d'XP
 tile.titane_extractor.name=Extracteur à Titane
@@ -32,11 +38,14 @@ tile.thyme.name=Thym
 tile.nettle.name=Ortie
 tile.pulmonary.name=Pulmonaire
 
-#Items
+# Items
 item.gold_stick.name=Bâton d'Or
 item.iron_stick.name=Bâton de Fer
 item.filter.name=Filtre
 item.mineria_xp_orb.name=Orbe d'XP
+item.mineria_compressed_xp_orb.name=Orbe d'XP Compressée
+item.mineria_super_compressed_xp_orb.name=Orbe d'XP Super Compressée
+item.mineria_super_duper_compressed_xp_orb.name=Orbe d'XP Supra Ultra Compressée
 item.vanadium_ingot.name=Lingot de Vanadium
 item.vanadium_helmet.name=Casque en Vanadium
 
@@ -104,27 +113,28 @@ item.thyme_tea.name=Thé au Thym
 item.nettle_tea.name=Thé à l'Ortie
 item.pulmonary_tea.name=Thé à la Pulmonaire
 
-#Entities
+# Entities
 entity.golden_silverfish.name=Poisson d'Argent Doré
 
-#CreativeTabs
+# CreativeTabs
 itemGroup.mineria=Mineria
 
-#Other
+# Container & Guis
 container.titane_extractor=Extracteur à Titane
 container.xp_block=Block d'XP
-gui.xp_block.give_xp=Donner XP
+container.copper_water_barrel=Baril d'Eau en Cuivre
+container.iron_fluid_barrel=Baril de Fluides en Fer
+container.golden_water_barrel=Baril d'Eau en Or
+container.diamond_fluid_barrel=Baril de Fluides en Diamant
 container.extractor=Extracteur
 container.infuser=Infuseur
-water_barrel.use=Pour utiliser le barril, il vous faut le placer et faire click droit avec un seau d'eau pour le remplir
+gui.xp_block.give_xp=Donner XP
 
-tile.cat_woodcut.name=Cat Woodcut
-tile.cow_woodcut.name=Cow Woodcut
-tile.deer_woodcut.name=Deer Woodcut
-tile.dog_woodcut.name=Dog Woodcut
-tile.donkey_woodcut.name=Donkey Woodcut
-tile.goat_woodcut.name=Goat Woodcut
-tile.horse_woodcut.name=Horse Woodcut
-tile.rabbit_woodcut.name=Rabbit Woodcut
-tile.wolf_woodcut.name=Wolf Woodcut
-tile.infinite_water_barrel.name=§dInfinite Water Barreltooltip.hold_shift=Appuyez sur SHIFT pour plus d'infos...
+tooltip.hold_shift=Tenez SHIFT enfoncé pour plus d'infos...
+tooltip.water_barrel.buckets=Seaux
+tooltip.water_barrel.use=Pour utiliser le baril, il vous faut le placer et faire click droit avec un seau d'eau pour le remplir.
+tooltip.water_barrel.ability=Abilité
+tooltip.water_barrel.small_inventory_ability=Ce baril possède un inventaire de 8 emplacements.
+tooltip.water_barrel.view_capacity=Sneak + Click pour voir la capacité du baril.
+tooltip.water_barrel.store_lava=Ce baril peut stocker n'importe quel fluide, mais pas plusieurs à la fois.
+tooltip.water_barrel.store_potions=Ce baril possède un inventaire qui peut stocker des potions et des tasses de thé.

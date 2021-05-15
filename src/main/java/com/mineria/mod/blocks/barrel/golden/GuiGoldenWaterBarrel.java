@@ -34,8 +34,8 @@ public class GuiGoldenWaterBarrel extends GuiContainer
     {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         String name = this.tile.getDisplayName().getUnformattedText();
-        this.fontRenderer.drawString(name, (this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2), 3, 4210752);
-        this.fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 112, 32, 4210752);
+        this.fontRenderer.drawString(name, (this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2), 5, 4210752);
+        this.fontRenderer.drawString(this.playerInv.getDisplayName().getUnformattedText(), 112, 88, 4210752);
     }
 
     @Override

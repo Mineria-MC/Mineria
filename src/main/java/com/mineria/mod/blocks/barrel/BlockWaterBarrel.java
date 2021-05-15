@@ -19,7 +19,7 @@ public class BlockWaterBarrel extends AbstractBlockWaterBarrel
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new TileEntityWaterBarrel(this.capacity);
+        return new TileEntityWaterBarrel(this.initialCapacity);
     }
 
     @Override

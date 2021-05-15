@@ -1,12 +1,12 @@
 {
-    "type": "minecraft:crafting_shaped",
+    "type": "forge:ore_shaped",
     "pattern": [
         "#",
         "#"
     ],
     "key": {
         "#": {
-            "item": "mineria:copper_ingot"
+            "item": "#COPPER"
         }
     },
     "result": {

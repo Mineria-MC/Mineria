@@ -64,6 +64,7 @@ public class TileEntityGoldenWaterBarrel extends AbstractTileEntityWaterBarrel
     {
         super.writeToNBT(compound);
         compound.setTag("Inventory", this.inventory.serializeNBT());
+        compound.setInteger("Potions", getPotionsState());
         return compound;
     }
 
@@ -106,7 +107,7 @@ public class TileEntityGoldenWaterBarrel extends AbstractTileEntityWaterBarrel
         return result;
     }
 
-    private void reloadBlockState()
+    private int getPotionsState()
     {
         int fullSlots = this.getFullPotionSlotsCount();
         int potions = 0;
@@ -122,6 +123,11 @@ public class TileEntityGoldenWaterBarrel extends AbstractTileEntityWaterBarrel
                 potions = 4;
         }
 
-        BlockGoldenWaterBarrel.setState(potions, this.world, this.pos);
+        return potions;
+    }
+
+    public void reloadBlockState()
+    {
+        BlockGoldenWaterBarrel.setState(getPotionsState(), this.world, pos);
     }
 }

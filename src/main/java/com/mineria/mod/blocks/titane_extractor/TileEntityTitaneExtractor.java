@@ -123,11 +123,11 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable
 	private boolean canExtract()
 	{
 	    ItemStack input = this.inventory.getStackInSlot(0);
-        ItemStack barrel = this.inventory.getStackInSlot(1);
+        ItemStack waterSource = this.inventory.getStackInSlot(1);
         ItemStack filter = this.inventory.getStackInSlot(2);
-        boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(barrel);
+        boolean hasWater = AbstractTileEntityWaterBarrel.checkWaterFromStack(waterSource);
 
-		if (input.isEmpty() || barrel.isEmpty() || filter.isEmpty() || !hasWater)
+		if (input.isEmpty() || waterSource.isEmpty() || filter.isEmpty() || !hasWater)
 		{
 			return false;
 		}
@@ -154,7 +154,7 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable
 		if (this.canExtract())
 		{
 			ItemStack input = this.inventory.getStackInSlot(0);
-			ItemStack barrel = this.inventory.getStackInSlot(1);
+			ItemStack waterSource = this.inventory.getStackInSlot(1);
             ItemStack filter = this.inventory.getStackInSlot(2);
 			ItemStack output = this.inventory.getStackInSlot(3);
             ItemStack result = new ItemStack(ItemsInit.TITANE_NUGGET);
@@ -169,7 +169,7 @@ public class TileEntityTitaneExtractor extends TileEntity implements ITickable
 			}
 
 			input.shrink(1);
-            AbstractTileEntityWaterBarrel.decreaseFluidFromStack(barrel);
+            this.inventory.setStackInSlot(1, AbstractTileEntityWaterBarrel.decreaseFluidFromStack(waterSource));
             filter.shrink(1);
 		}
 	}

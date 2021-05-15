@@ -91,7 +91,7 @@ public class MissingMappingHandler
         {
             V newValue = registry.getValue(new ResourceLocation(References.MODID, newName));
             if(newValue == null)
-                Mineria.LOGGER.fatal("Failed to fix " + mapping.key.toString() + ", could not find an instance of " + registry.getRegistrySuperType().getSimpleName() + " with key mineria:" + newName + " ! Please report this error to the mod author.");
+                Mineria.LOGGER.fatal("Failed to fix " + mapping.key + ", could not find an instance of " + registry.getRegistrySuperType().getSimpleName() + " with key mineria:" + newName + " ! Please report this error to the mod author.");
             else
                 mapping.remap(newValue);
         }

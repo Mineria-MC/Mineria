@@ -57,6 +57,8 @@ public final class ItemsInit
 	public static final Item CUP = register("cup", new ItemMineria(new ItemMineria.Builder().setMaxStackSize(16)));
 	public static final Item VANADIUM_INGOT = register("vanadium_ingot", new ItemMineria());
 	public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(ItemsInit.VANADIUM_ARMOR, EntityEquipmentSlot.HEAD).onArmorTick((world, player, stack) -> player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
+	//public static final Item INVENTORY_UPGRADE = register("barrel_inventory_upgrade", new ItemBarrelUpgrade(tile -> tile.getInventory().setSize(8)));
+
 
 	//Copper
 	public static final Item COPPER_INGOT = register("copper_ingot", new ItemMineria());

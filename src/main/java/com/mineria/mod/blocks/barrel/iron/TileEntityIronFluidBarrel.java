@@ -3,13 +3,15 @@ package com.mineria.mod.blocks.barrel.iron;
 import com.mineria.mod.blocks.barrel.AbstractTileEntityWaterBarrel;
 import com.mineria.mod.util.MineriaUtils;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class TileEntityIronFluidBarrel extends AbstractTileEntityWaterBarrel
+public class TileEntityIronFluidBarrel extends AbstractTileEntityWaterBarrel implements FluidBarrel
 {
     @Nullable
     private Fluid storedFluid;
@@ -17,6 +19,13 @@ public class TileEntityIronFluidBarrel extends AbstractTileEntityWaterBarrel
     public TileEntityIronFluidBarrel()
     {
         super(24);
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getDisplayName()
+    {
+        return new TextComponentTranslation("container.iron_fluid_barrel");
     }
 
     @Override
@@ -35,18 +44,20 @@ public class TileEntityIronFluidBarrel extends AbstractTileEntityWaterBarrel
         storedFluid = compound.hasKey("StoredFluid") ? FluidRegistry.getFluid(compound.getString("StoredFluid")) : null;
     }
 
-    protected boolean storeFluid(Fluid fluidToStore)
+    @Override
+    public boolean storeFluid(Fluid fluidToStore)
     {
         return (MineriaUtils.doIf(this.storedFluid, Objects::isNull, fluid -> this.storedFluid = fluidToStore) || this.storedFluid == fluidToStore) && super.increaseFluidBuckets();
     }
 
     @Nullable
-    protected Fluid getFluid()
+    @Override
+    public Fluid getFluid()
     {
         super.decreaseFluidBuckets();
-        Fluid fluid = storedFluid;
+        Fluid result = storedFluid;
         if(this.isEmpty())
             storedFluid = null;
-        return fluid;
+        return result;
     }
 }
