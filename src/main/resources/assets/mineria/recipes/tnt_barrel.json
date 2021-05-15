@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "iPi",
+    "P P",
+    "iPi"
+  ],
+  "key": {
+    "P": {
+      "item": "#PLANKS"
+    },
+    "i": {
+      "item": "#IRON"
+    }
+  },
+  "result": {
+    "item": "mineria:tnt_barrel",
+    "count": 1
+  }
+}

@@ -24,6 +24,10 @@ run
 # Files from Forge MDK
 forge*changelog.txt
 
+# Manually aded
+mcmodsrepo
+logs
+
 # Manually added
 mcmodsrepo
 logs
