@@ -13,14 +13,14 @@
   "block.mineria.silver_block": "Bloc d'Argent",
   "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé",
 
-  "block.mineria.blue_glowstone": "Glowstone Bleue",
+  "block.mineria.blue_glowstone": "Pierre lumineuse Bleue",
   "block.mineria.mineral_sand": "Sable Minéral",
   "block.mineria.lead_spike": "Pic en Plomb",
   "block.mineria.compressed_lead_spike": "Pic en Plomb Compressé",
   "block.mineria.golden_silverfish_netherrack": "Netherrack possédant un Silverfish en Or",
   "block.mineria.xp_wall": "Déco en XP",
-  "block.mineria.water_barrel": "Baril d'Eau",
-  "block.mineria.infinite_water_barrel": "Baril d'Eau Infini",
+  "block.mineria.water_barrel": "Barril d'Eau",
+  "block.mineria.infinite_water_barrel": "Barril d'Eau Infinie",
 
   "block.mineria.xp_block": "Bloc d'XP",
   "block.mineria.titane_extractor": "Extracteur à Titane",
@@ -121,6 +121,6 @@
   "recipe_category.mineria.extractor": "Extracteur",
 
   "tooltip.mineria.buckets": "Seaux",
-  "tooltip.mineria.water_barrel.use": "Pour utiliser le baril, il vous faut le placer et faire click droit avec un seau d'eau pour le remplir",
+  "tooltip.mineria.water_barrel.use": "Pour utiliser le barril, il vous faut le placer et faire un clic droit avec un seau d'eau pour le remplir",
   "tooltip.mineria.water_barrel.hold_shift": "Appuyez sur SHIFT pour plus d'infos..."
 }
