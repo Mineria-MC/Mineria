@@ -8,8 +8,13 @@ import net.minecraftforge.common.ToolType;
 
 public class MineriaBlock extends Block
 {
-	public MineriaBlock(Material materialIn, float hardness, float resistance, SoundType sound, int harvestlevel)
+	public MineriaBlock(Material materialIn, float hardness, float resistance, SoundType sound, int harvestLevel)
 	{
-		super(AbstractBlock.Properties.create(materialIn).hardnessAndResistance(hardness, resistance).sound(sound).harvestTool(ToolType.PICKAXE).harvestLevel(harvestlevel));
+		this(materialIn, hardness, resistance, sound, harvestLevel, ToolType.PICKAXE);
+	}
+
+	public MineriaBlock(Material materialIn, float hardness, float resistance, SoundType sound, int harvestLevel, ToolType toolType)
+	{
+		super(AbstractBlock.Properties.create(materialIn).hardnessAndResistance(hardness, resistance).sound(sound).harvestTool(toolType).harvestLevel(harvestLevel));
 	}
 }

@@ -5,13 +5,14 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -24,19 +25,12 @@ public class MineriaUtils
      * We register here the recipe types because there is no {@link net.minecraftforge.registries.ForgeRegistry} for the recipe type.
      *
      * @param id the id of the recipe type (for example : "example:example_recipe_type")
-     * @param <T> the recipe type that is returned
      * @param <V> the recipe
-     * @return the registered recipe type ({@link T})
+     * @return the registered recipe type
      */
-    public static <T extends IRecipeType<V>, V extends IRecipe<?>> T registerRecipeType(ResourceLocation id)
+    public static <V extends IRecipe<?>> IRecipeType<V> registerRecipeType(ResourceLocation id)
     {
-        return (T) Registry.register(Registry.RECIPE_TYPE, id, new IRecipeType<V>() {
-            @Override
-            public String toString()
-            {
-                return Registry.RECIPE_TYPE.getKey(this).toString();
-            }
-        });
+        return IRecipeType.register(id.toString());
     }
 
     /**
@@ -64,5 +58,13 @@ public class MineriaUtils
     {
         ClientWorld world = Minecraft.getInstance().world;
         return world != null ? (Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : null;
+    }
+
+    public static <T> boolean doIf(T obj, Predicate<T> condition, Consumer<T> action)
+    {
+        boolean test = condition.test(obj);
+        if(test)
+            action.accept(obj);
+        return test;
     }
 }

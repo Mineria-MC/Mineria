@@ -3,7 +3,7 @@
     "textures": {
         "particle": "mineria:blocks/water_barrel_bottom",
         "up": "mineria:blocks/water_barrel_top",
-        "down": "mineria:blocks/water_barrel_side",
+        "down": "mineria:blocks/water_barrel_bottom",
         "north": "mineria:blocks/water_barrel_side",
         "east": "mineria:blocks/water_barrel_side",
         "south": "mineria:blocks/water_barrel_side",

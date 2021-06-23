@@ -1,7 +1,7 @@
 package com.mineria.mod.blocks.infuser;
 
 import com.mineria.mod.Mineria;
-import com.mineria.mod.blocks.barrel.WaterBarrelTileEntity;
+import com.mineria.mod.blocks.barrel.AbstractWaterBarrelTileEntity;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.init.RecipeSerializerInit;
 import com.mineria.mod.init.TileEntitiesInit;
@@ -127,7 +127,6 @@ public class InfuserTileEntity extends MineriaLockableTileEntity implements ITic
             if (flag != this.isInfusing())
             {
                 flag1 = true;
-                Mineria.LOGGER.debug("aaa");
                 world.setBlockState(pos, this.getBlockState().with(InfuserBlock.LIT, this.isInfusing()), 3);
             }
         }
@@ -154,7 +153,7 @@ public class InfuserTileEntity extends MineriaLockableTileEntity implements ITic
             }
 
             input0.shrink(1);
-            WaterBarrelTileEntity.decreaseWaterFromStack(input1);
+            this.inventory.setStackInSlot(1, AbstractWaterBarrelTileEntity.decreaseFluidFromStack(input1));
         }
     }
 
@@ -163,7 +162,7 @@ public class InfuserTileEntity extends MineriaLockableTileEntity implements ITic
         ItemStack input0 = this.inventory.getStackInSlot(0);
         ItemStack input1 = this.inventory.getStackInSlot(1);
         ItemStack output = this.inventory.getStackInSlot(3);
-        boolean hasWater = WaterBarrelTileEntity.checkWaterFromStack(input1);
+        boolean hasWater = AbstractWaterBarrelTileEntity.checkWaterFromStack(input1);
 
         if (input0.isEmpty() || input1.isEmpty() || output.isEmpty() || !hasWater)
         {
@@ -212,11 +211,11 @@ public class InfuserTileEntity extends MineriaLockableTileEntity implements ITic
     private InfuserRecipe findRecipe()
     {
         Set<IRecipe<?>> recipes = MineriaUtils.findRecipesByType(RecipeSerializerInit.INFUSER_TYPE, this.world);
-        for(IRecipe<?> recipe : recipes)
-            if(recipe instanceof InfuserRecipe)
-                if(((InfuserRecipe)recipe).matches(new RecipeWrapper(this.inventory), this.world))
-                    return (InfuserRecipe)recipe;
-
+        if(recipes != null)
+            for(IRecipe<?> recipe : recipes)
+                if(recipe instanceof InfuserRecipe)
+                    if(((InfuserRecipe)recipe).matches(new RecipeWrapper(this.inventory), this.world))
+                        return (InfuserRecipe)recipe;
         return null;
     }
 

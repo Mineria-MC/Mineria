@@ -4,9 +4,9 @@ import com.mineria.mod.init.TileEntitiesInit;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
@@ -136,13 +136,7 @@ public class TitaneExtractorBlock extends Block
     {
         TileEntity tile = worldIn.getTileEntity(pos);
         if(tile instanceof TitaneExtractorTileEntity && state.getBlock() != newState.getBlock())
-        {
-            TitaneExtractorTileEntity titaneExtractor = (TitaneExtractorTileEntity)tile;
-            (titaneExtractor.getInventory()).toNonNullList().forEach(item -> {
-                ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addEntity(itemEntity);
-            });
-        }
+            InventoryHelper.dropItems(worldIn, pos, ((TitaneExtractorTileEntity)tile).getInventory().toNonNullList());
 
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }

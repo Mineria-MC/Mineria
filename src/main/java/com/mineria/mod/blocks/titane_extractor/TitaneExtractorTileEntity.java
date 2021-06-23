@@ -1,6 +1,6 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.blocks.barrel.WaterBarrelTileEntity;
+import com.mineria.mod.blocks.barrel.AbstractWaterBarrelTileEntity;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.init.TileEntitiesInit;
@@ -18,8 +18,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class TitaneExtractorTileEntity extends MineriaLockableTileEntity implements ITickableTileEntity
 {
-    public int extractTime;
-    public int totalExtractTime = 200;
+    protected int extractTime;
+    protected int totalExtractTime = 200;
 
     public TitaneExtractorTileEntity()
     {
@@ -46,7 +46,7 @@ public class TitaneExtractorTileEntity extends MineriaLockableTileEntity impleme
     @Override
     public void tick()
     {
-        boolean flag = this.isExtracting();
+        boolean alreadyExtracting = this.isExtracting();
         boolean dirty = false;
 
         if (!this.world.isRemote)
@@ -67,7 +67,7 @@ public class TitaneExtractorTileEntity extends MineriaLockableTileEntity impleme
                 this.extractTime = MathHelper.clamp(this.extractTime - 2, 0, this.totalExtractTime);
             }
 
-            if (flag != this.isExtracting())
+            if (alreadyExtracting != this.isExtracting())
             {
                 dirty = true;
                 this.world.setBlockState(this.pos, this.getBlockState().with(TitaneExtractorBlock.LIT, this.isExtracting()));
@@ -85,7 +85,7 @@ public class TitaneExtractorTileEntity extends MineriaLockableTileEntity impleme
         ItemStack input0 = this.inventory.getStackInSlot(0);
         ItemStack input1 = this.inventory.getStackInSlot(1);
         ItemStack input2 = this.inventory.getStackInSlot(2);
-        boolean hasWater = WaterBarrelTileEntity.checkWaterFromStack(input1);
+        boolean hasWater = AbstractWaterBarrelTileEntity.checkWaterFromStack(input1);
 
         if (input0.isEmpty() || input1.isEmpty() || input2.isEmpty() || !hasWater)
         {
@@ -130,7 +130,7 @@ public class TitaneExtractorTileEntity extends MineriaLockableTileEntity impleme
             }
 
             input0.shrink(1);
-            WaterBarrelTileEntity.decreaseWaterFromStack(input1);
+            this.inventory.setStackInSlot(1, AbstractWaterBarrelTileEntity.decreaseFluidFromStack(input1));
             input2.shrink(1);
         }
     }

@@ -3,7 +3,12 @@ package com.mineria.mod.init;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.References;
 import com.mineria.mod.blocks.*;
+import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.blocks.barrel.WaterBarrelBlock;
+import com.mineria.mod.blocks.barrel.copper.CopperWaterBarrelBlock;
+import com.mineria.mod.blocks.barrel.golden.GoldenWaterBarrelBlock;
+import com.mineria.mod.blocks.barrel.iron.IronFluidBarrelBlock;
+import com.mineria.mod.blocks.extractor.ExtractorBlock;
 import com.mineria.mod.blocks.infuser.InfuserBlock;
 import com.mineria.mod.blocks.titane_extractor.TitaneExtractorBlock;
 import com.mineria.mod.blocks.xp_block.XpBlock;
@@ -40,14 +45,14 @@ public class BlocksInit
 	public static final Block LEAD_BLOCK = register("lead_block", new MineriaBlock(Material.IRON, 6.5F, 20F, SoundType.METAL, 2));
 	public static final Block TITANE_BLOCK = register("titane_block", new MineriaBlock(Material.IRON, 10F, 15F, SoundType.METAL, 3));
 	public static final Block COPPER_BLOCK = register("copper_block", new MineriaBlock(Material.IRON, 5F, 10F, SoundType.METAL, 1));
-	public static final Block LONSDALEITE_BLOCK = register("lonsdaleite_block", new MineriaBlock(Material.IRON, 10F, 17.5F, SoundType.METAL, 3));
+	public static final Block LONSDALEITE_BLOCK = register("lonsdaleite_block", new LonsdaleiteBlock());
 	public static final Block SILVER_BLOCK = register("silver_block", new MineriaBlock(Material.IRON, 5F, 10F, SoundType.METAL, 2));
 	public static final Block COMPRESSED_LEAD_BLOCK = register("compressed_lead_block", new MineriaBlock(Material.IRON, 2.5F, 2F, SoundType.METAL, 3));
 	
 	//Machines
 	public static final Block XP_BLOCK = register("xp_block", new XpBlock());
 	public static final Block TITANE_EXTRACTOR = register("titane_extractor", new TitaneExtractorBlock());
-	//public static final Block EXTRACTOR = register("extractor", new ExtractorBlock(1, Material.IRON, 1F, 1F, SoundType.METAL));
+	public static final Block EXTRACTOR = register("extractor", new ExtractorBlock());
 	public static final Block INFUSER = register("infuser", new InfuserBlock());
 
 	//Plants
@@ -64,15 +69,20 @@ public class BlocksInit
 	public static final Block COMPRESSED_LEAD_SPIKE = register("compressed_lead_spike", new SpikeBlock(7.0F, 25.0F, 4.0F));
 	public static final Block GOLDEN_SILVERFISH_NETHERRACK = register("golden_silverfish_netherrack", new GoldenSilverfishBlock(Blocks.NETHERRACK));
 	public static final Block XP_WALL = register("xp_wall", new MineriaBlock(Material.IRON, 2.5F, 5F, SoundType.METAL, 1));
-	public static final Block WATER_BARREL = register("water_barrel", new WaterBarrelBlock(8), block -> new WaterBarrelBlock.WaterBarrelBlockItem((WaterBarrelBlock)block, new Item.Properties().maxStackSize(1)));
-	public static final Block INFINITE_WATER_BARREL = register("infinite_water_barrel", new WaterBarrelBlock(-1), block -> new WaterBarrelBlock.WaterBarrelBlockItem((WaterBarrelBlock)block, new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC)));
+	public static final Block WATER_BARREL = register("water_barrel", new WaterBarrelBlock(8), block -> new WaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().maxStackSize(1)));
+	public static final Block INFINITE_WATER_BARREL = register("infinite_water_barrel", new WaterBarrelBlock(-1), block -> new WaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC)));
+	public static final Block COPPER_WATER_BARREL = register("copper_water_barrel", new CopperWaterBarrelBlock(), block -> new AbstractWaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().maxStackSize(1)));
+	public static final Block IRON_FLUID_BARREL = register("iron_fluid_barrel", new IronFluidBarrelBlock(), block -> new AbstractWaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().maxStackSize(1)));
+	public static final Block GOLDEN_WATER_BARREL = register("golden_water_barrel", new GoldenWaterBarrelBlock(), GoldenWaterBarrelBlock.BarrelBlockItem::new);
+	public static final Block TNT_BARREL = register("tnt_barrel", new TNTBarrelBlock());
+	public static final Block DEBUG_BLOCK = register("debug_block", new DebugBlock(), block -> new BlockItem(block, new Item.Properties()));
 
 	private static Block register(String name, Block instance)
 	{
 		return register(name, instance, block -> new BlockItem(block, new Item.Properties().group(Mineria.MINERIA_GROUP)));
 	}
 
-	private static Block register(String name, Block instance, Function<Block, BlockItem> blockItem)
+	private static <T extends Block> T register(String name, T instance, Function<T, BlockItem> blockItem)
 	{
 		BLOCKS.register(name, () -> instance);
 		BLOCK_ITEMS.register(name, () -> blockItem.apply(instance));

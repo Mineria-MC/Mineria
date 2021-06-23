@@ -17,8 +17,8 @@ public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButton
     @Override
     public void onMessage(GuiButtonPressedMessage message, Supplier<NetworkEvent.Context> ctx)
     {
-        ServerPlayerEntity player = ctx.get().getSender();
-        player.getServer().deferTask(() -> {
+        ctx.get().enqueueWork(() -> {
+            ServerPlayerEntity player = ctx.get().getSender();
             World world = player.world;
             if (!world.isBlockLoaded(message.pos))
                 return;
@@ -27,6 +27,7 @@ public class GuiButtonPressedMessageHandler implements IMessageHandler<GuiButton
                 XpBlockTileEntity.executeProcedure(message.pos, world, player);
             }
         });
+        ctx.get().setPacketHandled(true);
     }
 
     @Override

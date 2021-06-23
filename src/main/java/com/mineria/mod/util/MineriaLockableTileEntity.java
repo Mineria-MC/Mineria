@@ -1,13 +1,9 @@
 package com.mineria.mod.util;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -15,16 +11,11 @@ import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class MineriaLockableTileEntity extends LockableTileEntity
 {
@@ -89,7 +80,7 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
     public CompoundNBT write(CompoundNBT compound)
     {
         super.write(compound);
-        ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
+        compound.put("Inventory", this.inventory.serializeNBT());
         return compound;
     }
 
@@ -97,9 +88,8 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
     public void read(BlockState state, CompoundNBT nbt)
     {
         super.read(state, nbt);
-        NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(nbt, inv);
-        this.inventory.setNonNullList(inv);
+        if(nbt.contains("Items")) deserializeOld(nbt, this.inventory); // Used if the NBT data is not up to date.
+        else this.inventory.deserializeNBT(nbt.getCompound("Inventory"));
     }
 
     public CustomItemStackHandler getInventory()
@@ -141,5 +131,13 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side)
     {
         return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> this.inventory));
+    }
+
+    @Deprecated
+    private static void deserializeOld(CompoundNBT nbt, CustomItemStackHandler inventory)
+    {
+        NonNullList<ItemStack> inv = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(nbt, inv);
+        inventory.setNonNullList(inv);
     }
 }

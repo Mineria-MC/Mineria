@@ -34,6 +34,11 @@ public class ExtractorRecipe
         this.outputs = outputs;
     }
 
+    public Map<Integer, ItemStack> getOutputsMap()
+    {
+        return this.outputs;
+    }
+
     public List<ItemStack> getOutputs()
     {
         List<Integer> ints = new ArrayList<>();

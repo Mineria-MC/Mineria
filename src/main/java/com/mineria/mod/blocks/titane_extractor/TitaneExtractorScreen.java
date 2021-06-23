@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class TitaneExtractorScreen extends ContainerScreen<TitaneExtractorContainer>
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(References.MODID, "textures/gui/titane_extractor/titane_extractor.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(References.MODID, "textures/gui/titane_extractor.png");
 
     public TitaneExtractorScreen(TitaneExtractorContainer screenContainer, PlayerInventory inv, ITextComponent titleIn)
     {

@@ -1,0 +1,12 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "mineria:blocks/golden_water_barrel_bottom",
+    "up": "mineria:blocks/golden_water_barrel_top",
+    "down": "mineria:blocks/golden_water_barrel_bottom",
+    "north": "mineria:blocks/golden_water_barrel_potions_2",
+    "east": "mineria:blocks/golden_water_barrel_potions_2",
+    "south": "mineria:blocks/golden_water_barrel_potions_2",
+    "west": "mineria:blocks/golden_water_barrel_potions_2"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iPi",
+    "P P",
+    "iPi"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "mineria:tnt_barrel",
+    "count": 1
+  }
+}

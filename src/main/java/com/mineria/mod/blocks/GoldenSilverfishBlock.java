@@ -73,47 +73,4 @@ public class GoldenSilverfishBlock extends Block
     {
         return normalToInfectedMap.get(blockIn).getDefaultState();
     }
-
-	/*
-	public BlockInfestedNetherrack(String name, SoundType sound)
-	{
-		super(Material.CLAY);
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(Mineria.MINERIA_GROUP);
-		setHardness(0.0F);
-		this.setSoundType(sound);
-		this.setDefaultState(this.blockState.getBaseState());
-	}
-
-	@Override
-	public int quantityDropped(Random random)
-	{
-		return 0;
-	}
-
-	@Override
-	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
-	{
-		if(!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops"))
-		{
-			EntityGoldenFish entitygoldenfish = new EntityGoldenFish(worldIn);
-			entitygoldenfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
-			worldIn.spawnEntity(entitygoldenfish);
-			entitygoldenfish.spawnExplosionParticle();
-		}
-	}
-
-	protected ItemStack getSilkTouchDrop(IBlockState state)
-	{
-		return new ItemStack(Blocks.NETHERRACK);
-	}
-
-	public static boolean canContainSilverfish(IBlockState blockState)
-    {
-        Block block = blockState.getBlock();
-        return blockState == Blocks.NETHERRACK.getDefaultState();
-    }
-
-	 */
 }

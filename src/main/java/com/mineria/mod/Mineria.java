@@ -1,11 +1,14 @@
 package com.mineria.mod;
 
+import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.init.*;
 import com.mineria.mod.util.MineriaPacketHandler;
 import com.mineria.mod.util.RenderHandler;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,8 +17,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.stream.Collectors;
 
 @Mod(References.MODID)
 public class Mineria
@@ -25,7 +31,7 @@ public class Mineria
 
 	//Logger
 	public static final Logger LOGGER = LogManager.getLogger();
-	
+
 	//CreativeTabs
 	public static final ItemGroup MINERIA_GROUP = new MineriaGroup("mineria");
 
@@ -45,6 +51,8 @@ public class Mineria
 		ContainerTypeInit.CONTAINER_TYPES.register(modBus);
 		EntityInit.ENTITY_TYPES.register(modBus);
 
+		modBus.addListener(EntityInit::registerEntityAttributes);
+
 		instance = this;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
@@ -53,7 +61,6 @@ public class Mineria
 	private void setup(FMLCommonSetupEvent event)
 	{
 		MineriaPacketHandler.registerNetworkMessagesMessages();
-		EntityInit.registerEntityAttributes();
 	}
 
 	//To setup client things
@@ -62,6 +69,7 @@ public class Mineria
 		RenderHandler.registerScreenFactories();
 		RenderHandler.registerBlockRenders();
 		RenderHandler.registerEntityRenders();
+		RenderHandler.registerItemModelsProperties();
 	}
 
 	//To register server-side objects
@@ -78,7 +86,7 @@ public class Mineria
 		{
 			super(label);
 			//To show the field for item search
-			setBackgroundImageName("item_search.png");
+			setBackgroundImage(new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png"));
 		}
 
 		@Override
@@ -97,9 +105,11 @@ public class Mineria
 		public void fill(NonNullList<ItemStack> items)
 		{
 			super.fill(items);
-			//Here we're manually adding these two items because they have custom Compound tags
-			items.add(BlocksInit.getItemFromBlock(BlocksInit.WATER_BARREL).getDefaultInstance());
-			items.add(BlocksInit.getItemFromBlock(BlocksInit.INFINITE_WATER_BARREL).getDefaultInstance());
+			//We're adding the barrels with custom NBT Tags
+			items.addAll(ForgeRegistries.ITEMS.getValues().stream()
+					.filter(AbstractWaterBarrelBlock.WaterBarrelBlockItem.class::isInstance)
+					.map(Item::getDefaultInstance)
+					.collect(Collectors.toList()));
 		}
 	}
 }

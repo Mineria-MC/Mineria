@@ -14,7 +14,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class XpBlockScreen extends ContainerScreen<XpBlockContainer>
 {
-    public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/xp_block/xp_block_gui.png");
+    public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/xp_block_gui.png");
 
     public XpBlockScreen(XpBlockContainer screenContainer, PlayerInventory inv, ITextComponent titleIn)
     {

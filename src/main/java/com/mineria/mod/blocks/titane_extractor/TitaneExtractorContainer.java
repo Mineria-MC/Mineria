@@ -1,7 +1,8 @@
 package com.mineria.mod.blocks.titane_extractor;
 
-import com.mineria.mod.blocks.titane_extractor.slots.TitaneExtractorFilterSlot;
-import com.mineria.mod.blocks.titane_extractor.slots.TitaneExtractorOutputSlot;
+import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
+import com.mineria.mod.blocks.titane_extractor.slots.FilterSlot;
+import com.mineria.mod.blocks.titane_extractor.slots.OutputSlot;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ContainerTypeInit;
 import com.mineria.mod.init.ItemsInit;
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,8 +41,8 @@ public class TitaneExtractorContainer extends MineriaContainer<TitaneExtractorTi
     {
         this.addSlot(new SlotItemHandler(tile.getInventory(), 0, 10, 7));
         this.addSlot(new SlotItemHandler(tile.getInventory(), 1, 41, 7));
-        this.addSlot(new TitaneExtractorFilterSlot(tile.getInventory(), 2, 24, 78));
-        this.addSlot(new TitaneExtractorOutputSlot(tile.getInventory(), 3, 95, 47));
+        this.addSlot(new FilterSlot(tile.getInventory(), 2, 24, 78));
+        this.addSlot(new OutputSlot(tile.getInventory(), 3, 95, 47));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -52,68 +54,68 @@ public class TitaneExtractorContainer extends MineriaContainer<TitaneExtractorTi
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index)
     {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack stackToTransfer = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            ItemStack slotStack = slot.getStack();
+            stackToTransfer = slotStack.copy();
 
             if (index == 3)
             {
-                if(!this.mergeItemStack(itemstack1, 4, 40, true)) return ItemStack.EMPTY;
+                if(!this.mergeItemStack(slotStack, 4, 40, true)) return ItemStack.EMPTY;
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onSlotChange(slotStack, stackToTransfer);
             }
             else if (index != 0 && index != 1 && index != 2)
             {
-                /*if (!TitaneExtractorRecipes.getInstance().getExtractingResult(itemstack1, itemstack1).isEmpty())
+                /*if (!TitaneExtractorRecipes.getInstance().getExtractingResult(slotStack, slotStack).isEmpty())
                 {
-                    if (!this.mergeItemStack(itemstack1, 0, 2, false))
+                    if (!this.mergeItemStack(slotStack, 0, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else*/ if(itemstack1.getItem().equals(new ItemStack(BlocksInit.MINERAL_SAND).getItem()))
+                else*/ if(slotStack.getItem().equals(new ItemStack(BlocksInit.MINERAL_SAND).getItem()))
                 {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
+                    if (!this.mergeItemStack(slotStack, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if(itemstack1.isItemEqual(new ItemStack(BlocksInit.WATER_BARREL)) || itemstack1.isItemEqual(new ItemStack(BlocksInit.INFINITE_WATER_BARREL)))
+                else if(slotStack.getItem() instanceof AbstractWaterBarrelBlock.WaterBarrelBlockItem || slotStack.getItem().equals(Items.WATER_BUCKET))
                 {
-                    if (!this.mergeItemStack(itemstack1, 1, 2, false))
+                    if (!this.mergeItemStack(slotStack, 1, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (itemstack1.getItem().equals(ItemsInit.FILTER))
+                else if (slotStack.getItem().equals(ItemsInit.FILTER))
                 {
-                    if (!this.mergeItemStack(itemstack1, 2, 3, false))
+                    if (!this.mergeItemStack(slotStack, 2, 3, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (index >= 4 && index < 31)
                 {
-                    if (!this.mergeItemStack(itemstack1, 31, 40, false))
+                    if (!this.mergeItemStack(slotStack, 31, 40, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 31, false))
+                else if (index >= 31 && index < 40 && !this.mergeItemStack(slotStack, 4, 31, false))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 4, 40, false))
+            else if (!this.mergeItemStack(slotStack, 4, 40, false))
             {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty())
+            if (slotStack.isEmpty())
             {
                 slot.putStack(ItemStack.EMPTY);
             }
@@ -122,14 +124,14 @@ public class TitaneExtractorContainer extends MineriaContainer<TitaneExtractorTi
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.getCount() == itemstack.getCount())
+            if (slotStack.getCount() == stackToTransfer.getCount())
             {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(playerIn, itemstack1);
+            slot.onTake(playerIn, slotStack);
         }
 
-        return itemstack;
+        return stackToTransfer;
     }
 }

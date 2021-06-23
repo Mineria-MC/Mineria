@@ -37,7 +37,7 @@ public class MissingMappingsHandler
                     {
                         Item newItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(References.MODID, newName));
                         if(newItem == null)
-                            Mineria.LOGGER.fatal("Failed to fix " + mapping.key.toString() + ", could not find item with key mineria:" + newName + " ! Please report this error to the mod author.");
+                            Mineria.LOGGER.error("Failed to fix " + mapping.key + ", could not find item with key mineria:" + newName + " ! Please report this error to the mod author.");
                         else
                             mapping.remap(newItem);
                     }

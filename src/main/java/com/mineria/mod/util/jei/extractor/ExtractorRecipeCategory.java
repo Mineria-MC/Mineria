@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
 {
-    protected static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/extractor/extractor.png");
+    protected static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/extractor.png");
 
     private final String name;
     private final IDrawable background;
@@ -32,7 +32,7 @@ public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
     {
         this.name = I18n.format("recipe_category.mineria.extractor");
         this.background = helper.createDrawable(TEXTURES, 3, 4, 206, 105);
-        this.icon = helper.createDrawableIngredient(new ItemStack(BlocksInit.TITANE_EXTRACTOR));
+        this.icon = helper.createDrawableIngredient(new ItemStack(BlocksInit.EXTRACTOR));
 
         IDrawableStatic staticAnimation = helper.createDrawable(TEXTURES, 214, 0, 40, 53);
         this.animation = helper.createAnimatedDrawable(staticAnimation, 200, IDrawableAnimated.StartDirection.TOP, false);
@@ -104,81 +104,4 @@ public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
     {
         animation.draw(matrixStack, 11 - 3, 35 - 4);
     }
-
-
-    /*
-    private final IDrawable icon;
-    private final IDrawable background;
-    private final String name;
-
-    public ExtractorRecipeCategory(IGuiHelper helper)
-    {
-        super(helper);
-        background = helper.createDrawable(TEXTURES, 3, 4, 206, 105);
-        icon = helper.createDrawableIngredient(new ItemStack(BlocksInit.extractor));
-        name = I18n.format("container.extractor");
-    }
-
-    @Override
-    public String getUid()
-    {
-        return RecipeCategories.EXTRACTOR;
-    }
-
-    @Override
-    public String getTitle()
-    {
-        return name;
-    }
-
-    @Override
-    public String getModName()
-    {
-        return References.NAME;
-    }
-
-    @Override
-    public IDrawable getBackground()
-    {
-        return background;
-    }
-
-    @Nullable
-    @Override
-    public IDrawable getIcon()
-    {
-        return icon;
-    }
-
-    @Override
-    public void drawExtras(Minecraft minecraft)
-    {
-        animation.draw(minecraft, 11 - 3, 35 - 4);
-    }
-
-    @Override
-    public void setRecipe(IRecipeLayout recipeLayout, ExtractorRecipe recipeWrapper, IIngredients ingredients)
-    {
-        IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
-        stacks.init(input1, true, 6 - 4, 18 - 5);
-        stacks.init(input2, true, 41 - 4, 18 - 5);
-        stacks.init(filter, true, 23 - 4, 90 - 5);
-        stacks.init(outputs[0], false, 190 - 4, 90 - 5);
-        stacks.init(outputs[1], false, 190 - 4, 68 - 5);
-        stacks.init(outputs[2], false, 190 - 4, 46 - 5);
-        stacks.init(outputs[3], false, 190 - 4, 25 - 5);
-        stacks.init(outputs[4], false, 120 - 4, 6 - 5);
-        stacks.init(outputs[5], false, 68 - 4, 25 - 5);
-        stacks.init(outputs[6], false, 68 - 4, 46 - 5);
-        stacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) ->
-        {
-            if(!input)
-            {
-                tooltip.add("§7" + recipeWrapper.getChance(ingredient) + "% of Chance");
-            }
-        });
-        stacks.set(ingredients);
-    }
-
-     */
 }

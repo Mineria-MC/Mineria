@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "gunpowder=0": { "model": "mineria:block/tnt_barrel_0" },
+    "gunpowder=1": { "model": "mineria:block/tnt_barrel_1" },
+    "gunpowder=2": { "model": "mineria:block/tnt_barrel_2" },
+    "gunpowder=3": { "model": "mineria:block/tnt_barrel_3" },
+    "gunpowder=4": { "model": "mineria:block/tnt_barrel_4" },
+    "gunpowder=5": { "model": "mineria:block/tnt_barrel_5" },
+    "gunpowder=6": { "model": "mineria:block/tnt_barrel_6" },
+    "gunpowder=7": { "model": "mineria:block/tnt_barrel_7" }
+  }
+}

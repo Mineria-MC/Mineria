@@ -85,7 +85,7 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
     @Override
     public NonNullList<Ingredient> getIngredients()
     {
-        return NonNullList.from(null, this.input);
+        return NonNullList.from(Ingredient.EMPTY, this.input);
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<InfuserRecipe>
@@ -93,8 +93,8 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
         @Override
         public InfuserRecipe read(ResourceLocation recipeId, JsonObject json)
         {
-            ItemStack output = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "output"), true);
             Ingredient input = Ingredient.deserialize(JSONUtils.getJsonObject(json, "input"));
+            ItemStack output = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "output"), true);
 
             return new InfuserRecipe(recipeId, input, output);
         }
@@ -103,8 +103,8 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
         @Override
         public InfuserRecipe read(ResourceLocation recipeId, PacketBuffer buffer)
         {
-            ItemStack output = buffer.readItemStack();
             Ingredient input = Ingredient.read(buffer);
+            ItemStack output = buffer.readItemStack();
 
             return new InfuserRecipe(recipeId, input, output);
         }

@@ -72,9 +72,6 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity
     {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof XpBlockTileEntity)
-        {
-            XpBlockTileEntity tile = (XpBlockTileEntity) tileEntity;
-            tile.spawnXp(player);
-        }
+            ((XpBlockTileEntity) tileEntity).spawnXp(player);
     }
 }

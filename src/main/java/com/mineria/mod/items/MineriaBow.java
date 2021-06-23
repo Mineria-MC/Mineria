@@ -5,9 +5,11 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.BowItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
@@ -30,14 +32,6 @@ public class MineriaBow extends BowItem
 		this.damage = damage;
 		this.velocityMultiplier = velocityMultiplier;
 		this.knockBack = knockBack;
-		ItemModelsProperties.registerProperty(this, new ResourceLocation("pull"), (stack, world, living) -> {
-			if (living == null)
-				return 0.0F;
-			else
-				return living.getActiveItemStack() != stack ? 0.0F : (float)(stack.getUseDuration() - living.getItemInUseCount()) / 20.0F;
-		});
-		ItemModelsProperties.registerProperty(this, new ResourceLocation("pulling"),
-				(stack, world, living) -> living != null && living.isHandActive() && living.getActiveItemStack() == stack ? 1.0F : 0.0F);
 	}
 	
 	@Override

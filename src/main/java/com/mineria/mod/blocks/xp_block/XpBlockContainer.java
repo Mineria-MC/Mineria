@@ -5,6 +5,7 @@ import com.mineria.mod.init.ContainerTypeInit;
 import com.mineria.mod.util.MineriaContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -34,12 +35,8 @@ public class XpBlockContainer extends MineriaContainer<XpBlockTileEntity>
     public void onContainerClosed(PlayerEntity playerIn)
     {
         super.onContainerClosed(playerIn);
-
-        if (!this.tile.getWorld().isRemote)
-        {
-            this.clearContainer(playerIn, this.tile.getWorld(), this.tile);
-        }
-        this.tile.closeInventory(playerIn);
+        this.worldPosCallable.consume((world, pos) -> this.clearContainer(playerIn, world, new Inventory(this.tile.getInventory().toNonNullList().toArray(new ItemStack[0]))));
+        this.tile.clear();
     }
 
     public BlockPos getTileEntityPos()

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PgP",
+    "bIb",
+    "PgP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "I": {
+      "item": "mineria:iron_fluid_barrel"
+    },
+    "b": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "mineria:golden_water_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Capacity": 32
+      }
+    }
+  }
+}

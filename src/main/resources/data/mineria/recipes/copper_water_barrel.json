@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "BcB",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "c": {
+      "tag": "forge:ingots/copper"
+    },
+    "B": {
+      "item": "mineria:water_barrel"
+    }
+  },
+  "result": {
+    "item": "mineria:copper_water_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Capacity": 16
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PiP",
+    "iCi",
+    "PiP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "C": {
+      "item": "mineria:copper_water_barrel"
+    }
+  },
+  "result": {
+    "item": "mineria:iron_fluid_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Capacity": 24
+      }
+    }
+  }
+}

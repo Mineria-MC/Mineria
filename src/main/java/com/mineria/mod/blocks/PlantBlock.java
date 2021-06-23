@@ -1,6 +1,5 @@
 package com.mineria.mod.blocks;
 
-import com.mineria.mod.util.RenderHandler;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -17,7 +16,6 @@ public class PlantBlock extends BushBlock
     public PlantBlock(MaterialColor color)
     {
         super(AbstractBlock.Properties.create(Material.PLANTS, color).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT));
-        RenderHandler.registerCutout(this);
     }
 
     @Override

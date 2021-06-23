@@ -22,7 +22,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe>
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(References.MODID, "textures/gui/infuser/infuser_gui.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(References.MODID, "textures/gui/infuser_gui.png");
 
     private final String name;
     private final IDrawable background;

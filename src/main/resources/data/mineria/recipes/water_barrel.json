@@ -21,7 +21,8 @@
     "count": 1,
     "nbt": {
       "BlockEntityTag": {
-        "Water": 0
+        "Buckets": 0,
+        "Capacity": 8
       }
     }
   }

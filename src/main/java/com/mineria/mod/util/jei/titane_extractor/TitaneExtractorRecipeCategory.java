@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class TitaneExtractorRecipeCategory implements IRecipeCategory<TitaneExtractorRecipe>
 {
-	public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/titane_extractor/titane_extractor.png");
+	public static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/titane_extractor.png");
 
 	private final IDrawable icon;
 	private final IDrawable background;

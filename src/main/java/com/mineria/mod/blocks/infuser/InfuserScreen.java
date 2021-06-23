@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class InfuserScreen extends ContainerScreen<InfuserContainer>
 {
-    private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/infuser/infuser_gui.png");
+    private static final ResourceLocation TEXTURES = new ResourceLocation(References.MODID, "textures/gui/infuser_gui.png");
 
     public InfuserScreen(InfuserContainer screenContainer, PlayerInventory inv, ITextComponent titleIn)
     {

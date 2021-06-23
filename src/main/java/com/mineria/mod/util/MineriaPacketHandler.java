@@ -11,11 +11,11 @@ import java.util.Optional;
 
 public class MineriaPacketHandler
 {
-    public static SimpleChannel PACKET_HANDLER;
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(References.MODID, "mineria"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void registerNetworkMessagesMessages()
     {
-        PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(References.MODID, "mineria"), () -> "1", e -> true, e -> true);
         addNetworkMessage(GuiButtonPressedMessageHandler.GuiButtonPressedMessage.class, new GuiButtonPressedMessageHandler(), NetworkDirection.PLAY_TO_SERVER);
     }
 

@@ -12,9 +12,9 @@ import java.util.Random;
 
 public class MineriaOre extends OreBlock
 {
-	public MineriaOre(int harvestlevel, float hardness, float resistance, SoundType sound)
+	public MineriaOre(int harvestLevel, float hardness, float resistance, SoundType sound)
 	{
-		super(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(hardness, resistance).sound(sound).harvestLevel(harvestlevel).harvestTool(ToolType.PICKAXE));
+		super(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(hardness, resistance).sound(sound).harvestLevel(harvestLevel).harvestTool(ToolType.PICKAXE));
 	}
 
 	@Override

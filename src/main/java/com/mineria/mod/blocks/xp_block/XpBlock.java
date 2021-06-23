@@ -6,9 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -58,13 +58,7 @@ public class XpBlock extends Block
     {
         TileEntity tile = worldIn.getTileEntity(pos);
         if(tile instanceof XpBlockTileEntity && state.getBlock() != newState.getBlock())
-        {
-            XpBlockTileEntity xpBlockTile = (XpBlockTileEntity)tile;
-            (xpBlockTile.getInventory()).toNonNullList().forEach(item -> {
-                ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addEntity(itemEntity);
-            });
-        }
+            InventoryHelper.dropItems(worldIn, pos, ((XpBlockTileEntity)tile).getInventory().toNonNullList());
 
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }

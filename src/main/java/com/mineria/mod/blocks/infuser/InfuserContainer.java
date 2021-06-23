@@ -1,5 +1,6 @@
 package com.mineria.mod.blocks.infuser;
 
+import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.blocks.infuser.slots.InfuserFuelSlot;
 import com.mineria.mod.blocks.infuser.slots.InfuserOutputSlot;
 import com.mineria.mod.init.ContainerTypeInit;
@@ -12,11 +13,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nullable;
+import java.util.Set;
 
 public class InfuserContainer extends MineriaContainer<InfuserTileEntity>
 {
@@ -91,18 +96,20 @@ public class InfuserContainer extends MineriaContainer<InfuserTileEntity>
             }
             else if(index != 1 && index != 0)
             {
-                if(!MineriaUtils.<InfuserRecipe>findRecipesByType(RecipeSerializerInit.INFUSER_TYPE, this.tile.getWorld())
-                        .stream().filter(recipe -> ((InfuserRecipe)recipe).getInput().test(stack1))
-                        .findFirst().get().getRecipeOutput().isEmpty())
+                if(hasRecipe(stack1))
                 {
-                    if(!this.mergeItemStack(stack1, 0, 2, false))
+                    if(!this.mergeItemStack(stack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
+                else if(stack1.getItem() instanceof AbstractWaterBarrelBlock.WaterBarrelBlockItem)
+                {
+                    if(!this.mergeItemStack(stack1, 1, 2, false)) return ItemStack.EMPTY;
+                }
                 else if(ForgeHooks.getBurnTime(stack1) > 0)
                 {
-                    if(!this.mergeItemStack(stack1, 3, 4, false)) return ItemStack.EMPTY;
+                    if(!this.mergeItemStack(stack1, 2, 3, false)) return ItemStack.EMPTY;
                 }
                 else if (index >= 3 && index < 30)
                 {
@@ -138,5 +145,16 @@ public class InfuserContainer extends MineriaContainer<InfuserTileEntity>
             slot.onTake(playerIn, stack1);
         }
         return stack;
+    }
+
+    private boolean hasRecipe(ItemStack stack)
+    {
+        @Nullable Set<IRecipe<?>> recipes = MineriaUtils.findRecipesByType(RecipeSerializerInit.INFUSER_TYPE, this.tile.getWorld());
+        if(recipes != null)
+        {
+            return recipes.stream().anyMatch(recipe -> ((InfuserRecipe)recipe).getInput().test(stack));
+        }
+
+        return false;
     }
 }

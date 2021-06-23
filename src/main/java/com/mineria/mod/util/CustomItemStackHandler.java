@@ -33,12 +33,12 @@ public class CustomItemStackHandler extends ItemStackHandler
     {
         for (ItemStack stack : this.stacks)
         {
-            if (stack.isEmpty() || stack.getItem() == Items.AIR)
+            if (!stack.isEmpty())
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public ItemStack decrStackSize(int index, int count)
@@ -58,10 +58,7 @@ public class CustomItemStackHandler extends ItemStackHandler
     public NonNullList<ItemStack> toNonNullList()
     {
         NonNullList<ItemStack> items = NonNullList.create();
-        for (ItemStack stack : this.stacks)
-        {
-            items.add(stack);
-        }
+        items.addAll(this.stacks);
         return items;
     }
 

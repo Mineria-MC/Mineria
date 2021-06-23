@@ -13,7 +13,7 @@
   "block.mineria.silver_block": "Bloc d'Argent",
   "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé",
 
-  "block.mineria.blue_glowstone": "Glowstone Bleue",
+  "block.mineria.blue_glowstone": "Pierre Lumineuse Bleue",
   "block.mineria.mineral_sand": "Sable Minéral",
   "block.mineria.lead_spike": "Pic en Plomb",
   "block.mineria.compressed_lead_spike": "Pic en Plomb Compressé",
@@ -21,6 +21,10 @@
   "block.mineria.xp_wall": "Déco en XP",
   "block.mineria.water_barrel": "Baril d'Eau",
   "block.mineria.infinite_water_barrel": "Baril d'Eau Infini",
+  "block.mineria.copper_water_barrel": "Baril d'Eau en Cuivre",
+  "block.mineria.iron_fluid_barrel": "Baril de Fluides en Fer",
+  "block.mineria.golden_water_barrel": "Baril d'Eau en Or",
+  "block.mineria.tnt_barrel": "Baril de TNT",
 
   "block.mineria.xp_block": "Bloc d'XP",
   "block.mineria.titane_extractor": "Extracteur à Titane",
@@ -32,6 +36,8 @@
   "block.mineria.thyme": "Thym",
   "block.mineria.nettle": "Ortie",
   "block.mineria.pulmonary": "Pulmonaire",
+
+  "block.mineria.debug_block": "Bloc de Debug",
 
   "item.mineria.gold_stick": "Bâton en Or",
   "item.mineria.iron_stick": "Bâton en Fer",
@@ -113,14 +119,22 @@
   "tile_entity.mineria.titane_extractor": "Extracteur à Titane",
   "tile_entity.mineria.infuser": "Infuseur",
   "tile_entity.mineria.xp_block": "Block d'XP",
+  "tile_entity.mineria.copper_water_barrel": "Baril d'Eau en Cuivre",
+  "tile_entity.mineria.golden_water_barrel": "Baril d'Eau en Or",
+  "tile_entity.mineria.extractor": "Extractor",
 
   "screen.mineria.xp_block.give_xp": "Donner de l'XP",
-  
+
   "recipe_category.mineria.infuser": "Infuseur",
   "recipe_category.mineria.titane_extractor": "Extracteur à Titane",
   "recipe_category.mineria.extractor": "Extracteur",
 
   "tooltip.mineria.buckets": "Seaux",
-  "tooltip.mineria.water_barrel.use": "Pour utiliser le baril, il vous faut le placer et faire click droit avec un seau d'eau pour le remplir",
-  "tooltip.mineria.water_barrel.hold_shift": "Appuyez sur SHIFT pour plus d'infos..."
+  "tooltip.mineria.water_barrel.use": "Pour utiliser le baril, il vous faut le placer et faire clic droit avec un seau d'eau pour le remplir",
+  "tooltip.mineria.water_barrel.hold_shift": "Appuyez sur SHIFT pour plus d'infos...",
+  "tooltip.mineria.water_barrel.ability": "Abilité",
+  "tooltip.mineria.water_barrel.small_inventory_ability": "Ce baril possède un inventaire de 8 emplacements.",
+  "tooltip.mineria.water_barrel.view_capacity": "Sneak + Clic pour voir la capacité du baril.",
+  "tooltip.mineria.water_barrel.store_lava": "Ce baril peut stocker n'importe quel fluide, mais pas plusieurs à la fois.",
+  "tooltip.mineria.water_barrel.store_potions": "Ce baril possède un inventaire qui peut stocker des potions et des tasses de thé."
 }

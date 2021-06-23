@@ -21,6 +21,10 @@
   "block.mineria.xp_wall": "XP Wall",
   "block.mineria.water_barrel": "Water Barrel",
   "block.mineria.infinite_water_barrel": "Infinite Water Barrel",
+  "block.mineria.copper_water_barrel": "Copper Water Barrel",
+  "block.mineria.iron_fluid_barrel": "Iron Fluid Barrel",
+  "block.mineria.golden_water_barrel": "Golden Water Barrel",
+  "block.mineria.tnt_barrel": "TNT Barrel",
 
   "block.mineria.xp_block": "XP Block",
   "block.mineria.titane_extractor": "Titane Extractor",
@@ -32,6 +36,8 @@
   "block.mineria.thyme": "Thyme",
   "block.mineria.nettle": "Nettle",
   "block.mineria.pulmonary": "Pulmonary",
+
+  "block.mineria.debug_block": "Debug Block",
 
   "item.mineria.gold_stick": "Gold Stick",
   "item.mineria.iron_stick": "Iron Stick",
@@ -113,6 +119,9 @@
   "tile_entity.mineria.titane_extractor": "Titane Extractor",
   "tile_entity.mineria.infuser": "Infuser",
   "tile_entity.mineria.xp_block": "XP Block",
+  "tile_entity.mineria.copper_water_barrel": "Copper Water Barrel",
+  "tile_entity.mineria.golden_water_barrel": "Golden Water Barrel",
+  "tile_entity.mineria.extractor": "Extractor",
 
   "screen.mineria.xp_block.give_xp": "Give XP",
   
@@ -122,5 +131,10 @@
 
   "tooltip.mineria.buckets": "Buckets",
   "tooltip.mineria.water_barrel.use": "To use the barrel, you must place it down and right click on it with a water bucket to fill it",
-  "tooltip.mineria.water_barrel.hold_shift": "Hold SHIFT for more..."
+  "tooltip.mineria.water_barrel.hold_shift": "Hold SHIFT for more...",
+  "tooltip.mineria.water_barrel.ability": "Ability",
+  "tooltip.mineria.water_barrel.small_inventory_ability": "This barrel has a small inventory of 8 slots.",
+  "tooltip.mineria.water_barrel.view_capacity": "Sneak + Click to see the capacity of the barrel.",
+  "tooltip.mineria.water_barrel.store_lava": "This barrel can store any fluid, but only one at a time.",
+  "tooltip.mineria.water_barrel.store_potions": "This barrel has an inventory that can only store potions and teas."
 }

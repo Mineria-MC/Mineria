@@ -1,13 +1,9 @@
 {
     "variants" :
     {
-        "extracting=false,facing=north": { "model": "mineria:block/extractor"},
-        "extracting=false,facing=east": { "model": "mineria:block/extractor", "y": 90},
-        "extracting=false,facing=south": { "model": "mineria:block/extractor", "y": 180},
-        "extracting=false,facing=west": { "model": "mineria:block/extractor", "y": 270},
-        "extracting=true,facing=north": { "model": "mineria:block/extractor"},
-        "extracting=true,facing=east": { "model": "mineria:block/extractor", "y": 90},
-        "extracting=true,facing=south": { "model": "mineria:block/extractor", "y": 180},
-        "extracting=true,facing=west": { "model": "mineria:block/extractor", "y": 270}
+        "facing=north": { "model": "mineria:block/extractor"},
+        "facing=east": { "model": "mineria:block/extractor", "y": 90},
+        "facing=south": { "model": "mineria:block/extractor", "y": 180},
+        "facing=west": { "model": "mineria:block/extractor", "y": 270}
     }
 }

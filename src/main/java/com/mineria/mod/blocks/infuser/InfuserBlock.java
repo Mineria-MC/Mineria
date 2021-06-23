@@ -4,9 +4,9 @@ import com.mineria.mod.init.TileEntitiesInit;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
@@ -68,14 +68,7 @@ public class InfuserBlock extends Block
     {
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof InfuserTileEntity && state.getBlock() != newState.getBlock())
-        {
-            InfuserTileEntity infuser = (InfuserTileEntity) tile;
-            (infuser.getInventory()).toNonNullList().forEach(item ->
-            {
-                ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addEntity(itemEntity);
-            });
-        }
+            InventoryHelper.dropItems(worldIn, pos, ((InfuserTileEntity)tile).getInventory().toNonNullList());
 
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
@@ -120,7 +113,6 @@ public class InfuserBlock extends Block
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
             double d2 = (double) pos.getZ() + 0.5D;
-            double d3 = 0.52D;
             double d4 = rand.nextDouble() * 0.6D - 0.3D;
 
             if (rand.nextDouble() < 0.1D)

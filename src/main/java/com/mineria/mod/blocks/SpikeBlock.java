@@ -1,6 +1,5 @@
 package com.mineria.mod.blocks;
 
-import com.mineria.mod.util.RenderHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -23,7 +22,6 @@ public class SpikeBlock extends MineriaBlock
 	{
 		super(Material.IRON, hardness, resistance, SoundType.METAL, 2);
 		this.attackDamage = attackDamage;
-		RenderHandler.registerCutout(this);
 	}
 
 	@Override
