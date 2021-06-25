@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "mineria:block/iron_fluid_barrel" }
+    "": { "model": "mineria:block/barrel/iron_fluid_barrel" }
   }
 }

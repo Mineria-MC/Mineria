@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:items/titane_nugget"
+        "layer0": "mineria:item/titane_stuff/titane_nugget"
     }
 }

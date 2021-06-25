@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:items/silver_ingot"
+        "layer0": "mineria:item/silver_stuff/silver_ingot"
     }
 }

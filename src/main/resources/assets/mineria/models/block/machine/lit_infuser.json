@@ -1,0 +1,6 @@
+{
+	"parent": "mineria:block/machine/infuser",
+	"textures": {
+		"front": "mineria:block/machine/infuser/infuser_front"
+	}
+}

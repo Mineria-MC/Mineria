@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "mineria:blocks/blue_glowstone"
+        "all": "mineria:block/blue_glowstone"
     }
 }

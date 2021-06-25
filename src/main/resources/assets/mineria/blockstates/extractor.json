@@ -1,9 +1,9 @@
 {
     "variants" :
     {
-        "facing=north": { "model": "mineria:block/extractor"},
-        "facing=east": { "model": "mineria:block/extractor", "y": 90},
-        "facing=south": { "model": "mineria:block/extractor", "y": 180},
-        "facing=west": { "model": "mineria:block/extractor", "y": 270}
+        "facing=north": { "model": "mineria:block/machine/extractor"},
+        "facing=east": { "model": "mineria:block/machine/extractor", "y": 90},
+        "facing=south": { "model": "mineria:block/machine/extractor", "y": 180},
+        "facing=west": { "model": "mineria:block/machine/extractor", "y": 270}
     }
 }

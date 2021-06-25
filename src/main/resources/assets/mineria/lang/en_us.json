@@ -115,6 +115,7 @@
   "item.mineria.golden_silverfish_spawn_egg": "Golden Silverfish Spawn Egg",
 
   "itemGroup.mineria": "Mineria",
+  "itemGroup.mineria_dev": "Mineria Dev",
 
   "tile_entity.mineria.titane_extractor": "Titane Extractor",
   "tile_entity.mineria.infuser": "Infuser",

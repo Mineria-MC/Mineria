@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mineria:block/plantain" }
+        "": { "model": "mineria:block/plant/plantain" }
     }
 }

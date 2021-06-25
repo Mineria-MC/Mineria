@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:items/plantain_tea"
+        "layer0": "mineria:item/tea/plantain_tea"
     }
 }

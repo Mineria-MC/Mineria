@@ -4,6 +4,7 @@ import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.init.*;
 import com.mineria.mod.util.MineriaPacketHandler;
 import com.mineria.mod.util.RenderHandler;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -34,6 +35,13 @@ public class Mineria
 
 	//CreativeTabs
 	public static final ItemGroup MINERIA_GROUP = new MineriaGroup("mineria");
+	public static final ItemGroup DEV_GROUP = new ItemGroup("mineria_dev") {
+		@Override
+		public ItemStack createIcon()
+		{
+			return new ItemStack(Blocks.COMMAND_BLOCK);
+		}
+	}.setBackgroundImage(new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png"));
 
 	//Mod Constructor
 	public Mineria()

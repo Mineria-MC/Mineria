@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:items/pulmonary_tea"
+        "layer0": "mineria:item/tea/pulmonary_tea"
     }
 }

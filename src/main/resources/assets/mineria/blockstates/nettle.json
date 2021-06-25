@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mineria:block/nettle" }
+        "": { "model": "mineria:block/plant/nettle" }
     }
 }

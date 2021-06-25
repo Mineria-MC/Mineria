@@ -1,3 +1,3 @@
 {
-    "parent": "mineria:block/extractor"
+    "parent": "mineria:block/machine/extractor"
 }

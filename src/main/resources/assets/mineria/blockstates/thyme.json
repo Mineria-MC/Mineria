@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mineria:block/thyme" }
+        "": { "model": "mineria:block/plant/thyme" }
     }
 }

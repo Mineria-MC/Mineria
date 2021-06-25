@@ -1,0 +1,12 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "mineria:block/barrel/iron/iron_fluid_barrel_bottom",
+    "up": "mineria:block/barrel/iron/iron_fluid_barrel_top",
+    "down": "mineria:block/barrel/iron/iron_fluid_barrel_bottom",
+    "north": "mineria:block/barrel/iron/iron_fluid_barrel_side",
+    "east": "mineria:block/barrel/iron/iron_fluid_barrel_side",
+    "south": "mineria:block/barrel/iron/iron_fluid_barrel_side",
+    "west": "mineria:block/barrel/iron/iron_fluid_barrel_side"
+  }
+}

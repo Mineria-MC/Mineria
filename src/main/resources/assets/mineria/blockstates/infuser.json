@@ -1,8 +1,12 @@
 {
     "variants" : {
-        "facing=north": { "model": "mineria:block/infuser"},
-        "facing=south": { "model": "mineria:block/infuser", "y": 180},
-        "facing=west":  { "model": "mineria:block/infuser", "y": 270},
-        "facing=east":  { "model": "mineria:block/infuser", "y": 90}
+        "facing=north,lit=false": { "model": "mineria:block/machine/infuser"},
+        "facing=south,lit=false": { "model": "mineria:block/machine/infuser", "y": 180},
+        "facing=west,lit=false":  { "model": "mineria:block/machine/infuser", "y": 270},
+        "facing=east,lit=false":  { "model": "mineria:block/machine/infuser", "y": 90},
+        "facing=north,lit=true": { "model": "mineria:block/machine/lit_infuser"},
+        "facing=south,lit=true": { "model": "mineria:block/machine/lit_infuser", "y": 180},
+        "facing=west,lit=true":  { "model": "mineria:block/machine/lit_infuser", "y": 270},
+        "facing=east,lit=true":  { "model": "mineria:block/machine/lit_infuser", "y": 90}
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:items/lead_nugget"
+        "layer0": "mineria:item/lead_stuff/lead_nugget"
     }
 }

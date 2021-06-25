@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "mineria:items/gold_stick"
+        "layer0": "mineria:item/gold_stick"
     }
 }

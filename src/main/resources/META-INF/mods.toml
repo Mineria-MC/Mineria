@@ -4,12 +4,12 @@ license="MIT License"
 
 [[mods]]
 modId="mineria"
-version="1.2.0"
+version="1.3.0"
 displayName="Mineria"
-#updateJSONURL="http://myurl.me/" #optional
-displayURL="https://mineria-update.fr/" #optional
-logoFile="logo.png" #optional
-credits="Coded by LGatodu47" #optional
+#updateJSONURL="http://myurl.me/"
+displayURL="https://mineria-update.fr/"
+logoFile="logo.png"
+credits="Coded by LGatodu47"
 authors="Mathys_craft, Mr-lulu-51, LGatodu47"
 description='''
 The main mod of Mineria, a Modded PVP-Faction server."
@@ -18,13 +18,13 @@ The main mod of Mineria, a Modded PVP-Faction server."
 [[dependencies.mineria]]
     modId="forge"
     mandatory=true
-    versionRange="[34,)"
+    versionRange="[36,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.mineria]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3,1.17)"
+    versionRange="[1.16.5,1.17)"
     ordering="NONE"
     side="BOTH"

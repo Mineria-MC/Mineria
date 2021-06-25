@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "mineria:items/copper_sword"
+        "layer0": "mineria:item/copper_stuff/copper_sword"
     }
 }

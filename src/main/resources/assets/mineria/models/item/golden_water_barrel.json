@@ -1,5 +1,5 @@
 {
-  "parent": "mineria:block/golden_water_barrel_potions_empty",
+  "parent": "mineria:block/barrel/golden/golden_water_barrel_potions_empty",
   "overrides": [
     {
       "predicate": {

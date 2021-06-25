@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mineria:block/nether_gold_ore" }
+        "": { "model": "mineria:block/ore/nether_gold_ore" }
     }
 }

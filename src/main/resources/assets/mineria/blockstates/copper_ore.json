@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mineria:block/copper_ore" }
+        "": { "model": "mineria:block/ore/copper_ore" }
     }
 }

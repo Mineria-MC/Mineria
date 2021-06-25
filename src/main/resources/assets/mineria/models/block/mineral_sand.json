@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "mineria:blocks/mineral_sand"
+        "all": "mineria:block/mineral_sand"
     }
 }

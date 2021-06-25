@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mineria:block/lead_ore" }
+        "": { "model": "mineria:block/ore/lead_ore" }
     }
 }

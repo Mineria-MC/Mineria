@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "particle": "mineria:block/machine/extractor/extractor",
+        "up": "mineria:block/machine/extractor/extractor_top",
+        "down": "mineria:block/machine/extractor/extractor",
+        "north": "mineria:block/machine/extractor/extractor_front",
+        "east": "mineria:block/machine/extractor/extractor",
+        "south": "mineria:block/machine/extractor/extractor",
+        "west": "mineria:block/machine/extractor/extractor"
+    }
+}
