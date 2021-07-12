@@ -1,7 +1,6 @@
-package com.mineria.mod.util;
+package com.mineria.mod.network;
 
 import com.mineria.mod.References;
-import com.mineria.mod.network.GuiButtonPressedMessageHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -14,7 +13,7 @@ public class MineriaPacketHandler
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(References.MODID, "mineria"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
-    public static void registerNetworkMessagesMessages()
+    public static void registerNetworkMessages()
     {
         addNetworkMessage(GuiButtonPressedMessageHandler.GuiButtonPressedMessage.class, new GuiButtonPressedMessageHandler(), NetworkDirection.PLAY_TO_SERVER);
     }

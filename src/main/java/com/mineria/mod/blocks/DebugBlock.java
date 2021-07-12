@@ -1,11 +1,16 @@
 package com.mineria.mod.blocks;
 
 import com.google.common.collect.Lists;
+import com.mineria.mod.effects.PoisonEffectInstance;
 import com.mineria.mod.init.BlocksInit;
 import com.mineria.mod.init.ItemsInit;
+import com.mineria.mod.init.VanillaEffectsInit;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,11 +18,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.RegistryObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +53,7 @@ public class DebugBlock extends Block
 
             return ActionResultType.func_233537_a_(false);
         }
+
         return ActionResultType.PASS;
     }
 

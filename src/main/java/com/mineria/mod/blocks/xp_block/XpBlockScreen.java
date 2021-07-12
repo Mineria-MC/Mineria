@@ -2,7 +2,7 @@ package com.mineria.mod.blocks.xp_block;
 
 import com.mineria.mod.References;
 import com.mineria.mod.network.GuiButtonPressedMessageHandler;
-import com.mineria.mod.util.MineriaPacketHandler;
+import com.mineria.mod.network.MineriaPacketHandler;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

@@ -1,9 +1,6 @@
 package com.mineria.mod.util;
 
-import com.mineria.mod.blocks.LonsdaleiteBlock;
-import com.mineria.mod.blocks.PlantBlock;
-import com.mineria.mod.blocks.SpikeBlock;
-import com.mineria.mod.blocks.TNTBarrelBlock;
+import com.mineria.mod.blocks.*;
 import com.mineria.mod.blocks.barrel.copper.CopperWaterBarrelScreen;
 import com.mineria.mod.blocks.barrel.golden.GoldenWaterBarrelScreen;
 import com.mineria.mod.blocks.extractor.ExtractorScreen;
@@ -16,15 +13,18 @@ import com.mineria.mod.init.ContainerTypeInit;
 import com.mineria.mod.init.EntityInit;
 import com.mineria.mod.init.ItemsInit;
 import com.mineria.mod.items.MineriaBow;
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.FoliageColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 @OnlyIn(Dist.CLIENT)
@@ -78,6 +78,12 @@ public class RenderHandler
 	{
 		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, SpikeBlock.class).forEach(RenderHandler::registerCutout);
 		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, PlantBlock.class).forEach(RenderHandler::registerCutout);
+		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, FruitPlantBlock.class).forEach(RenderHandler::registerCutout);
+		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, DoublePlantBlock.class).forEach(RenderHandler::registerCutout);
+		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, StrychnosPlantBlock.class).forEach(RenderHandler::registerCutout);
+		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, VineBlock.class).forEach(RenderHandler::registerCutout);
+		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, LeavesBlock.class).forEach(RenderHandler::registerCutout);
+		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, SaplingBlock.class).forEach(RenderHandler::registerCutout);
 		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, TNTBarrelBlock.class).forEach(RenderHandler::registerCutout);
 
 		DeferredRegisterUtil.filterEntriesFromRegister(BlocksInit.BLOCKS, LonsdaleiteBlock.class).forEach(RenderHandler::registerTranslucent);
@@ -96,5 +102,18 @@ public class RenderHandler
 	private static void registerRenderType(Block block, RenderType type)
 	{
 		RenderTypeLookup.setRenderLayer(block, type);
+	}
+
+	public static void registerBlockColors(ColorHandlerEvent.Block event)
+	{
+		event.getBlockColors().register((state, reader, pos, color) -> FoliageColors.getSpruce(), BlocksInit.SPRUCE_YEW_LEAVES);
+	}
+
+	public static void registerItemColors(ColorHandlerEvent.Item event)
+	{
+		event.getItemColors().register((stack, color) -> {
+			BlockState blockstate = ((BlockItem)stack.getItem()).getBlock().getDefaultState();
+			return event.getBlockColors().getColor(blockstate, null, null, color);
+		}, BlocksInit.SPRUCE_YEW_LEAVES);
 	}
 }

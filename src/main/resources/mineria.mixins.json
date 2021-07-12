@@ -4,8 +4,15 @@
   "package": "com.mineria.mod.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "EffectInstanceMixin",
+    "FoodStatsMixin",
+    "LivingEntityMixin",
+    "SPlayEntityEffectPacketMixin"
   ],
   "client": [
+    "ClientPlayerEntityMixin",
+    "ClientPlayNetHandlerMixin",
+    "DisplayEffectsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

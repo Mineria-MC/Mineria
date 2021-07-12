@@ -2,7 +2,7 @@ package com.mineria.mod;
 
 import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.init.*;
-import com.mineria.mod.util.MineriaPacketHandler;
+import com.mineria.mod.network.MineriaPacketHandler;
 import com.mineria.mod.util.RenderHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
@@ -68,7 +68,7 @@ public class Mineria
 	//To setup some things other than registries
 	private void setup(FMLCommonSetupEvent event)
 	{
-		MineriaPacketHandler.registerNetworkMessagesMessages();
+		MineriaPacketHandler.registerNetworkMessages();
 	}
 
 	//To setup client things

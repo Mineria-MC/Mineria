@@ -12,17 +12,24 @@ import com.mineria.mod.blocks.extractor.ExtractorBlock;
 import com.mineria.mod.blocks.infuser.InfuserBlock;
 import com.mineria.mod.blocks.titane_extractor.TitaneExtractorBlock;
 import com.mineria.mod.blocks.xp_block.XpBlock;
+import com.mineria.mod.world.feature.SakuraTree;
+import com.mineria.mod.world.feature.SpruceYewTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
+import net.minecraft.item.TallBlockItem;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -32,6 +39,8 @@ public class BlocksInit
 	//Deferred Registries (Blocks and Block Items)
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.MODID);
 	public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, References.MODID);
+
+	private static final Function<Block, BlockItem> DEV_ITEM_FUNC = block -> new BlockItem(block, new Item.Properties().group(Mineria.DEV_GROUP));
 
 	//Ores
 	public static final Block LEAD_ORE = register("lead_ore", new MineriaOre(2, 4.0F, 5.0F, SoundType.STONE));
@@ -56,11 +65,36 @@ public class BlocksInit
 	public static final Block INFUSER = register("infuser", new InfuserBlock());
 
 	//Plants
-	public static final Block PLANTAIN = register("plantain", new PlantBlock(MaterialColor.GRASS));
-	public static final Block MINT = register("mint", new PlantBlock(MaterialColor.GRASS));
-	public static final Block THYME = register("thyme", new PlantBlock(MaterialColor.GRASS));
-	public static final Block NETTLE = register("nettle", new PlantBlock(MaterialColor.GRASS));
-	public static final Block PULMONARY = register("pulmonary", new PlantBlock(MaterialColor.GRASS));
+	public static final Block PLANTAIN = register("plantain", new PlantBlock(MaterialColor.GRASS, false));
+	public static final Block MINT = register("mint", new PlantBlock(MaterialColor.GRASS, false));
+	public static final Block THYME = register("thyme", new PlantBlock(MaterialColor.GRASS, false));
+	public static final Block NETTLE = register("nettle", new PlantBlock(MaterialColor.GRASS, false));
+	public static final Block PULMONARY = register("pulmonary", new PlantBlock(MaterialColor.GRASS, false));
+	public static final Block RHUBARB = register("rhubarb", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block SENNA = register("senna", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block SENNA_BUSH = register("senna_bush", new PlantBlock(MaterialColor.GRASS, true), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block ELDERBERRY_BUSH = register("elderberry_bush", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable, Growth System
+	public static final Block BLACK_ELDERBERRY_BUSH = register("black_elderberry_bush", new FruitPlantBlock(() -> ItemsInit.BLACK_ELDERBERRY), DEV_ITEM_FUNC); // TODO LootTable, Growth System
+	public static final Block STRYCHNOS_TOXIFERA = register("strychnos_toxifera", new StrychnosPlantBlock(), DEV_ITEM_FUNC); // TODO LootTable, Review Growth System
+	public static final Block STRYCHNOS_NUX_VOMICA = register("strychnos_nux-vomica", new StrychnosPlantBlock(), DEV_ITEM_FUNC); // TODO LootTable, Review Growth System
+	public static final Block BELLADONNA = register("belladonna", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block MANDRAKE = register("mandrake", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block LYCIUM_BARBARUM = register("lycium_barbarum", new FruitPlantBlock(() -> ItemsInit.GOJI), DEV_ITEM_FUNC); // TODO LootTable, Growth System
+	public static final Block SAUSSUREA_COSTUS = register("saussurea_costus", new SaussureaCostusPlantBlock(), block -> new TallBlockItem(block, new Item.Properties().group(Mineria.DEV_GROUP))); // TODO LootTable
+	public static final Block SCHISANDRA_CHINENSIS = register("schisandra_chinensis", new VineBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.VINE)), DEV_ITEM_FUNC); // TODO LootTable, Review Growth System
+	public static final Block PULSATILLA_CHINENSI = register("pulsatilla_chinensis", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
+
+	//Mushrooms
+	public static final Block GIROLLE = register("girolle", new PlantBlock(MaterialColor.YELLOW, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block HORN_OF_PLENTY = register("horn_of_plenty", new PlantBlock(MaterialColor.BROWN, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block PUFFBALL = register("puffball", new PlantBlock(MaterialColor.WOOL, false), DEV_ITEM_FUNC); // TODO LootTable, Special Use
+	public static final Block FLY_AGARIC = null;
+
+	// Trees, Leaves...
+	public static final Block SPRUCE_YEW_LEAVES = register("spruce_yew_leaves", new LeavesBlock(AbstractBlock.Properties.from(Blocks.OAK_LEAVES)), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block SPRUCE_YEW_SAPLING = register("spruce_yew_sapling", new SaplingBlock(new SpruceYewTree(), AbstractBlock.Properties.from(Blocks.SPRUCE_SAPLING)), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block SAKURA_LEAVES = register("sakura_leaves", new LeavesBlock(AbstractBlock.Properties.from(Blocks.OAK_LEAVES)), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block SAKURA_SAPLING = register("sakura_sapling", new SaplingBlock(new SakuraTree(), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)), DEV_ITEM_FUNC); // TODO LootTable
 
 	//Other
 	public static final Block BLUE_GLOWSTONE = register("blue_glowstone", new Block(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).setLightLevel(value -> 15)));
@@ -82,10 +116,10 @@ public class BlocksInit
 		return register(name, instance, block -> new BlockItem(block, new Item.Properties().group(Mineria.MINERIA_GROUP)));
 	}
 
-	private static <T extends Block> T register(String name, T instance, Function<T, BlockItem> blockItem)
+	private static <T extends Block> T register(String name, T instance, @Nullable Function<T, BlockItem> blockItem)
 	{
 		BLOCKS.register(name, () -> instance);
-		BLOCK_ITEMS.register(name, () -> blockItem.apply(instance));
+		if(blockItem != null) BLOCK_ITEMS.register(name, () -> blockItem.apply(instance));
 		return instance;
 	}
 

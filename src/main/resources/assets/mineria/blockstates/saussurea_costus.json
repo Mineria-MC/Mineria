@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=lower": { "model": "mineria:block/plant/saussurea_costus_bottom" },
+    "half=upper": { "model": "mineria:block/plant/saussurea_costus_top" }
+  }
+}

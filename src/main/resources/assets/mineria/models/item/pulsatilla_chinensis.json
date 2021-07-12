@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "mineria:block/plant/pulsatilla_chinensis"
+    }
+}

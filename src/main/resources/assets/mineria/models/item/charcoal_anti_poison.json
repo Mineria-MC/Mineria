@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mineria:item/potion/charcoal_anti_poison",
+    "layer1": "minecraft:item/glass_bottle"
+  }
+}

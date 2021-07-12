@@ -1,4 +1,4 @@
-package com.mineria.mod.util;
+package com.mineria.mod.world.gen;
 
 import com.mineria.mod.References;
 import com.mineria.mod.init.BlocksInit;

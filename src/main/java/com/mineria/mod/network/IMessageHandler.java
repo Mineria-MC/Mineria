@@ -1,4 +1,4 @@
-package com.mineria.mod.util;
+package com.mineria.mod.network;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;

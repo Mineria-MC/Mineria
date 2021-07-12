@@ -16,15 +16,36 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.apache.logging.log4j.util.TriConsumer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class DrinkItem extends Item
 {
+    private final Item container;
+    private final TriConsumer<ItemStack, World, LivingEntity> onFoodEaten;
+
     public DrinkItem(Item.Properties properties)
     {
+        this(properties, ItemsInit.CUP, (stack, world, living) -> {});
+    }
+
+    public DrinkItem(Item.Properties properties, TriConsumer<ItemStack, World, LivingEntity> onFoodEaten)
+    {
+        this(properties, ItemsInit.CUP, onFoodEaten);
+    }
+
+    public DrinkItem(Item.Properties properties, Item container)
+    {
+        this(properties, container, (stack, world, living) -> {});
+    }
+
+    public DrinkItem(Item.Properties properties, Item container, TriConsumer<ItemStack, World, LivingEntity> onFoodEaten)
+    {
         super(properties);
+        this.container = container;
+        this.onFoodEaten = onFoodEaten;
     }
 
     @Override
@@ -43,13 +64,17 @@ public class DrinkItem extends Item
             serverplayerentity.addStat(Stats.ITEM_USED.get(this));
         }
 
+        if(!worldIn.isRemote) entityLiving.curePotionEffects(stack);
+        if(!worldIn.isRemote) onFoodEaten.accept(stack, worldIn, entityLiving);
+
         try
         {
             ObfuscationReflectionHelper.findMethod(LivingEntity.class, "func_213349_a", ItemStack.class, World.class, LivingEntity.class).invoke(entityLiving, stack, worldIn, entityLiving);
         }
         catch (IllegalAccessException | InvocationTargetException e)
         {
-            Mineria.LOGGER.error("Couldn't apply effect for DrinkItem " + this.getRegistryName().toString() + " : " + e.getMessage());
+            Mineria.LOGGER.error("Couldn't apply effect for DrinkItem " + this.getRegistryName().toString());
+            e.printStackTrace();
         }
 
         if (entityLiving instanceof PlayerEntity && !((PlayerEntity)entityLiving).abilities.isCreativeMode)
@@ -57,7 +82,7 @@ public class DrinkItem extends Item
             stack.shrink(1);
         }
 
-        return stack.isEmpty() ? new ItemStack(ItemsInit.CUP) : stack;
+        return stack.isEmpty() ? new ItemStack(this.container) : stack;
     }
 
     @Override

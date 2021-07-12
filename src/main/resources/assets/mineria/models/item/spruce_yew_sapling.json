@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mineria:block/tree/spruce_yew_sapling"
+  }
+}

@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"peak": "mineria:block/lead_spike_peak",
-		"base": "mineria:block/compressed_lead_spike_peak",
-		"particle": "mineria:block/compressed_lead_spike_peak"
+		"base": "mineria:block/lead_spike_base",
+		"particle": "mineria:block/lead_spike_base"
 	},
 	"elements": [
 		{

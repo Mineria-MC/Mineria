@@ -130,6 +130,8 @@
   "recipe_category.mineria.titane_extractor": "Titane Extractor",
   "recipe_category.mineria.extractor": "Extractor",
 
+  "poison_source.mineria.elderberry": "Elderberry poisoning of class %d (level %d)",
+
   "tooltip.mineria.buckets": "Buckets",
   "tooltip.mineria.water_barrel.use": "To use the barrel, you must place it down and right click on it with a water bucket to fill it",
   "tooltip.mineria.water_barrel.hold_shift": "Hold SHIFT for more...",

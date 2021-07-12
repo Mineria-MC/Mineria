@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "mineria:block/tree/spruce_yew_sapling"
+  }
+}
