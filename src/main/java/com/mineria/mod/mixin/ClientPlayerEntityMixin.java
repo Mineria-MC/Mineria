@@ -1,5 +1,6 @@
 package com.mineria.mod.mixin;
 
+import com.mineria.mod.effects.PoisonEffectInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -14,6 +15,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin extends LivingEntity
@@ -47,6 +51,19 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity
 
         return super.removeActivePotionEffect(effect);
     }*/
+
+    @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
+    public void mixIsSneaking(CallbackInfoReturnable<Boolean> cir)
+    {
+        if(this.isPotionActive(Effects.POISON) && this.getActivePotionEffect(Effects.POISON) instanceof PoisonEffectInstance)
+        {
+            PoisonEffectInstance poison = (PoisonEffectInstance) this.getActivePotionEffect(Effects.POISON);
+            if(poison.doSpasms())
+            {
+                cir.setReturnValue(false);
+            }
+        }
+    }
 
     /**
      * @reason it's easier

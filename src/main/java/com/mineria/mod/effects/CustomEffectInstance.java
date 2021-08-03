@@ -1,12 +1,20 @@
 package com.mineria.mod.effects;
 
+import com.mineria.mod.References;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomEffectInstance extends EffectInstance
 {
@@ -17,6 +25,7 @@ public class CustomEffectInstance extends EffectInstance
     protected boolean ambient;
     protected boolean showParticles;
     protected boolean showIcon;
+    protected List<ItemStack> curativeItems;
 
     public CustomEffectInstance(Effect potion, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon)
     {
@@ -28,6 +37,7 @@ public class CustomEffectInstance extends EffectInstance
         this.ambient = ambient;
         this.showParticles = showParticles;
         this.showIcon = showIcon;
+        this.curativeItems = new ArrayList<>();
     }
 
     @Override
@@ -121,6 +131,11 @@ public class CustomEffectInstance extends EffectInstance
         return this.showIcon;
     }
 
+    public ResourceLocation getSerializerName()
+    {
+        return new ResourceLocation(References.MODID, "custom");
+    }
+
     @Override
     public boolean tick(LivingEntity living, Runnable onChangedPotionEffect)
     {
@@ -204,15 +219,26 @@ public class CustomEffectInstance extends EffectInstance
     public CompoundNBT write(CompoundNBT nbt)
     {
         super.write(nbt);
-        nbt.putBoolean("Custom", true);
         nbt.putInt("MaxDuration", this.maxDuration);
-        nbt.putBoolean("ShouldRender", this.shouldRender());
+        nbt.putString("Serializer", this.getSerializerName().toString());
         return nbt;
     }
 
     public void drawPotionName(FontRenderer font, MatrixStack matrixStack, float x, float y)
     {
         font.drawTextWithShadow(matrixStack, new TranslationTextComponent(this.getEffectName()), x, y, 16777215);
+    }
+
+    @Override
+    public List<ItemStack> getCurativeItems()
+    {
+        return curativeItems;
+    }
+
+    @Override
+    public void setCurativeItems(List<ItemStack> curativeItems)
+    {
+        this.curativeItems = curativeItems;
     }
 
     public static EffectInstance makeEffectInstance(Effect effect, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, boolean shouldRender)
@@ -235,5 +261,44 @@ public class CustomEffectInstance extends EffectInstance
                 return shouldRender;
             }
         };
+    }
+
+    public static CustomEffectInstance merge(CustomEffectInstance custom, EffectInstance effect)
+    {
+        return makeCustomEffectInstance(effect.getPotion(), effect.getDuration(), custom.maxDuration, effect.getAmplifier(), effect.isAmbient(), effect.doesShowParticles(), effect.isShowIcon(), effect.shouldRender());
+    }
+
+    public static class Serializer implements IEffectInstanceSerializer<CustomEffectInstance>
+    {
+        @Override
+        public ResourceLocation getName()
+        {
+            return new ResourceLocation(References.MODID, "custom");
+        }
+
+        @Override
+        public void encodePacket(CustomEffectInstance effect, PacketBuffer buf)
+        {
+            IEffectInstanceSerializer.getSerializer(new ResourceLocation("default")).encodePacket(effect, buf);
+            buf.writeInt(effect.getMaxDuration());
+        }
+
+        @Override
+        public CustomEffectInstance decodePacket(PacketBuffer buf)
+        {
+            EffectInstance instance = IEffectInstanceSerializer.getSerializer(new ResourceLocation("default")).decodePacket(buf);
+            CustomEffectInstance custom = new CustomEffectInstance(Effects.SPEED, 0, buf.readInt(), 0, false, false, false);
+
+            return CustomEffectInstance.merge(custom, instance);
+        }
+
+        @Override
+        public CustomEffectInstance deserialize(Effect effect, CompoundNBT nbt)
+        {
+            EffectInstance instance = IEffectInstanceSerializer.getSerializer(new ResourceLocation("default")).deserialize(effect, nbt);
+            CustomEffectInstance custom = new CustomEffectInstance(Effects.SPEED, 0, nbt.getInt("MaxDuration"), 0, false, false, false);
+
+            return IEffectInstanceSerializer.readCurativeItems(CustomEffectInstance.merge(custom, instance), nbt);
+        }
     }
 }

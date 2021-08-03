@@ -28,6 +28,8 @@ public class MissingMappingsHandler
         table.put(ForgeRegistries.BLOCKS, modLoc("elderberry"), new ResourceLocation("air"));
         table.put(ForgeRegistries.BLOCKS, modLoc("pulsatilla_vulgaris"), modLoc("pulsatilla_chinensis"));
         table.put(ForgeRegistries.ITEMS, modLoc("pulsatilla_vulgaris"), modLoc("pulsatilla_chinensis"));
+        table.put(ForgeRegistries.ITEMS, modLoc("orange_blossom"), modLoc("orange-blossom"));
+        table.put(ForgeRegistries.ITEMS, modLoc("distilled_orange-blossom"), modLoc("distilled_orange-blossom_water"));
     });
 
     @SubscribeEvent

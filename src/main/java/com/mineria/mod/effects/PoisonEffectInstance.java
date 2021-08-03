@@ -1,15 +1,18 @@
 package com.mineria.mod.effects;
 
+import com.mineria.mod.References;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectUtils;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
@@ -17,7 +20,7 @@ public class PoisonEffectInstance extends CustomEffectInstance
 {
     private int potionClass;
     private final IPoisonEffect potion;
-    private final PoisonSource poisonSource;
+    private PoisonSource poisonSource;
 
     public PoisonEffectInstance(int potionClass, int duration, int amplifier, PoisonSource source)
     {
@@ -71,7 +74,7 @@ public class PoisonEffectInstance extends CustomEffectInstance
             {
                 if (other.potionClass == this.potionClass && other.amplifier == this.amplifier && other.maxDuration == this.maxDuration)
                 {
-                    this.duration = other.duration;
+                    this.duration = Math.max(this.duration + other.duration, 24000);
                     combined = true;
                 }
             }
@@ -94,6 +97,12 @@ public class PoisonEffectInstance extends CustomEffectInstance
                 combined = true;
             }
 
+            if(other.poisonSource != this.poisonSource)
+            {
+                this.poisonSource = other.poisonSource;
+                combined = true;
+            }
+
             return combined;
         }
         return false;
@@ -102,6 +111,12 @@ public class PoisonEffectInstance extends CustomEffectInstance
     public int getPotionClass()
     {
         return potionClass;
+    }
+
+    @Override
+    public ResourceLocation getSerializerName()
+    {
+        return new ResourceLocation(References.MODID, "poison");
     }
 
     @Override
@@ -117,6 +132,16 @@ public class PoisonEffectInstance extends CustomEffectInstance
         {
             this.potion.performEffect(living, this.amplifier, this.duration, this.maxDuration, this.potionClass);
         }
+    }
+
+    public boolean doSpasms()
+    {
+        return this.potion.doSpasms(this.duration, this.maxDuration, this.potionClass);
+    }
+
+    public boolean doConvulsions()
+    {
+        return this.potion.doConvulsions(this.duration, this.maxDuration, this.potionClass);
     }
 
     @Override
@@ -142,7 +167,14 @@ public class PoisonEffectInstance extends CustomEffectInstance
     @Override
     public void drawPotionName(FontRenderer font, MatrixStack matrixStack, float x, float y)
     {
-        font.drawTextWithShadow(matrixStack, this.poisonSource.getTranslationComponent(this.potionClass, this.amplifier), x, y, 16777215);
+        ITextComponent txt = this.poisonSource.getTranslationComponent(this.potionClass, this.amplifier).appendString(" - ").appendString(EffectUtils.getPotionDurationString(this, 1.0F));
+        int width = font.getStringPropertyWidth(txt);
+        font.drawTextWithShadow(matrixStack, txt, x - (int) (width / 2), y, 16727643);
+    }
+
+    public void onPotionCured(LivingEntity living)
+    {
+        this.poisonSource.onPotionCured(living);
     }
 
     public static void applyPoisonEffect(LivingEntity living, int potionClass, int duration, int amplifier, PoisonSource source)
@@ -163,5 +195,45 @@ public class PoisonEffectInstance extends CustomEffectInstance
                     return false;
                 }
             });
+    }
+
+    public static PoisonEffectInstance merge(PoisonEffectInstance poison, CustomEffectInstance custom)
+    {
+        return new PoisonEffectInstance(poison.getPotionClass(), custom.getDuration(), custom.getMaxDuration(), custom.getAmplifier(), poison.getPoisonSource());
+    }
+
+    public static class Serializer implements IEffectInstanceSerializer<PoisonEffectInstance>
+    {
+        @Override
+        public ResourceLocation getName()
+        {
+            return new ResourceLocation(References.MODID, "poison");
+        }
+
+        @Override
+        public void encodePacket(PoisonEffectInstance effect, PacketBuffer buf)
+        {
+            IEffectInstanceSerializer.<CustomEffectInstance>getSerializer(new ResourceLocation(References.MODID, "custom")).encodePacket(effect, buf);
+            buf.writeInt(effect.getPotionClass());
+            buf.writeInt(effect.getPoisonSource().getId());
+        }
+
+        @Override
+        public PoisonEffectInstance decodePacket(PacketBuffer buf)
+        {
+            CustomEffectInstance custom = IEffectInstanceSerializer.<CustomEffectInstance>getSerializer(new ResourceLocation(References.MODID, "custom")).decodePacket(buf);
+            PoisonEffectInstance poison = new PoisonEffectInstance(buf.readInt(), 0, 0, PoisonSource.byId(buf.readInt()));
+
+            return PoisonEffectInstance.merge(poison, custom);
+        }
+
+        @Override
+        public PoisonEffectInstance deserialize(Effect effect, CompoundNBT nbt)
+        {
+            CustomEffectInstance custom = IEffectInstanceSerializer.<CustomEffectInstance>getSerializer(new ResourceLocation(References.MODID, "custom")).deserialize(effect, nbt);
+            PoisonEffectInstance poison = new PoisonEffectInstance(nbt.getInt("PotionClass"), 0, 0, PoisonSource.byId(nbt.getInt("PoisonSource")));
+
+            return IEffectInstanceSerializer.readCurativeItems(PoisonEffectInstance.merge(poison, custom), nbt);
+        }
     }
 }

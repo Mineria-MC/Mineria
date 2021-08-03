@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:plantain",
+    "mineria:mint",
+    "mineria:thyme",
+    "mineria:nettle",
+    "mineria:pulmonary",
+    "mineria:rhubarb",
+    "mineria:senna",
+    "mineria:senna_bush",
+    "mineria:elderberry_bush",
+    "mineria:black_elderberry_bush",
+    "mineria:strychnos_nux-vomica",
+    "mineria:strychnos_toxifera",
+    "mineria:belladonna",
+    "mineria:mandrake",
+    "mineria:lycium_barbarum",
+    "mineria:saussurea_costus",
+    "mineria:schisandra_chinensis",
+    "mineria:pulsatilla_chinensis"
+  ]
+}

@@ -124,6 +124,8 @@
   "tile_entity.mineria.golden_water_barrel": "Golden Water Barrel",
   "tile_entity.mineria.extractor": "Extractor",
 
+  "entity.minecraft.villager.mineria.apothecary": "Apothecary",
+
   "screen.mineria.xp_block.give_xp": "Give XP",
   
   "recipe_category.mineria.infuser": "Infuser",
@@ -131,6 +133,12 @@
   "recipe_category.mineria.extractor": "Extractor",
 
   "poison_source.mineria.elderberry": "Elderberry poisoning of class %d (level %d)",
+  "poison_source.mineria.strychnos_toxifera": "Strychnos Toxifera poisoning of class %d (level %d)",
+  "poison_source.mineria.strychnos_nux_vomica": "Strychnos Nux-Vomica poisoning of class %d (level %d)",
+  "poison_source.mineria.belladonna": "Belladonna poisoning of class %d (level %d)",
+  "poison_source.mineria.mandrake": "Mandrake poisoning of class %d (level %d)",
+
+  "biome.mineria.eastern_plains": "Eastern Plains",
 
   "tooltip.mineria.buckets": "Buckets",
   "tooltip.mineria.water_barrel.use": "To use the barrel, you must place it down and right click on it with a water bucket to fill it",

@@ -82,13 +82,13 @@ public class BlocksInit
 	public static final Block LYCIUM_BARBARUM = register("lycium_barbarum", new FruitPlantBlock(() -> ItemsInit.GOJI), DEV_ITEM_FUNC); // TODO LootTable, Growth System
 	public static final Block SAUSSUREA_COSTUS = register("saussurea_costus", new SaussureaCostusPlantBlock(), block -> new TallBlockItem(block, new Item.Properties().group(Mineria.DEV_GROUP))); // TODO LootTable
 	public static final Block SCHISANDRA_CHINENSIS = register("schisandra_chinensis", new VineBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.VINE)), DEV_ITEM_FUNC); // TODO LootTable, Review Growth System
-	public static final Block PULSATILLA_CHINENSI = register("pulsatilla_chinensis", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
+	public static final Block PULSATILLA_CHINENSIS = register("pulsatilla_chinensis", new PlantBlock(MaterialColor.GRASS, false), DEV_ITEM_FUNC); // TODO LootTable
 
 	//Mushrooms
 	public static final Block GIROLLE = register("girolle", new PlantBlock(MaterialColor.YELLOW, false), DEV_ITEM_FUNC); // TODO LootTable
 	public static final Block HORN_OF_PLENTY = register("horn_of_plenty", new PlantBlock(MaterialColor.BROWN, false), DEV_ITEM_FUNC); // TODO LootTable
 	public static final Block PUFFBALL = register("puffball", new PlantBlock(MaterialColor.WOOL, false), DEV_ITEM_FUNC); // TODO LootTable, Special Use
-	public static final Block FLY_AGARIC = null;
+	public static final Block FLY_AGARIC = Blocks.RED_MUSHROOM;
 
 	// Trees, Leaves...
 	public static final Block SPRUCE_YEW_LEAVES = register("spruce_yew_leaves", new LeavesBlock(AbstractBlock.Properties.from(Blocks.OAK_LEAVES)), DEV_ITEM_FUNC); // TODO LootTable

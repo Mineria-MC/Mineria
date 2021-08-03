@@ -1,6 +1,7 @@
 package com.mineria.mod;
 
 import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
+import com.mineria.mod.capabilities.CapabilityRegistry;
 import com.mineria.mod.init.*;
 import com.mineria.mod.network.MineriaPacketHandler;
 import com.mineria.mod.util.RenderHandler;
@@ -10,6 +11,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,6 +47,8 @@ public class Mineria
 		}
 	}.setBackgroundImage(new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png"));
 
+	public static final long FOOD_DIGESTION_TIME = 12000;
+
 	//Mod Constructor
 	public Mineria()
 	{
@@ -52,12 +58,19 @@ public class Mineria
 
 		//Registries
 		RecipeSerializerInit.RECIPE_SERIALIZERS.register(modBus);
+		LootModifierSerializersInit.SERIALIZERS.register(modBus);
+		EffectsInit.EFFECTS.register(modBus);
 		ItemsInit.ITEMS.register(modBus);
 		BlocksInit.BLOCK_ITEMS.register(modBus);
 		BlocksInit.BLOCKS.register(modBus);
 		TileEntitiesInit.TILE_ENTITY_TYPES.register(modBus);
 		ContainerTypeInit.CONTAINER_TYPES.register(modBus);
 		EntityInit.ENTITY_TYPES.register(modBus);
+		PointOfInterestTypeInit.POI_TYPES.register(modBus);
+		ProfessionsInit.PROFESSIONS.register(modBus);
+		modBus.addGenericListener(Feature.class, FeaturesInit::registerFeatures);
+		modBus.addGenericListener(Structure.class, StructuresInit::registerStructures);
+		modBus.addGenericListener(Biome.class, BiomesInit::registerBiomes);
 
 		modBus.addListener(EntityInit::registerEntityAttributes);
 
@@ -69,6 +82,7 @@ public class Mineria
 	private void setup(FMLCommonSetupEvent event)
 	{
 		MineriaPacketHandler.registerNetworkMessages();
+		CapabilityRegistry.registerCapabilities();
 	}
 
 	//To setup client things

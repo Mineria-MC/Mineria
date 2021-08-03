@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class SakuraTree extends Tree
 {
-    public static final BaseTreeFeatureConfig SAKURA_TREE = new BaseTreeFeatureConfig.Builder(
+    public static final BaseTreeFeatureConfig CONFIG = new BaseTreeFeatureConfig.Builder(
             new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
             new SimpleBlockStateProvider(BlocksInit.SAKURA_LEAVES.getDefaultState()),
             new BlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3),
@@ -24,6 +24,6 @@ public class SakuraTree extends Tree
     @Override
     protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean largeHive)
     {
-        return Feature.TREE.withConfiguration(SAKURA_TREE);
+        return Feature.TREE.withConfiguration(CONFIG);
     }
 }

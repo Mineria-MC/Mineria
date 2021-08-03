@@ -16,6 +16,7 @@ public class MineriaPacketHandler
     public static void registerNetworkMessages()
     {
         addNetworkMessage(GuiButtonPressedMessageHandler.GuiButtonPressedMessage.class, new GuiButtonPressedMessageHandler(), NetworkDirection.PLAY_TO_SERVER);
+        addNetworkMessage(PlayEntityEffectMessageHandler.PlayEntityEffectMessage.class, new PlayEntityEffectMessageHandler(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
     private static int messageID = 0;

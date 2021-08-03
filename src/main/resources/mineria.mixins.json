@@ -5,14 +5,17 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EffectInstanceMixin",
+    "EntityMixin",
     "FoodStatsMixin",
+    "ItemMixin",
     "LivingEntityMixin",
-    "SPlayEntityEffectPacketMixin"
+    "MilkBucketItemMixin",
+    "ServerPlayNetHandlerMixin",
+    "SPlayEntityEffectPacketMixin",
+    "VillagerEntityMixin"
   ],
   "client": [
-    "ClientPlayerEntityMixin",
-    "ClientPlayNetHandlerMixin",
-    "DisplayEffectsScreenMixin"
+    "ClientPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

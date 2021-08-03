@@ -1,0 +1,17 @@
+{
+  "type": "mineria:oak_leaves_billhook_serializer",
+  "conditions": [
+    {
+      "condition": "minecraft:match_tool",
+      "predicate": {
+        "item": "mineria:billhook"
+      }
+    },
+    {
+      "condition": "block_state_property",
+      "block": "minecraft:oak_leaves"
+    }
+  ],
+  "chance": 0.5,
+  "drops": "minecraft:apple"
+}

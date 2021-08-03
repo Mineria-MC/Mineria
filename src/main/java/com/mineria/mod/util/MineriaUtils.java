@@ -10,6 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -66,5 +67,23 @@ public class MineriaUtils
         if(test)
             action.accept(obj);
         return test;
+    }
+
+    /**
+     * Calculates a random pitch based on the given integer.
+     * For example :
+     * - randomPitch(5) returns a number between 0.5 and 1.5
+     * - randomPitch(146) returns a number between 0.854 and 1.146
+     * - randomPitch(0) returns 1
+     *
+     * @return a float between 1 - maxDifference / 10^[number of digits of maxDifference] and 1 + maxDifference / 10^[number of digits].
+     */
+    public static float randomPitch()
+    {
+        Random rand = new Random();
+
+        float floatDif = rand.nextFloat() / 2;
+
+        return rand.nextBoolean() ? 1.0F - floatDif : 1.0F + floatDif;
     }
 }

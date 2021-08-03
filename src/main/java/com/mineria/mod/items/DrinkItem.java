@@ -1,6 +1,8 @@
 package com.mineria.mod.items;
 
+import com.google.common.collect.Lists;
 import com.mineria.mod.Mineria;
+import com.mineria.mod.capabilities.CapabilityRegistry;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.LivingEntity;
@@ -8,18 +10,22 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DrinkHelper;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class DrinkItem extends Item
 {
@@ -28,7 +34,7 @@ public class DrinkItem extends Item
 
     public DrinkItem(Item.Properties properties)
     {
-        this(properties, ItemsInit.CUP, (stack, world, living) -> {});
+        this(properties, ItemsInit.CUP);
     }
 
     public DrinkItem(Item.Properties properties, TriConsumer<ItemStack, World, LivingEntity> onFoodEaten)
@@ -66,6 +72,7 @@ public class DrinkItem extends Item
 
         if(!worldIn.isRemote) entityLiving.curePotionEffects(stack);
         if(!worldIn.isRemote) onFoodEaten.accept(stack, worldIn, entityLiving);
+        entityLiving.getCapability(CapabilityRegistry.INGESTED_FOOD_CAP).ifPresent(cap -> cap.foodIngested(stack.getItem()));
 
         try
         {
@@ -89,5 +96,37 @@ public class DrinkItem extends Item
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
     {
         return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
+    }
+
+    // TODO Serialize CooldownTracker
+    public static void lockLaxativeDrinks(LivingEntity living)
+    {
+        if(living instanceof PlayerEntity)
+        {
+            PlayerEntity player = (PlayerEntity) living;
+            getLaxativeDrinks().forEach(item -> player.getCooldownTracker().setCooldown(item, 20 * 60 * 10));
+        }
+    }
+
+    public static void unlockLaxativeDrinks(LivingEntity living)
+    {
+        if(living instanceof PlayerEntity)
+        {
+            PlayerEntity player = (PlayerEntity) living;
+            getLaxativeDrinks().forEach(item -> player.getCooldownTracker().removeCooldown(item));
+        }
+    }
+
+    public static List<Item> getLaxativeDrinks()
+    {
+        return Lists.newArrayList(ItemsInit.CHARCOAL_ANTI_POISON, ItemsInit.CATHOLICON, ItemsInit.RHUBARB_TEA, ItemsInit.SENNA_TEA);
+    }
+
+    public static Map<Item, Long> getMaxDigestionTime()
+    {
+        return Util.make(new HashMap<>(), map -> {
+            map.put(ItemsInit.ELDERBERRY_TEA, (long) (20 * 45));
+            map.put(ItemsInit.STRYCHNOS_NUX_VOMICA_TEA, (long) (20 * 60 * 5));
+        });
     }
 }

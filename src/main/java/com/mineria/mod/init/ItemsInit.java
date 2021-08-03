@@ -2,6 +2,8 @@ package com.mineria.mod.init;
 
 import com.mineria.mod.Mineria;
 import com.mineria.mod.References;
+import com.mineria.mod.capabilities.CapabilityRegistry;
+import com.mineria.mod.effects.BowelSoundEffectInstance;
 import com.mineria.mod.effects.PoisonEffectInstance;
 import com.mineria.mod.effects.PoisonSource;
 import com.mineria.mod.items.*;
@@ -9,6 +11,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -28,6 +32,7 @@ public class ItemsInit
 	public static final Item CUP = register("cup", new Item(defaultProperties().maxStackSize(16)));
 	public static final Item VANADIUM_INGOT = register("vanadium_ingot", new MineriaItem());
 	public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, EquipmentSlotType.HEAD).onArmorTick((stack, world, player) -> player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
+	public static final Item BILLHOOK = register("billhook", new BillhookItem(devProperties().maxDamage(240)));
 	
 	//Copper
 	public static final Item COPPER_INGOT = register("copper_ingot", new MineriaItem());
@@ -101,56 +106,116 @@ public class ItemsInit
 	//Drinks
 	public static final Item PLANTAIN_TEA = register("plantain_tea", new DrinkItem(defaultProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			//() -> new EffectInstance(Effects.STRENGTH, 600, 1, true, true), 1.0F
-			() -> new EffectInstance(Effects.STRENGTH, 1800, 1, true, true), 1
+			() -> new EffectInstance(Effects.STRENGTH, 1800, 1, false, true), 1
 	).build())));
 	public static final Item MINT_TEA = register("mint_tea", new DrinkItem(defaultProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			//() -> new EffectInstance(Effects.SPEED, 1200, 2, true, true), 1.0F
-			() -> new EffectInstance(Effects.SPEED, 2400, 2, true, true), 1
+			() -> new EffectInstance(Effects.SPEED, 2400, 2, false, true), 1
 	).effect(
 			//() -> new EffectInstance(Effects.JUMP_BOOST, 1200, 1, true, true), 1.0F
-			() -> new EffectInstance(Effects.SPEED, 2400, 2, true, true), 1
+			() -> new EffectInstance(Effects.SPEED, 2400, 2, false, true), 1
 	).build())));
 	public static final Item THYME_TEA = register("thyme_tea", new DrinkItem(defaultProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			//() -> new EffectInstance(Effects.REGENERATION, 200, 2, true, true), 1.0F
-			() -> new EffectInstance(Effects.REGENERATION, 200, 4, true, true), 1
+			() -> new EffectInstance(Effects.REGENERATION, 200, 4, false, true), 1
 	).build())));
 	public static final Item NETTLE_TEA = register("nettle_tea", new DrinkItem(defaultProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			//() -> new EffectInstance(Effects.ABSORPTION, 900, 0, true, true), 1.0F
-			() -> new EffectInstance(Effects.ABSORPTION, 2400, 0, true, true), 1
+			() -> new EffectInstance(Effects.ABSORPTION, 2400, 0, false, true), 1
 	).effect(
-			() -> new EffectInstance(Effects.REGENERATION, 100, 1, true, true), 1
+			() -> new EffectInstance(Effects.REGENERATION, 100, 1, false, true), 1
 	).build())));
 	public static final Item PULMONARY_TEA = register("pulmonary_tea", new DrinkItem(defaultProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			//() -> new EffectInstance(Effects.RESISTANCE, 600, 1, true, true), 1.0F
-			() -> new EffectInstance(Effects.RESISTANCE, 1800, 1, true, true), 1
+			() -> new EffectInstance(Effects.RESISTANCE, 1800, 1, false, true), 1
 	).build())));
 	// TODO START
-	public static final Item RHUBARB_TEA = register("rhubarb_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build())));
-	public static final Item SENNA_TEA = register("senna_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build())));
-	public static final Item CATHOLICON = register("catholicon", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), Items.GLASS_BOTTLE));
-	public static final Item BLACK_ELDERBERRY_TEA = null;
-	public static final Item ELDERBERRY_TEA = register("elderberry_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, livingEntity) -> {
-		PoisonEffectInstance.applyPoisonEffect(livingEntity, 1, 24000, 0, PoisonSource.ELDERBERRY);
+	public static final Item RHUBARB_TEA = register("rhubarb_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, living) -> {
+		living.addPotionEffect(new BowelSoundEffectInstance(20 * 60 * 2, 20 * 60 * 2, 0, false, true, true));
 	}));
-	public static final Item STRYCHNOS_TOXIFERA_TEA = register("strychnos_toxifera_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
+	public static final Item SENNA_TEA = register("senna_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, living) -> {
+		living.addPotionEffect(new BowelSoundEffectInstance(20 * 60 * 2, 20 * 60 * 3, 0, false, true, true));
+	}));
+	// TODO Redo Catholicon, Rhubarb tea and Senna tea
+	public static final Item CATHOLICON = register("catholicon", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), Items.GLASS_BOTTLE));
+	public static final Item BLACK_ELDERBERRY_TEA = register("black_elderberry_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
+			() -> new EffectInstance(Effects.REGENERATION, 200, 1, false, true), 1
 	).build())));
-	public static final Item STRYCHNOS_NUX_VOMICA_TEA = register("strychnos_nux-vomica_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build())));
-	public static final Item BELLADONNA_TEA = register("belladonna_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build())));
-	public static final Item MANDRAKE_TEA = register("mandrake_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build())));
-	public static final Item MANDRAKE_ROOT_TEA = register("mandrake_root_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build())));
+	public static final Item ELDERBERRY_TEA = register("elderberry_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, livingEntity) -> {
+		livingEntity.getCapability(CapabilityRegistry.INGESTED_FOOD_CAP).ifPresent(cap -> {
+			if(cap.getTicksSinceFoodIngested(stack.getItem()) < 20 * 45)
+			{
+				switch (cap.getFoodIngestedCount(stack.getItem()))
+				{
+					case 0:
+						livingEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 600, 0));
+						break;
+					case 1:
+						livingEntity.addPotionEffect(new EffectInstance(Effects.NAUSEA, 1200, 0));
+						break;
+					case 2:
+						livingEntity.removePotionEffect(Effects.NAUSEA);
+						PoisonEffectInstance.applyPoisonEffect(livingEntity, 1, 24000, 0, PoisonSource.ELDERBERRY);
+						break;
+				}
+			}
+		});
+	}));
+	public static final Item STRYCHNOS_TOXIFERA_TEA = register("strychnos_toxifera_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, livingEntity) -> {
+		PoisonEffectInstance.applyPoisonEffect(livingEntity, 3, 24000, 0, PoisonSource.STRYCHNOS_TOXIFERA);
+	}));
+	public static final Item STRYCHNOS_NUX_VOMICA_TEA = register("strychnos_nux-vomica_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, livingEntity) -> {
+		livingEntity.getCapability(CapabilityRegistry.INGESTED_FOOD_CAP).ifPresent(cap -> {
+			if(cap.getTicksSinceFoodIngested(stack.getItem()) < 20 * 60 * 5)
+			{
+				switch (cap.getFoodIngestedCount(stack.getItem()))
+				{
+					case 0:
+						PoisonEffectInstance.applyPoisonEffect(livingEntity, 1, 24000, 0, PoisonSource.STRYCHNOS_NUX_VOMICA);
+						break;
+					case 1:
+						PoisonEffectInstance.applyPoisonEffect(livingEntity, 2, 24000, 0, PoisonSource.STRYCHNOS_NUX_VOMICA);
+						break;
+					case 2:
+						PoisonEffectInstance.applyPoisonEffect(livingEntity, 3, 24000, 0, PoisonSource.STRYCHNOS_NUX_VOMICA);
+						break;
+				}
+			}
+		});
+	}));
+	public static final Item BELLADONNA_TEA = register("belladonna_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, livingEntity) -> {
+		livingEntity.getCapability(CapabilityRegistry.INGESTED_FOOD_CAP).ifPresent(cap -> {
+			if(cap.getTicksSinceFoodIngested(stack.getItem()) < Mineria.FOOD_DIGESTION_TIME)
+			{
+				switch (cap.getFoodIngestedCount(stack.getItem()))
+				{
+					case 0:
+						PoisonEffectInstance.applyPoisonEffect(livingEntity, 2, 24000, 0, PoisonSource.BELLADONNA);
+						break;
+					case 2:
+						PoisonEffectInstance.applyPoisonEffect(livingEntity, 3, 24000, 0, PoisonSource.BELLADONNA);
+						break;
+				}
+			}
+		});
+	}));
+	public static final Item MANDRAKE_TEA = register("mandrake_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), (stack, world, living) -> {
+		living.getCapability(CapabilityRegistry.INGESTED_FOOD_CAP).ifPresent(cap -> {
+			if(cap.getTicksSinceFoodIngested(stack.getItem()) < Mineria.FOOD_DIGESTION_TIME)
+			{
+				switch (cap.getFoodIngestedCount(stack.getItem()))
+				{
+					case 0:
+						PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, PoisonSource.MANDRAKE);
+						break;
+					case 1:
+						PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, PoisonSource.MANDRAKE);
+						break;
+				}
+			}
+		});
+	}));
+	public static final Item MANDRAKE_ROOT_TEA = register("mandrake_root_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build())));
 	public static final Item GOJI_TEA = register("goji_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			() -> new EffectInstance(Effects.REGENERATION, 400, 1, false, true), 1
 	).effect(
@@ -162,18 +227,16 @@ public class ItemsInit
 			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
 	).build())));
 	public static final Item FIVE_FLAVOR_FRUIT_TEA = register("five_flavor_fruit_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
+			() -> new EffectInstance(Effects.NIGHT_VISION, 20 * 60 * 2, 0, false, true), 1
+	).effect(
+			() -> new EffectInstance(Effects.SPEED, 20 * 90, 2, false, true), 1
 	).build())));
 	public static final Item PULSATILLA_CHINENSI_ROOT_TEA = register("pulsatilla_chinensis_root_tea", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
+			() -> new EffectInstance(Effects.REGENERATION, 20 * 10, 3, false, true), 1
 	).build())));
 	public static final Item JULEP = register("julep", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), Items.GLASS_BOTTLE)); // TODO Patch bug
-	public static final Item CHARCOAL_ANTI_POISON = register("charcoal_anti_poison", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build()), Items.GLASS_BOTTLE));
-	public static final Item MILK_ANTI_POISON = register("milk_anti_poison", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
-			() -> new EffectInstance(Effects.INSTANT_HEALTH, 1, 0, false, false), 1
-	).build()), Items.GLASS_BOTTLE));
+	public static final Item CHARCOAL_ANTI_POISON = register("charcoal_anti_poison", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), Items.GLASS_BOTTLE, (stack, world, living) -> DrinkItem.lockLaxativeDrinks(living)));
+	public static final Item MILK_ANTI_POISON = register("milk_anti_poison", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().build()), Items.GLASS_BOTTLE, (stack, world, living) -> DrinkItem.unlockLaxativeDrinks(living)));
 	public static final Item NAUSEOUS_ANTI_POISON = register("nauseous_anti_poison", new DrinkItem(devProperties().maxStackSize(1).food(new Food.Builder().saturation(0).hunger(0).setAlwaysEdible().effect(
 			() -> new EffectInstance(Effects.NAUSEA, 200, 3, false, true), 1
 	).build()), Items.GLASS_BOTTLE));
@@ -198,6 +261,16 @@ public class ItemsInit
 	public static final Item PULSATILLA_CHINENSIS_ROOT = register("pulsatilla_chinensis_root", new Item(devProperties()));
 	public static final Item SAUSSUREA_COSTUS_ROOT = register("saussurea_costus_root", new Item(devProperties()));
 
+	// Ingredient
+	public static final Item CHARCOAL_DUST = register("charcoal_dust", new Item(devProperties()));
+	public static final Item CINNAMON = register("cinnamon", new Item(devProperties()));
+	public static final Item GUM_ARABIC_JAR = register("gum_arabic_jar", new Item(devProperties()));
+	public static final Item ORANGE_BLOSSOM = register("orange-blossom", new Item(devProperties()));
+	public static final Item DISTILLED_ORANGE_BLOSSOM_WATER = register("distilled_orange-blossom_water", new Item(devProperties()));
+	public static final Item SYRUP = register("syrup", new Item(devProperties()));
+	public static final Item VISCOUS_SYRUP = register("viscous_syrup", new Item(devProperties()));
+	public static final Item ORANGE_BLOSSOM_SYRUP = register("orange-blossom_syrup", new Item(devProperties()));
+
 	private static Item register(String name, Item instance)
 	{
 		ITEMS.register(name, () -> instance);
@@ -212,5 +285,10 @@ public class ItemsInit
 	private static Item.Properties devProperties()
 	{
 		return new Item.Properties().group(Mineria.DEV_GROUP);
+	}
+
+	public static final class Tags
+	{
+		public static final ITag.INamedTag<Item> PLANTS = ItemTags.makeWrapperTag("mineria:plants");
 	}
 }

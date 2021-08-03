@@ -31,6 +31,7 @@ public class ClientPlayNetHandlerMixin
     @Overwrite
     public void handleEntityEffect(SPlayEntityEffectPacket packetIn)
     {
+        /*
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, (ClientPlayNetHandler) (Object) this, this.client);
         Entity entity = this.world.getEntityByID(packetIn.getEntityId());
         if (entity instanceof LivingEntity)
@@ -71,6 +72,6 @@ public class ClientPlayNetHandlerMixin
                     ((LivingEntity) entity).func_233646_e_(instance);
                 }
             }
-        }
+        }*/
     }
 }

@@ -3,6 +3,7 @@ package com.mineria.mod.effects;
 import com.google.common.collect.Lists;
 import com.mineria.mod.init.ItemsInit;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
@@ -22,8 +23,13 @@ public class PoisonEffect extends Effect implements IPoisonEffect
     @Override
     public void performEffect(LivingEntity living, int amplifier)
     {
+        if (living.getHealth() > 1.0F)
+        {
+            living.attackEntityFrom(DamageSource.MAGIC, getDamageToDeal(living.getHealth(), 0));
+        }
     }
 
+    @Override
     public void performEffect(LivingEntity living, int amplifier, int duration, int maxDuration, int potionClass)
     {
         if (living.getHealth() > 1.0F)
@@ -31,18 +37,25 @@ public class PoisonEffect extends Effect implements IPoisonEffect
             living.attackEntityFrom(DamageSource.MAGIC, getDamageToDeal(living.getHealth(), potionClass));
         }
 
-        if(doSpasm(duration, maxDuration, potionClass))
+        Random rand = new Random();
+
+        if(doConvulsions(duration, maxDuration, potionClass) && !isImmune(living))
         {
-            Random rand = new Random();
             float x = rand.nextFloat() / 2;
             float z = rand.nextFloat() / 2;
-            living.setMotion(living.getMotion().add(rand.nextBoolean() ? x : -x, 0.5, rand.nextBoolean() ? z : -z));
+            living.setMotion(living.getMotion().add(rand.nextBoolean() ? x : -x, 0.1F, rand.nextBoolean() ? z : -z));
         }
-
-        if(doConvulsions(duration, maxDuration, potionClass))
+        else if(doSpasms(duration, maxDuration, potionClass) && !isImmune(living))
         {
-            // Code
+            float x = rand.nextFloat() / 4;
+            float z = rand.nextFloat() / 4;
+            living.setMotion(living.getMotion().add(rand.nextBoolean() ? x : -x, living.isOnGround() ? 0.5 : -0.5, rand.nextBoolean() ? z : -z));
         }
+    }
+
+    public static boolean isImmune(LivingEntity living)
+    {
+        return living instanceof PlayerEntity && ((PlayerEntity) living).abilities.allowFlying;
     }
 
     private float getDamageToDeal(float health, int potionClass)
@@ -60,7 +73,9 @@ public class PoisonEffect extends Effect implements IPoisonEffect
         return 0;
     }
 
-    private boolean doSpasm(int duration, int maxDuration, int potionClass)
+    // TODO "Utilisiation incontrôlée des bras"
+    @Override
+    public boolean doSpasms(int duration, int maxDuration, int potionClass)
     {
         switch (potionClass)
         {
@@ -74,7 +89,8 @@ public class PoisonEffect extends Effect implements IPoisonEffect
         return false;
     }
 
-    private boolean doConvulsions(int duration, int maxDuration, int potionClass)
+    @Override
+    public boolean doConvulsions(int duration, int maxDuration, int potionClass)
     {
         return potionClass == 2 && maxDuration - duration >= 3600;
     }
@@ -82,7 +98,7 @@ public class PoisonEffect extends Effect implements IPoisonEffect
     @Override
     public boolean isReady(int duration, int amplifier)
     {
-        return false;
+        return isReady(duration, amplifier, 0);
     }
 
     @Override
@@ -97,7 +113,7 @@ public class PoisonEffect extends Effect implements IPoisonEffect
             case 2:
                 return duration % 30 == 0; // 1.5 seconds delay
             case 3:
-                return duration % 20 == 0; // 1 second delay
+                return duration % 20 == 0; // 1-second delay
         }
         return false;
     }
@@ -105,7 +121,7 @@ public class PoisonEffect extends Effect implements IPoisonEffect
     @Override
     public List<ItemStack> getCurativeItems()
     {
-        return Lists.newArrayList();
+        return Lists.newArrayList(new ItemStack(Items.MILK_BUCKET), new ItemStack(ItemsInit.MIRACLE_ANTI_POISON));
     }
 
     @Override
@@ -127,12 +143,12 @@ public class PoisonEffect extends Effect implements IPoisonEffect
                     items.add(new ItemStack(ItemsInit.MILK_ANTI_POISON));
                 if(maxDuration < 1200)
                     items.add(new ItemStack(Items.MILK_BUCKET));
+                if(maxDuration > 600 && maxDuration < 6000)
+                    items.add(new ItemStack(ItemsInit.ANTI_POISON));
                 if(maxDuration - duration > 1200) // after 1 minute
                 {
                     if(maxDuration - duration < 6000) // before 5 minutes
                         items.add(new ItemStack(ItemsInit.CATHOLICON));
-                    if(maxDuration - duration < 2400) // before 2 minutes
-                        items.add(new ItemStack(ItemsInit.SENNA_TEA));
                 }
                 else
                     items.add(new ItemStack(ItemsInit.MANDRAKE_ROOT_TEA));
@@ -146,6 +162,8 @@ public class PoisonEffect extends Effect implements IPoisonEffect
                     items.add(new ItemStack(ItemsInit.MILK_ANTI_POISON));
                 if(maxDuration < 600)
                     items.add(new ItemStack(Items.MILK_BUCKET));
+                if(maxDuration > 600 && maxDuration < 6000)
+                    items.add(new ItemStack(ItemsInit.ANTI_POISON));
                 if(maxDuration - duration > 1200)
                 {
                     if(maxDuration - duration < 6000)
