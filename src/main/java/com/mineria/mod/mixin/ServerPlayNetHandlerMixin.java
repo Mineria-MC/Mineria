@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayNetHandler.class)
 public class ServerPlayNetHandlerMixin
 {
-    @Shadow @Final public NetworkManager netManager;
+    @Shadow @Final public NetworkManager connection;
 
-    @Inject(method = "sendPacket(Lnet/minecraft/network/IPacket;Lio/netty/util/concurrent/GenericFutureListener;)V", at = @At("HEAD"), cancellable = true)
-    public void sendPacket(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners, CallbackInfo ci)
+    @Inject(method = "send(Lnet/minecraft/network/IPacket;Lio/netty/util/concurrent/GenericFutureListener;)V", at = @At("HEAD"), cancellable = true)
+    public void send(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners, CallbackInfo ci)
     {
-        if(MineriaHooks.replacePacket(packetIn, this.netManager))
+        if(MineriaHooks.replacePacket(packetIn, this.connection))
             ci.cancel();
     }
 }

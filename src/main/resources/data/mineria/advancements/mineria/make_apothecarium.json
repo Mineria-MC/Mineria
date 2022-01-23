@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/root",
+  "display": {
+    "icon": {
+      "item": "mineria:apothecarium"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_apothecarium.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_apothecarium.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_apothecarium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:apothecarium"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_apothecarium"
+    ]
+  ]
+}

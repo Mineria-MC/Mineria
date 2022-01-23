@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:blue_glowstone",
+    "minecraft:torch",
+    "minecraft:soul_torch"
+  ]
+}

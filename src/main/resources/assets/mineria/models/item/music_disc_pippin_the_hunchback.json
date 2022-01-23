@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mineria:item/music_disc/pippin_the_hunchback"
+  }
+}

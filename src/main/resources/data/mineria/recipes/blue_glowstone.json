@@ -1,15 +1,15 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "iEi",
-        "EBE",
-        "iEi"
+        "lBl",
+        "BvB",
+        "lBl"
     ],
     "key": {
-        "i": {
+        "v": {
             "item": "mineria:vanadium_ingot"
         },
-        "E": {
+        "l": {
             "item": "minecraft:lapis_lazuli"
         },
         "B": {

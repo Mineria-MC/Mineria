@@ -1,0 +1,14 @@
+{
+  "type": "mineria:infuser",
+  "input": [
+    {
+      "item": "mineria:senna"
+    },
+    {
+      "item": "mineria:senna_bush"
+    }
+  ],
+  "output": {
+    "item": "mineria:senna_tea"
+  }
+}

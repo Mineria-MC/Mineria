@@ -1,0 +1,51 @@
+{
+  "parent": "mineria:mineria/find_ritual_structure",
+  "display": {
+    "icon": {
+      "item": "minecraft:apple"
+    },
+    "title": {
+      "translate": "advancements.mineria.kill_druid.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.kill_druid.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "kill_druid": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "mineria:druid"
+        }
+      }
+    },
+    "kill_ovate": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "mineria:ovate"
+        }
+      }
+    },
+    "kill_bard": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "mineria:bard"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "kill_druid",
+      "kill_ovate",
+      "kill_bard"
+    ]
+  ]
+}

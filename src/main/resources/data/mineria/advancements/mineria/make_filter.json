@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/smelt_copper",
+  "display": {
+    "icon": {
+      "item": "mineria:filter"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_filter.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_filter.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_filter": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:filter"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_filter"
+    ]
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/kill_druid",
+  "display": {
+    "icon": {
+      "item": "mineria:mistletoe"
+    },
+    "title": {
+      "translate": "advancements.mineria.get_mistletoe.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.get_mistletoe.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_mistletoe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:mistletoe"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_mistletoe"
+    ]
+  ]
+}

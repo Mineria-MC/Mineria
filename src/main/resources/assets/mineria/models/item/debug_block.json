@@ -1,3 +1,35 @@
 {
-  "parent": "minecraft:block/command_block"
+  "parent": "minecraft:block/command_block",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "mineria:item/debug_block_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "mineria:item/debug_block_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "mineria:item/debug_block_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "mineria:item/debug_block_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "mineria:item/debug_block_5"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:block/plant/elderberry_bush"
+        "layer0": "mineria:block/plant/elderberry_bush_0"
     }
 }

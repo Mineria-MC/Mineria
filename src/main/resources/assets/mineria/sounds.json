@@ -1,0 +1,272 @@
+{
+  "entity.bowel_sounds": {
+    "subtitle": "subtitles.mineria.entity.bowel_sounds",
+    "sounds": [
+      {
+        "name": "mineria:entity/bowel_sounds/bowel_sound_1",
+        "stream": true
+      },
+      {
+        "name": "mineria:entity/bowel_sounds/bowel_sound_2",
+        "stream": true
+      },
+      {
+        "name": "mineria:entity/bowel_sounds/bowel_sound_3",
+        "stream": true
+      },
+      {
+        "name": "mineria:entity/bowel_sounds/bowel_sound_4",
+        "stream": true
+      },
+      {
+        "name": "mineria:entity/bowel_sounds/bowel_sound_5",
+        "stream": true
+      }
+    ]
+  },
+  "music_disc.pippin_the_hunchback": {
+    "sounds": [
+      {
+        "name": "mineria:music_disc/pippin_the_hunchback",
+        "stream": true
+      }
+    ]
+  },
+  "entity.druid.ambient": {
+    "subtitle": "subtitles.mineria.entity.druid.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/villager/idle1",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/idle2",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/idle3",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/idle1",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/idle2",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/idle3",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/idle4",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/idle5",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
+  },
+  "entity.druid.hurt": {
+    "subtitle": "subtitles.mineria.entity.druid.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/villager/hit1",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/hit2",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/hit3",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/hit4",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/hurt1",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/hurt2",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/hurt3",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/hurt4",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
+  },
+  "entity.druid.death": {
+    "subtitle": "subtitles.mineria.entity.druid.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/villager/death",
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/wandering_trader/death",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
+  },
+  "entity.druid.yes": {
+    "subtitle": "subtitles.mineria.entity.druid.yes",
+    "sounds": [
+      {
+        "name": "minecraft:mob/villager/yes1",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/yes2",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/yes3",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
+  },
+  "entity.druid.no": {
+    "subtitle": "subtitles.mineria.entity.druid.no",
+    "sounds": [
+      {
+        "name": "minecraft:mob/villager/no1",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/no2",
+        "volume": 1,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/villager/no3",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
+  },
+  "entity.dirt_golem.hurt": {
+    "subtitle": "subtitles.mineria.entity.dirt_golem.hurt",
+    "sounds": [
+      "mineria:entity/dirt_golem/hit1",
+      "mineria:entity/dirt_golem/hit2",
+      "mineria:entity/dirt_golem/hit3",
+      "mineria:entity/dirt_golem/hit4"
+    ]
+  },
+  "entity.dirt_golem.death": {
+    "subtitle": "subtitles.mineria.entity.dirt_golem.death",
+    "sounds": [
+      "minecraft:mob/irongolem/death"
+    ]
+  },
+  "entity.fire_golem.hurt": {
+    "subtitle": "subtitles.mineria.entity.fire_golem.hurt",
+    "sounds": [
+      "minecraft:mob/irongolem/hit1",
+      "minecraft:mob/irongolem/hit2",
+      "minecraft:mob/irongolem/hit3",
+      "minecraft:mob/irongolem/hit4"
+    ]
+  },
+  "entity.fire_golem.death": {
+    "subtitle": "subtitles.mineria.entity.fire_golem.death",
+    "sounds": [
+      "minecraft:mob/irongolem/death"
+    ]
+  },
+  "entity.air_spirit.ambient": {
+    "subtitle": "subtitles.mineria.entity.air_spirit.ambient",
+    "sounds": [
+      "mineria:entity/air_spirit/ambient1",
+      "mineria:entity/air_spirit/ambient2",
+      "mineria:entity/air_spirit/ambient3"
+    ]
+  },
+  "entity.air_spirit.hurt": {
+    "subtitle": "subtitles.mineria.entity.air_spirit.hurt",
+    "sounds": [
+      "mineria:entity/air_spirit/hit1",
+      "mineria:entity/air_spirit/hit2",
+      "mineria:entity/air_spirit/hit3"
+    ]
+  },
+  "entity.air_spirit.death": {
+    "subtitle": "subtitles.mineria.entity.air_spirit.death",
+    "sounds": [
+      "mineria:entity/air_spirit/death"
+    ]
+  },
+  "entity.wizard.ambient": {
+    "subtitle": "subtitles.mineria.entity.wizard.ambient",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "entity.wizard.hurt": {
+    "subtitle": "subtitles.mineria.entity.wizard.hurt",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "entity.wizard.death": {
+    "subtitle": "subtitles.mineria.entity.wizard.death",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "entity.water_spirit.hurt": {
+    "subtitle": "subtitles.mineria.entity.water_spirit.hurt",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "entity.water_spirit.death": {
+    "subtitle": "subtitles.mineria.entity.water_spirit.death",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "entity.druidic_wolf.hurt": {
+    "subtitle": "subtitles.mineria.entity.druidic_wolf.hurt",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "entity.druidic_wolf.death": {
+    "subtitle": "subtitles.mineria.entity.druidic_wolf.death",
+    "sounds": [
+      "mineria:empty"
+    ]
+  },
+  "item.apothecarium.custom_page_turn": {
+    "subtitle": "subtitles.item.book.page_turn",
+    "sounds": [
+      "mineria:item/apothecarium/custom_page_turn"
+    ]
+  }
+}

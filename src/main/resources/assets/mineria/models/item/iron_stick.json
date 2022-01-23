@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "mineria:item/iron_stick"
+        "layer0": "mineria:item/ingredient/iron_stick"
     }
 }

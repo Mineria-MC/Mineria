@@ -1,77 +1,70 @@
 package com.mineria.mod.mixin;
 
-import com.mineria.mod.effects.CustomEffectInstance;
-import com.mineria.mod.effects.PoisonEffectInstance;
-import com.mineria.mod.effects.PoisonSource;
-import net.minecraft.client.Minecraft;
+import com.mineria.mod.common.entity.*;
+import com.mineria.mod.common.init.MineriaEntities;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketThreadUtil;
-import net.minecraft.network.play.server.SPlayEntityEffectPacket;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.entity.EntityType;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetHandler.class)
 public class ClientPlayNetHandlerMixin
 {
-    @Shadow private Minecraft client;
+    @Shadow private ClientWorld level;
 
-    @Shadow private ClientWorld world;
-
-    /**
-     * @reason Injections do not work
-     * @author LGatodu47
-     */
-    @Overwrite
-    public void handleEntityEffect(SPlayEntityEffectPacket packetIn)
+    @Inject(method = "handleAddEntity", at = @At("TAIL"))
+    public void handleAddEntity(SSpawnObjectPacket pkt, CallbackInfo ci)
     {
-        /*
-        PacketThreadUtil.checkThreadAndEnqueue(packetIn, (ClientPlayNetHandler) (Object) this, this.client);
-        Entity entity = this.world.getEntityByID(packetIn.getEntityId());
-        if (entity instanceof LivingEntity)
+        double x = pkt.getX();
+        double y = pkt.getY();
+        double z = pkt.getZ();
+        EntityType<?> type = pkt.getType();
+        Entity entity = null;
+        if(type == MineriaEntities.KUNAI.get())
+            entity = new KunaiEntity(x, y, z, this.level);
+        else if(type == MineriaEntities.MINERIA_POTION.get())
+            entity = new MineriaPotionEntity(this.level, x, y, z);
+        else if(type == MineriaEntities.MINERIA_AREA_EFFECT_CLOUD.get())
+            entity = new MineriaAreaEffectCloudEntity(this.level, x, y, z);
+        else if(type == MineriaEntities.ELEMENTAL_ORB.get())
         {
-            byte effectID = ObfuscationReflectionHelper.getPrivateValue(SPlayEntityEffectPacket.class, packetIn, "field_149432_b");
-            Effect effect = Effect.get(effectID & 0xFF);
-            if (effect != null)
-            {
-                byte flags = ObfuscationReflectionHelper.getPrivateValue(SPlayEntityEffectPacket.class, packetIn, "field_186985_e");
-                boolean showIcon = (flags & 4) == 4;
-                boolean shouldRender = packetIn.shouldShowIcon();
-                int duration = ObfuscationReflectionHelper.getPrivateValue(SPlayEntityEffectPacket.class, packetIn, "field_149431_d");
-                int maxDuration = packetIn.getDuration(); // instead used to get maxDuration
-                byte amplifier = ObfuscationReflectionHelper.getPrivateValue(SPlayEntityEffectPacket.class, packetIn, "field_149433_c");
+            entity = new ElementalOrbEntity(this.level, x, y, z);
+            Entity owner = this.level.getEntity(pkt.getData());
+            if(owner != null)
+                ((ElementalOrbEntity) entity).setOwner(owner);
+        }
+        else if(type == MineriaEntities.DART.get())
+        {
+            entity = new BlowgunRefillEntity(this.level, x, y, z);
+            Entity owner = this.level.getEntity(pkt.getData());
+            if (owner != null)
+                ((BlowgunRefillEntity) entity).setOwner(owner);
+        }
+        else if(type == MineriaEntities.JAR.get())
+            entity = new JarEntity(x, y, z, this.level);
+        else if(type == MineriaEntities.MINERIA_LIGHTNING_BOLT.get())
+            entity = new MineriaLightningBoltEntity(MineriaEntities.MINERIA_LIGHTNING_BOLT.get(), this.level);
+        else if(type == MineriaEntities.TEMPORARY_ITEM_FRAME.get())
+            entity = new TemporaryItemFrameEntity(this.level, new BlockPos(x, y, z), Direction.from3DDataValue(pkt.getData()));
 
-                if(maxDuration > -1)
-                {
-                    int potionClass = packetIn.getAmplifier(); // instead used to get potionClass
-                    int poisonSource = packetIn.getEffectId(); // instead used to get poisonSource
-
-                    if(potionClass > -1 && poisonSource > -1)
-                    {
-                        PoisonEffectInstance poisonInstance = new PoisonEffectInstance(potionClass, duration, maxDuration, amplifier, PoisonSource.byId(poisonSource));
-                        poisonInstance.setPotionDurationMax(packetIn.isMaxDuration());
-                        ((LivingEntity) entity).func_233646_e_(poisonInstance);
-                    }
-                    else
-                    {
-                        CustomEffectInstance customInstance = CustomEffectInstance.makeCustomEffectInstance(effect, duration, maxDuration, amplifier, packetIn.getIsAmbient(), packetIn.doesShowParticles(), showIcon, shouldRender);
-                        customInstance.setPotionDurationMax(packetIn.isMaxDuration());
-                        ((LivingEntity) entity).func_233646_e_(customInstance);
-                    }
-                }
-                else
-                {
-                    EffectInstance instance = CustomEffectInstance.makeEffectInstance(effect, duration, amplifier, packetIn.getIsAmbient(), packetIn.doesShowParticles(), showIcon, shouldRender);
-                    instance.setPotionDurationMax(packetIn.isMaxDuration());
-                    ((LivingEntity) entity).func_233646_e_(instance);
-                }
-            }
-        }*/
+        if(entity != null)
+        {
+            int id = pkt.getId();
+            entity.setPacketCoordinates(x, y, z);
+            entity.moveTo(x, y, z);
+            entity.xRot = (float) (pkt.getxRot() * 360) / 256.0F;
+            entity.yRot = (float) (pkt.getyRot() * 360) / 256.0F;
+            entity.setId(id);
+            entity.setUUID(pkt.getUUID());
+            this.level.putNonPlayerEntity(id, entity);
+        }
     }
 }

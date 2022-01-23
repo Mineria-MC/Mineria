@@ -1,0 +1,34 @@
+{
+  "parent": "mineria:mineria/find_pagoda",
+  "display": {
+    "icon": {
+      "item": "mineria:debug_block",
+      "nbt": "{CustomModelData:5}"
+    },
+    "title": {
+      "translate": "advancements.mineria.trade_asiatic_herbalist.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.trade_asiatic_herbalist.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "trade_with_asiatic_herbalist": {
+      "trigger": "minecraft:villager_trade",
+      "conditions": {
+        "villager": {
+          "type": "mineria:asiatic_herbalist"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "trade_with_asiatic_herbalist"
+    ]
+  ]
+}

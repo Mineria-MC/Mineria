@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:five_flavor_fruit"
+  },
+  "output": {
+    "item": "mineria:five_flavor_fruit_tea"
+  }
+}

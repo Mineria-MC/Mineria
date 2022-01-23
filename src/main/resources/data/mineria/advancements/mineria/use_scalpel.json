@@ -1,0 +1,29 @@
+{
+  "parent": "mineria:mineria/mine_mineria_plant",
+  "display": {
+    "icon": {
+      "item": "mineria:scalpel"
+    },
+    "title": {
+      "translate": "advancements.mineria.use_scalpel.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.use_scalpel.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "used_scalpel": {
+      "trigger": "mineria:used_scalpel",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "used_scalpel"
+    ]
+  ]
+}

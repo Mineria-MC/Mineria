@@ -1,0 +1,8 @@
+{
+  "variants" : {
+    "facing=north": { "model": "mineria:block/ritual_stuff/water_elementary_stone"},
+    "facing=east": { "model": "mineria:block/ritual_stuff/water_elementary_stone", "y": 90},
+    "facing=south": { "model": "mineria:block/ritual_stuff/water_elementary_stone", "y": 180},
+    "facing=west": { "model": "mineria:block/ritual_stuff/water_elementary_stone", "y": 270}
+  }
+}

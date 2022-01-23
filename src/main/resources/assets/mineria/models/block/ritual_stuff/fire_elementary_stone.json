@@ -1,0 +1,12 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "minecraft:block/stone",
+    "up": "minecraft:block/stone",
+    "down": "minecraft:block/stone",
+    "north": "mineria:block/ritual_stuff/fire_elementary_stone",
+    "east": "minecraft:block/stone",
+    "south": "minecraft:block/stone",
+    "west": "minecraft:block/stone"
+  }
+}

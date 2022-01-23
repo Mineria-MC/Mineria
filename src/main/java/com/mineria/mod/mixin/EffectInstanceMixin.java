@@ -1,6 +1,6 @@
 package com.mineria.mod.mixin;
 
-import com.mineria.mod.effects.IEffectInstanceSerializer;
+import com.mineria.mod.common.init.MineriaEffectInstanceSerializers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EffectInstance.class)
 public abstract class EffectInstanceMixin implements IForgeEffectInstance
 {
-    @Inject(method = "write", at = @At(value = "RETURN", shift = At.Shift.BEFORE))
+    @Inject(method = "save", at = @At(value = "RETURN", shift = At.Shift.BEFORE))
     public void write(CompoundNBT nbt, CallbackInfoReturnable<CompoundNBT> cir)
     {
-        nbt.putString("Serializer", "minecraft:default");
+        nbt.putString("Serializer", "mineria:default");
         nbt.putBoolean("ShouldRender", this.shouldRender());
     }
 
-    @Inject(method = "readInternal", at = @At(value = "RETURN", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "loadSpecifiedEffect", at = @At(value = "RETURN", shift = At.Shift.BEFORE), cancellable = true)
     private static void readInternal(Effect effect, CompoundNBT nbt, CallbackInfoReturnable<EffectInstance> cir)
     {
         if(nbt.contains("Serializer"))
-            cir.setReturnValue(IEffectInstanceSerializer.getSerializer(new ResourceLocation(nbt.getString("Serializer"))).deserialize(effect, nbt));
+            cir.setReturnValue(MineriaEffectInstanceSerializers.byName(new ResourceLocation(nbt.getString("Serializer"))).deserialize(effect, nbt));
     }
 }

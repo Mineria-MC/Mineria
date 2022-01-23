@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:pulsatilla_chinensis_root"
+  },
+  "output": {
+    "item": "mineria:pulsatilla_chinensis_root_tea"
+  }
+}

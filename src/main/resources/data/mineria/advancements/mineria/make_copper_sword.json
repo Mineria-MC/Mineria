@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/smelt_copper",
+  "display": {
+    "icon": {
+      "item": "mineria:copper_sword"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_copper_sword.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_copper_sword.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_copper_sword": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:copper_sword"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_copper_sword"
+    ]
+  ]
+}

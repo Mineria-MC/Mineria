@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/smelt_lead",
+  "display": {
+    "icon": {
+      "item": "mineria:lead_sword"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_lead_sword.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_lead_sword.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_lead_sword": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:lead_sword"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_lead_sword"
+    ]
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "F",
+    "B",
+    "B"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "B": {
+      "item": "minecraft:bamboo"
+    }
+  },
+  "result": {
+    "item": "mineria:blowgun_refill",
+    "count": 4
+  }
+}

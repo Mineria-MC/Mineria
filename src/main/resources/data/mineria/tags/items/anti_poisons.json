@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:catholicon",
+    "mineria:charcoal_anti_poison",
+    "mineria:milk_anti_poison",
+    "mineria:nauseous_anti_poison",
+    "mineria:anti_poison",
+    "mineria:miracle_anti_poison"
+  ]
+}

@@ -3,7 +3,6 @@ package com.mineria.mod.util;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mineria.mod.Mineria;
-import com.mineria.mod.References;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -15,21 +14,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = References.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+/**
+ * Automatically remaps every old mapping from Mineria. 
+ */
+@Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class MissingMappingsHandler
 {
     private static final Table<IForgeRegistry<?>, ResourceLocation, ResourceLocation> OLD_TO_NEW_MAPPINGS = Util.make(HashBasedTable.create(), table -> {
         table.put(ForgeRegistries.ITEMS, modLoc("mineria_xp_orb"), modLoc("xp_orb"));
-        table.put(ForgeRegistries.BLOCKS, modLoc("elderberry"), new ResourceLocation("air"));
-        table.put(ForgeRegistries.BLOCKS, modLoc("pulsatilla_vulgaris"), modLoc("pulsatilla_chinensis"));
-        table.put(ForgeRegistries.ITEMS, modLoc("pulsatilla_vulgaris"), modLoc("pulsatilla_chinensis"));
-        table.put(ForgeRegistries.ITEMS, modLoc("orange_blossom"), modLoc("orange-blossom"));
-        table.put(ForgeRegistries.ITEMS, modLoc("distilled_orange-blossom"), modLoc("distilled_orange-blossom_water"));
+        table.put(ForgeRegistries.ITEMS, modLoc("mrlulu_sword"), new ResourceLocation("diamond_sword"));
+        table.put(ForgeRegistries.ITEMS, modLoc("mathys_craft_sword"), new ResourceLocation("diamond_sword"));
     });
 
     @SubscribeEvent
@@ -87,6 +84,6 @@ public class MissingMappingsHandler
 
     private static ResourceLocation modLoc(String name)
     {
-        return new ResourceLocation(References.MODID, name);
+        return new ResourceLocation(Mineria.MODID, name);
     }
 }

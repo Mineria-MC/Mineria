@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB",
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:glass_bottle"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "mineria:apothecary_table",
+    "count": 1
+  }
+}

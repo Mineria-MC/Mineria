@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/mine_mineria_plant",
+  "display": {
+    "icon": {
+      "item": "mineria:syrup"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_syrup.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_syrup.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_syrup": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:syrup"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_syrup"
+    ]
+  ]
+}

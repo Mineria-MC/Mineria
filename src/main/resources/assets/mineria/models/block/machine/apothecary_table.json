@@ -1,0 +1,124 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"bottom": "mineria:block/machine/apothecary_table/apothecary_table_bottom",
+		"books": "mineria:block/machine/apothecary_table/apothecary_table_side_books",
+		"potions": "mineria:block/machine/apothecary_table/apothecary_table_side_potions",
+		"top": "mineria:block/machine/apothecary_table/apothecary_table_top",
+		"flask": "mineria:block/machine/apothecary_table/flask",
+		"potion": "minecraft:item/potion",
+		"particle": "mineria:block/machine/apothecary_table/apothecary_table_bottom"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#books"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#potions"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#books"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#potions"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
+			}
+		},
+		{
+			"from": [2, 16, 6],
+			"to": [8, 22, 6],
+			"rotation": {"angle": -45, "axis": "y", "origin": [5, 19, 6]},
+			"faces": {
+				"north": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"east": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"south": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"west": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"up": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"down": {"uv": [2, 1, 15, 15], "texture": "#flask"}
+			}
+		},
+		{
+			"from": [2, 16, 6],
+			"to": [8, 22, 6],
+			"rotation": {"angle": 45, "axis": "y", "origin": [5, 19, 6]},
+			"faces": {
+				"north": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"east": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"south": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"west": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"up": {"uv": [2, 1, 15, 15], "texture": "#flask"},
+				"down": {"uv": [2, 1, 15, 15], "texture": "#flask"}
+			}
+		},
+		{
+			"from": [8.9, 16, 11],
+			"to": [14.9, 22, 11],
+			"rotation": {"angle": 45, "axis": "y", "origin": [12, 19, 11]},
+			"faces": {
+				"north": {"uv": [2, 1, 15, 15], "texture": "#potion"},
+				"east": {"uv": [2, 1, 15, 15], "texture": "#potion"},
+				"south": {"uv": [2, 1, 15, 15], "texture": "#potion"},
+				"west": {"uv": [2, 1, 15, 15], "texture": "#potion"},
+				"up": {"uv": [2, 1, 15, 15], "texture": "#potion"},
+				"down": {"uv": [2, 1, 15, 15], "texture": "#potion"}
+			}
+		},
+		{
+			"from": [9.25, 16, 11],
+			"to": [15.25, 22, 11],
+			"rotation": {"angle": -45, "axis": "y", "origin": [12, 19, 11]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#potion"},
+				"east": {"uv": [1, 1, 15, 15], "texture": "#potion"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#potion"},
+				"west": {"uv": [1, 1, 15, 15], "texture": "#potion"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#potion"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#potion"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		0,
+		{
+			"name": "flask",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [1, 2]
+		},
+		{
+			"name": "potion",
+			"origin": [12, 19, 11],
+			"color": 0,
+			"children": [3, 4]
+		}
+	]
+}

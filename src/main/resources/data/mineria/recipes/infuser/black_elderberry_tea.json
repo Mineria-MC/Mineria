@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:black_elderberry"
+  },
+  "output": {
+    "item": "mineria:black_elderberry_tea"
+  }
+}

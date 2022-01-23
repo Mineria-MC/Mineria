@@ -1,0 +1,56 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mineria:saussurea_costus_root",
+          "conditions": [
+            {
+              "condition": "minecraft:match_tool",
+              "predicate": {
+                "item": "mineria:billhook"
+              }
+            },
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "mineria:saussurea_costus",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "mineria:saussurea_costus",
+          "conditions": [
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:match_tool",
+                "predicate": {
+                  "item": "mineria:billhook"
+                }
+              }
+            },
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "mineria:saussurea_costus",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

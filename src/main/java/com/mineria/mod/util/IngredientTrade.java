@@ -1,15 +1,19 @@
 package com.mineria.mod.util;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.crafting.Ingredient;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
+/**
+ * An {@link net.minecraft.entity.merchant.villager.VillagerTrades.ITrade} implementation for prices that are Ingredients.
+ * These get resolved to a random stack when {@link net.minecraft.entity.merchant.villager.VillagerTrades.ITrade#getOffer(Entity, Random)} is called.
+ */
 public class IngredientTrade implements VillagerTrades.ITrade
 {
     protected final Pair<Ingredient, Integer> price;
@@ -38,23 +42,23 @@ public class IngredientTrade implements VillagerTrades.ITrade
     @Override
     public MerchantOffer getOffer(Entity trader, Random rand)
     {
-        ItemStack price = getRandomItemStack(this.price.getLeft(), rand);
-        price.setCount(this.price.getRight());
+        ItemStack price = getRandomItemStack(this.price.getFirst(), rand);
+        price.setCount(this.price.getSecond());
 
-        ItemStack price2 = getRandomItemStack(this.price2.getLeft(), rand);
-        price2.setCount(this.price2.getRight());
+        ItemStack price2 = getRandomItemStack(this.price2.getFirst(), rand);
+        price2.setCount(this.price2.getSecond());
 
         return new MerchantOffer(price, price2, forSale, maxTrades, xp, priceMult);
     }
 
     private ItemStack getRandomItemStack(Ingredient ingredient, Random random)
     {
-        if(ingredient.hasNoMatchingItems())
+        if(ingredient.isEmpty())
             return ItemStack.EMPTY;
 
-        if(ingredient.getMatchingStacks().length > 1)
-            return ingredient.getMatchingStacks()[random.nextInt(ingredient.getMatchingStacks().length)];
+        if(ingredient.getItems().length > 1)
+            return ingredient.getItems()[random.nextInt(ingredient.getItems().length)];
         else
-            return ingredient.getMatchingStacks()[0];
+            return ingredient.getItems()[0];
     }
 }

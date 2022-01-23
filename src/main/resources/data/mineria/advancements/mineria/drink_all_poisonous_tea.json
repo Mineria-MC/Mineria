@@ -1,0 +1,78 @@
+{
+  "parent": "mineria:mineria/drink_poisonous_tea",
+  "display": {
+    "icon": {
+      "item": "mineria:debug_block",
+      "nbt": "{CustomModelData:1}"
+    },
+    "title": {
+      "translate": "advancements.mineria.drink_all_poisonous_tea.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.drink_all_poisonous_tea.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "drink_elderberry_tea": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:elderberry_tea"
+        }
+      }
+    },
+    "drink_strychnos_toxifera_tea": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:strychnos_toxifera_tea"
+        }
+      }
+    },
+    "drink_strychnos_nux-vomica_tea": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:strychnos_nux-vomica_tea"
+        }
+      }
+    },
+    "drink_belladonna_tea": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:belladonna_tea"
+        }
+      }
+    },
+    "drink_mandrake_tea": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:mandrake_tea"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "drink_elderberry_tea"
+    ],
+    [
+      "drink_strychnos_toxifera_tea"
+    ],
+    [
+      "drink_strychnos_nux-vomica_tea"
+    ],
+    [
+      "drink_belladonna_tea"
+    ],
+    [
+      "drink_mandrake_tea"
+    ]
+  ]
+}

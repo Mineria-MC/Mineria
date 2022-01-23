@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:strychnos_nux-vomica"
+  },
+  "output": {
+    "item": "mineria:strychnos_nux-vomica_tea"
+  }
+}

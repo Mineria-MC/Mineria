@@ -1,0 +1,22 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "mineria:misc/heart_full.png",
+      "ascent": 8,
+      "height": 16,
+      "chars": [
+        "\u1ff1"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "mineria:misc/heart_half.png",
+      "ascent": 8,
+      "height": 16,
+      "chars": [
+        "\u1ff2"
+      ]
+    }
+  ]
+}

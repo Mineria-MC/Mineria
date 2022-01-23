@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_bottom_top",
-  "textures": {
-    "side": "mineria:block/plant/lycium_barbarum",
-    "top": "mineria:block/plant/lycium_barbarum_top",
-    "bottom": "mineria:block/plant/lycium_barbarum_bottom"
-  }
-}

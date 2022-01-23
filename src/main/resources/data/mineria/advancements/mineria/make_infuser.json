@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/mine_mineria_plant",
+  "display": {
+    "icon": {
+      "item": "mineria:infuser"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_infuser.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_infuser.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_infuser": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:infuser"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_infuser"
+    ]
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:plantain_tea",
+    "mineria:mint_tea",
+    "mineria:thyme_tea",
+    "mineria:nettle_tea",
+    "mineria:pulmonary_tea",
+    "mineria:rhubarb_tea",
+    "mineria:senna_tea",
+    "mineria:black_elderberry_tea",
+    "mineria:elderberry_tea",
+    "mineria:strychnos_toxifera_tea",
+    "mineria:strychnos_nux-vomica_tea",
+    "mineria:belladonna_tea",
+    "mineria:mandrake_tea",
+    "mineria:mandrake_root_tea",
+    "mineria:goji_tea",
+    "mineria:saussurea_costus_root_tea",
+    "mineria:five_flavor_fruit_tea",
+    "mineria:pulsatilla_chinensis_root_tea"
+  ]
+}

@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyboardHelper
 {
-    private static final long WINDOW = Minecraft.getInstance().getMainWindow().getHandle();
+    private static final long WINDOW = Minecraft.getInstance().getWindow().getWindow();
 
     public static boolean isShiftKeyDown()
     {

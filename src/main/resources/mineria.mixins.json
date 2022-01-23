@@ -3,19 +3,27 @@
   "minVersion": "0.8.2",
   "package": "com.mineria.mod.mixin",
   "compatibilityLevel": "JAVA_8",
+  "refmap": "mineria.refmap.json",
   "mixins": [
+    "BlockMixin",
     "EffectInstanceMixin",
     "EntityMixin",
     "FoodStatsMixin",
-    "ItemMixin",
+    "HoneyBottleItemMixin",
     "LivingEntityMixin",
     "MilkBucketItemMixin",
+    "PlayerEntityMixin",
+    "PotionItemMixin",
+    "RepairContainerMixin",
     "ServerPlayNetHandlerMixin",
     "SPlayEntityEffectPacketMixin",
+    "UnbreakingEnchantmentMixin",
     "VillagerEntityMixin"
   ],
   "client": [
-    "ClientPlayerEntityMixin"
+    "ClientPlayerEntityMixin",
+    "ClientPlayNetHandlerMixin",
+    "SoundEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

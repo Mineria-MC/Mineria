@@ -1,0 +1,13 @@
+{
+  "type": "mineria:apothecary_table",
+  "input": {
+    "item": "mineria:blowgun_refill"
+  },
+  "poison_source": "mineria:belladonna",
+  "output": {
+    "item": "mineria:blowgun_refill",
+    "nbt": {
+      "PoisonSource": "mineria:belladonna"
+    }
+  }
+}

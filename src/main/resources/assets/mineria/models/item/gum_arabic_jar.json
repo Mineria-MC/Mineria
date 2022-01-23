@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mineria:item/gum_arabic_jar"
+        "layer0": "mineria:item/ingredient/gum_arabic_jar"
     }
 }

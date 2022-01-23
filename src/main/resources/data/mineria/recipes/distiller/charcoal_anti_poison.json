@@ -1,0 +1,12 @@
+{
+  "type": "mineria:distiller",
+  "input": {
+    "item": "mineria:julep"
+  },
+  "ingredient1": {
+    "item": "mineria:charcoal_dust"
+  },
+  "output": {
+    "item": "mineria:charcoal_anti_poison"
+  }
+}

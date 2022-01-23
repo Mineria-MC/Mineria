@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:strychnos_toxifera"
+  },
+  "output": {
+    "item": "mineria:strychnos_toxifera_tea"
+  }
+}

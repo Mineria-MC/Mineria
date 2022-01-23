@@ -1,0 +1,74 @@
+{
+  "parent": "mineria:mineria/trade_apothecary",
+  "display": {
+    "icon": {
+      "item": "mineria:gum_arabic_jar"
+    },
+    "title": {
+      "translate": "advancements.mineria.get_unique_ingredients.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.get_unique_ingredients.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_orange-blossom": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:orange-blossom"
+          }
+        ]
+      }
+    },
+    "get_gum_arabic_jar": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:gum_arabic_jar"
+          }
+        ]
+      }
+    },
+    "get_cinnamon_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:cinnamon_dust"
+          }
+        ]
+      }
+    },
+    "get_ginger": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:ginger"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_orange-blossom"
+    ],
+    [
+      "get_gum_arabic_jar"
+    ],
+    [
+      "get_cinnamon_dust"
+    ],
+    [
+      "get_ginger"
+    ]
+  ]
+}

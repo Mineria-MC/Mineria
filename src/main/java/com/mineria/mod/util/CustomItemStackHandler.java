@@ -1,12 +1,11 @@
 package com.mineria.mod.util;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
- * A class that handles an inventory for a Tile Entity
+ * A class that handles an inventory for a TileEntity
  */
 public class CustomItemStackHandler extends ItemStackHandler
 {

@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/get_mineral_sand",
+  "display": {
+    "icon": {
+      "item": "mineria:titane_extractor"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_titane_extractor.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_titane_extractor.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_titane_extractor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:titane_extractor"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_titane_extractor"
+    ]
+  ]
+}

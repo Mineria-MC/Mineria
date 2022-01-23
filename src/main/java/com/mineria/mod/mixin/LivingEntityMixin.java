@@ -1,6 +1,7 @@
 package com.mineria.mod.mixin;
 
-import com.mineria.mod.effects.PoisonEffectInstance;
+import com.mineria.mod.common.effects.instances.PoisonEffectInstance;
+import com.mineria.mod.common.items.IMineriaItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -8,7 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,81 +21,72 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity
 {
-    @Shadow @Nullable public abstract EffectInstance getActivePotionEffect(Effect p_70660_1_);
+    @Shadow public abstract boolean hasEffect(Effect p_70644_1_);
 
-    @Shadow public abstract boolean isPotionActive(Effect p_70644_1_);
+    @Shadow @Nullable public abstract EffectInstance getEffect(Effect p_70660_1_);
 
-    @Shadow public abstract Map<Effect, EffectInstance> getActivePotionMap();
+    @Shadow public abstract Map<Effect, EffectInstance> getActiveEffectsMap();
 
     public LivingEntityMixin(EntityType<?> entityTypeIn, World worldIn)
     {
         super(entityTypeIn, worldIn);
     }
 
-    /**
-     * @reason @Inject wouldn't work
-     * @author LGatodu47
-     */
-    /*@Overwrite(remap = false)
-    public boolean curePotionEffects(ItemStack curativeItem) {
-        if (this.world.isRemote)
-            return false;
-        boolean ret = false;
-        Iterator<EffectInstance> itr = this.activePotionsMap.values().iterator();
-        while (itr.hasNext()) {
-            EffectInstance effect = itr.next();
-            if (effect.isCurativeItem(curativeItem) && !net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent((LivingEntity) (Object) this, effect))) {
-                this.onFinishedPotionEffect(effect);
-                itr.remove();
-                ret = true;
-                this.potionsNeedUpdate = true;
+    @Inject(method = "hurt", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/LivingEntity;invulnerableTime:I", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    public void hurt(DamageSource source, float dmg, CallbackInfoReturnable<Boolean> cir)
+    {
+        Entity directEntity = source.getDirectEntity();
+        if(directEntity instanceof LivingEntity)
+        {
+            LivingEntity living = (LivingEntity) directEntity;
+            if(living.getItemInHand(Hand.MAIN_HAND).getItem() instanceof IMineriaItem)
+            {
+                this.invulnerableTime = ((IMineriaItem) living.getItemInHand(Hand.MAIN_HAND).getItem()).getInvulnerableTime(this);
             }
         }
-        return ret;
-    }*/
+    }
 
     @Inject(method = "curePotionEffects", at = @At("HEAD"), remap = false)
     public void curePotionEffects(ItemStack curativeItem, CallbackInfoReturnable<Boolean> cir)
     {
-        if(!this.world.isRemote)
+        if(!this.level.isClientSide)
         {
-            if (this.isPotionActive(Effects.POISON) && this.getActivePotionEffect(Effects.POISON) instanceof PoisonEffectInstance)
+            if (this.hasEffect(Effects.POISON) && this.getEffect(Effects.POISON) instanceof PoisonEffectInstance)
             {
-                if(this.getActivePotionEffect(Effects.POISON).isCurativeItem(curativeItem))
+                if(this.getEffect(Effects.POISON).isCurativeItem(curativeItem))
                 {
-                    if(this.isPotionActive(Effects.NAUSEA))
+                    if(this.hasEffect(Effects.CONFUSION))
                     {
-                        EffectInstance nausea = this.getActivePotionEffect(Effects.NAUSEA);
-                        nausea.setCurativeItems(this.getActivePotionEffect(Effects.POISON).getCurativeItems());
-                        this.getActivePotionMap().put(Effects.NAUSEA, nausea);
+                        EffectInstance nausea = this.getEffect(Effects.CONFUSION);
+                        nausea.setCurativeItems(this.getEffect(Effects.POISON).getCurativeItems());
+                        this.getActiveEffectsMap().put(Effects.CONFUSION, nausea);
                     }
-                    if(this.isPotionActive(Effects.SLOWNESS))
+                    if(this.hasEffect(Effects.MOVEMENT_SLOWDOWN))
                     {
-                        EffectInstance slowness = this.getActivePotionEffect(Effects.SLOWNESS);
-                        slowness.setCurativeItems(this.getActivePotionEffect(Effects.POISON).getCurativeItems());
-                        this.getActivePotionMap().put(Effects.SLOWNESS, slowness);
+                        EffectInstance slowness = this.getEffect(Effects.MOVEMENT_SLOWDOWN);
+                        slowness.setCurativeItems(this.getEffect(Effects.POISON).getCurativeItems());
+                        this.getActiveEffectsMap().put(Effects.MOVEMENT_SLOWDOWN, slowness);
                     }
                 }
             }
         }
     }
 
-    @Inject(method = "onFinishedPotionEffect", at = @At("HEAD"))
-    public void onFinishedPotionEffect(EffectInstance effect, CallbackInfo ci)
+    @Inject(method = "onEffectRemoved", at = @At("HEAD"))
+    public void onEffectRemoved(EffectInstance effect, CallbackInfo ci)
     {
         if (effect instanceof PoisonEffectInstance)
         {
             ((PoisonEffectInstance) effect).onPotionCured((LivingEntity) (Object) this);
-            if(this.isPotionActive(Effects.NAUSEA))
-                this.getActivePotionEffect(Effects.NAUSEA).setCurativeItems(effect.getCurativeItems());
-            if(this.isPotionActive(Effects.SLOWNESS))
-                this.getActivePotionEffect(Effects.SLOWNESS).setCurativeItems(effect.getCurativeItems());
+            if(this.hasEffect(Effects.CONFUSION))
+                this.getEffect(Effects.CONFUSION).setCurativeItems(effect.getCurativeItems());
+            if(this.hasEffect(Effects.MOVEMENT_SLOWDOWN))
+                this.getEffect(Effects.MOVEMENT_SLOWDOWN).setCurativeItems(effect.getCurativeItems());
         }
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:belladonna"
+  },
+  "output": {
+    "item": "mineria:belladonna_tea"
+  }
+}

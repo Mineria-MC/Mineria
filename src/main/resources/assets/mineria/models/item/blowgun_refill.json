@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mineria:item/blowgun_refill"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "mineria:has_poison": 1
+      },
+      "model": "mineria:item/poisonous_blowgun_refill"
+    }
+  ]
+}

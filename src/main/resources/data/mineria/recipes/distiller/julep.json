@@ -1,0 +1,15 @@
+{
+  "type": "mineria:distiller",
+  "input": {
+    "item": "mineria:syrup"
+  },
+  "ingredient1": {
+    "item": "mineria:gum_arabic_jar"
+  },
+  "ingredient2": {
+    "item": "mineria:distilled_orange-blossom_water"
+  },
+  "output": {
+    "item": "mineria:julep"
+  }
+}

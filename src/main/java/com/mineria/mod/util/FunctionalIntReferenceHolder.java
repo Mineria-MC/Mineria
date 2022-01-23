@@ -7,7 +7,9 @@ import java.util.function.IntSupplier;
 
 /**
  * This class holds an {@link IntSupplier} and an {@link IntConsumer}.
- * Used for the Int Trackers in Containers
+ * Used to track fields from Tile Entities in Containers
+ *
+ * TODOLTR Replace with data slots (This works but not very well)
  */
 public class FunctionalIntReferenceHolder extends IntReferenceHolder
 {

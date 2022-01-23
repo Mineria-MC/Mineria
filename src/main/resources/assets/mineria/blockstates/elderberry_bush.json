@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "mineria:block/plant/elderberry_bush" }
+    "age=0": { "model": "mineria:block/plant/elderberry_bush" },
+    "age=1": { "model": "mineria:block/plant/grown_elderberry_bush" }
   }
 }

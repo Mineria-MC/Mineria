@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  B",
+    "BB ",
+    "  B"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bamboo"
+    }
+  },
+  "result": {
+    "item": "mineria:bamboo_blowgun",
+    "count": 1
+  }
+}

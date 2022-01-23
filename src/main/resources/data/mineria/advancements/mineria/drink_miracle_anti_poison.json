@@ -1,0 +1,33 @@
+{
+  "parent": "mineria:mineria/trade_apothecary",
+  "display": {
+    "icon": {
+      "item": "mineria:miracle_anti_poison"
+    },
+    "title": {
+      "translate": "advancements.mineria.drink_miracle_anti_poison.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.drink_miracle_anti_poison.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "drink_miracle_anti_poison": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:miracle_anti_poison"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "drink_miracle_anti_poison"
+    ]
+  ]
+}

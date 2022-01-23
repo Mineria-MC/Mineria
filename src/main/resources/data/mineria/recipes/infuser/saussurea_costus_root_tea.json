@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:saussurea_costus_root"
+  },
+  "output": {
+    "item": "mineria:saussurea_costus_root_tea"
+  }
+}

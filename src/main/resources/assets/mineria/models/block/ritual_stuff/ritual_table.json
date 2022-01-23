@@ -1,0 +1,12 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "particle": "minecraft:block/stone",
+    "up": "mineria:block/ritual_stuff/ritual_table_top",
+    "down": "minecraft:block/stone",
+    "north": "mineria:block/ritual_stuff/ritual_table_side",
+    "east": "mineria:block/ritual_stuff/ritual_table_side",
+    "south": "mineria:block/ritual_stuff/ritual_table_side",
+    "west": "mineria:block/ritual_stuff/ritual_table_side"
+  }
+}

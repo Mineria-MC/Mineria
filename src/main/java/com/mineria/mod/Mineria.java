@@ -1,137 +1,156 @@
 package com.mineria.mod;
 
-import com.mineria.mod.blocks.barrel.AbstractWaterBarrelBlock;
-import com.mineria.mod.capabilities.CapabilityRegistry;
-import com.mineria.mod.init.*;
+import com.mineria.mod.client.ClientProxy;
+import com.mineria.mod.common.CommonProxy;
+import com.mineria.mod.common.capabilities.CapabilityRegistry;
+import com.mineria.mod.common.init.*;
 import com.mineria.mod.network.MineriaPacketHandler;
+import com.mineria.mod.server.ServerProxy;
+import com.mineria.mod.server.commands.PoisonCommand;
+import com.mineria.mod.util.MineriaConfig;
 import com.mineria.mod.util.RenderHandler;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
-@Mod(References.MODID)
+/**
+ * Main class for Mineria
+ */
+@Mod(Mineria.MODID)
 public class Mineria
 {
-	//Instance
+	// Mod id
+    public static final String MODID = "mineria";
+
+    // Instance
 	public static Mineria instance;
 
-	//Logger
+	// Proxy
+	public static CommonProxy proxy;
+
+	// Logger
 	public static final Logger LOGGER = LogManager.getLogger();
 
-	//CreativeTabs
-	public static final ItemGroup MINERIA_GROUP = new MineriaGroup("mineria");
-	public static final ItemGroup DEV_GROUP = new ItemGroup("mineria_dev") {
-		@Override
-		public ItemStack createIcon()
-		{
-			return new ItemStack(Blocks.COMMAND_BLOCK);
-		}
-	}.setBackgroundImage(new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png"));
+	// CreativeTabs
+	public static final ItemGroup MINERIA_GROUP = new MineriaGroup("mineria", () -> new ItemStack(MineriaBlocks.LONSDALEITE_ORE));
+	public static final ItemGroup APOTHECARY_GROUP = new MineriaGroup("apothecary", () -> new ItemStack(MineriaBlocks.APOTHECARY_TABLE));
 
-	public static final long FOOD_DIGESTION_TIME = 12000;
+	/**
+	 * TODOS
+	 */
 
-	//Mod Constructor
+	// Mod Constructor
 	public Mineria()
 	{
+		proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modBus.addListener(this::setup);
 		modBus.addListener(this::clientSetup);
 
-		//Registries
-		RecipeSerializerInit.RECIPE_SERIALIZERS.register(modBus);
-		LootModifierSerializersInit.SERIALIZERS.register(modBus);
-		EffectsInit.EFFECTS.register(modBus);
-		ItemsInit.ITEMS.register(modBus);
-		BlocksInit.BLOCK_ITEMS.register(modBus);
-		BlocksInit.BLOCKS.register(modBus);
-		TileEntitiesInit.TILE_ENTITY_TYPES.register(modBus);
-		ContainerTypeInit.CONTAINER_TYPES.register(modBus);
-		EntityInit.ENTITY_TYPES.register(modBus);
-		PointOfInterestTypeInit.POI_TYPES.register(modBus);
-		ProfessionsInit.PROFESSIONS.register(modBus);
-		modBus.addGenericListener(Feature.class, FeaturesInit::registerFeatures);
-		modBus.addGenericListener(Structure.class, StructuresInit::registerStructures);
-		modBus.addGenericListener(Biome.class, BiomesInit::registerBiomes);
+		// Registries
+		MineriaRecipeSerializers.RECIPE_SERIALIZERS.register(modBus);
+		MineriaLootModifierSerializers.SERIALIZERS.register(modBus);
+		MineriaParticleTypes.PARTICLE_TYPES.register(modBus);
+		MineriaSounds.SOUNDS.register(modBus);
+		MineriaEffects.EFFECTS.register(modBus);
+		MineriaEffectInstanceSerializers.SERIALIZERS.register(modBus);
+		MineriaEnchantments.ENCHANTMENTS.register(modBus);
+		MineriaPotions.POTIONS.register(modBus);
+		MineriaItems.ITEMS.register(modBus);
+		MineriaBlocks.BLOCK_ITEMS.register(modBus);
+		MineriaBlocks.BLOCKS.register(modBus);
+		MineriaTileEntities.TILE_ENTITY_TYPES.register(modBus);
+		MineriaContainerTypes.CONTAINER_TYPES.register(modBus);
+		MineriaEntities.ENTITY_TYPES.register(modBus);
+		MineriaPOITypes.POI_TYPES.register(modBus);
+		MineriaProfessions.PROFESSIONS.register(modBus);
+		MineriaTreeDecoratorTypes.TREE_DECORATORS.register(modBus);
+		modBus.addGenericListener(Feature.class, MineriaFeatures::registerFeatures);
+		MineriaStructures.STRUCTURES.register(modBus);
+		modBus.addGenericListener(Biome.class, MineriaBiomes::registerBiomes);
+		MineriaCriteriaTriggers.init();
 
-		modBus.addListener(EntityInit::registerEntityAttributes);
+		// Config
+		MineriaConfig.registerConfigSpecs(ModLoadingContext.get());
+
+		modBus.addListener(MineriaEntities::registerEntityAttributes);
 
 		instance = this;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	//To setup some things other than registries
+	// To set up some things other than registries
 	private void setup(FMLCommonSetupEvent event)
 	{
 		MineriaPacketHandler.registerNetworkMessages();
 		CapabilityRegistry.registerCapabilities();
+		MineriaEntities.registerSpawnPlacements();
+		MineriaStructures.setupStructures();
+		MineriaStructures.Configured.registerConfiguredStructures();
+		MineriaBrewingRecipes.register();
 	}
 
-	//To setup client things
+	// To set up client things
 	private void clientSetup(FMLClientSetupEvent event)
 	{
 		RenderHandler.registerScreenFactories();
 		RenderHandler.registerBlockRenders();
 		RenderHandler.registerEntityRenders();
 		RenderHandler.registerItemModelsProperties();
+		RenderHandler.registerTileEntityRenderers();
 	}
 
-	//To register server-side objects
+	// To register server-side objects
 	@SubscribeEvent
 	public void serverStart(FMLServerStartingEvent event)
 	{
-
+		PoisonCommand.register(event.getServer().getCommands().getDispatcher());
 	}
 
-	//The Mod ItemGroup
+	// The Mod ItemGroup
 	private static class MineriaGroup extends ItemGroup
 	{
-		public MineriaGroup(String label)
+		private final Supplier<ItemStack> icon;
+
+		public MineriaGroup(String label, Supplier<ItemStack> icon)
 		{
 			super(label);
-			//To show the field for item search
-			setBackgroundImage(new ResourceLocation("textures/gui/container/creative_inventory/tab_item_search.png"));
+			this.icon = icon;
 		}
 
 		@Override
-		public ItemStack createIcon()
+		public ItemStack makeIcon()
 		{
-			return new ItemStack(BlocksInit.LONSDALEITE_ORE);
+			return icon.get();
 		}
 
 		@Override
-		public boolean hasSearchBar()
+		public void fillItemList(NonNullList<ItemStack> items)
 		{
-			return true;
-		}
-
-		@Override
-		public void fill(NonNullList<ItemStack> items)
-		{
-			super.fill(items);
-			//We're adding the barrels with custom NBT Tags
-			items.addAll(ForgeRegistries.ITEMS.getValues().stream()
-					.filter(AbstractWaterBarrelBlock.WaterBarrelBlockItem.class::isInstance)
-					.map(Item::getDefaultInstance)
-					.collect(Collectors.toList()));
+			super.fillItemList(items);
+			// We are sorting here the items to make the block-items appear first (cleaner look)
+			items.sort((o1, o2) -> {
+				boolean o1BlockItem = o1.getItem() instanceof BlockItem;
+				boolean o2BlockItem = o2.getItem() instanceof BlockItem;
+				return o1BlockItem == o2BlockItem ? 0 : (o2BlockItem ? 1 : -1);
+			});
 		}
 	}
 }

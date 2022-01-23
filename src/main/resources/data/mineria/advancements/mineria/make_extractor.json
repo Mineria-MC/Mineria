@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_titane_extractor",
+  "display": {
+    "icon": {
+      "item": "mineria:extractor"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_extractor.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_extractor.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_extractor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:extractor"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_extractor"
+    ]
+  ]
+}

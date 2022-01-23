@@ -5,9 +5,18 @@
             "rolls": 1,
             "entries": [
                 {
-                    "type": "item",
+                    "type": "minecraft:item",
                     "weight": 1,
-                    "name": "minecraft:gold_nugget"
+                    "name": "minecraft:gold_nugget",
+                    "functions": [
+                        {
+                            "function": "minecraft:looting_enchant",
+                            "count": {
+                                "min": 0,
+                                "max": 1
+                            }
+                        }
+                    ]
                 }
             ]
         }

@@ -1,6 +1,6 @@
 {
   "parent": "block/cross",
   "textures": {
-    "cross": "mineria:block/plant/elderberry_bush"
+    "cross": "mineria:block/plant/elderberry_bush_0"
   }
 }

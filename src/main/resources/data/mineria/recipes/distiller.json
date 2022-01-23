@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BTT",
+    "BBB",
+    "CCC"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:glass_bottle"
+    },
+    "T": {
+      "item": "mineria:titane_ingot"
+    },
+    "C": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "mineria:distiller",
+    "count": 1
+  }
+}

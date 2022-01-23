@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "age=0": { "model": "mineria:block/plant/lycium_chinense" },
+        "age=1": { "model": "mineria:block/plant/grown_lycium_chinense" }
+    }
+}

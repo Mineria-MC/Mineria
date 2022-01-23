@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:elderberry_tea",
+    "mineria:strychnos_toxifera_tea",
+    "mineria:strychnos_nux-vomica_tea",
+    "mineria:belladonna_tea",
+    "mineria:mandrake_tea"
+  ]
+}

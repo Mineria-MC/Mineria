@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_distiller",
+  "display": {
+    "icon": {
+      "item": "mineria:julep"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_julep.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_julep.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_julep": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:julep"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_julep"
+    ]
+  ]
+}

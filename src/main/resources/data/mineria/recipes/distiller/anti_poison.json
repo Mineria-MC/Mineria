@@ -1,0 +1,15 @@
+{
+  "type": "mineria:distiller",
+  "input": {
+    "item": "mineria:julep"
+  },
+  "ingredient1": {
+    "item": "mineria:ginger"
+  },
+  "ingredient2": {
+    "item": "mineria:cinnamon_dust"
+  },
+  "output": {
+    "item": "mineria:anti_poison"
+  }
+}

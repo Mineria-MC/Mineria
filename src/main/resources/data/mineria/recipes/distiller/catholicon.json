@@ -1,0 +1,20 @@
+{
+  "type": "mineria:distiller",
+  "input": {
+    "item": "mineria:julep"
+  },
+  "ingredient1": [
+    {
+      "item": "mineria:senna"
+    },
+    {
+      "item": "mineria:senna_bush"
+    }
+  ],
+  "ingredient2": {
+    "item": "mineria:rhubarb"
+  },
+  "output": {
+    "item": "mineria:catholicon"
+  }
+}

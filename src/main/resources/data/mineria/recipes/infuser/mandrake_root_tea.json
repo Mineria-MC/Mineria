@@ -1,0 +1,9 @@
+{
+  "type": "mineria:infuser",
+  "input": {
+    "item": "mineria:mandrake_root"
+  },
+  "output": {
+    "item": "mineria:mandrake_root_tea"
+  }
+}

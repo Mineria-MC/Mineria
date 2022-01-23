@@ -1,0 +1,33 @@
+{
+  "parent": "mineria:mineria/smelt_silver",
+  "display": {
+    "icon": {
+      "item": "mineria:silver_apple"
+    },
+    "title": {
+      "translate": "advancements.mineria.eat_silver_apple.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.eat_silver_apple.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "eat_silver_apple": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "mineria:silver_apple"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "eat_silver_apple"
+    ]
+  ]
+}

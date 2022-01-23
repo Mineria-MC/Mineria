@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/kill_druid",
+  "display": {
+    "icon": {
+      "item": "mineria:billhook"
+    },
+    "title": {
+      "translate": "advancements.mineria.get_billhook.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.get_billhook.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_billhook": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:billhook"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_billhook"
+    ]
+  ]
+}

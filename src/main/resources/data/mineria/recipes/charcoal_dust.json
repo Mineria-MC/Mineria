@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "minecraft:charcoal"
+  },
+  "result": "mineria:charcoal_dust",
+  "experience": 0.2,
+  "cookingtime": 200
+}

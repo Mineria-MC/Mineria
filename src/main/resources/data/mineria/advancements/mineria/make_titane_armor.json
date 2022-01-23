@@ -1,0 +1,77 @@
+{
+  "parent": "mineria:mineria/smelt_titane",
+  "display": {
+    "icon": {
+      "item": "mineria:titane_chestplate"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_titane_armor.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_titane_armor.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_titane_helmet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:titane_helmet"
+          }
+        ]
+      }
+    },
+    "get_titane_chestplate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:titane_chestplate"
+          }
+        ]
+      }
+    },
+    "get_titane_leggings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:titane_leggings"
+          }
+        ]
+      }
+    },
+    "get_titane_boots": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:titane_boots"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_titane_helmet"
+    ],
+    [
+      "get_titane_chestplate"
+    ],
+    [
+      "get_titane_leggings"
+    ],
+    [
+      "get_titane_boots"
+    ]
+  ],
+  "rewards": {
+    "experience": 70
+  }
+}

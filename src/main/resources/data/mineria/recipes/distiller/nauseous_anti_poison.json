@@ -1,0 +1,12 @@
+{
+  "type": "mineria:distiller",
+  "input": {
+    "item": "mineria:julep"
+  },
+  "ingredient1": {
+    "item": "mineria:strychnos_nux-vomica"
+  },
+  "output": {
+    "item": "mineria:nauseous_anti_poison"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/mine_mineria_ore",
+  "display": {
+    "icon": {
+      "item": "mineria:lead_ingot"
+    },
+    "title": {
+      "translate": "advancements.mineria.smelt_lead.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.smelt_lead.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_lead": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:lead_ingot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_lead"
+    ]
+  ]
+}

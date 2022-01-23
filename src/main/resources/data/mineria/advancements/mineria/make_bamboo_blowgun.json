@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/mine_mineria_plant",
+  "display": {
+    "icon": {
+      "item": "mineria:bamboo_blowgun"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_bamboo_blowgun.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_bamboo_blowgun.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_bamboo_blowgun": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "mineria:bamboo_blowgun"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_bamboo_blowgun"
+    ]
+  ]
+}

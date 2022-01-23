@@ -1,0 +1,69 @@
+{
+  "parent": "mineria:mineria/root",
+  "display": {
+    "icon": {
+      "item": "mineria:copper_ore"
+    },
+    "title": {
+      "translate": "advancements.mineria.mine_mineria_ore.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.mine_mineria_ore.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "mine_copper": {
+      "trigger": "mineria:mined_block",
+      "conditions": {
+        "block": {
+          "block": "mineria:copper_ore"
+        }
+      }
+    },
+    "mine_lead": {
+      "trigger": "mineria:mined_block",
+      "conditions": {
+        "block": {
+          "block": "mineria:lead_ore"
+        }
+      }
+    },
+    "mine_silver": {
+      "trigger": "mineria:mined_block",
+      "conditions": {
+        "block": {
+          "block": "mineria:silver_ore"
+        }
+      }
+    },
+    "mine_titane": {
+      "trigger": "mineria:mined_block",
+      "conditions": {
+        "block": {
+          "block": "mineria:titane_ore"
+        }
+      }
+    },
+    "mine_lonsdaleite": {
+      "trigger": "mineria:mined_block",
+      "conditions": {
+        "block": {
+          "block": "mineria:lonsdaleite_ore"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "mine_copper",
+      "mine_lead",
+      "mine_silver",
+      "mine_titane",
+      "mine_lonsdaleite"
+    ]
+  ]
+}

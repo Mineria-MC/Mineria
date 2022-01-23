@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_julep",
+  "display": {
+    "icon": {
+      "item": "mineria:anti_poison"
+    },
+    "title": {
+      "translate": "advancements.mineria.make_anti_poison.title"
+    },
+    "description": {
+      "translate": "advancements.mineria.make_anti_poison.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_anti_poison": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "mineria:anti_poisons"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_anti_poison"
+    ]
+  ]
+}
