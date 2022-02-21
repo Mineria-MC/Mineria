@@ -1,15 +1,13 @@
 package com.mineria.mod.common.world.biome;
 
 import com.mineria.mod.common.world.feature.MineriaConfiguredFeatures;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeAmbience;
-import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.biome.MoodSoundAmbience;
+import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.structure.StructureFeatures;
 import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilders;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
@@ -35,8 +33,8 @@ public class EasternPlainsBiome extends MineriaBiome
                         .grassColorOverride(8958511)
                         .skyColor(getSkyColorWithTemperatureModifier(0.8F))
                         .ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
-                .mobSpawnSettings(spawnInfoBuilder.build())
-                .generationSettings(settingsBuilder.build()).build());
+                .mobSpawnSettings(new MobSpawnInfo.Builder().build())
+                .generationSettings(new BiomeGenerationSettings.Builder().surfaceBuilder(ConfiguredSurfaceBuilders.GRASS).build()).build());
     }
 
     @Override

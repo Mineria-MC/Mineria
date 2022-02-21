@@ -18,6 +18,8 @@ public interface VanillaOverride
         if(this instanceof ForgeRegistryEntry)
         {
             ObfuscationReflectionHelper.setPrivateValue(ForgeRegistryEntry.class, (ForgeRegistryEntry<?>) this, new ResourceLocation("minecraft", name), "registryName");
+            return;
         }
+        throw new AssertionError("A vanilla override should be an instance of a ForgeRegistryEntry!");
     }
 }

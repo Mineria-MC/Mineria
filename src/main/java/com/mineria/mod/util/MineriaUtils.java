@@ -1,5 +1,6 @@
 package com.mineria.mod.util;
 
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.crafting.IRecipe;
@@ -67,7 +68,7 @@ public class MineriaUtils
     public static <T extends IRecipe<?>> Set<T> findRecipesByType(IRecipeType<T> type, Predicate<T> filter)
     {
         ClientWorld world = Minecraft.getInstance().level;
-        return world != null ? (Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == type).filter(recipe -> filter.test((T) recipe)).collect(Collectors.toSet()) : new HashSet<>();
+        return world != null ? ImmutableSet.copyOf((Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == type && filter.test((T) recipe)).collect(Collectors.toSet())) : Collections.emptySet();
     }
 
     /**
@@ -82,10 +83,11 @@ public class MineriaUtils
     public static <T> boolean doIf(T obj, Predicate<T> condition, Consumer<T> action)
     {
         boolean test = condition.test(obj);
-        if(test)
-            action.accept(obj);
+        if(test) action.accept(obj);
         return test;
     }
+
+    private static final Random RANDOM = new Random();
 
     /**
      * Calculates a random pitch value.
@@ -94,11 +96,7 @@ public class MineriaUtils
      */
     public static float randomPitch()
     {
-        Random rand = new Random();
-
-        float floatDif = rand.nextFloat() / 2;
-
-        return rand.nextBoolean() ? 1.0F - floatDif : 1.0F + floatDif;
+        return RANDOM.nextFloat() + 0.5F;
     }
 
     /**
@@ -110,7 +108,7 @@ public class MineriaUtils
      */
     public static <E> E getRandomElement(Collection<E> collection)
     {
-        int num = (int) (Math.random() * collection.size());
+        int num = (int) (RANDOM.nextDouble() * collection.size());
         for(E element : collection)
             if (--num < 0) return element;
         throw new AssertionError();

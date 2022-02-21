@@ -165,7 +165,7 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
         }
         catch (IllegalAccessException | InvocationTargetException e)
         {
-            LOGGER.error("Failed to apply rotation to item frame due to reflection error!", e);
+            LOGGER.error("Failed to apply rotation to item frame due to reflection error! Report this error to Mineria's authors!", e);
         }
     }
 

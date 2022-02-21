@@ -83,34 +83,6 @@ public final class ForgeEventHandler
         event.getEntityLiving().getCapability(CapabilityRegistry.POISON_EXPOSURE).ifPresent(IPoisonExposure::increaseTicksSinceExposure);
     }
 
-    // Cool way to disable client input
-
-    /*@SubscribeEvent
-    public static void modifyMovementInputs(InputUpdateEvent event)
-    {
-        LivingEntity living = event.getEntityLiving();
-
-        boolean lockInputs = false;
-
-        if(!PoisonEffect.isImmune(living))
-        {
-            if(living.hasEffect(Effects.POISON) && living.getEffect(Effects.POISON) instanceof PoisonEffectInstance)
-            {
-                PoisonEffectInstance poison = (PoisonEffectInstance) living.getEffect(Effects.POISON);
-                if(poison.doConvulsions())
-                {
-                    lockInputs = true;
-                }
-            }
-        }
-
-        if(lockInputs)
-        {
-            event.getMovementInput().forwardImpulse = 0;
-            event.getMovementInput().leftImpulse = 0;
-        }
-    }*/
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void loadBiomes(BiomeLoadingEvent event)
     {

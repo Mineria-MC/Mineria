@@ -25,7 +25,7 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
     public static final ResourceLocation RECIPE_ID = new ResourceLocation(Mineria.MODID, "infuser");
 
     private final ResourceLocation id;
-    private Ingredient input;
+    private final Ingredient input;
     private final ItemStack output;
 
     public InfuserRecipe(ResourceLocation id, Ingredient input, @Nonnull ItemStack output)

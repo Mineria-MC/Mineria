@@ -28,10 +28,10 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
     public static final ResourceLocation RECIPE_ID = new ResourceLocation(Mineria.MODID, "distiller");
 
     private final ResourceLocation id;
-    private Ingredient input;
-    private Ingredient ingredient1;
-    private Ingredient ingredient2;
-    private Ingredient ingredient3;
+    private final Ingredient input;
+    private final Ingredient ingredient1;
+    private final Ingredient ingredient2;
+    private final Ingredient ingredient3;
     private final ItemStack output;
 
     public DistillerRecipe(ResourceLocation id, Ingredient input, Ingredient ingredient1, Ingredient ingredient2, Ingredient ingredient3, @Nonnull ItemStack output)

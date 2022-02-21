@@ -129,7 +129,6 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
         this.load(state, tag);
     }
 
-    @Nullable
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side)
     {
@@ -150,7 +149,6 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
         return 0;
     }*/
 
-    @Deprecated
     private static void deserializeOld(CompoundNBT nbt, CustomItemStackHandler inventory)
     {
         NonNullList<ItemStack> inv = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);

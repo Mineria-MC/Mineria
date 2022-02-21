@@ -127,7 +127,7 @@ public abstract class AbstractWaterBarrelBlock extends Block
 
             if(barrel.shouldDrop())
             {
-                ItemStack stack = new ItemStack(MineriaBlocks.getItemFromBlock(this));
+                ItemStack stack = new ItemStack(this);
                 CompoundNBT compound = new CompoundNBT();
                 CompoundNBT blockEntityTag = new CompoundNBT();
                 compound.put("BlockEntityTag", barrel.save(blockEntityTag));

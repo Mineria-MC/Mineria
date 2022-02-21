@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.vector.Matrix4f;
 
 /**
- * De-obfuscated version of {@link net.minecraft.client.gui.AbstractGui}. Purely used for documentation.
+ * De-obfuscated version of {@link net.minecraft.client.gui.AbstractGui}. Used for documentation.
  */
 public class DeobfAbstractGui
 {

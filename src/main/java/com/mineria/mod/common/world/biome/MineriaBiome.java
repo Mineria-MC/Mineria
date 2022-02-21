@@ -16,8 +16,6 @@ import java.util.List;
 
 public abstract class MineriaBiome
 {
-    protected static MobSpawnInfo.Builder spawnInfoBuilder = new MobSpawnInfo.Builder();
-    protected static BiomeGenerationSettings.Builder settingsBuilder = new BiomeGenerationSettings.Builder().surfaceBuilder(ConfiguredSurfaceBuilders.GRASS);
     private final int weight;
     private final BiomeManager.BiomeType type;
     private final Biome biome;

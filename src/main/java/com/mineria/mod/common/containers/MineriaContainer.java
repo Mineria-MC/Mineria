@@ -250,6 +250,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
          */
         public StackTransferHandler withFuel(int fuelIndex, @Nullable IRecipeType<?> type)
         {
+            if(this == StackTransferHandler.NONE) return this;
             this.fuelIndex = fuelIndex;
             this.fuelType = type;
             return this;
@@ -264,6 +265,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
          */
         public StackTransferHandler withSpecialInput(int inputIndex, Predicate<ItemStack> condition)
         {
+            if(this == StackTransferHandler.NONE) return this;
             if(inputIndex > minOutputIndex)
                 throw new IllegalArgumentException("The given index doesn't correspond to an input!");
             this.specialInputs.put(inputIndex, condition);

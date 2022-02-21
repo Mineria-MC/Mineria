@@ -104,6 +104,11 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.mockito:mockito-inline:4.3.1'
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
@@ -178,5 +183,45 @@ publishing {
         maven {
             url "https://repo1.maven.org/maven2"
         }
+    }
+}
+
+test {
+    // Discover and execute JUnit4-based tests
+    useJUnit()
+
+    // Discover and execute TestNG-based tests
+    useTestNG()
+
+    // Discover and execute JUnit Platform-based tests
+    useJUnitPlatform()
+
+    // set a system property for the test JVM(s)
+//    systemProperty 'some.prop', 'value'
+
+    // explicitly include or exclude tests
+    include 'com/mineria/mod/**'
+
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging.showStandardStreams = true
+
+    // set heap size for the test JVM(s)
+    minHeapSize = "128m"
+    maxHeapSize = "512m"
+
+    // set JVM arguments for the test JVM(s)
+//    jvmArgs '-XX:MaxPermSize=256m'
+
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    // Fail the 'test' task on the first test failure
+    failFast = true
+
+    // listen to standard out and standard error of the test JVM(s)
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
     }
 }

@@ -8,13 +8,13 @@ import net.minecraft.network.play.server.SPlayEntityEffectPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraftforge.fml.network.NetworkDirection;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MineriaHooks
 {
     // This map stores the effect instance associated to a packet (they aren't stored in the packet instance)
-    public static final Map<SPlayEntityEffectPacket, EffectInstance> EFFECTS_FROM_PACKET = new HashMap<>();
+    public static final Map<SPlayEntityEffectPacket, EffectInstance> EFFECTS_FROM_PACKET = new LinkedHashMap<>();
 
     // A way for other modders to disable packet replacing.
     public static boolean replacePlayEffectPacket = true;
