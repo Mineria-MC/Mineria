@@ -6,11 +6,11 @@ import com.mineria.mod.common.effects.instances.PoisonEffectInstance;
 import com.mineria.mod.common.init.MineriaEffects;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -32,16 +32,12 @@ public class PoisonSource
             {
                 switch (cap.exposureCount(source))
                 {
-                    case 0:
-                        living.addEffect(new EffectInstance(Effects.CONFUSION, 600, 0));
-                        break;
-                    case 1:
-                        living.addEffect(new EffectInstance(Effects.CONFUSION, 1200, 0));
-                        break;
-                    case 2:
-                        living.removeEffect(Effects.CONFUSION);
+                    case 0 -> living.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 600, 0));
+                    case 1 -> living.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 1200, 0));
+                    case 2 -> {
+                        living.removeEffect(MobEffects.CONFUSION);
                         PoisonEffectInstance.applyPoisonEffect(living, 1, 24000, 0, source);
-                        break;
+                    }
                 }
             }
             cap.poison(source);
@@ -57,15 +53,9 @@ public class PoisonSource
             {
                 switch (cap.exposureCount(source))
                 {
-                    case 0:
-                        PoisonEffectInstance.applyPoisonEffect(living, 1, 24000, 0, source);
-                        break;
-                    case 1:
-                        PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                        break;
-                    case 2:
-                        PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                        break;
+                    case 0 -> PoisonEffectInstance.applyPoisonEffect(living, 1, 24000, 0, source);
+                    case 1 -> PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
+                    case 2 -> PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
                 }
             }
             cap.poison(source);
@@ -77,12 +67,8 @@ public class PoisonSource
             {
                 switch (cap.exposureCount(source))
                 {
-                    case 0:
-                        PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                        break;
-                    case 2:
-                        PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                        break;
+                    case 0 -> PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
+                    case 2 -> PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
                 }
             }
             cap.poison(source);
@@ -94,12 +80,8 @@ public class PoisonSource
             {
                 switch (cap.exposureCount(source))
                 {
-                    case 0:
-                        PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                        break;
-                    case 1:
-                        PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                        break;
+                    case 0 -> PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
+                    case 1 -> PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
                 }
             }
             cap.poison(source);
@@ -111,19 +93,19 @@ public class PoisonSource
             {
                 switch (cap.exposureCount(source))
                 {
-                    case 0:
-                        living.addEffect(new EffectInstance(MineriaEffects.NO_NATURAL_REGENERATION.get(), 20 * 60));
-                        living.addEffect(new EffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 60));
-                        living.addEffect(new EffectInstance(Effects.CONFUSION, 20 * 60));
-                        break;
-                    case 1:
+                    case 0 -> {
+                        living.addEffect(new MobEffectInstance(MineriaEffects.NO_NATURAL_REGENERATION.get(), 20 * 60));
+                        living.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 60));
+                        living.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 60));
+                    }
+                    case 1 -> {
                         PoisonEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                        living.addEffect(new EffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 45));
-                        break;
-                    case 2:
-                        living.removeEffect(Effects.CONFUSION);
+                        living.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 45));
+                    }
+                    case 2 -> {
+                        living.removeEffect(MobEffects.CONFUSION);
                         PoisonEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                        break;
+                    }
                 }
             }
             cap.poison(source);
@@ -165,9 +147,9 @@ public class PoisonSource
         return this.translationKey;
     }
 
-    public TranslationTextComponent getDescription(int potionClass, int amplifier)
+    public TranslatableComponent getDescription(int potionClass, int amplifier)
     {
-        return new TranslationTextComponent(this.descriptionTranslationKey, potionClass, amplifier);
+        return new TranslatableComponent(this.descriptionTranslationKey, potionClass, amplifier);
     }
 
     public int getColor()

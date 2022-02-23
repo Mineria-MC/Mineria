@@ -7,15 +7,15 @@ import com.mineria.mod.network.MineriaPacketHandler;
 import com.mineria.mod.network.XpBlockMessageHandler;
 import com.mineria.mod.util.MineriaConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public final class ClientProxy extends CommonProxy
 {
     @Override
-    public void openApothecariumScreen(PlayerEntity player)
+    public void openApothecariumScreen(Player player)
     {
-        if(player instanceof ClientPlayerEntity)
+        if(player instanceof LocalPlayer)
         {
             Minecraft mc = Minecraft.getInstance();
             if(mc.screen == null)
@@ -26,7 +26,7 @@ public final class ClientProxy extends CommonProxy
     }
 
     @Override
-    public void onXpBlockContainerOpen(PlayerEntity player, XpBlockTileEntity tile)
+    public void onXpBlockContainerOpen(Player player, XpBlockTileEntity tile)
     {
         MineriaPacketHandler.PACKET_HANDLER.sendToServer(new XpBlockMessageHandler.XpBlockMessage(tile.getBlockPos()));
     }

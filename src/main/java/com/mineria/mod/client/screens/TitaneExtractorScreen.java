@@ -2,18 +2,19 @@ package com.mineria.mod.client.screens;
 
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.containers.TitaneExtractorContainer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
-public class TitaneExtractorScreen extends ContainerScreen<TitaneExtractorContainer>
+public class TitaneExtractorScreen extends AbstractContainerScreen<TitaneExtractorContainer>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/gui/titane_extractor.png");
 
-    public TitaneExtractorScreen(TitaneExtractorContainer screenContainer, PlayerInventory inv, ITextComponent titleIn)
+    public TitaneExtractorScreen(TitaneExtractorContainer screenContainer, Inventory inv, Component titleIn)
     {
         super(screenContainer, inv, titleIn);
 
@@ -28,7 +29,7 @@ public class TitaneExtractorScreen extends ContainerScreen<TitaneExtractorContai
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -36,10 +37,11 @@ public class TitaneExtractorScreen extends ContainerScreen<TitaneExtractorContai
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y)
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y)
     {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(TEXTURE);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         this.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
         this.blit(matrixStack, this.leftPos + 15, this.topPos + 24, 177, 0, 36, this.menu.getExtractTimeScaled() + 1);

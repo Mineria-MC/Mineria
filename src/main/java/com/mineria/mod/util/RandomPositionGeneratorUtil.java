@@ -1,83 +1,84 @@
 package com.mineria.mod.util;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.function.ToDoubleFunction;
 
 /**
- * De-obfuscated version of {@link RandomPositionGenerator}
+ * De-obfuscated version of {}
  */
+// TODO
 public class RandomPositionGeneratorUtil
 {
-    @Nullable
-    public static Vector3d getPos(CreatureEntity entity, int horizontalMovement, int verticalMovement)
+    /*@Nullable
+    public static Vec3 getPos(PathfinderMob entity, int horizontalMovement, int verticalMovement)
     {
-        return RandomPositionGenerator.getPos(entity, horizontalMovement, verticalMovement);
+        return RandomPos.getPos(entity, horizontalMovement, verticalMovement);
     }
 
     @Nullable
-    public static Vector3d getAirPos(CreatureEntity entity, int horizontalMovement, int verticalMovement, int additionalY, @Nullable Vector3d direction, double maxRotAngle)
+    public static Vec3 getAirPos(PathfinderMob entity, int horizontalMovement, int verticalMovement, int additionalY, @Nullable Vec3 direction, double maxRotAngle)
     {
-        return RandomPositionGenerator.getAirPos(entity, horizontalMovement, verticalMovement, additionalY, direction, maxRotAngle);
+        return RandomPos.getAirPos(entity, horizontalMovement, verticalMovement, additionalY, direction, maxRotAngle);
     }
 
     @Nullable
-    public static Vector3d getLandPos(CreatureEntity entity, int horizontalMovement, int verticalMovement)
+    public static Vec3 getLandPos(PathfinderMob entity, int horizontalMovement, int verticalMovement)
     {
-        return RandomPositionGenerator.getLandPos(entity, horizontalMovement, verticalMovement);
+        return RandomPos.getLandPos(entity, horizontalMovement, verticalMovement);
     }
 
     @Nullable
-    public static Vector3d getLandPos(CreatureEntity entity, int horizontalMovement, int verticalMovement, ToDoubleFunction<BlockPos> walkTargetGetter)
+    public static Vec3 getLandPos(PathfinderMob entity, int horizontalMovement, int verticalMovement, ToDoubleFunction<BlockPos> walkTargetGetter)
     {
-        return RandomPositionGenerator.getLandPos(entity, horizontalMovement, verticalMovement, walkTargetGetter);
+        return RandomPos.getLandPos(entity, horizontalMovement, verticalMovement, walkTargetGetter);
     }
 
     @Nullable
-    public static Vector3d getAboveLandPos(CreatureEntity entity, int horizontalMovement, int verticalMovement, Vector3d direction, float maxRotAngle, int aboveSolidMax, int aboveSolidMin)
+    public static Vec3 getAboveLandPos(PathfinderMob entity, int horizontalMovement, int verticalMovement, Vec3 direction, float maxRotAngle, int aboveSolidMax, int aboveSolidMin)
     {
-        return RandomPositionGenerator.getAboveLandPos(entity, horizontalMovement, verticalMovement, direction, maxRotAngle, aboveSolidMax, aboveSolidMin);
+        return RandomPos.getAboveLandPos(entity, horizontalMovement, verticalMovement, direction, maxRotAngle, aboveSolidMax, aboveSolidMin);
     }
 
     @Nullable
-    public static Vector3d getLandPosTowards(CreatureEntity entity, int horizontalMovement, int verticalMovement, Vector3d direction)
+    public static Vec3 getLandPosTowards(PathfinderMob entity, int horizontalMovement, int verticalMovement, Vec3 direction)
     {
-        return RandomPositionGenerator.getLandPosTowards(entity, horizontalMovement, verticalMovement, direction);
+        return RandomPos.getLandPosTowards(entity, horizontalMovement, verticalMovement, direction);
     }
 
     @Nullable
-    public static Vector3d getPosTowards(CreatureEntity entity, int horizontalMovement, int verticalMovement, Vector3d direction)
+    public static Vec3 getPosTowards(PathfinderMob entity, int horizontalMovement, int verticalMovement, Vec3 direction)
     {
-        return RandomPositionGenerator.getPosTowards(entity, horizontalMovement, verticalMovement, direction);
+        return RandomPos.getPosTowards(entity, horizontalMovement, verticalMovement, direction);
     }
 
     @Nullable
-    public static Vector3d getPosTowards(CreatureEntity entity, int horizontalMovement, int verticalMovement, Vector3d direction, double maxRotAngle)
+    public static Vec3 getPosTowards(PathfinderMob entity, int horizontalMovement, int verticalMovement, Vec3 direction, double maxRotAngle)
     {
-        return RandomPositionGenerator.getPosTowards(entity, horizontalMovement, verticalMovement, direction, maxRotAngle);
+        return RandomPos.getPosTowards(entity, horizontalMovement, verticalMovement, direction, maxRotAngle);
     }
 
     @Nullable
-    public static Vector3d getAirPosTowards(CreatureEntity entity, int horizontalMovement, int verticalMovement, int additionalY, Vector3d direction, double maxRotAngle)
+    public static Vec3 getAirPosTowards(PathfinderMob entity, int horizontalMovement, int verticalMovement, int additionalY, Vec3 direction, double maxRotAngle)
     {
-        return RandomPositionGenerator.getAirPosTowards(entity, horizontalMovement, verticalMovement, additionalY, direction, maxRotAngle);
+        return RandomPos.getAirPosTowards(entity, horizontalMovement, verticalMovement, additionalY, direction, maxRotAngle);
     }
 
     @Nullable
-    public static Vector3d getPosAvoid(CreatureEntity entity, int horizontalMovement, int verticalMovement, Vector3d direction)
+    public static Vec3 getPosAvoid(PathfinderMob entity, int horizontalMovement, int verticalMovement, Vec3 direction)
     {
-        return RandomPositionGenerator.getPosAvoid(entity, horizontalMovement, verticalMovement, direction);
+        return RandomPos.getPosAvoid(entity, horizontalMovement, verticalMovement, direction);
     }
 
     @Nullable
-    public static Vector3d getLandPosAvoid(CreatureEntity entity, int horizontalMovement, int verticalMovement, Vector3d direction)
+    public static Vec3 getLandPosAvoid(PathfinderMob entity, int horizontalMovement, int verticalMovement, Vec3 direction)
     {
-        return RandomPositionGenerator.getLandPosAvoid(entity, horizontalMovement, verticalMovement, direction);
-    }
+        return RandomPos.getLandPosAvoid(entity, horizontalMovement, verticalMovement, direction);
+    }*/
 
     /*
      * generateRandomPos(CreatureEntity entity, int horizontalMovement, int verticalMovement, int additionalY, @Nullable Vector3d direction, boolean airOnly, double maxRotAngle, ToDoubleFunction<BlockPos> walkTargetGetter, boolean moveUpToAboveSolid, int aboveSolidMin, int aboveSolidMax, boolean stable)

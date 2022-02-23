@@ -3,14 +3,14 @@ package com.mineria.mod.common.world.feature;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ModVinesFeatureConfig implements IFeatureConfig
+public class ModVinesFeatureConfig implements FeatureConfiguration
 {
     public static final Codec<ModVinesFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockState.CODEC.fieldOf("state").forGetter(config -> config.state),

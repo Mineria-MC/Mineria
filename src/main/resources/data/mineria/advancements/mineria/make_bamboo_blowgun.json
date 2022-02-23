@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:bamboo_blowgun"
+            "items": ["mineria:bamboo_blowgun"]
           }
         ]
       }

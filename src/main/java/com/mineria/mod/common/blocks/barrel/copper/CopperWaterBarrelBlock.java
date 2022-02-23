@@ -2,24 +2,24 @@ package com.mineria.mod.common.blocks.barrel.copper;
 
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,11 +28,11 @@ public class CopperWaterBarrelBlock extends AbstractWaterBarrelBlock
 {
     public CopperWaterBarrelBlock()
     {
-        super(3.5F, 10, 1, 16);
+        super(3.5F, 10, 16);
     }
 
     @Override
-    protected void interact(World world, BlockPos pos, BlockState state, AbstractWaterBarrelTileEntity tile, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
+    protected void interact(Level world, BlockPos pos, BlockState state, AbstractWaterBarrelTileEntity tile, Player player, InteractionHand hand, BlockHitResult hit)
     {
         Item heldItem = player.getItemInHand(hand).getItem();
 
@@ -44,25 +44,25 @@ public class CopperWaterBarrelBlock extends AbstractWaterBarrelBlock
         {
             if(player.isShiftKeyDown())
             {
-                ITextComponent message = new StringTextComponent(tile.getBuckets() == 0 ? "There is no Water stored." : (tile.getBuckets() > 1 ? "There are " + tile.getBuckets() + " Water Buckets." : "There is 1 Water Bucket stored.")).withStyle(TextFormatting.GREEN);
+                Component message = new TextComponent(tile.getBuckets() == 0 ? "There is no Water stored." : (tile.getBuckets() > 1 ? "There are " + tile.getBuckets() + " Water Buckets." : "There is 1 Water Bucket stored.")).withStyle(ChatFormatting.GREEN);
                 player.displayClientMessage(message, true);
             }
             else
-                NetworkHooks.openGui((ServerPlayerEntity) player, (CopperWaterBarrelTileEntity) tile, pos);
+                NetworkHooks.openGui((ServerPlayer) player, (CopperWaterBarrelTileEntity) tile, pos);
         }
     }
 
     @Override
-    protected void addInformationOnShift(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    protected void addInformationOnShift(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        tooltip.add(new TranslationTextComponent("tooltip.mineria.water_barrel.ability").withStyle(TextFormatting.GOLD, TextFormatting.ITALIC).append(" : ").append(new TranslationTextComponent("tooltip.mineria.water_barrel.small_inventory_ability")));
-        tooltip.add(new TranslationTextComponent("tooltip.mineria.water_barrel.view_capacity").withStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslatableComponent("tooltip.mineria.water_barrel.ability").withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC).append(" : ").append(new TranslatableComponent("tooltip.mineria.water_barrel.small_inventory_ability")));
+        tooltip.add(new TranslatableComponent("tooltip.mineria.water_barrel.view_capacity").withStyle(ChatFormatting.GRAY));
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState)
     {
-        return new CopperWaterBarrelTileEntity();
+        return new CopperWaterBarrelTileEntity(pPos, pState);
     }
 }

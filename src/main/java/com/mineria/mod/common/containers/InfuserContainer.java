@@ -9,9 +9,9 @@ import com.mineria.mod.common.init.MineriaContainerTypes;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
 import com.mineria.mod.common.recipe.InfuserRecipe;
 import com.mineria.mod.util.FunctionalIntReferenceHolder;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.SlotItemHandler;
@@ -22,7 +22,7 @@ public class InfuserContainer extends MineriaContainer<InfuserTileEntity>
     private final FunctionalIntReferenceHolder burnTime;
     private final FunctionalIntReferenceHolder currentBurnTime;
 
-    public InfuserContainer(int id, PlayerInventory playerInv, InfuserTileEntity tileEntity)
+    public InfuserContainer(int id, Inventory playerInv, InfuserTileEntity tileEntity)
     {
         super(MineriaContainerTypes.INFUSER.get(), id, tileEntity);
 
@@ -33,7 +33,7 @@ public class InfuserContainer extends MineriaContainer<InfuserTileEntity>
         this.addDataSlot(currentBurnTime = new FunctionalIntReferenceHolder(() -> tileEntity.currentBurnTime, value -> tileEntity.currentBurnTime = value));
     }
 
-    public static InfuserContainer create(int id, PlayerInventory playerInv, PacketBuffer buffer)
+    public static InfuserContainer create(int id, Inventory playerInv, FriendlyByteBuf buffer)
     {
         return new InfuserContainer(id, playerInv, getTileEntity(InfuserTileEntity.class, playerInv, buffer));
     }

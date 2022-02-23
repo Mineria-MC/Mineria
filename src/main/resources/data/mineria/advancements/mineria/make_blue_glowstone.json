@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:blue_glowstone"
+            "items": ["mineria:blue_glowstone"]
           }
         ]
       }

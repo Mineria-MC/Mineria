@@ -3,8 +3,8 @@ package com.mineria.mod.common.init;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.world.feature.decorators.LeavePlantTreeDecorator;
 import com.mineria.mod.common.world.feature.decorators.TrunkPlantTreeDecorator;
-import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 

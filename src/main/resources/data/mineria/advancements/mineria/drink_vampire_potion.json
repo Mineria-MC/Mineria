@@ -21,7 +21,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:mineria_potion",
+          "items": ["mineria:mineria_potion"],
           "potion": "mineria:vampire"
         }
       }
@@ -30,7 +30,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:mineria_potion",
+          "items": ["mineria:mineria_potion"],
           "potion": "mineria:long_vampire"
         }
       }
@@ -39,7 +39,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:mineria_potion",
+          "items": ["mineria:mineria_potion"],
           "potion": "mineria:strong_vampire"
         }
       }
@@ -48,7 +48,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:mineria_potion",
+          "items": ["mineria:mineria_potion"],
           "potion": "mineria:very_strong_vampire"
         }
       }

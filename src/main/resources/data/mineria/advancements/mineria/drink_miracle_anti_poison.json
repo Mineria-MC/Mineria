@@ -20,7 +20,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:miracle_anti_poison"
+          "items": ["mineria:miracle_anti_poison"]
         }
       }
     }

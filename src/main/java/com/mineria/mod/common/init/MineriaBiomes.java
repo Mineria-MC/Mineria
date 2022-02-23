@@ -2,8 +2,8 @@ package com.mineria.mod.common.init;
 
 import com.mineria.mod.common.world.biome.EasternPlainsBiome;
 import com.mineria.mod.common.world.biome.MineriaBiome;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -40,7 +40,7 @@ public class MineriaBiomes
         });
     }
 
-    private static RegistryKey<Biome> getRegistryKey(Biome biome)
+    private static ResourceKey<Biome> getRegistryKey(Biome biome)
     {
         ForgeRegistry<Biome> registry = (ForgeRegistry<Biome>) ForgeRegistries.BIOMES;
         int id = registry.getID(biome);

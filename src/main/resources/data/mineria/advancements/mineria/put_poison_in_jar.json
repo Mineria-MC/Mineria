@@ -21,7 +21,7 @@
       "trigger": "mineria:used_apothecary_table",
       "conditions": {
         "item": {
-          "item": "mineria:jar"
+          "items": ["mineria:jar"]
         }
       }
     }

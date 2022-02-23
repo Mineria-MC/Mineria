@@ -2,17 +2,17 @@ package com.mineria.mod.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import com.mineria.mod.Mineria;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.loot.LootContext;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.resources.ResourceLocation;
 
-public class UsedScalpelTrigger extends AbstractCriterionTrigger<UsedScalpelTrigger.Instance>
+public class UsedScalpelTrigger extends SimpleCriterionTrigger<UsedScalpelTrigger.Instance>
 {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "used_scalpel");
 
@@ -23,26 +23,26 @@ public class UsedScalpelTrigger extends AbstractCriterionTrigger<UsedScalpelTrig
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate andPredicate, ConditionArrayParser parser)
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser)
     {
-        EntityPredicate.AndPredicate user = EntityPredicate.AndPredicate.fromJson(json, "user", parser);
-        EntityPredicate.AndPredicate target = EntityPredicate.AndPredicate.fromJson(json, "target", parser);
+        EntityPredicate.Composite user = EntityPredicate.Composite.fromJson(json, "user", parser);
+        EntityPredicate.Composite target = EntityPredicate.Composite.fromJson(json, "target", parser);
         return new Instance(andPredicate, user, target);
     }
 
-    public void trigger(ServerPlayerEntity player, LivingEntity user, LivingEntity target)
+    public void trigger(ServerPlayer player, LivingEntity user, LivingEntity target)
     {
         LootContext userCtx = EntityPredicate.createContext(player, user);
         LootContext targetCtx = EntityPredicate.createContext(player, target);
         this.trigger(player, instance -> instance.matches(userCtx, targetCtx));
     }
 
-    public static class Instance extends CriterionInstance
+    public static class Instance extends AbstractCriterionTriggerInstance
     {
-        private final EntityPredicate.AndPredicate user;
-        private final EntityPredicate.AndPredicate target;
+        private final EntityPredicate.Composite user;
+        private final EntityPredicate.Composite target;
 
-        public Instance(EntityPredicate.AndPredicate andPredicate, EntityPredicate.AndPredicate user, EntityPredicate.AndPredicate target)
+        public Instance(EntityPredicate.Composite andPredicate, EntityPredicate.Composite user, EntityPredicate.Composite target)
         {
             super(ID, andPredicate);
             this.user = user;
@@ -55,7 +55,7 @@ public class UsedScalpelTrigger extends AbstractCriterionTrigger<UsedScalpelTrig
         }
 
         @Override
-        public JsonObject serializeToJson(ConditionArraySerializer serializer)
+        public JsonObject serializeToJson(SerializationContext serializer)
         {
             JsonObject json = super.serializeToJson(serializer);
             json.add("user", this.user.toJson(serializer));

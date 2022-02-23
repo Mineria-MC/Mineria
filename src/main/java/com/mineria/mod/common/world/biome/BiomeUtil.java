@@ -1,10 +1,10 @@
 package com.mineria.mod.common.world.biome;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 
 import javax.annotation.Nullable;
 
@@ -22,17 +22,17 @@ public class BiomeUtil
         JUNGLE(Biomes.JUNGLE, Biomes.JUNGLE_EDGE, Biomes.JUNGLE_HILLS, Biomes.MODIFIED_JUNGLE, Biomes.MODIFIED_JUNGLE_EDGE),
         MOUNTAINS(Biomes.MOUNTAINS, Biomes.MOUNTAIN_EDGE, Biomes.GRAVELLY_MOUNTAINS, Biomes.MODIFIED_GRAVELLY_MOUNTAINS, Biomes.TAIGA_MOUNTAINS, Biomes.WOODED_MOUNTAINS);
 
-        private final ImmutableSet<RegistryKey<Biome>> validBiomes;
+        private final ImmutableSet<ResourceKey<Biome>> validBiomes;
 
         @SafeVarargs
-        BiomeType(RegistryKey<Biome>... biomes)
+        BiomeType(ResourceKey<Biome>... biomes)
         {
             this.validBiomes = ImmutableSet.copyOf(biomes);
         }
 
         public boolean isBiomeValid(@Nullable ResourceLocation biomeName)
         {
-            return biomeName != null && this.validBiomes.stream().map(RegistryKey::location).anyMatch(biomeName::equals);
+            return biomeName != null && this.validBiomes.stream().map(ResourceKey::location).anyMatch(biomeName::equals);
         }
     }
 }

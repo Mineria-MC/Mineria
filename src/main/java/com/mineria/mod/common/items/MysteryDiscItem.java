@@ -1,14 +1,16 @@
 package com.mineria.mod.common.items;
 
 import com.mineria.mod.Mineria;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class MysteryDiscItem extends Item
 {
@@ -18,17 +20,17 @@ public class MysteryDiscItem extends Item
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
         ItemStack stack = player.getItemInHand(hand);
         if(stack.getItem().equals(this))
         {
-            ItemStack stackToAdd = new ItemStack(ItemTags.MUSIC_DISCS.getRandomElement(random));
+            ItemStack stackToAdd = new ItemStack(ItemTags.MUSIC_DISCS.getRandomElement(world.getRandom()));
             /*if(!player.addItem(stackToAdd))
                 player.drop(stackToAdd, false);*/
             player.setItemInHand(hand, stackToAdd);
 
-            return ActionResult.success(stackToAdd);
+            return InteractionResultHolder.success(stackToAdd);
         }
         return super.use(world, player, hand);
     }

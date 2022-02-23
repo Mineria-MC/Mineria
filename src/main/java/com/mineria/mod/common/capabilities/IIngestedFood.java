@@ -1,10 +1,10 @@
 package com.mineria.mod.common.capabilities;
 
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.Item;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface IIngestedFood extends INBTSerializable<CompoundNBT>
+public interface IIngestedFood extends INBTSerializable<CompoundTag>
 {
     void foodIngested(Item food);
 

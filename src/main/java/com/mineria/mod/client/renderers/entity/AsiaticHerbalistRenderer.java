@@ -2,20 +2,23 @@ package com.mineria.mod.client.renderers.entity;
 
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.entity.AsiaticHerbalistEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
-import net.minecraft.client.renderer.entity.model.VillagerModel;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class AsiaticHerbalistRenderer extends MobRenderer<AsiaticHerbalistEntity, VillagerModel<AsiaticHerbalistEntity>>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/entity/asiatic_herbalist.png");
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(Mineria.MODID, "asiatic_herbalist"), "main");
 
-    public AsiaticHerbalistRenderer(EntityRendererManager manager)
+    public AsiaticHerbalistRenderer(EntityRendererProvider.Context ctx)
     {
-        super(manager, new VillagerModel<>(0), 0.5F);
+        super(ctx, new VillagerModel<>(ctx.bakeLayer(LAYER)), 0.5F);
         this.addLayer(new CrossedArmsItemLayer<>(this));
     }
 
@@ -26,7 +29,7 @@ public class AsiaticHerbalistRenderer extends MobRenderer<AsiaticHerbalistEntity
     }
 
     @Override
-    protected void scale(AsiaticHerbalistEntity entity, MatrixStack stack, float p_225620_3_)
+    protected void scale(AsiaticHerbalistEntity entity, PoseStack stack, float p_225620_3_)
     {
         stack.scale(0.9375F, 0.9375F, 0.9375F);
     }

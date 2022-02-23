@@ -8,9 +8,9 @@ import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaContainerTypes;
 import com.mineria.mod.util.FunctionalIntReferenceHolder;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.SlotItemHandler;
@@ -19,7 +19,7 @@ public class TitaneExtractorContainer extends MineriaContainer<TitaneExtractorTi
 {
     private final FunctionalIntReferenceHolder currentExtractTime;
 
-    public TitaneExtractorContainer(int id, PlayerInventory playerInv, TitaneExtractorTileEntity tileEntity)
+    public TitaneExtractorContainer(int id, Inventory playerInv, TitaneExtractorTileEntity tileEntity)
     {
         super(MineriaContainerTypes.TITANE_EXTRACTOR.get(), id, tileEntity);
 
@@ -28,7 +28,7 @@ public class TitaneExtractorContainer extends MineriaContainer<TitaneExtractorTi
         this.addDataSlot(currentExtractTime = new FunctionalIntReferenceHolder(() -> tileEntity.extractTime, (value) -> tileEntity.extractTime = value));
     }
 
-    public static TitaneExtractorContainer create(int windowID, PlayerInventory playerInv, PacketBuffer data)
+    public static TitaneExtractorContainer create(int windowID, Inventory playerInv, FriendlyByteBuf data)
     {
         return new TitaneExtractorContainer(windowID, playerInv, getTileEntity(TitaneExtractorTileEntity.class, playerInv, data));
     }

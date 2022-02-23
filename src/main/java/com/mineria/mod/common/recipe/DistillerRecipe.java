@@ -4,16 +4,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -23,15 +23,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class DistillerRecipe implements IRecipe<RecipeWrapper>
+public class DistillerRecipe implements Recipe<RecipeWrapper>
 {
     public static final ResourceLocation RECIPE_ID = new ResourceLocation(Mineria.MODID, "distiller");
 
     private final ResourceLocation id;
-    private Ingredient input;
-    private Ingredient ingredient1;
-    private Ingredient ingredient2;
-    private Ingredient ingredient3;
+    private final Ingredient input;
+    private final Ingredient ingredient1;
+    private final Ingredient ingredient2;
+    private final Ingredient ingredient3;
     private final ItemStack output;
 
     public DistillerRecipe(ResourceLocation id, Ingredient input, Ingredient ingredient1, Ingredient ingredient2, Ingredient ingredient3, @Nonnull ItemStack output)
@@ -45,7 +45,7 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
     }
 
     @Override
-    public boolean matches(RecipeWrapper inv, @Nullable World world)
+    public boolean matches(RecipeWrapper inv, @Nullable Level world)
     {
         return input.test(inv.getItem(0)) && ingredient1.test(inv.getItem(1)) && ingredient2.test(inv.getItem(2)) && ingredient3.test(inv.getItem(3));
     }
@@ -91,13 +91,13 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer()
+    public RecipeSerializer<?> getSerializer()
     {
         return MineriaRecipeSerializers.DISTILLER.get();
     }
 
     @Override
-    public IRecipeType<?> getType()
+    public RecipeType<?> getType()
     {
         return MineriaRecipeSerializers.DISTILLER_TYPE;
     }
@@ -108,23 +108,23 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
         return NonNullList.of(Ingredient.EMPTY, input, ingredient1, ingredient2, ingredient3);
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DistillerRecipe>
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<DistillerRecipe>
     {
         @Override
         public DistillerRecipe fromJson(ResourceLocation location, JsonObject json)
         {
-            Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
+            Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
             Ingredient ingredient1 = fromJson(json, "ingredient1");
             Ingredient ingredient2 = fromJson(json, "ingredient2");
             Ingredient ingredient3 = fromJson(json, "ingredient3");
-            ItemStack output = CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "output"), true);
+            ItemStack output = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "output"), true);
 
             return new DistillerRecipe(location, input, ingredient1, ingredient2, ingredient3, output);
         }
 
         @Nullable
         @Override
-        public DistillerRecipe fromNetwork(ResourceLocation location, PacketBuffer buf)
+        public DistillerRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buf)
         {
             Ingredient input = Ingredient.fromNetwork(buf);
             Ingredient ingredient1 = fromNetwork(buf);
@@ -136,7 +136,7 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
         }
 
         @Override
-        public void toNetwork(PacketBuffer buf, DistillerRecipe recipe)
+        public void toNetwork(FriendlyByteBuf buf, DistillerRecipe recipe)
         {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
             ingredients.get(0).toNetwork(buf);
@@ -156,7 +156,7 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
             return result;
         }
 
-        private static Ingredient fromNetwork(PacketBuffer buffer)
+        private static Ingredient fromNetwork(FriendlyByteBuf buffer)
         {
             int count = buffer.readVarInt();
             if (count == -1)
@@ -165,7 +165,7 @@ public class DistillerRecipe implements IRecipe<RecipeWrapper>
             }
             if(count == 0)
                 return Ingredient.EMPTY;
-            return Ingredient.fromValues(Stream.generate(() -> new Ingredient.SingleItemList(buffer.readItem())).limit(count));
+            return Ingredient.fromValues(Stream.generate(() -> new Ingredient.ItemValue(buffer.readItem())).limit(count));
         }
     }
 }

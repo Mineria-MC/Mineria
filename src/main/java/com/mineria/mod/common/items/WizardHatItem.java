@@ -1,19 +1,21 @@
 package com.mineria.mod.common.items;
 
 import com.mineria.mod.Mineria;
-import net.minecraft.enchantment.IArmorVanishable;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Wearable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class WizardHatItem extends Item implements IArmorVanishable
+import net.minecraft.world.item.Item.Properties;
+
+public class WizardHatItem extends Item implements Wearable
 {
     public WizardHatItem()
     {
@@ -22,22 +24,22 @@ public class WizardHatItem extends Item implements IArmorVanishable
 
     @Nullable
     @Override
-    public EquipmentSlotType getEquipmentSlot(ItemStack stack)
+    public EquipmentSlot getEquipmentSlot(ItemStack stack)
     {
-        return EquipmentSlotType.HEAD;
+        return EquipmentSlot.HEAD;
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
         ItemStack heldItem = player.getItemInHand(hand);
-        ItemStack headItem = player.getItemBySlot(EquipmentSlotType.HEAD);
+        ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
         if (headItem.isEmpty())
         {
-            player.setItemSlot(EquipmentSlotType.HEAD, heldItem.copy());
+            player.setItemSlot(EquipmentSlot.HEAD, heldItem.copy());
             heldItem.setCount(0);
-            return ActionResult.sidedSuccess(heldItem, world.isClientSide());
+            return InteractionResultHolder.sidedSuccess(heldItem, world.isClientSide());
         }
-        return ActionResult.fail(heldItem);
+        return InteractionResultHolder.fail(heldItem);
     }
 }

@@ -9,39 +9,40 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerBossInfo;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.spawner.WorldEntitySpawner;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -55,9 +56,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class GreatDruidOfGaulsEntity extends MonsterEntity
+public class GreatDruidOfGaulsEntity extends Monster
 {
-    private static final Supplier<Int2ObjectMap<Object2IntMap<EntityType<? extends MobEntity>>>> ENTITIES_BY_WAVE = () -> Util.make(new Int2ObjectOpenHashMap<>(), map -> {
+    private static final Supplier<Int2ObjectMap<Object2IntMap<EntityType<? extends Mob>>>> ENTITIES_BY_WAVE = () -> Util.make(new Int2ObjectOpenHashMap<>(), map -> {
         map.put(1, Object2IntMaps.singleton(EntityType.WOLF, 2));
         map.put(2, Util.make(new Object2IntArrayMap<>(), map2 -> {
             map2.put(EntityType.WOLF, 6);
@@ -80,16 +81,16 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
             map2.put(MineriaEntities.WATER_SPIRIT.get(), 1);
         }));
     });
-    private static final DataParameter<Integer> WAVE_DATA = EntityDataManager.defineId(GreatDruidOfGaulsEntity.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> WAVE_DATA = SynchedEntityData.defineId(GreatDruidOfGaulsEntity.class, EntityDataSerializers.INT);
 
-    private final Int2ObjectMap<Object2IntMap<EntityType<? extends MobEntity>>> entitiesByWave = ENTITIES_BY_WAVE.get();
+    private final Int2ObjectMap<Object2IntMap<EntityType<? extends Mob>>> entitiesByWave = ENTITIES_BY_WAVE.get();
     private final List<UUID> summonedEntitiesUUIDs = new ArrayList<>();
-    private final NonNullList<MobEntity> summonedEntities = NonNullList.create();
+    private final NonNullList<Mob> summonedEntities = NonNullList.create();
     private boolean doTrigger;
     private int triggerCooldown;
-    private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.WHITE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
+    private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
 
-    public GreatDruidOfGaulsEntity(EntityType<? extends GreatDruidOfGaulsEntity> type, World world)
+    public GreatDruidOfGaulsEntity(EntityType<? extends GreatDruidOfGaulsEntity> type, Level world)
     {
         super(type, world);
         setNoGravity(true);
@@ -103,9 +104,9 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     {
         super.registerGoals();
         this.goalSelector.addGoal(1, new SummonEntitiesGoal());
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true)));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(1, (new NearestAttackableTargetGoal<>(this, Player.class, true)));
     }
 
     @Override
@@ -116,27 +117,27 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("CurrentWave", this.getCurrentWave());
         nbt.putBoolean("DoTrigger", this.doTrigger);
         nbt.putInt("TriggerCooldown", this.triggerCooldown);
-        ListNBT list = new ListNBT();
-        for(MobEntity entity : this.summonedEntities)
-            list.add(NBTUtil.createUUID(entity.getUUID()));
+        ListTag list = new ListTag();
+        for(Mob entity : this.summonedEntities)
+            list.add(NbtUtils.createUUID(entity.getUUID()));
         nbt.put("SummonedEntities", list);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
         setCurrentWave(nbt.getInt("CurrentWave"));
         this.doTrigger = nbt.getBoolean("DoTrigger");
         this.triggerCooldown = nbt.getInt("TriggerCooldown");
-        ListNBT list = nbt.getList("SummonedEntities", 11);
-        list.stream().map(NBTUtil::loadUUID).forEach(this.summonedEntitiesUUIDs::add);
+        ListTag list = nbt.getList("SummonedEntities", 11);
+        list.stream().map(NbtUtils::loadUUID).forEach(this.summonedEntitiesUUIDs::add);
         if (this.hasCustomName())
         {
             this.bossEvent.setName(this.getDisplayName());
@@ -144,7 +145,7 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     }
 
     @Override
-    public void setCustomName(@Nullable ITextComponent name)
+    public void setCustomName(@Nullable Component name)
     {
         super.setCustomName(name);
         this.bossEvent.setName(this.getDisplayName());
@@ -155,9 +156,9 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     {
         if(this.summonedEntities.isEmpty())
         {
-            if(this.level instanceof ServerWorld)
+            if(this.level instanceof ServerLevel)
             {
-                this.summonedEntitiesUUIDs.stream().map(id -> ((ServerWorld) this.level).getEntity(id)).map(MobEntity.class::cast).filter(Objects::nonNull).forEach(this.summonedEntities::add);
+                this.summonedEntitiesUUIDs.stream().map(id -> ((ServerLevel) this.level).getEntity(id)).map(Mob.class::cast).filter(Objects::nonNull).forEach(this.summonedEntities::add);
             }
         }
         summonedEntities.removeIf(entity -> !entity.isAlive());
@@ -165,7 +166,7 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
         super.tick();
         if(isCurrentWaveOver() && getCurrentWave() >= 5)
         {
-            this.level.getNearbyPlayers(EntityPredicate.DEFAULT, this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
+            this.level.getNearbyPlayers(TargetingConditions.DEFAULT, this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
                     .forEach(playerEntity -> playerEntity.awardKillScore(this, this.deathScore, DamageSource.MAGIC));
             this.kill();
         }
@@ -175,27 +176,27 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
             LivingEntity target = getTarget();
             if(!level.isClientSide())
             {
-                ServerWorld world = (ServerWorld) level;
-                MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), SpawnReason.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
+                ServerLevel world = (ServerLevel) level;
+                MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
             }
-            target.addEffect(new EffectInstance(MineriaEffects.HALLUCINATIONS.get(), 600));
-            target.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200));
+            target.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 600));
+            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200));
             doTrigger = false;
             triggerCooldown = 800;
         }
     }
 
-    private void tickEntity(MobEntity summonedEntity)
+    private void tickEntity(Mob summonedEntity)
     {
         summonedEntity.setTarget(this.getTarget());
         if(!isInRange(summonedEntity))
         {
-            Vector3d targetPos = isInRange(this.getTarget()) ? getTarget().position() : this.position();
+            Vec3 targetPos = isInRange(this.getTarget()) ? getTarget().position() : this.position();
             summonedEntity.teleportTo(targetPos.x, targetPos.y, targetPos.z);
         }
         if(PoisonEffectInstance.isEntityAffected(summonedEntity) && triggerCooldown <= 0)
         {
-            summonedEntity.removeEffect(Effects.POISON);
+            summonedEntity.removeEffect(MobEffects.POISON);
             doTrigger = true;
         }
     }
@@ -216,7 +217,7 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     protected void customServerAiStep()
     {
         super.customServerAiStep();
-        this.bossEvent.setPercent(Math.min(5, (6 - this.getCurrentWave())) / 5.0F);
+        this.bossEvent.setProgress(Math.min(5, (6 - this.getCurrentWave())) / 5.0F);
     }
 
     @Nullable
@@ -239,19 +240,19 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     }
 
     @Override
-    public void makeStuckInBlock(BlockState state, Vector3d vec3)
+    public void makeStuckInBlock(BlockState state, Vec3 vec3)
     {
     }
 
     @Override
-    public void startSeenByPlayer(ServerPlayerEntity player)
+    public void startSeenByPlayer(ServerPlayer player)
     {
         super.startSeenByPlayer(player);
         this.bossEvent.addPlayer(player);
     }
 
     @Override
-    public void stopSeenByPlayer(ServerPlayerEntity player)
+    public void stopSeenByPlayer(ServerPlayer player)
     {
         super.stopSeenByPlayer(player);
         this.bossEvent.removePlayer(player);
@@ -270,13 +271,13 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
     }
 
     @Override
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_)
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource)
     {
         return false;
     }
 
     @Override
-    public boolean addEffect(EffectInstance effect)
+    public boolean addEffect(MobEffectInstance effect, @Nullable Entity entity)
     {
         return false;
     }
@@ -288,7 +289,7 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT nbt)
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt)
     {
         setInvulnerable(true);
         setNoGravity(true);
@@ -319,9 +320,9 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
         return true;
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 300.0D).add(Attributes.FOLLOW_RANGE, 45);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 300.0D).add(Attributes.FOLLOW_RANGE, 45);
     }
 
     @SubscribeEvent
@@ -332,7 +333,7 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
             event.getDrops().forEach(item -> {
                 item.setNoGravity(true);
                 item.setInvulnerable(true);
-                item.setGlowing(true);
+                item.setGlowingTag(true);
             });
         }
     }
@@ -365,16 +366,16 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
         {
             if(isCurrentWaveOver())
             {
-                if(level instanceof ServerWorld)
+                if(level instanceof ServerLevel)
                 {
-                    List<MobEntity> toAdd = new ArrayList<>();
-                    ServerWorld world = (ServerWorld) level;
+                    List<Mob> toAdd = new ArrayList<>();
+                    ServerLevel world = (ServerLevel) level;
                     List<BlockPos> spawnRange = getPoses(blockPosition());
 
-                    for(Object2IntMap.Entry<EntityType<? extends MobEntity>> entry : entitiesByWave.get(getCurrentWave() + 1).object2IntEntrySet())
+                    for(Object2IntMap.Entry<EntityType<? extends Mob>> entry : entitiesByWave.get(getCurrentWave() + 1).object2IntEntrySet())
                     {
-                        EntitySpawnPlacementRegistry.PlacementType type = EntitySpawnPlacementRegistry.getPlacementType(entry.getKey());
-                        List<BlockPos> spawnPositions = spawnRange.stream().filter(position -> WorldEntitySpawner.isSpawnPositionOk(type, world, position, entry.getKey())).collect(Collectors.toList());
+                        SpawnPlacements.Type type = SpawnPlacements.getPlacementType(entry.getKey());
+                        List<BlockPos> spawnPositions = spawnRange.stream().filter(position -> NaturalSpawner.isSpawnPositionOk(type, world, position, entry.getKey())).collect(Collectors.toList());
 
                         if(spawnPositions.isEmpty())
                             return false;
@@ -382,7 +383,7 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
                         for(int i = 0; i < entry.getIntValue(); i++)
                         {
                             BlockPos entityPos = spawnPositions.get(random.nextInt(spawnPositions.size()));
-                            toAdd.add(entry.getKey().create(world, null, null, null, entityPos, SpawnReason.MOB_SUMMONED, false, false));
+                            toAdd.add(entry.getKey().create(world, null, null, null, entityPos, MobSpawnType.MOB_SUMMONED, false, false));
                         }
                     }
 
@@ -390,10 +391,10 @@ public class GreatDruidOfGaulsEntity extends MonsterEntity
                         LivingEntity target = getTarget();
                         if(target != null)
                         {
-                            if(target instanceof PlayerEntity && !((PlayerEntity) target).abilities.instabuild)
+                            if(target instanceof Player && !((Player) target).getAbilities().instabuild)
                             {
-                                if(entity instanceof IAngerable)
-                                    ((IAngerable) entity).setPersistentAngerTarget(target.getUUID());
+                                if(entity instanceof NeutralMob)
+                                    ((NeutralMob) entity).setPersistentAngerTarget(target.getUUID());
                                 entity.setTarget(target);
                             }
                         }

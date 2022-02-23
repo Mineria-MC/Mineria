@@ -9,12 +9,12 @@ import com.mineria.mod.server.ServerProxy;
 import com.mineria.mod.server.commands.PoisonCommand;
 import com.mineria.mod.util.MineriaConfig;
 import com.mineria.mod.util.RenderHandler;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,8 +23,8 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,11 +49,13 @@ public class Mineria
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	// CreativeTabs
-	public static final ItemGroup MINERIA_GROUP = new MineriaGroup("mineria", () -> new ItemStack(MineriaBlocks.LONSDALEITE_ORE));
-	public static final ItemGroup APOTHECARY_GROUP = new MineriaGroup("apothecary", () -> new ItemStack(MineriaBlocks.APOTHECARY_TABLE));
+	public static final CreativeModeTab MINERIA_GROUP = new MineriaGroup("mineria", () -> new ItemStack(MineriaBlocks.LONSDALEITE_ORE));
+	public static final CreativeModeTab APOTHECARY_GROUP = new MineriaGroup("apothecary", () -> new ItemStack(MineriaBlocks.APOTHECARY_TABLE));
 
 	/**
 	 * TODOS
+	 * TODO Fix loot tables
+	 * TODO Fix capabilities
 	 */
 
 	// Mod Constructor
@@ -83,7 +85,7 @@ public class Mineria
 		MineriaProfessions.PROFESSIONS.register(modBus);
 		MineriaTreeDecoratorTypes.TREE_DECORATORS.register(modBus);
 		modBus.addGenericListener(Feature.class, MineriaFeatures::registerFeatures);
-		MineriaStructures.STRUCTURES.register(modBus);
+//		MineriaStructures.STRUCTURES.register(modBus);
 		modBus.addGenericListener(Biome.class, MineriaBiomes::registerBiomes);
 		MineriaCriteriaTriggers.init();
 
@@ -102,8 +104,8 @@ public class Mineria
 		MineriaPacketHandler.registerNetworkMessages();
 		CapabilityRegistry.registerCapabilities();
 		MineriaEntities.registerSpawnPlacements();
-		MineriaStructures.setupStructures();
-		MineriaStructures.Configured.registerConfiguredStructures();
+//		MineriaStructures.setupStructures();
+//		MineriaStructures.Configured.registerConfiguredStructures();
 		MineriaBrewingRecipes.register();
 	}
 
@@ -112,9 +114,7 @@ public class Mineria
 	{
 		RenderHandler.registerScreenFactories();
 		RenderHandler.registerBlockRenders();
-		RenderHandler.registerEntityRenders();
 		RenderHandler.registerItemModelsProperties();
-		RenderHandler.registerTileEntityRenderers();
 	}
 
 	// To register server-side objects
@@ -125,7 +125,7 @@ public class Mineria
 	}
 
 	// The Mod ItemGroup
-	private static class MineriaGroup extends ItemGroup
+	private static class MineriaGroup extends CreativeModeTab
 	{
 		private final Supplier<ItemStack> icon;
 

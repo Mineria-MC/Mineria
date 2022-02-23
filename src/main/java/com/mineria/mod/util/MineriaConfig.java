@@ -76,7 +76,7 @@ public class MineriaConfig
             builder.comment("Client side config for Mineria.")
                     .push("client");
 
-            enableTERAnimations = builder.comment("Toggle off to disable Tile Entity Renderers animations like the gear of the extractor rotation.")
+            enableTERAnimations = builder.comment("Toggle off to disable Tile Entity Renderers animations such as the gear of the extractor rotation.")
                     .define("enableTERAnimations", true);
 
             useHallucinationsShader = builder.comment("If set to true, the hallucinations effect overlay will be disabled and replaced with a minecraft shader named 'wobble'.",

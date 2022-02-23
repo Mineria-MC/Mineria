@@ -5,11 +5,11 @@ import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
 import com.mineria.mod.common.items.JarItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class PoisonousJarRecipe extends AbstractApothecaryTableRecipe
 {
@@ -19,7 +19,7 @@ public class PoisonousJarRecipe extends AbstractApothecaryTableRecipe
     }
 
     @Override
-    public boolean matches(ApothecaryTableInventoryWrapper wrapper, World world)
+    public boolean matches(ApothecaryTableInventoryWrapper wrapper, Level world)
     {
         return this.input.test(wrapper.getItem(1)) && wrapper.getPoisonSource() != null;
     }
@@ -39,7 +39,7 @@ public class PoisonousJarRecipe extends AbstractApothecaryTableRecipe
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer()
+    public RecipeSerializer<?> getSerializer()
     {
         return MineriaRecipeSerializers.POISONOUS_JAR.get();
     }

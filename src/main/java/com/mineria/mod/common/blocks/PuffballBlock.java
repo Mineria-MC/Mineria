@@ -2,17 +2,18 @@ package com.mineria.mod.common.blocks;
 
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.util.MineriaUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.Entity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.phys.Vec3;
 
 public class PuffballBlock extends MineriaMushroomBlock
 {
@@ -23,19 +24,19 @@ public class PuffballBlock extends MineriaMushroomBlock
 
     private void bounceUp(Entity entity)
     {
-        Vector3d motion = entity.getDeltaMovement();
+        Vec3 motion = entity.getDeltaMovement();
         entity.setDeltaMovement(motion.x, 1, motion.z);
     }
 
     @Override
-    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity)
     {
-        Vector3d motion = entity.getDeltaMovement();
+        Vec3 motion = entity.getDeltaMovement();
         if (motion.y < -0.5)
         {
             if (!entity.isSuppressingBounce())
             {
-                entity.causeFallDamage(0, 0);
+                entity.causeFallDamage(0, 0, DamageSource.FALL);
                 bounceUp(entity);
                 for (int i = 0; i < 15; i++)
                 {
@@ -48,8 +49,8 @@ public class PuffballBlock extends MineriaMushroomBlock
 
                     world.addParticle(ParticleTypes.POOF, false, pos.getX() + 0.5 + posX, pos.getY() + 0.5 + posY, pos.getZ() + 0.5 + posZ, dx, dy, dz);
                 }
-                world.setBlock(pos, MineriaBlocks.PUFFBALL_POWDER.defaultBlockState(), Constants.BlockFlags.DEFAULT);
-                world.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundCategory.BLOCKS, 1, MineriaUtils.randomPitch());
+                world.setBlock(pos, MineriaBlocks.PUFFBALL_POWDER.defaultBlockState(), Block.UPDATE_ALL);
+                world.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 1, MineriaUtils.randomPitch());
                 for(Direction direction : Direction.Plane.HORIZONTAL)
                 {
                     if(world.random.nextInt(3) == 0)
@@ -57,7 +58,7 @@ public class PuffballBlock extends MineriaMushroomBlock
                         BlockPos adjacentPos = pos.relative(direction);
                         BlockState adjacent = world.getBlockState(adjacentPos);
                         if(adjacent.getMaterial().isReplaceable())
-                            world.setBlock(adjacentPos, MineriaBlocks.PUFFBALL_POWDER.defaultBlockState(), Constants.BlockFlags.DEFAULT);
+                            world.setBlock(adjacentPos, MineriaBlocks.PUFFBALL_POWDER.defaultBlockState(), Block.UPDATE_ALL);
                     }
                 }
             }

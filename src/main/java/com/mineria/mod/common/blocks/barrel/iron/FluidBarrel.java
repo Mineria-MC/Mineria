@@ -1,6 +1,6 @@
 package com.mineria.mod.common.blocks.barrel.iron;
 
-import net.minecraft.fluid.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nullable;
 

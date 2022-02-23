@@ -5,27 +5,25 @@ import com.mineria.mod.common.effects.CustomEffectInstance;
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.items.MineriaPotionItem;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class MineriaPotion extends Potion
 {
-    private final Either<ImmutableList<EffectInstance>, PoisonSource> effects;
+    private final Either<ImmutableList<MobEffectInstance>, PoisonSource> effects;
 
-    public MineriaPotion(String name, EffectInstance... effects)
+    public MineriaPotion(String name, MobEffectInstance... effects)
     {
         super(name);
         this.effects = Either.left(ImmutableList.copyOf(effects));
@@ -39,7 +37,7 @@ public class MineriaPotion extends Potion
 
     @Deprecated
     @Override
-    public List<EffectInstance> getEffects()
+    public List<MobEffectInstance> getEffects()
     {
         return this.effects.left().orElse(ImmutableList.of());
     }
@@ -49,7 +47,7 @@ public class MineriaPotion extends Potion
     {
         if(this.effects.left().isPresent())
         {
-            for(EffectInstance effect : this.effects.left().get())
+            for(MobEffectInstance effect : this.effects.left().get())
             {
                 if(effect.getEffect().isInstantenous())
                 {
@@ -67,10 +65,10 @@ public class MineriaPotion extends Potion
         return super.getName(translationKey.concat(this.effects.left().isPresent() ? "effect." : "poison_source."));
     }
 
-    public void applyEffects(ItemStack stack, World world, @Nullable PlayerEntity player, LivingEntity living)
+    public void applyEffects(ItemStack stack, Level world, @Nullable Player player, LivingEntity living)
     {
         this.effects.ifLeft(effectInstances -> {
-            for (EffectInstance effect : effectInstances)
+            for (MobEffectInstance effect : effectInstances)
             {
                 if (effect.getEffect().isInstantenous())
                 {
@@ -80,11 +78,10 @@ public class MineriaPotion extends Potion
                     living.addEffect(CustomEffectInstance.copyEffect(effect));
                 }
             }
-        });
-        this.effects.ifRight(poisonSource -> poisonSource.poison(living));
+        }).ifRight(poisonSource -> poisonSource.poison(living));
     }
 
-    public boolean showInItemGroup(ItemGroup group, MineriaPotionItem potionItem)
+    public boolean showInItemGroup(CreativeModeTab group, MineriaPotionItem potionItem)
     {
         return true;
     }
@@ -94,14 +91,14 @@ public class MineriaPotion extends Potion
         return this.effects.right().isPresent() ? this.effects.right().get().getColor() : -1;
     }
 
-    public Either<ImmutableList<EffectInstance>, PoisonSource> effects()
+    public Either<ImmutableList<MobEffectInstance>, PoisonSource> effects()
     {
         return this.effects;
     }
 
     public static int getColor(ItemStack stack)
     {
-        CompoundNBT nbt = stack.getTag();
+        CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("CustomPotionColor", 99))
             return nbt.getInt("CustomPotionColor");
         else

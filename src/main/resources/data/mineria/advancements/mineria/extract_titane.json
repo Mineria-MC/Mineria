@@ -20,7 +20,7 @@
       "trigger": "mineria:extracted_item",
       "conditions": {
         "item": {
-          "item": "mineria:titane_nugget"
+          "items": ["mineria:titane_nugget"]
         }
       }
     }

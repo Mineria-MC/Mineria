@@ -3,50 +3,54 @@ package com.mineria.mod.common.entity;
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.util.DamageSourceUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SChangeGameStatePacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class BlowgunRefillEntity extends ProjectileEntity
+public class BlowgunRefillEntity extends Projectile
 {
-    private static final DataParameter<String> POISON_SOURCE_ID = EntityDataManager.defineId(BlowgunRefillEntity.class, DataSerializers.STRING);
+    private static final EntityDataAccessor<String> POISON_SOURCE_ID = SynchedEntityData.defineId(BlowgunRefillEntity.class, EntityDataSerializers.STRING);
     private PoisonSource poisonSource = PoisonSource.UNKNOWN;
     private int life;
 
-    public BlowgunRefillEntity(EntityType<? extends BlowgunRefillEntity> type, World world)
+    public BlowgunRefillEntity(EntityType<? extends BlowgunRefillEntity> type, Level world)
     {
         super(type, world);
     }
 
-    public BlowgunRefillEntity(World world, double x, double y, double z)
+    public BlowgunRefillEntity(Level world, double x, double y, double z)
     {
         this(MineriaEntities.DART.get(), world);
         this.setPos(x, y, z);
     }
 
-    public BlowgunRefillEntity(World world, LivingEntity living, PoisonSource poisonSource)
+    public BlowgunRefillEntity(Level world, LivingEntity living, PoisonSource poisonSource)
     {
         this(world, living.getX(), living.getEyeY() - (double) 0.1F, living.getZ());
         setOwner(living);
@@ -87,14 +91,14 @@ public class BlowgunRefillEntity extends ProjectileEntity
     public void tick()
     {
         super.tick();
-        Vector3d motion = this.getDeltaMovement();
+        Vec3 motion = this.getDeltaMovement();
         if (this.xRotO == 0.0F && this.yRotO == 0.0F)
         {
-            float f = MathHelper.sqrt(getHorizontalDistanceSqr(motion));
-            this.yRot = (float) (MathHelper.atan2(motion.x, motion.z) * (double) (180F / (float) Math.PI));
-            this.xRot = (float) (MathHelper.atan2(motion.y, (double) f) * (double) (180F / (float) Math.PI));
-            this.yRotO = this.yRot;
-            this.xRotO = this.xRot;
+            double f = Math.sqrt(motion.horizontalDistanceSqr());
+            setYRot((float) (Mth.atan2(motion.x, motion.z) * (double) (180F / (float) Math.PI)));
+            setXRot((float) (Mth.atan2(motion.y, f) * (double) (180F / (float) Math.PI)));
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
         }
 
         if (this.isInWaterOrRain())
@@ -104,29 +108,29 @@ public class BlowgunRefillEntity extends ProjectileEntity
 
         tickDespawn();
 
-        Vector3d pos = this.position();
-        Vector3d motionPos = pos.add(motion);
-        RayTraceResult result = this.level.clip(new RayTraceContext(pos, motionPos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+        Vec3 pos = this.position();
+        Vec3 motionPos = pos.add(motion);
+        HitResult result = this.level.clip(new ClipContext(pos, motionPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
-        if (result.getType() != RayTraceResult.Type.MISS)
+        if (result.getType() != HitResult.Type.MISS)
             motionPos = result.getLocation();
 
-        EntityRayTraceResult entityHit = this.findHitEntity(pos, motionPos);
+        EntityHitResult entityHit = this.findHitEntity(pos, motionPos);
 
         if (entityHit != null)
             result = entityHit;
 
-        if (result.getType() == RayTraceResult.Type.ENTITY)
+        if (result.getType() == HitResult.Type.ENTITY)
         {
-            Entity hit = ((EntityRayTraceResult) result).getEntity();
+            Entity hit = ((EntityHitResult) result).getEntity();
             Entity owner = this.getOwner();
-            if (hit instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity) owner).canHarmPlayer((PlayerEntity) hit))
+            if (hit instanceof Player && owner instanceof Player && !((Player) owner).canHarmPlayer((Player) hit))
             {
                 result = null;
             }
         }
 
-        if (result != null && result.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, result))
+        if (result != null && result.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, result))
         {
             this.onHit(result);
             this.hasImpulse = true;
@@ -140,12 +144,12 @@ public class BlowgunRefillEntity extends ProjectileEntity
         double modX = this.getX() + moX;
         double modY = this.getY() + moY;
         double modZ = this.getZ() + moZ;
-        float horizontalDistance = MathHelper.sqrt(getHorizontalDistanceSqr(motion));
+        double horizontalDistance = Math.sqrt(motion.horizontalDistanceSqr());
 
-        this.yRot = (float) (MathHelper.atan2(moX, moZ) * (double) (180F / (float) Math.PI));
-        this.xRot = (float) (MathHelper.atan2(moY, (double) horizontalDistance) * (double) (180F / (float) Math.PI));
-        this.xRot = lerpRotation(this.xRotO, this.xRot);
-        this.yRot = lerpRotation(this.yRotO, this.yRot);
+        setYRot((float) (Mth.atan2(moX, moZ) * (double) (180F / (float) Math.PI)));
+        setXRot((float) (Mth.atan2(moY, horizontalDistance) * (double) (180F / (float) Math.PI)));
+        setXRot(lerpRotation(this.xRotO, this.getXRot()));
+        setYRot(lerpRotation(this.yRotO, this.getYRot()));
 
         float inertia = 0.99F;
         if (this.isInWater())
@@ -159,7 +163,7 @@ public class BlowgunRefillEntity extends ProjectileEntity
         this.setDeltaMovement(motion.scale(inertia));
         if (!this.isNoGravity())
         {
-            Vector3d motion2 = this.getDeltaMovement();
+            Vec3 motion2 = this.getDeltaMovement();
             this.setDeltaMovement(motion2.x, motion2.y - (double) 0.05F, motion2.z);
         }
 
@@ -171,16 +175,16 @@ public class BlowgunRefillEntity extends ProjectileEntity
     {
         ++this.life;
         if (this.life >= 1200)
-            this.remove();
+            this.remove(RemovalReason.KILLED);
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult result)
+    protected void onHitEntity(EntityHitResult result)
     {
         super.onHitEntity(result);
         Entity hit = result.getEntity();
         float motionLength = (float) this.getDeltaMovement().length();
-        int damage = MathHelper.ceil(MathHelper.clamp((double) motionLength * 3.5D, 0.0D, 2.147483647E9D));
+        int damage = Mth.ceil(Mth.clamp((double) motionLength * 3.5D, 0.0D, 2.147483647E9D));
 
         Entity owner = this.getOwner();
         DamageSource source = DamageSourceUtil.bambooBlowgun(this, owner == null ? this : owner);
@@ -203,35 +207,35 @@ public class BlowgunRefillEntity extends ProjectileEntity
                 if (!this.level.isClientSide)
                     living.setArrowCount(living.getArrowCount() + 1);
 
-                if (living != owner && living instanceof PlayerEntity && owner instanceof ServerPlayerEntity && !this.isSilent())
-                    ((ServerPlayerEntity) owner).connection.send(new SChangeGameStatePacket(SChangeGameStatePacket.ARROW_HIT_PLAYER, 0.0F));
+                if (living != owner && living instanceof Player && owner instanceof ServerPlayer && !this.isSilent())
+                    ((ServerPlayer) owner).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
             }
 
             this.playSound(SoundEvents.ARROW_HIT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-            this.remove();
+            this.discard();
         } else
         {
             this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
-            this.yRot += 180.0F;
+            setYRot(getYRot() + 180.0F);
             this.yRotO += 180.0F;
 
             if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D)
-                this.remove();
+                this.discard();
         }
     }
 
     @Override
-    protected void onHitBlock(BlockRayTraceResult result)
+    protected void onHitBlock(BlockHitResult result)
     {
         super.onHitBlock(result);
         this.playSound(SoundEvents.ARROW_HIT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-        this.remove();
+        this.discard();
     }
 
     @Nullable
-    protected EntityRayTraceResult findHitEntity(Vector3d p_213866_1_, Vector3d p_213866_2_)
+    protected EntityHitResult findHitEntity(Vec3 p_213866_1_, Vec3 p_213866_2_)
     {
-        return ProjectileHelper.getEntityHitResult(this.level, this, p_213866_1_, p_213866_2_, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+        return ProjectileUtil.getEntityHitResult(this.level, this, p_213866_1_, p_213866_2_, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
 
     protected void doPostHurtEffects(LivingEntity living)
@@ -240,9 +244,9 @@ public class BlowgunRefillEntity extends ProjectileEntity
     }
 
     @Override
-    protected boolean isMovementNoisy()
+    protected MovementEmission getMovementEmission()
     {
-        return false;
+        return MovementEmission.NONE;
     }
 
     @Override
@@ -258,23 +262,23 @@ public class BlowgunRefillEntity extends ProjectileEntity
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT nbt)
+    protected void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
         nbt.putShort("life", (short)this.life);
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
         this.life = nbt.getShort("life");
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket()
+    public Packet<?> getAddEntityPacket()
     {
         Entity owner = this.getOwner();
-        return new SSpawnObjectPacket(this, owner == null ? 0 : owner.getId());
+        return new ClientboundAddEntityPacket(this, owner == null ? 0 : owner.getId());
     }
 }

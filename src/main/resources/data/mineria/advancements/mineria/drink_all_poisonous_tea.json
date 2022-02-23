@@ -21,7 +21,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:elderberry_tea"
+          "items": ["mineria:elderberry_tea"]
         }
       }
     },
@@ -29,7 +29,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:strychnos_toxifera_tea"
+          "items": ["mineria:strychnos_toxifera_tea"]
         }
       }
     },
@@ -37,7 +37,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:strychnos_nux-vomica_tea"
+          "items": ["mineria:strychnos_nux-vomica_tea"]
         }
       }
     },
@@ -45,7 +45,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:belladonna_tea"
+          "items": ["mineria:belladonna_tea"]
         }
       }
     },
@@ -53,7 +53,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:mandrake_tea"
+          "items": ["mineria:mandrake_tea"]
         }
       }
     }

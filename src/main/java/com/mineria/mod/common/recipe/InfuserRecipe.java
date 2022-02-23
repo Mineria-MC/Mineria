@@ -3,16 +3,16 @@ package com.mineria.mod.common.recipe;
 import com.google.gson.JsonObject;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -20,12 +20,12 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InfuserRecipe implements IRecipe<RecipeWrapper>
+public class InfuserRecipe implements Recipe<RecipeWrapper>
 {
     public static final ResourceLocation RECIPE_ID = new ResourceLocation(Mineria.MODID, "infuser");
 
     private final ResourceLocation id;
-    private Ingredient input;
+    private final Ingredient input;
     private final ItemStack output;
 
     public InfuserRecipe(ResourceLocation id, Ingredient input, @Nonnull ItemStack output)
@@ -36,7 +36,7 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
     }
 
     @Override
-    public boolean matches(RecipeWrapper inv, World worldIn)
+    public boolean matches(RecipeWrapper inv, Level worldIn)
     {
         return input.test(inv.getItem(0));
     }
@@ -66,13 +66,13 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer()
+    public RecipeSerializer<?> getSerializer()
     {
         return MineriaRecipeSerializers.INFUSER.get();
     }
 
     @Override
-    public IRecipeType<?> getType()
+    public RecipeType<?> getType()
     {
         return MineriaRecipeSerializers.INFUSER_TYPE;
     }
@@ -88,20 +88,20 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
         return NonNullList.of(Ingredient.EMPTY, this.input);
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<InfuserRecipe>
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<InfuserRecipe>
     {
         @Override
         public InfuserRecipe fromJson(ResourceLocation recipeId, JsonObject json)
         {
             Ingredient input = Ingredient.fromJson(json.get("input"));
-            ItemStack output = CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "output"), true);
+            ItemStack output = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "output"), true);
 
             return new InfuserRecipe(recipeId, input, output);
         }
 
         @Nullable
         @Override
-        public InfuserRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer)
+        public InfuserRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer)
         {
             Ingredient input = Ingredient.fromNetwork(buffer);
             ItemStack output = buffer.readItem();
@@ -110,7 +110,7 @@ public class InfuserRecipe implements IRecipe<RecipeWrapper>
         }
 
         @Override
-        public void toNetwork(PacketBuffer buffer, InfuserRecipe recipe)
+        public void toNetwork(FriendlyByteBuf buffer, InfuserRecipe recipe)
         {
             Ingredient input = recipe.getIngredients().get(0);
             input.toNetwork(buffer);

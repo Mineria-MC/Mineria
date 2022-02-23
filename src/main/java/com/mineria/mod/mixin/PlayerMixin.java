@@ -1,14 +1,12 @@
 package com.mineria.mod.mixin;
 
 import com.mineria.mod.Mineria;
-import com.mineria.mod.common.containers.XpBlockContainer;
-import com.mineria.mod.util.CooldownTrackerUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.CooldownTracker;
-import net.minecraft.util.ResourceLocation;
+import com.mineria.mod.util.ItemCooldownsUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,32 +19,32 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(PlayerEntity.class)
-public class PlayerEntityMixin
+@Mixin(Player.class)
+public class PlayerMixin
 {
-    @Shadow @Final private CooldownTracker cooldowns;
+    @Shadow @Final private ItemCooldowns cooldowns;
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void addAdditionalSaveData(CompoundNBT nbt, CallbackInfo ci)
+    public void addAdditionalSaveData(CompoundTag nbt, CallbackInfo ci)
     {
         nbt.put("CooldownTracker", serializeCooldownTracker(this.cooldowns));
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    public void readAdditionalSaveData(CompoundNBT nbt, CallbackInfo ci)
+    public void readAdditionalSaveData(CompoundTag nbt, CallbackInfo ci)
     {
         if(nbt.contains("CooldownTracker"))
             deserializeCooldownTracker(nbt.getCompound("CooldownTracker"), this.cooldowns);
     }
 
-    private static CompoundNBT serializeCooldownTracker(CooldownTracker cooldownTracker)
+    private static CompoundTag serializeCooldownTracker(ItemCooldowns cooldownTracker)
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         getCooldowns(cooldownTracker).forEach(nbt::putInt);
         return nbt;
     }
 
-    private static void deserializeCooldownTracker(CompoundNBT nbt, CooldownTracker cooldownTracker)
+    private static void deserializeCooldownTracker(CompoundTag nbt, ItemCooldowns cooldownTracker)
     {
         for(String key : nbt.getAllKeys())
         {
@@ -58,18 +56,18 @@ public class PlayerEntityMixin
         }
     }
 
-    private static Map<String, Integer> getCooldowns(CooldownTracker tracker)
+    private static Map<String, Integer> getCooldowns(ItemCooldowns tracker)
     {
         Map<String, Integer> result = new HashMap<>();
 
         try
         {
-            Map<Item, ?> map = CooldownTrackerUtil.getCooldowns(tracker);
+            Map<Item, ?> map = ItemCooldownsUtil.getCooldowns(tracker);
 
             for(Map.Entry<Item, ?> entry : map.entrySet())
             {
-                int startTime = (int) CooldownTrackerUtil.getStartTimeField().get(entry.getValue());
-                int endTime = (int) CooldownTrackerUtil.getEndTimeField().get(entry.getValue());
+                int startTime = (int) ItemCooldownsUtil.getStartTimeField().get(entry.getValue());
+                int endTime = (int) ItemCooldownsUtil.getEndTimeField().get(entry.getValue());
                 result.put(entry.getKey().getRegistryName().toString(), endTime - startTime);
             }
         } catch (Exception e)
@@ -80,16 +78,16 @@ public class PlayerEntityMixin
         return result;
     }
 
-    private static void putCooldown(CooldownTracker tracker, Item item, int time)
+    private static void putCooldown(ItemCooldowns tracker, Item item, int time)
     {
         try
         {
-            Class<?> cooldownClass = CooldownTracker.class.getDeclaredClasses()[0];
-            Constructor<?> constructor = cooldownClass.getDeclaredConstructor(CooldownTracker.class, int.class, int.class);
+            Class<?> cooldownClass = ItemCooldowns.class.getDeclaredClasses()[0];
+            Constructor<?> constructor = cooldownClass.getDeclaredConstructor(ItemCooldowns.class, int.class, int.class);
             constructor.setAccessible(true);
 
-            Map<Item, Object> map = CooldownTrackerUtil.getCooldowns(tracker);
-            int tickCount = CooldownTrackerUtil.getTickCount(tracker);
+            Map<Item, Object> map = ItemCooldownsUtil.getCooldowns(tracker);
+            int tickCount = ItemCooldownsUtil.getTickCount(tracker);
             map.put(item, constructor.newInstance(tracker, tickCount, tickCount + time));
         } catch (Exception e)
         {

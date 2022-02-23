@@ -9,27 +9,27 @@ import com.mineria.mod.util.MineriaUtils;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.block.pattern.BlockPattern;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SuspiciousStewItem;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.pattern.BlockPattern;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -40,10 +40,10 @@ import java.util.function.Supplier;
 
 public class DruidEntity extends AbstractDruidEntity
 {
-    private static final Supplier<Int2ObjectMap<List<VillagerTrades.ITrade>>> DRUID_TRADES = () -> Util.make(new Int2ObjectOpenHashMap<>(), map -> {
+    private static final Supplier<Int2ObjectMap<List<VillagerTrades.ItemListing>>> DRUID_TRADES = () -> Util.make(new Int2ObjectOpenHashMap<>(), map -> {
         map.put(1, ImmutableList.of(
                 new IngredientTrade(Pair.of(Ingredient.of(Tags.Items.MUSHROOMS), 16), new ItemStack(Items.EMERALD), 16, 1, 0.05F),
-                new BasicTrade(2, Util.make(new ItemStack(Items.SUSPICIOUS_STEW), stack -> SuspiciousStewItem.saveMobEffect(stack, MineriaUtils.getRandomElement(ForgeRegistries.POTIONS.getValues()), 20 * 5)), 12, 2, 0.2F),
+                new BasicTrade(2, Util.make(new ItemStack(Items.SUSPICIOUS_STEW), stack -> SuspiciousStewItem.saveMobEffect(stack, MineriaUtils.getRandomElement(ForgeRegistries.MOB_EFFECTS.getValues()), 20 * 5)), 12, 2, 0.2F),
                 new BasicTrade(new ItemStack(MineriaItems.ELDERBERRY, 3), new ItemStack(MineriaItems.BLACK_ELDERBERRY), 16, 1, 0.05F)
         ));
         map.put(2, ImmutableList.of(
@@ -72,7 +72,7 @@ public class DruidEntity extends AbstractDruidEntity
 
     private PerformRitualGoal performRitualGoal;
 
-    public DruidEntity(EntityType<? extends AbstractDruidEntity> type, World world)
+    public DruidEntity(EntityType<? extends AbstractDruidEntity> type, Level world)
     {
         super(type, world);
     }
@@ -81,16 +81,16 @@ public class DruidEntity extends AbstractDruidEntity
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new AbstractDruidEntity.CastingASpellGoal());
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, player -> player.equals(this.getTarget()), 8.0F, 0.6D, 1.0D, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test));
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, player -> player.equals(this.getTarget()), 8.0F, 0.6D, 1.0D, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test));
         this.goalSelector.addGoal(3, new DruidEntity.StrikeSpellGoal());
         this.goalSelector.addGoal(4, performRitualGoal = new PerformRitualGoal());
         this.goalSelector.addGoal(5, new DruidRandomWalkingGoal(0.6D));
-        this.goalSelector.addGoal(6, new DruidLookAtGoal(PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(7, new DruidLookAtGoal(MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(6, new DruidLookAtGoal(Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(7, new DruidLookAtGoal(Mob.class, 8.0F));
         this.targetSelector.addGoal(1, (new AlertTeamHurtByTargetGoal(this, AbstractDruidEntity.class)).setAlertEntities(AbstractDruidEntity.class));
-        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::isAngryAt)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt)).setUnseenMemoryTicks(300));
     }
 
     @Override
@@ -100,13 +100,13 @@ public class DruidEntity extends AbstractDruidEntity
     }
 
     @Override
-    protected Int2ObjectMap<List<VillagerTrades.ITrade>> getTrades()
+    protected Int2ObjectMap<List<VillagerTrades.ItemListing>> getTrades()
     {
         return DRUID_TRADES.get();
     }
 
     @Override
-    public void callForRitual(BlockPattern.PatternHelper patternHelper, int index)
+    public void callForRitual(BlockPattern.BlockPatternMatch patternHelper, int index)
     {
         super.callForRitual(patternHelper, index);
         if(performRitualGoal != null)
@@ -118,10 +118,10 @@ public class DruidEntity extends AbstractDruidEntity
         @Override
         public void tick()
         {
-            World world = DruidEntity.this.getLevel();
+            Level world = DruidEntity.this.getLevel();
             if(!world.isClientSide())
             {
-                ((ServerWorld) world).setWeatherParameters(0, 600, true, true);
+                ((ServerLevel) world).setWeatherParameters(0, 600, true, true);
             }
 
             super.tick();
@@ -133,8 +133,8 @@ public class DruidEntity extends AbstractDruidEntity
             LivingEntity target = DruidEntity.this.getTarget();
             if(!level.isClientSide() && target != null)
             {
-                ServerWorld world = (ServerWorld) level;
-                MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), SpawnReason.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
+                ServerLevel world = (ServerLevel) level;
+                MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
             }
         }
 

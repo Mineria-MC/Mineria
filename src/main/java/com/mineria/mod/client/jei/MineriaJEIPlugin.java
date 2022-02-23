@@ -18,9 +18,9 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Function;
 
@@ -80,9 +80,9 @@ public class MineriaJEIPlugin implements IModPlugin
         registration.addRecipeClickArea(ApothecaryTableScreen.class, getFontRenderer(font -> 88 - font.width(I18n.get("tile_entity.mineria.apothecary_table")) / 2, 58), 5, getFontRenderer(font -> font.width(I18n.get("tile_entity.mineria.apothecary_table")), 60), 8, ApothecaryTableRecipeCategory.ID);
     }
 
-    private static int getFontRenderer(Function<FontRenderer, Integer> getter, int defaultValue)
+    private static int getFontRenderer(Function<Font, Integer> getter, int defaultValue)
     {
-        FontRenderer font = Minecraft.getInstance().font;
+        Font font = Minecraft.getInstance().font;
         return font == null ? defaultValue : getter.apply(font);
     }
 }

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:lead_ore",
+    "mineria:nether_gold_ore",
+    "mineria:silver_ore",
+    "mineria:lead_block",
+    "mineria:silver_block",
+    "mineria:extractor",
+    "mineria:distiller",
+    "mineria:lead_spike",
+    "mineria:compressed_lead_spike",
+    "mineria:golden_water_barrel"
+  ]
+}

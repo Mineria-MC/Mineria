@@ -3,17 +3,20 @@ package com.mineria.mod.client.renderers.entity;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.client.models.entity.GreatDruidOfGaulsModel;
 import com.mineria.mod.common.entity.GreatDruidOfGaulsEntity;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class GreatDruidOfGaulsRenderer extends MobRenderer<GreatDruidOfGaulsEntity, GreatDruidOfGaulsModel>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/entity/great_druid_of_gauls.png");
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(Mineria.MODID, "great_druid_of_gauls"), "main");
 
-    public GreatDruidOfGaulsRenderer(EntityRendererManager manager)
+    public GreatDruidOfGaulsRenderer(EntityRendererProvider.Context ctx)
     {
-        super(manager, new GreatDruidOfGaulsModel(0, 0, 64, 64), 0.5F);
+        super(ctx, new GreatDruidOfGaulsModel(ctx.bakeLayer(LAYER)), 0.5F);
     }
 
     @Override

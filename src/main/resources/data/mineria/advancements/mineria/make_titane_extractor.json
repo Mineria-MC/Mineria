@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_extractor"
+            "items": ["mineria:titane_extractor"]
           }
         ]
       }

@@ -2,17 +2,17 @@ package com.mineria.mod.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import com.mineria.mod.Mineria;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
 
-public class UsedAnvilTrigger extends AbstractCriterionTrigger<UsedAnvilTrigger.Instance>
+public class UsedAnvilTrigger extends SimpleCriterionTrigger<UsedAnvilTrigger.Instance>
 {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "used_anvil");
 
@@ -23,7 +23,7 @@ public class UsedAnvilTrigger extends AbstractCriterionTrigger<UsedAnvilTrigger.
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate andPredicate, ConditionArrayParser parser)
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser)
     {
         ItemPredicate left = ItemPredicate.fromJson(json.get("left"));
         ItemPredicate right = ItemPredicate.fromJson(json.get("right"));
@@ -31,18 +31,18 @@ public class UsedAnvilTrigger extends AbstractCriterionTrigger<UsedAnvilTrigger.
         return new Instance(andPredicate, left, right, output);
     }
 
-    public void trigger(ServerPlayerEntity player, ItemStack left, ItemStack right, ItemStack output)
+    public void trigger(ServerPlayer player, ItemStack left, ItemStack right, ItemStack output)
     {
         this.trigger(player, instance -> instance.matches(left, right, output));
     }
 
-    public static class Instance extends CriterionInstance
+    public static class Instance extends AbstractCriterionTriggerInstance
     {
         private final ItemPredicate left;
         private final ItemPredicate right;
         private final ItemPredicate output;
 
-        public Instance(EntityPredicate.AndPredicate andPredicate, ItemPredicate left, ItemPredicate right, ItemPredicate output)
+        public Instance(EntityPredicate.Composite andPredicate, ItemPredicate left, ItemPredicate right, ItemPredicate output)
         {
             super(ID, andPredicate);
             this.left = left;
@@ -56,7 +56,7 @@ public class UsedAnvilTrigger extends AbstractCriterionTrigger<UsedAnvilTrigger.
         }
 
         @Override
-        public JsonObject serializeToJson(ConditionArraySerializer serializer)
+        public JsonObject serializeToJson(SerializationContext serializer)
         {
             JsonObject json = super.serializeToJson(serializer);
             json.add("left", this.left.serializeToJson());

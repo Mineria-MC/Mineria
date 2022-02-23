@@ -3,52 +3,53 @@ package com.mineria.mod.common.entity;
 import com.mineria.mod.common.entity.goal.AlertTeamHurtByTargetGoal;
 import com.mineria.mod.common.init.MineriaSounds;
 import com.mineria.mod.util.RandomPositionGeneratorUtil;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.AirRandomPos;
+import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Random;
 
-public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAttackMob
+public class AirSpiritEntity extends ElementaryGolemEntity implements RangedAttackMob
 {
-    private static final DataParameter<Boolean> TRANSLUCENT = EntityDataManager.defineId(AirSpiritEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> TRANSLUCENT = SynchedEntityData.defineId(AirSpiritEntity.class, EntityDataSerializers.BOOLEAN);
     private int hitCount;
     private int invisibleTicks;
 
-    public AirSpiritEntity(EntityType<? extends AirSpiritEntity> type, World world)
+    public AirSpiritEntity(EntityType<? extends AirSpiritEntity> type, Level world)
     {
         super(type, world);
         this.moveControl = new AirSpiritMovementController();
@@ -58,20 +59,20 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(2, new AvoidTargetGoal());
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+//        this.goalSelector.addGoal(2, new AvoidTargetGoal());
         this.goalSelector.addGoal(3, new RangedAttackGoal());
-        this.goalSelector.addGoal(8, new MoveRandomGoal());
-        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
+//        this.goalSelector.addGoal(8, new MoveRandomGoal());
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.targetSelector.addGoal(1, (new AlertTeamHurtByTargetGoal(this, AbstractDruidEntity.class, ElementaryGolemEntity.class)).setAlertEntities(ElementaryGolemEntity.class));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
     @Override
-    protected PathNavigator createNavigation(World world)
+    protected PathNavigation createNavigation(Level world)
     {
-        return new FlyingPathNavigator(this, world);
+        return new FlyingPathNavigation(this, world);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HitCount", this.hitCount);
@@ -91,7 +92,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
         this.hitCount = nbt.getInt("HitCount");
@@ -100,7 +101,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
     }
 
     @Override
-    public float getWalkTargetValue(BlockPos pos, IWorldReader world)
+    public float getWalkTargetValue(BlockPos pos, LevelReader world)
     {
         return world.isEmptyBlock(pos.below()) ? 10 : 0;
     }
@@ -169,19 +170,19 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
         return 2;
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 80).add(Attributes.ATTACK_DAMAGE, 15).add(Attributes.MOVEMENT_SPEED, 0.2).add(Attributes.FLYING_SPEED, 0.7 * (1 + 0.2 * 4));
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 80).add(Attributes.ATTACK_DAMAGE, 15).add(Attributes.MOVEMENT_SPEED, 0.2).add(Attributes.FLYING_SPEED, 0.7 * (1 + 0.2 * 4));
     }
 
     @Override
     public void performRangedAttack(LivingEntity target, float dmg)
     {
-        AbstractArrowEntity arrow = ProjectileHelper.getMobArrow(this, new ItemStack(Items.SPECTRAL_ARROW), dmg);
+        AbstractArrow arrow = ProjectileUtil.getMobArrow(this, new ItemStack(Items.SPECTRAL_ARROW), dmg);
         double x = target.getX() - this.getX();
         double y = target.getY(0.3333333333333333D) - arrow.getY();
         double z = target.getZ() - this.getZ();
-        double dist = MathHelper.sqrt(x * x + z * z);
+        double dist = Math.sqrt(x * x + z * z);
         arrow.shoot(x, y + dist * (double)0.2F, z, 1.6F, (float)(14 - this.level.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(arrow);
@@ -219,7 +220,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
         @Override
         public void start()
         {
-            Vector3d destination = this.findPos();
+            Vec3 destination = this.findPos();
             if (destination != null)
             {
                 navigation.moveTo(navigation.createPath(new BlockPos(destination), 1), 1.6D);
@@ -227,12 +228,13 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
         }
 
         @Nullable
-        private Vector3d findPos()
+        private Vec3 findPos()
         {
-            Vector3d direction = getViewVector(0.0F);
+            Vec3 direction = getViewVector(0.0F);
 
-            Vector3d vector3d2 = RandomPositionGeneratorUtil.getAboveLandPos(AirSpiritEntity.this, 8, 7, direction, ((float) Math.PI / 2F), 4, 1);
-            return vector3d2 != null ? vector3d2 : RandomPositionGeneratorUtil.getAirPos(AirSpiritEntity.this, 8, 4, -2, direction, ((float) Math.PI / 2F));
+//            Vec3 vector3d2 = AirRandomPos.getPosTowards(AirSpiritEntity.this, 8, 7, direction, ((float) Math.PI / 2F), 4, 1);
+//            return vector3d2 != null ? vector3d2 : RandomPositionGeneratorUtil.getAirPos(AirSpiritEntity.this, 8, 4, -2, direction, ((float) Math.PI / 2F));
+            return Vec3.ZERO;
         }
     }
 
@@ -251,7 +253,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
             LivingEntity target = getTarget();
             if(target != null)
             {
-                Vector3d avoidPos = RandomPositionGenerator.getPosAvoid(AirSpiritEntity.this, 20, 7, target.position());
+                Vec3 avoidPos = /*RandomPos.getPosAvoid(AirSpiritEntity.this, 20, 7, target.position())*/ Vec3.ZERO;
                 if (avoidPos == null)
                 {
                     return false;
@@ -311,7 +313,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
             LivingEntity target = getTarget();
             if(target != null)
             {
-                boolean visible = getSensing().canSee(target);
+                boolean visible = getSensing().hasLineOfSight(target);
 
                 if(visible)
                 {
@@ -327,7 +329,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
         }
     }
 
-    class AirSpiritMovementController extends FlyingMovementController
+    class AirSpiritMovementController extends FlyingMoveControl
     {
         private final int maxTurn;
         private final boolean hoversInPlace;
@@ -342,9 +344,9 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
         @Override
         public void tick()
         {
-            if (this.operation == MovementController.Action.MOVE_TO)
+            if (this.operation == MoveControl.Operation.MOVE_TO)
             {
-                this.operation = MovementController.Action.WAIT;
+                this.operation = MoveControl.Operation.WAIT;
                 setNoGravity(true);
                 double distX = this.wantedX - getX();
                 double distY = this.wantedY - getY();
@@ -359,15 +361,15 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
 
                 if(getTarget() == null)
                 {
-                    float f = (float) (MathHelper.atan2(distZ, distX) * (double) (180F / (float) Math.PI)) - 90.0F;
-                    yRot = this.rotlerp(yRot, f, 90.0F);
+                    float f = (float) (Mth.atan2(distZ, distX) * (double) (180F / (float) Math.PI)) - 90.0F;
+                    setYRot(this.rotlerp(getYRot(), f, 90.0F));
                 } else
                 {
                     double targetDistanceX = getTarget().getX() - getX();
                     double targetDistanceZ = getTarget().getZ() - getZ();
-                    yRot = -((float) MathHelper.atan2(targetDistanceX, targetDistanceZ)) * (180F / (float) Math.PI);
+                    setYRot(-((float) Mth.atan2(targetDistanceX, targetDistanceZ)) * (180F / (float) Math.PI));
                 }
-                yBodyRot = yRot;
+                yBodyRot = getYRot();
 
                 float impulse;
                 if (isOnGround())
@@ -379,9 +381,9 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements IRangedAtt
                 }
 
                 setSpeed(impulse);
-                double horizontalDist = MathHelper.sqrt(distX * distX + distZ * distZ);
-                float f2 = (float) (-(MathHelper.atan2(distY, horizontalDist) * (double) (180F / (float) Math.PI)));
-                xRot = this.rotlerp(xRot, f2, (float) this.maxTurn);
+                double horizontalDist = Math.sqrt(distX * distX + distZ * distZ);
+                float f2 = (float) (-(Mth.atan2(distY, horizontalDist) * (double) (180F / (float) Math.PI)));
+                setXRot(this.rotlerp(getXRot(), f2, (float) this.maxTurn));
                 setYya(distY > 0.0D ? impulse : -impulse);
             } else
             {

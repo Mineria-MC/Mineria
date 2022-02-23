@@ -2,27 +2,28 @@ package com.mineria.mod.common.entity;
 
 import com.mineria.mod.common.entity.goal.AlertTeamHurtByTargetGoal;
 import com.mineria.mod.common.init.MineriaSounds;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IGrowable;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Random;
 
 public class DirtGolemEntity extends ElementaryGolemEntity
 {
-    public DirtGolemEntity(EntityType<? extends DirtGolemEntity> type, World world)
+    public DirtGolemEntity(EntityType<? extends DirtGolemEntity> type, Level world)
     {
         super(type, world);
     }
@@ -33,11 +34,11 @@ public class DirtGolemEntity extends ElementaryGolemEntity
         super.registerGoals();
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9D, 32.0F));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.6D, 240, true));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.6D, 240, true));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new AlertTeamHurtByTargetGoal(this, AbstractDruidEntity.class, ElementaryGolemEntity.class).setAlertEntities(ElementaryGolemEntity.class));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
     }
 
     @Override
@@ -55,15 +56,15 @@ public class DirtGolemEntity extends ElementaryGolemEntity
             {
                 BlockState state = this.level.getBlockState(blockPos);
 
-                if(state.getBlock() instanceof IGrowable)
+                if(state.getBlock() instanceof BonemealableBlock)
                 {
-                    IGrowable growable = (IGrowable) state.getBlock();
+                    BonemealableBlock growable = (BonemealableBlock) state.getBlock();
 
                     if(growable.isValidBonemealTarget(this.level, blockPos, state, this.level.isClientSide))
                     {
-                        if(this.level instanceof ServerWorld && growable.isBonemealSuccess(this.level, this.level.random, blockPos, state))
+                        if(this.level instanceof ServerLevel && growable.isBonemealSuccess(this.level, this.level.random, blockPos, state))
                         {
-                            growable.performBonemeal((ServerWorld) this.level, this.level.random, blockPos, state);
+                            growable.performBonemeal((ServerLevel) this.level, this.level.random, blockPos, state);
                         }
 
                         fertilizedDirt = true;
@@ -72,7 +73,7 @@ public class DirtGolemEntity extends ElementaryGolemEntity
             }
 
             if(fertilizedDirt)
-                this.level.playSound(null, pos, SoundEvents.COMPOSTER_READY, SoundCategory.HOSTILE, 1.0F, 1.0F);
+                this.level.playSound(null, pos, SoundEvents.COMPOSTER_READY, SoundSource.HOSTILE, 1.0F, 1.0F);
         }
     }
 
@@ -100,8 +101,8 @@ public class DirtGolemEntity extends ElementaryGolemEntity
         return 11 + random.nextInt(11);
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 200).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 2);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 2);
     }
 }

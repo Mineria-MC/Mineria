@@ -2,26 +2,27 @@ package com.mineria.mod.mixin;
 
 import com.mineria.mod.common.entity.*;
 import com.mineria.mod.common.init.MineriaEntities;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayNetHandler.class)
-public class ClientPlayNetHandlerMixin
+@Mixin(ClientPacketListener.class)
+public class ClientPacketListenerMixin
 {
-    @Shadow private ClientWorld level;
+    @Shadow private ClientLevel level;
 
+    // TODO
     @Inject(method = "handleAddEntity", at = @At("TAIL"))
-    public void handleAddEntity(SSpawnObjectPacket pkt, CallbackInfo ci)
+    public void handleAddEntity(ClientboundAddEntityPacket pkt, CallbackInfo ci)
     {
         double x = pkt.getX();
         double y = pkt.getY();
@@ -60,8 +61,8 @@ public class ClientPlayNetHandlerMixin
             int id = pkt.getId();
             entity.setPacketCoordinates(x, y, z);
             entity.moveTo(x, y, z);
-            entity.xRot = (float) (pkt.getxRot() * 360) / 256.0F;
-            entity.yRot = (float) (pkt.getyRot() * 360) / 256.0F;
+            entity.setXRot((float) (pkt.getxRot() * 360) / 256.0F);
+            entity.setYRot((float) (pkt.getyRot() * 360) / 256.0F);
             entity.setId(id);
             entity.setUUID(pkt.getUUID());
             this.level.putNonPlayerEntity(id, entity);

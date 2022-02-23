@@ -8,33 +8,33 @@ import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.common.init.MineriaPotions;
 import com.mineria.mod.common.init.MineriaStructures;
 import com.mineria.mod.common.items.MineriaPotionItem;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CauldronBlock;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.BrewingStandTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CauldronBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,12 +43,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Random;
 
-public class WizardLaboratoryPiece extends TemplateStructurePiece
+public class WizardLaboratoryPiece /*extends TemplateStructurePiece*/
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    /*private static final Logger LOGGER = LogManager.getLogger();
     private Rotation rotation;
 
-    public WizardLaboratoryPiece(TemplateManager templateManagerIn, BlockPos pos, Rotation rotationIn)
+    public WizardLaboratoryPiece(StructureManager templateManagerIn, BlockPos pos, Rotation rotationIn)
     {
         super(MineriaStructures.WLP, 0);
         this.templatePosition = pos;
@@ -56,29 +56,29 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
         this.setupPiece(templateManagerIn);
     }
 
-    public WizardLaboratoryPiece(TemplateManager templateManagerIn, CompoundNBT nbt)
+    public WizardLaboratoryPiece(StructureManager templateManagerIn, CompoundTag nbt)
     {
         super(MineriaStructures.WLP, nbt);
         this.rotation = Rotation.valueOf(nbt.getString("Rot"));
         this.setupPiece(templateManagerIn);
     }
 
-    private void setupPiece(TemplateManager templateManager)
+    private void setupPiece(StructureManager templateManager)
     {
-        Template template = templateManager.getOrCreate(new ResourceLocation(Mineria.MODID, "wizard_laboratory"));
-        PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
+        StructureTemplate template = templateManager.getOrCreate(new ResourceLocation(Mineria.MODID, "wizard_laboratory"));
+        StructurePlaceSettings placementsettings = (new StructurePlaceSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
         this.setup(template, this.templatePosition, placementsettings);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT tagCompound)
+    protected void addAdditionalSaveData(CompoundTag tagCompound)
     {
         super.addAdditionalSaveData(tagCompound);
         tagCompound.putString("Rot", this.rotation.name());
     }
 
     @Override
-    protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb)
+    protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox sbb)
     {
         List<Pair<Potion, Boolean>> potions = ImmutableList.of(Pair.of(Potions.HEALING, false), Pair.of(MineriaPotions.CLASS_2_POISON.get(), true),
                 Pair.of(Potions.INVISIBILITY, false), Pair.of(Potions.SLOWNESS, true), Pair.of(Potions.NIGHT_VISION, false),
@@ -103,11 +103,11 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
                 break;
             case "brewing_stand":
                 BlockPos brewingStandPos = pos.below();
-                TileEntity tile = worldIn.getBlockEntity(brewingStandPos);
+                BlockEntity tile = worldIn.getBlockEntity(brewingStandPos);
 
-                if(tile instanceof BrewingStandTileEntity && sbb.isInside(brewingStandPos))
+                if(tile instanceof BrewingStandBlockEntity && sbb.isInside(brewingStandPos))
                 {
-                    BrewingStandTileEntity brewingStand = (BrewingStandTileEntity) tile;
+                    BrewingStandBlockEntity brewingStand = (BrewingStandBlockEntity) tile;
                     int netherWartCount = rand.nextInt(6);
                     brewingStand.setItem(3, new ItemStack(Items.NETHER_WART, netherWartCount));
 
@@ -146,10 +146,10 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
                     WizardEntity entity = MineriaEntities.WIZARD.get().create(worldIn.getLevel());
                     if(entity != null)
                     {
-                        entity.moveTo(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() + 0.5, MathHelper.wrapDegrees(rand.nextFloat() * 360F), 0);
+                        entity.moveTo(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() + 0.5, Mth.wrapDegrees(rand.nextFloat() * 360F), 0);
                         entity.yHeadRot = entity.yRot;
                         entity.yBodyRot = entity.yRot;
-                        entity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.STRUCTURE, null, null);
+                        entity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.STRUCTURE, null, null);
                         worldIn.addFreshEntityWithPassengers(entity);
                     }
                 }
@@ -157,11 +157,11 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
         }
     }
 
-    private static void setItemFrameRotation(ItemFrameEntity itemFrame, int value)
+    private static void setItemFrameRotation(ItemFrame itemFrame, int value)
     {
         try
         {
-            ObfuscationReflectionHelper.findMethod(ItemFrameEntity.class, "func_174865_a", int.class, boolean.class).invoke(itemFrame, value, false);
+            ObfuscationReflectionHelper.findMethod(ItemFrame.class, "m_31772_", int.class, boolean.class).invoke(itemFrame, value, false);
         }
         catch (IllegalAccessException | InvocationTargetException e)
         {
@@ -169,7 +169,7 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
         }
     }
 
-    public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random)
+    public static void start(StructureManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random)
     {
         int x = pos.getX();
         int z = pos.getZ();
@@ -177,5 +177,5 @@ public class WizardLaboratoryPiece extends TemplateStructurePiece
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
         BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
         pieceList.add(new WizardLaboratoryPiece(templateManager, blockpos, rotation));
-    }
+    }*/
 }

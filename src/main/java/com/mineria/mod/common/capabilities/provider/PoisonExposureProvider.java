@@ -2,8 +2,8 @@ package com.mineria.mod.common.capabilities.provider;
 
 import com.mineria.mod.common.capabilities.CapabilityRegistry;
 import com.mineria.mod.common.capabilities.IPoisonExposure;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PoisonExposureProvider implements ICapabilitySerializable<CompoundNBT>
+public class PoisonExposureProvider implements ICapabilitySerializable<CompoundTag>
 {
     private final IPoisonExposure cap;
 
@@ -29,13 +29,13 @@ public class PoisonExposureProvider implements ICapabilitySerializable<CompoundN
     }
 
     @Override
-    public CompoundNBT serializeNBT()
+    public CompoundTag serializeNBT()
     {
         return this.cap.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt)
+    public void deserializeNBT(CompoundTag nbt)
     {
         this.cap.deserializeNBT(nbt);
     }

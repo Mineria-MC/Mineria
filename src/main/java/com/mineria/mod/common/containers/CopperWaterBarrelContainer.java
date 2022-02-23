@@ -3,26 +3,26 @@ package com.mineria.mod.common.containers;
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.common.blocks.barrel.copper.CopperWaterBarrelTileEntity;
 import com.mineria.mod.common.init.MineriaContainerTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
 public class CopperWaterBarrelContainer extends MineriaContainer<CopperWaterBarrelTileEntity>
 {
-    public CopperWaterBarrelContainer(int id, PlayerInventory playerInv, CopperWaterBarrelTileEntity tileEntity)
+    public CopperWaterBarrelContainer(int id, Inventory playerInv, CopperWaterBarrelTileEntity tileEntity)
     {
         super(MineriaContainerTypes.COPPER_WATER_BARREL.get(), id, tileEntity);
 
         this.createPlayerInventorySlots(playerInv, 8, 44);
     }
 
-    public static CopperWaterBarrelContainer create(int windowID, PlayerInventory playerInv, PacketBuffer data)
+    public static CopperWaterBarrelContainer create(int windowID, Inventory playerInv, FriendlyByteBuf data)
     {
         return new CopperWaterBarrelContainer(windowID, playerInv, getTileEntity(CopperWaterBarrelTileEntity.class, playerInv, data));
     }
@@ -43,7 +43,7 @@ public class CopperWaterBarrelContainer extends MineriaContainer<CopperWaterBarr
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index)
+    public ItemStack quickMoveStack(Player playerIn, int index)
     {
         ItemStack stackToTransfer = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);

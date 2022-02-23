@@ -1,16 +1,17 @@
 package com.mineria.mod.mixin;
 
-import com.mineria.mod.common.init.MineriaItems;
+import com.mineria.mod.common.enchantments.FourElementsEnchantment;
 import com.mineria.mod.common.init.MineriaEnchantments;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.AbstractRepairContainer;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.RepairContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.fml.RegistryObject;
+import com.mineria.mod.common.init.MineriaItems;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,13 +22,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Mixin(RepairContainer.class)
-public abstract class RepairContainerMixin extends AbstractRepairContainer
+@Mixin(AnvilMenu.class)
+public abstract class AnvilMenuMixin extends ItemCombinerMenu
 {
-    public RepairContainerMixin(@Nullable ContainerType<?> type, int windowId, PlayerInventory playerInv, IWorldPosCallable worldPosCallable)
+    public AnvilMenuMixin(@Nullable MenuType<?> type, int windowId, Inventory playerInv, ContainerLevelAccess worldPosCallable)
     {
         super(type, windowId, playerInv, worldPosCallable);
     }
@@ -43,9 +43,9 @@ public abstract class RepairContainerMixin extends AbstractRepairContainer
     }
 
     private final Random rand = new Random();
-    private static List<Enchantment> enchantments;
+    private static List<FourElementsEnchantment> enchantments;
 
-    @Redirect(method = "createResult()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;setEnchantments(Ljava/util/Map;Lnet/minecraft/item/ItemStack;)V"))
+    @Redirect(method = "createResult()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;setEnchantments(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"))
     private void replaceFourElements(Map<Enchantment, Integer> map, ItemStack stack)
     {
         rand.setSeed(this.player.getEnchantmentSeed());
@@ -54,7 +54,7 @@ public abstract class RepairContainerMixin extends AbstractRepairContainer
         {
             map.remove(MineriaEnchantments.FOUR_ELEMENTS.get());
             if(enchantments == null)
-                enchantments = Stream.of(MineriaEnchantments.FIRE_ELEMENT, MineriaEnchantments.WATER_ELEMENT, MineriaEnchantments.AIR_ELEMENT, MineriaEnchantments.GROUND_ELEMENT).map(RegistryObject::get).collect(Collectors.toList());
+                enchantments = Stream.of(MineriaEnchantments.FIRE_ELEMENT, MineriaEnchantments.WATER_ELEMENT, MineriaEnchantments.AIR_ELEMENT, MineriaEnchantments.GROUND_ELEMENT).map(RegistryObject::get).toList();
             map.put(enchantments.get(rand.nextInt(enchantments.size())), 1);
         }
         EnchantmentHelper.setEnchantments(map, stack);

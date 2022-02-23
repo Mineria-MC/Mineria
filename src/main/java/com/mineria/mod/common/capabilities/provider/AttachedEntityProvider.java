@@ -2,8 +2,8 @@ package com.mineria.mod.common.capabilities.provider;
 
 import com.mineria.mod.common.capabilities.CapabilityRegistry;
 import com.mineria.mod.common.capabilities.IAttachedEntity;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class AttachedEntityProvider implements ICapabilitySerializable<ListNBT>
+public class AttachedEntityProvider implements ICapabilitySerializable<ListTag>
 {
     private final IAttachedEntity cap;
 
@@ -29,13 +29,13 @@ public class AttachedEntityProvider implements ICapabilitySerializable<ListNBT>
     }
 
     @Override
-    public ListNBT serializeNBT()
+    public ListTag serializeNBT()
     {
         return cap.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(ListNBT nbt)
+    public void deserializeNBT(ListTag nbt)
     {
         cap.deserializeNBT(nbt);
     }

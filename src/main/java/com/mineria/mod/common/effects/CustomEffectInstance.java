@@ -1,18 +1,18 @@
 package com.mineria.mod.common.effects;
 
 import com.mineria.mod.common.init.MineriaEffectInstanceSerializers;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -23,9 +23,9 @@ import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.ToIntFunction;
 
-public abstract class CustomEffectInstance extends EffectInstance
+public abstract class CustomEffectInstance extends MobEffectInstance
 {
-    protected Effect potion;
+    protected MobEffect potion;
     protected int duration;
     protected int maxDuration;
     protected int amplifier;
@@ -34,9 +34,9 @@ public abstract class CustomEffectInstance extends EffectInstance
     protected boolean showIcon;
     protected List<ItemStack> curativeItems;
     @Nullable
-    protected final Effect parentEffect;
+    protected final MobEffect parentEffect;
 
-    public CustomEffectInstance(Effect potion, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable Effect parentEffect)
+    public CustomEffectInstance(MobEffect potion, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable MobEffect parentEffect)
     {
         super(potion, duration, amplifier, ambient, showParticles, showIcon);
         this.potion = potion;
@@ -51,7 +51,7 @@ public abstract class CustomEffectInstance extends EffectInstance
     }
 
     @Override
-    public abstract boolean update(EffectInstance effectInstance);
+    public abstract boolean update(MobEffectInstance effectInstance);
     /*{
         if (effectInstance instanceof CustomEffectInstance)
         {
@@ -106,7 +106,7 @@ public abstract class CustomEffectInstance extends EffectInstance
         return false;
     }*/
 
-    public Effect getEffect()
+    public MobEffect getEffect()
     {
         return this.potion;
     }
@@ -169,13 +169,18 @@ public abstract class CustomEffectInstance extends EffectInstance
         this.showIcon = showIcon;
     }
 
-    public Optional<EffectInstance> getActiveParentEffect(LivingEntity living)
+    public boolean shouldRender()
     {
-        return Optional.ofNullable(living.getEffect(this.parentEffect));
+        return true;
+    }
+
+    public Optional<MobEffectInstance> getActiveParentEffect(LivingEntity living)
+    {
+        return Optional.ofNullable(this.parentEffect == null ? null : living.getEffect(this.parentEffect));
     }
 
     @Nullable
-    public Effect getParentEffect()
+    public MobEffect getParentEffect()
     {
         return this.parentEffect;
     }
@@ -246,7 +251,7 @@ public abstract class CustomEffectInstance extends EffectInstance
     {
         if (this == obj)
             return true;
-        else if (!(obj instanceof EffectInstance))
+        else if (!(obj instanceof MobEffectInstance))
             return false;
         else
         {
@@ -265,7 +270,7 @@ public abstract class CustomEffectInstance extends EffectInstance
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         super.save(nbt);
         nbt.putInt("MaxDuration", this.maxDuration);
@@ -274,9 +279,9 @@ public abstract class CustomEffectInstance extends EffectInstance
         return nbt;
     }
 
-    public void drawPotionName(FontRenderer font, MatrixStack matrixStack, float x, float y)
+    public void drawPotionName(Font font, PoseStack matrixStack, float x, float y)
     {
-        font.drawShadow(matrixStack, new TranslationTextComponent(this.getDescriptionId()), x, y, 16777215);
+        font.drawShadow(matrixStack, new TranslatableComponent(this.getDescriptionId()), x, y, 16777215);
     }
 
     public int getColor()
@@ -300,17 +305,16 @@ public abstract class CustomEffectInstance extends EffectInstance
 
     public static class Impl extends CustomEffectInstance
     {
-        public Impl(Effect potion, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable Effect parentEffect)
+        public Impl(MobEffect potion, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable MobEffect parentEffect)
         {
             super(potion, duration, maxDuration, amplifier, ambient, showParticles, showIcon, parentEffect);
         }
 
         @Override
-        public boolean update(EffectInstance effectInstance)
+        public boolean update(MobEffectInstance effectInstance)
         {
-            if(effectInstance instanceof CustomEffectInstance.Impl)
+            if(effectInstance instanceof Impl other)
             {
-                CustomEffectInstance.Impl other = (CustomEffectInstance.Impl) effectInstance;
                 if(other.parentEffect != this.parentEffect)
                     return false;
                 return getEffectUpdater().updateEffect(this, other);
@@ -331,20 +335,27 @@ public abstract class CustomEffectInstance extends EffectInstance
             return Util.make(makeCustomEffectInstance(this.getEffect(), this.getDuration(), this.getMaxDuration(), this.getAmplifier(), this.isAmbient(), this.isVisible(), this.showIcon(), this.parentEffect, this.shouldRender()), effect -> effect.setCurativeItems(this.getCurativeItems()));
         }
 
-        public EffectUpdater<CustomEffectInstance.Impl> getEffectUpdater()
+        private static EffectUpdater<Impl> EFFECT_UPDATER;
+
+        public static EffectUpdater<Impl> getEffectUpdater()
         {
-            EffectUpdater<CustomEffectInstance.Impl> updater = new EffectUpdater<>();
-            updater.compareOrderedInts(0, CustomEffectInstance::getAmplifier, CustomEffectInstance::setAmplifier);
-            updater.compareOrderedInts(1, CustomEffectInstance::getMaxDuration, (inst, value) -> inst.maxDuration = value);
-            updater.compareOrderedInts(2, CustomEffectInstance::getDuration, CustomEffectInstance::setDuration);
-            updater.compareBooleans(CustomEffectInstance::isAmbient, CustomEffectInstance::setAmbient);
-            updater.compareBooleans(CustomEffectInstance::isVisible, CustomEffectInstance::setVisible);
-            updater.compareBooleans(CustomEffectInstance::showIcon, CustomEffectInstance::setShowIcon);
-            return updater;
+            if(EFFECT_UPDATER == null)
+            {
+                EffectUpdater<Impl> updater = new EffectUpdater<>();
+                updater.compareOrderedInts(0, CustomEffectInstance::getAmplifier, CustomEffectInstance::setAmplifier);
+                updater.compareOrderedInts(1, CustomEffectInstance::getMaxDuration, (inst, value) -> inst.maxDuration = value);
+                updater.compareOrderedInts(2, CustomEffectInstance::getDuration, CustomEffectInstance::setDuration);
+                updater.compareBooleans(CustomEffectInstance::isAmbient, CustomEffectInstance::setAmbient);
+                updater.compareBooleans(CustomEffectInstance::isVisible, CustomEffectInstance::setVisible);
+                updater.compareBooleans(CustomEffectInstance::showIcon, CustomEffectInstance::setShowIcon);
+                EFFECT_UPDATER = updater;
+            }
+
+            return EFFECT_UPDATER;
         }
     }
 
-    public static CustomEffectInstance.Impl makeCustomEffectInstance(Effect effect, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable Effect parentEffect, boolean shouldRender)
+    public static CustomEffectInstance.Impl makeCustomEffectInstance(MobEffect effect, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable MobEffect parentEffect, boolean shouldRender)
     {
         return new CustomEffectInstance.Impl(effect, duration, maxDuration, amplifier, ambient, showParticles, showIcon, parentEffect)
         {
@@ -356,14 +367,14 @@ public abstract class CustomEffectInstance extends EffectInstance
         };
     }
 
-    public static CustomEffectInstance merge(CustomEffectInstance custom, EffectInstance effect)
+    public static CustomEffectInstance merge(CustomEffectInstance custom, MobEffectInstance effect)
     {
-        return makeCustomEffectInstance(effect.getEffect(), effect.getDuration(), custom.maxDuration, effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon(), custom.parentEffect, effect.shouldRender());
+        return makeCustomEffectInstance(effect.getEffect(), effect.getDuration(), custom.maxDuration, effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon(), custom.parentEffect, true);
     }
 
-    public static EffectInstance copyEffect(EffectInstance effect)
+    public static MobEffectInstance copyEffect(MobEffectInstance effect)
     {
-        return effect instanceof CustomEffectInstance ? ((CustomEffectInstance) effect).copy() : new EffectInstance(effect);
+        return effect instanceof CustomEffectInstance ? ((CustomEffectInstance) effect).copy() : new MobEffectInstance(effect);
     }
 
     public static class EffectUpdater<T extends CustomEffectInstance>
@@ -470,7 +481,7 @@ public abstract class CustomEffectInstance extends EffectInstance
     public static class Serializer extends ForgeRegistryEntry<IEffectInstanceSerializer<?>> implements IEffectInstanceSerializer<CustomEffectInstance>
     {
         @Override
-        public void encodePacket(CustomEffectInstance effect, PacketBuffer buf)
+        public void encodePacket(CustomEffectInstance effect, FriendlyByteBuf buf)
         {
             MineriaEffectInstanceSerializers.DEFAULT.get().encodePacket(effect, buf);
             buf.writeInt(effect.getMaxDuration());
@@ -478,21 +489,21 @@ public abstract class CustomEffectInstance extends EffectInstance
         }
 
         @Override
-        public CustomEffectInstance decodePacket(PacketBuffer buf)
+        public CustomEffectInstance decodePacket(FriendlyByteBuf buf)
         {
-            EffectInstance instance = MineriaEffectInstanceSerializers.DEFAULT.get().decodePacket(buf);
+            MobEffectInstance instance = MineriaEffectInstanceSerializers.DEFAULT.get().decodePacket(buf);
             int maxDuration = buf.readInt();
             ResourceLocation parentEffectId = buf.readResourceLocation();
-            CustomEffectInstance custom = new CustomEffectInstance.Impl(Effects.MOVEMENT_SPEED, 0, maxDuration, 0, false, false, false, parentEffectId.getPath().equals("null") ? null : ForgeRegistries.POTIONS.getValue(parentEffectId));
+            CustomEffectInstance custom = new CustomEffectInstance.Impl(MobEffects.MOVEMENT_SPEED, 0, maxDuration, 0, false, false, false, parentEffectId.getPath().equals("null") ? null : ForgeRegistries.MOB_EFFECTS.getValue(parentEffectId));
 
             return CustomEffectInstance.merge(custom, instance);
         }
 
         @Override
-        public CustomEffectInstance deserialize(Effect effect, CompoundNBT nbt)
+        public CustomEffectInstance deserialize(MobEffect effect, CompoundTag nbt)
         {
-            EffectInstance instance = MineriaEffectInstanceSerializers.DEFAULT.get().deserialize(effect, nbt);
-            CustomEffectInstance custom = new CustomEffectInstance.Impl(Effects.MOVEMENT_SPEED, 0, nbt.getInt("MaxDuration"), 0, false, false, false, nbt.contains("ParentEffect") ? ForgeRegistries.POTIONS.getValue(new ResourceLocation(nbt.getString("ParentEffect"))) : null);
+            MobEffectInstance instance = MineriaEffectInstanceSerializers.DEFAULT.get().deserialize(effect, nbt);
+            CustomEffectInstance custom = new CustomEffectInstance.Impl(MobEffects.MOVEMENT_SPEED, 0, nbt.getInt("MaxDuration"), 0, false, false, false, nbt.contains("ParentEffect") ? ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(nbt.getString("ParentEffect"))) : null);
 
             return IEffectInstanceSerializer.readCurativeItems(CustomEffectInstance.merge(custom, instance), nbt);
         }

@@ -1,65 +1,68 @@
 package com.mineria.mod.common.blocks.apothecary_table;
 
-import com.mineria.mod.common.blocks.MineriaBlock;
 import com.mineria.mod.common.init.MineriaTileEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class ApothecaryTableBlock extends MineriaBlock
+public class ApothecaryTableBlock extends Block implements EntityBlock
 {
     public ApothecaryTableBlock()
     {
-        super(Material.METAL, 3.5F, 3.5F, SoundType.WOOD, 0, ToolType.AXE);
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state)
-    {
-        return true;
+        super(BlockBehaviour.Properties.of(Material.WOOD).strength(3.5F).sound(SoundType.WOOD));
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return MineriaTileEntities.APOTHECARY_TABLE.get().create();
+        return new ApothecaryTableTileEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
+    {
+        return level.isClientSide || blockEntityType != MineriaTileEntities.APOTHECARY_TABLE.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ApothecaryTableTileEntity.serverTick(level, pPos, pState, (ApothecaryTableTileEntity) pBlockEntity);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult)
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult)
     {
         if(!world.isClientSide)
         {
-            TileEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
             if(tile instanceof ApothecaryTableTileEntity)
-                NetworkHooks.openGui((ServerPlayerEntity) player, (ApothecaryTableTileEntity) tile, pos);
+                NetworkHooks.openGui((ServerPlayer) player, (ApothecaryTableTileEntity) tile, pos);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean hasFlags)
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean hasFlags)
     {
-        TileEntity tile = world.getBlockEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
         if(tile instanceof ApothecaryTableTileEntity)
-            InventoryHelper.dropContents(world, pos, ((ApothecaryTableTileEntity) tile).getInventory().toNonNullList());
+            Containers.dropContents(world, pos, ((ApothecaryTableTileEntity) tile).getInventory().toNonNullList());
 
         super.onRemove(state, world, pos, newState, hasFlags);
     }

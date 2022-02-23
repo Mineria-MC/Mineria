@@ -1,29 +1,34 @@
 package com.mineria.mod.common.entity;
 
 import com.mineria.mod.common.blocks.GoldenSilverfishBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.SilverfishEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Silverfish;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.EnumSet;
 import java.util.Random;
 
-public class GoldenSilverfishEntity extends SilverfishEntity
+public class GoldenSilverfishEntity extends Silverfish
 {
     private SummonGoldenSilverfishGoal summonGoldenSilverfish;
 
-    public GoldenSilverfishEntity(EntityType<? extends SilverfishEntity> type, World worldIn)
+    public GoldenSilverfishEntity(EntityType<? extends Silverfish> type, Level worldIn)
     {
         super(type, worldIn);
     }
@@ -32,16 +37,16 @@ public class GoldenSilverfishEntity extends SilverfishEntity
     protected void registerGoals()
     {
         this.summonGoldenSilverfish = new SummonGoldenSilverfishGoal(this);
-        this.goalSelector.addGoal(1, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(3, this.summonGoldenSilverfish);
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(5, new HideInStoneGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers());
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
     @Override
-    public float getWalkTargetValue(BlockPos pos, IWorldReader worldIn)
+    public float getWalkTargetValue(BlockPos pos, LevelReader worldIn)
     {
         return GoldenSilverfishBlock.canContainGoldenSilverfish(worldIn.getBlockState(pos.below())) ? 10.0F : super.getWalkTargetValue(pos, worldIn);
     }
@@ -63,12 +68,12 @@ public class GoldenSilverfishEntity extends SilverfishEntity
         }
     }
 
-    static class HideInStoneGoal extends RandomWalkingGoal
+    static class HideInStoneGoal extends RandomStrollGoal
     {
         private Direction facing;
         private boolean doMerge;
 
-        public HideInStoneGoal(SilverfishEntity silverfishIn)
+        public HideInStoneGoal(Silverfish silverfishIn)
         {
             super(silverfishIn, 1.0D, 10);
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -117,7 +122,7 @@ public class GoldenSilverfishEntity extends SilverfishEntity
                 super.start();
             }
             else {
-                IWorld world = this.mob.level;
+                LevelAccessor world = this.mob.level;
                 BlockPos pos = (new BlockPos(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
                 BlockState state = world.getBlockState(pos);
 
@@ -125,7 +130,7 @@ public class GoldenSilverfishEntity extends SilverfishEntity
                 {
                     world.setBlock(pos, GoldenSilverfishBlock.infest(state.getBlock()), 3);
                     this.mob.spawnAnim();
-                    this.mob.remove();
+                    this.mob.discard();
                 }
             }
         }
@@ -160,7 +165,7 @@ public class GoldenSilverfishEntity extends SilverfishEntity
             --this.lookForFriends;
             if (this.lookForFriends <= 0)
             {
-                World world = this.goldenSilverfish.level;
+                Level world = this.goldenSilverfish.level;
                 Random random = this.goldenSilverfish.getRandom();
                 BlockPos pos = this.goldenSilverfish.blockPosition();
 

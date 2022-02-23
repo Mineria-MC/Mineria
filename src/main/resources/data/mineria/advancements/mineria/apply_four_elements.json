@@ -21,7 +21,7 @@
       "trigger": "mineria:used_anvil",
       "conditions": {
         "right": {
-          "item": "minecraft:enchanted_book",
+          "items": ["minecraft:enchanted_book"],
           "stored_enchantments": [
             {
               "enchantment": "mineria:four_elements"

@@ -3,37 +3,38 @@ package com.mineria.mod.common.entity;
 import com.mineria.mod.common.entity.goal.AlertTeamHurtByTargetGoal;
 import com.mineria.mod.common.init.MineriaEffects;
 import com.mineria.mod.common.init.MineriaSounds;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.SnowballEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
 public class WaterSpiritEntity extends ElementaryGolemEntity
 {
-    private static final DataParameter<Boolean> FROZEN = EntityDataManager.defineId(WaterSpiritEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> FROZEN = SynchedEntityData.defineId(WaterSpiritEntity.class, EntityDataSerializers.BOOLEAN);
 
     private boolean frozen;
     private int frozenTicks;
 
-    public WaterSpiritEntity(EntityType<? extends WaterSpiritEntity> type, World world)
+    public WaterSpiritEntity(EntityType<? extends WaterSpiritEntity> type, Level world)
     {
         super(type, world);
     }
@@ -44,11 +45,11 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
         super.registerGoals();
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9, 32.0F));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.6, 240, true));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.6, 240, true));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new AlertTeamHurtByTargetGoal(this, AbstractDruidEntity.class, ElementaryGolemEntity.class).setAlertEntities(ElementaryGolemEntity.class));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
     }
 
     @Override
@@ -100,7 +101,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Frozen", this.frozen);
@@ -108,7 +109,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
         this.setFrozen(nbt.getBoolean("Frozen"));
@@ -128,7 +129,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
         {
             if(entity instanceof LivingEntity)
             {
-                EffectInstance effect = isFrozen() ? new EffectInstance(MineriaEffects.FAST_FREEZING.get(), 100) : new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 200, 2);
+                MobEffectInstance effect = isFrozen() ? new MobEffectInstance(MineriaEffects.FAST_FREEZING.get(), 100) : new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 2);
                 ((LivingEntity) entity).addEffect(effect);
             }
             return true;
@@ -141,7 +142,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
     {
         if(super.hurt(source, dmg))
         {
-            if(source.getDirectEntity() instanceof SnowballEntity)
+            if(source.getDirectEntity() instanceof Snowball)
             {
                 if(frozenTicks < 100)
                 {
@@ -194,7 +195,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
     }
 
     @Override
-    protected float getVoicePitch()
+    public float getVoicePitch()
     {
         return super.getVoicePitch() * 0.95F;
     }
@@ -228,9 +229,9 @@ public class WaterSpiritEntity extends ElementaryGolemEntity
         this.entityData.set(FROZEN, value);
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 100).add(Attributes.ATTACK_DAMAGE, 15).add(Attributes.MOVEMENT_SPEED, 0.225).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 100).add(Attributes.ATTACK_DAMAGE, 15).add(Attributes.MOVEMENT_SPEED, 0.225).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
     /*private static Field WANTED_X;

@@ -4,17 +4,24 @@ import com.mineria.mod.Mineria;
 import com.mineria.mod.common.effects.instances.PoisonEffectInstance;
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.init.MineriaCriteriaTriggers;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.Item.Properties;
 
 public class ScalpelItem extends Item
 {
@@ -24,85 +31,85 @@ public class ScalpelItem extends Item
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
         ItemStack scalpel = player.getItemInHand(hand);
         player.startUsingItem(hand);
-        return ActionResult.consume(scalpel);
+        return InteractionResultHolder.consume(scalpel);
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity living)
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity living)
     {
-        if(living instanceof PlayerEntity && living.isCrouching())
+        if(living instanceof Player && living.isCrouching())
         {
-            PlayerEntity player = (PlayerEntity) living;
-            world.playSound(null, player.blockPosition(), SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH, SoundCategory.PLAYERS, 1.0F, 1.5F);
+            Player player = (Player) living;
+            world.playSound(null, player.blockPosition(), SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH, SoundSource.PLAYERS, 1.0F, 1.5F);
 
-            if(player instanceof ServerPlayerEntity)
+            if(player instanceof ServerPlayer)
             {
-                MineriaCriteriaTriggers.USED_SCALPEL.trigger((ServerPlayerEntity) player, player, player);
+                MineriaCriteriaTriggers.USED_SCALPEL.trigger((ServerPlayer) player, player, player);
             }
 
             if(!world.isClientSide())
             {
-                int chance = random.nextInt(1000);
+                int chance = world.getRandom().nextInt(1000);
 
                 if(chance < 75)
-                    PoisonEffectInstance.getEffects(3, 0, 0, PoisonSource.UNKNOWN).stream().map(EffectInstance::getEffect).forEach(player::removeEffect);
+                    PoisonEffectInstance.getEffects(3, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(player::removeEffect);
                 else if(chance < 150)
-                    PoisonEffectInstance.getEffects(2, 0, 0, PoisonSource.UNKNOWN).stream().map(EffectInstance::getEffect).forEach(player::removeEffect);
+                    PoisonEffectInstance.getEffects(2, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(player::removeEffect);
                 else if(chance < 300)
-                    PoisonEffectInstance.getEffects(1, 0, 0, PoisonSource.UNKNOWN).stream().map(EffectInstance::getEffect).forEach(player::removeEffect);
+                    PoisonEffectInstance.getEffects(1, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(player::removeEffect);
 
-                int chance2 = random.nextInt(100);
+                int chance2 = world.getRandom().nextInt(100);
 
                 if(chance2 < 20)
-                    player.addEffect(new EffectInstance(Effects.HUNGER, 20 * 90));
+                    player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 90));
                 if(chance2 < 40)
-                    player.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * 60));
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 60));
             }
 
-            stack.hurtAndBreak(1, player, player1 -> player1.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
+            stack.hurtAndBreak(1, player, player1 -> player1.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
         return stack;
     }
 
     @Override
-    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand)
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand)
     {
-        if(target instanceof PlayerEntity && target.isAlive() && target.isCrouching())
+        if(target instanceof Player && target.isAlive() && target.isCrouching())
         {
-            PlayerEntity targetPlayer = (PlayerEntity) target;
-            World world = player.getCommandSenderWorld();
-            world.playSound(null, targetPlayer.blockPosition(), SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH, SoundCategory.PLAYERS, 1.0F, 1.5F);
+            Player targetPlayer = (Player) target;
+            Level world = player.getCommandSenderWorld();
+            world.playSound(null, targetPlayer.blockPosition(), SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH, SoundSource.PLAYERS, 1.0F, 1.5F);
 
-            if(player instanceof ServerPlayerEntity)
+            if(player instanceof ServerPlayer)
             {
-                MineriaCriteriaTriggers.USED_SCALPEL.trigger((ServerPlayerEntity) player, player, target);
+                MineriaCriteriaTriggers.USED_SCALPEL.trigger((ServerPlayer) player, player, target);
             }
 
             if(!world.isClientSide())
             {
-                int chance = random.nextInt(1000);
+                int chance = world.getRandom().nextInt(1000);
 
                 if(chance < 75)
-                    PoisonEffectInstance.getEffects(3, 0, 0, PoisonSource.UNKNOWN).stream().map(EffectInstance::getEffect).forEach(targetPlayer::removeEffect);
+                    PoisonEffectInstance.getEffects(3, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(targetPlayer::removeEffect);
                 else if(chance < 150)
-                    PoisonEffectInstance.getEffects(2, 0, 0, PoisonSource.UNKNOWN).stream().map(EffectInstance::getEffect).forEach(targetPlayer::removeEffect);
+                    PoisonEffectInstance.getEffects(2, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(targetPlayer::removeEffect);
                 else if(chance < 300)
-                    PoisonEffectInstance.getEffects(1, 0, 0, PoisonSource.UNKNOWN).stream().map(EffectInstance::getEffect).forEach(targetPlayer::removeEffect);
+                    PoisonEffectInstance.getEffects(1, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(targetPlayer::removeEffect);
 
-                int chance2 = random.nextInt(100);
+                int chance2 = world.getRandom().nextInt(100);
 
                 if(chance2 < 20)
-                    targetPlayer.addEffect(new EffectInstance(Effects.HUNGER, 20 * 90));
+                    targetPlayer.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 90));
                 if(chance2 < 40)
-                    targetPlayer.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * 60));
+                    targetPlayer.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 60));
             }
 
-            stack.hurtAndBreak(1, targetPlayer, player2 -> player2.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
-            return ActionResultType.SUCCESS;
+            stack.hurtAndBreak(1, targetPlayer, player2 -> player2.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            return InteractionResult.SUCCESS;
         }
 
         return super.interactLivingEntity(stack, player, target, hand);
@@ -115,8 +122,8 @@ public class ScalpelItem extends Item
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack)
+    public UseAnim getUseAnimation(ItemStack stack)
     {
-        return UseAction.CROSSBOW;
+        return UseAnim.CROSSBOW;
     }
 }

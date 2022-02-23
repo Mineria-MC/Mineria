@@ -3,7 +3,7 @@ package com.mineria.mod.client.jei.recipe_categories;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.recipe.ExtractorRecipe;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,25 +13,25 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 
 public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
 {
     public static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "extractor");
     private static final ResourceLocation TEXTURES = new ResourceLocation(Mineria.MODID, "textures/gui/extractor.png");
 
-    private final String name;
     private final IDrawable background;
     private final IDrawable icon;
     private final IDrawableAnimated animation;
 
     public ExtractorRecipeCategory(IGuiHelper helper)
     {
-        this.name = I18n.get("recipe_category.mineria.extractor");
         this.background = helper.createDrawable(TEXTURES, 4, 5, 158, 108);
         this.icon = helper.createDrawableIngredient(new ItemStack(MineriaBlocks.EXTRACTOR));
 
@@ -52,9 +52,9 @@ public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
     }
 
     @Override
-    public String getTitle()
+    public Component getTitle()
     {
-        return name;
+        return new TranslatableComponent("recipe_category.mineria.extractor");
     }
 
     @Override
@@ -95,14 +95,14 @@ public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
             {
                 float chance = recipe.getChance(ingredient);
                 String chanceStr = chance == Math.ceil(chance) ? Integer.toString((int) chance) : Float.toString(chance);
-                tooltip.add(new StringTextComponent(chanceStr.concat("% of Chance")).withStyle(TextFormatting.GOLD));
+                tooltip.add(new TextComponent(chanceStr.concat("% of Chance")).withStyle(ChatFormatting.GOLD));
             }
         });
         stacks.set(ingredients);
     }
 
     @Override
-    public void draw(ExtractorRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(ExtractorRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY)
     {
         animation.draw(matrixStack, 13 - 4, 37 - 5);
     }

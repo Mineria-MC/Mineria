@@ -1,23 +1,23 @@
 package com.mineria.mod.common.entity;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
 // TODOLTR Will probably get fully implemented in 1.4
-public class BuddhistEntity extends CreatureEntity
+public class BuddhistEntity extends PathfinderMob
 {
-    public BuddhistEntity(EntityType<? extends BuddhistEntity> type, World world)
+    public BuddhistEntity(EntityType<? extends BuddhistEntity> type, Level world)
     {
         super(type, world);
     }
@@ -26,10 +26,10 @@ public class BuddhistEntity extends CreatureEntity
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(5, new RandomWalkingGoal(this, 0.35));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 20.0F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.35));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 20.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
 
     @Nullable

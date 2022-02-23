@@ -7,44 +7,45 @@ import com.mineria.mod.common.recipe.DistillerRecipe;
 import com.mineria.mod.util.CustomItemStackHandler;
 import com.mineria.mod.util.MineriaLockableTileEntity;
 import com.mineria.mod.util.MineriaUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class DistillerTileEntity extends MineriaLockableTileEntity implements ITickableTileEntity
+public class DistillerTileEntity extends MineriaLockableTileEntity
 {
     public int burnTime;
     public int currentBurnTime;
     public int distillationTime;
     public final int totalDistillationTime = 200;
 
-    public DistillerTileEntity()
+    public DistillerTileEntity(BlockPos pos, BlockState state)
     {
-        super(MineriaTileEntities.DISTILLER.get(), new CustomItemStackHandler(6));
+        super(MineriaTileEntities.DISTILLER.get(), pos, state, new CustomItemStackHandler(6));
     }
 
     @Override
-    protected ITextComponent getDefaultName()
+    protected Component getDefaultName()
     {
-        return new TranslationTextComponent("tile_entity.mineria.distiller");
+        return new TranslatableComponent("tile_entity.mineria.distiller");
     }
 
     @Override
-    protected Container createMenu(int id, PlayerInventory playerInv)
+    protected AbstractContainerMenu createMenu(int id, Inventory playerInv)
     {
         return new DistillerContainer(id, playerInv, this);
     }
@@ -54,31 +55,30 @@ public class DistillerTileEntity extends MineriaLockableTileEntity implements IT
         return burnTime > 0;
     }
 
-    @Override
-    public void tick()
+    public static void serverTick(Level level, BlockPos pos, BlockState state, DistillerTileEntity tile)
     {
-        boolean distilling = this.isBurning();
+        boolean distilling = tile.isBurning();
         boolean changed = false;
 
-        if(this.isBurning())
+        if(tile.isBurning())
         {
-            --this.burnTime;
+            --tile.burnTime;
         }
 
-        if (!this.level.isClientSide)
+        if (!level.isClientSide)
         {
-            ItemStack fuel = this.inventory.getStackInSlot(4);
+            ItemStack fuel = tile.inventory.getStackInSlot(4);
 
-            if (this.isBurning() || !fuel.isEmpty() && !this.inventory.getStackInSlot(0).isEmpty())
+            if (tile.isBurning() || !fuel.isEmpty() && !tile.inventory.getStackInSlot(0).isEmpty())
             {
-                DistillerRecipe recipe = findRecipe();
+                DistillerRecipe recipe = tile.findRecipe();
 
-                if (!this.isBurning() && this.canDistill(recipe))
+                if (!tile.isBurning() && tile.canDistill(recipe))
                 {
-                    this.burnTime = ForgeHooks.getBurnTime(fuel, null);
-                    this.currentBurnTime = this.burnTime;
+                    tile.burnTime = ForgeHooks.getBurnTime(fuel, null);
+                    tile.currentBurnTime = tile.burnTime;
 
-                    if (this.isBurning())
+                    if (tile.isBurning())
                     {
                         changed = true;
 
@@ -90,34 +90,34 @@ public class DistillerTileEntity extends MineriaLockableTileEntity implements IT
                             if (fuel.isEmpty())
                             {
                                 ItemStack item1 = item.getContainerItem(fuel);
-                                this.inventory.setStackInSlot(4, item1);
+                                tile.inventory.setStackInSlot(4, item1);
                             }
                         }
                     }
                 }
 
-                if(this.isBurning() && this.canDistill(recipe))
+                if(tile.isBurning() && tile.canDistill(recipe))
                 {
-                    ++this.distillationTime;
+                    ++tile.distillationTime;
 
-                    if (this.distillationTime == this.totalDistillationTime)
+                    if (tile.distillationTime == tile.totalDistillationTime)
                     {
-                        this.distillationTime = 0;
-                        this.distillItem(recipe);
+                        tile.distillationTime = 0;
+                        tile.distillItem(recipe);
                         changed = true;
                     }
                 }
                 else
                 {
-                    this.distillationTime = MathHelper.clamp(this.distillationTime - 2, 0, this.totalDistillationTime);
+                    tile.distillationTime = Mth.clamp(tile.distillationTime - 2, 0, tile.totalDistillationTime);
                 }
             }
-            else if (!this.isBurning() && this.distillationTime > 0)
+            else if (!tile.isBurning() && tile.distillationTime > 0)
             {
-                this.distillationTime = MathHelper.clamp(this.distillationTime - 2, 0, this.totalDistillationTime);
+                tile.distillationTime = Mth.clamp(tile.distillationTime - 2, 0, tile.totalDistillationTime);
             }
 
-            if (distilling != this.isBurning())
+            if (distilling != tile.isBurning())
             {
                 changed = true;
             }
@@ -125,7 +125,7 @@ public class DistillerTileEntity extends MineriaLockableTileEntity implements IT
 
         if (changed)
         {
-            this.setChanged();
+            tile.setChanged();
         }
     }
 
@@ -175,16 +175,16 @@ public class DistillerTileEntity extends MineriaLockableTileEntity implements IT
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.load(state, nbt);
+        super.load(nbt);
         this.burnTime = nbt.getInt("BurnTime");
         this.currentBurnTime = nbt.getInt("CurrentBurnTime");
         this.distillationTime = nbt.getInt("DistillationTime");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.putInt("BurnTime", this.burnTime);
@@ -196,9 +196,9 @@ public class DistillerTileEntity extends MineriaLockableTileEntity implements IT
     @Nullable
     private DistillerRecipe findRecipe()
     {
-        Set<IRecipe<?>> recipes = MineriaUtils.findRecipesByType(MineriaRecipeSerializers.DISTILLER_TYPE, this.level);
+        Set<Recipe<?>> recipes = MineriaUtils.findRecipesByType(MineriaRecipeSerializers.DISTILLER_TYPE, this.level);
         if(recipes != null)
-            for(IRecipe<?> recipe : recipes)
+            for(Recipe<?> recipe : recipes)
                 if(recipe instanceof DistillerRecipe)
                     if(((DistillerRecipe)recipe).matches(this.inventory))
                         return (DistillerRecipe)recipe;

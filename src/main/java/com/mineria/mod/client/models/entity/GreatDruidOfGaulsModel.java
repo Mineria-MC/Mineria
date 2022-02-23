@@ -1,70 +1,41 @@
 package com.mineria.mod.client.models.entity;
 
-import com.google.common.collect.ImmutableList;
 import com.mineria.mod.common.entity.GreatDruidOfGaulsEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.model.IHasArm;
-import net.minecraft.client.renderer.entity.model.IHasHead;
-import net.minecraft.client.renderer.entity.model.SegmentedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.ArmedModel;
+import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 
-public class GreatDruidOfGaulsModel extends SegmentedModel<GreatDruidOfGaulsEntity> implements IHasArm, IHasHead
+public class GreatDruidOfGaulsModel extends HierarchicalModel<GreatDruidOfGaulsEntity> implements ArmedModel, HeadedModel
 {
-    private final ModelRenderer head;
-    private final ModelRenderer hat;
-    private final ModelRenderer body;
-    private final ModelRenderer arms;
-    private final ModelRenderer leftLeg;
-    private final ModelRenderer rightLeg;
-    private final ModelRenderer rightArm;
-    private final ModelRenderer leftArm;
+    private final ModelPart root;
+    private final ModelPart head;
+    private final ModelPart hat;
+    private final ModelPart arms;
+    private final ModelPart leftLeg;
+    private final ModelPart rightLeg;
+    private final ModelPart rightArm;
+    private final ModelPart leftArm;
 
-    public GreatDruidOfGaulsModel(float texStart, float yOffset, int texSizeX, int texSizeY)
+    public GreatDruidOfGaulsModel(ModelPart root)
     {
-        this.head = (new ModelRenderer(this)).setTexSize(texSizeX, texSizeY);
-        this.head.setPos(0.0F, 0.0F + yOffset, 0.0F);
-        this.head.texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, texStart);
-        this.hat = (new ModelRenderer(this, 32, 0)).setTexSize(texSizeX, texSizeY);
-        this.hat.texOffs(32, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 12.0F, 8.0F, texStart + 0.45F);
-        this.head.addChild(this.hat);
-        ModelRenderer modelrenderer = (new ModelRenderer(this)).setTexSize(texSizeX, texSizeY);
-        modelrenderer.setPos(0.0F, yOffset - 2.0F, 0.0F);
-        modelrenderer.texOffs(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, texStart);
-        this.head.addChild(modelrenderer);
-        this.body = (new ModelRenderer(this)).setTexSize(texSizeX, texSizeY);
-        this.body.setPos(0.0F, 0.0F + yOffset, 0.0F);
-        this.body.texOffs(16, 20).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, texStart);
-        this.body.texOffs(0, 38).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 18.0F, 6.0F, texStart + 0.5F);
-        this.arms = (new ModelRenderer(this)).setTexSize(texSizeX, texSizeY);
-        this.arms.setPos(0.0F, 0.0F + yOffset + 2.0F, 0.0F);
-        this.arms.texOffs(44, 22).addBox(-8.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, texStart);
-        ModelRenderer modelrenderer1 = (new ModelRenderer(this, 44, 22)).setTexSize(texSizeX, texSizeY);
-        modelrenderer1.mirror = true;
-        modelrenderer1.addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, texStart);
-        this.arms.addChild(modelrenderer1);
-        this.arms.texOffs(40, 38).addBox(-4.0F, 2.0F, -2.0F, 8.0F, 4.0F, 4.0F, texStart);
-        this.leftLeg = (new ModelRenderer(this, 0, 22)).setTexSize(texSizeX, texSizeY);
-        this.leftLeg.setPos(-2.0F, 12.0F + yOffset, 0.0F);
-        this.leftLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, texStart);
-        this.rightLeg = (new ModelRenderer(this, 0, 22)).setTexSize(texSizeX, texSizeY);
-        this.rightLeg.mirror = true;
-        this.rightLeg.setPos(2.0F, 12.0F + yOffset, 0.0F);
-        this.rightLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, texStart);
-        this.rightArm = (new ModelRenderer(this, 40, 46)).setTexSize(texSizeX, texSizeY);
-        this.rightArm.addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, texStart);
-        this.rightArm.setPos(-5.0F, 2.0F + yOffset, 0.0F);
-        this.leftArm = (new ModelRenderer(this, 40, 46)).setTexSize(texSizeX, texSizeY);
-        this.leftArm.mirror = true;
-        this.leftArm.addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, texStart);
-        this.leftArm.setPos(5.0F, 2.0F + yOffset, 0.0F);
+        this.root = root;
+        this.head = root.getChild("head");
+        this.hat = this.head.getChild("hat");
+        this.arms = root.getChild("arms");
+        this.leftLeg = root.getChild("left_leg");
+        this.rightLeg = root.getChild("right_leg");
+        this.leftArm = root.getChild("left_arm");
+        this.rightArm = root.getChild("right_arm");
     }
 
     @Override
-    public Iterable<ModelRenderer> parts()
+    public ModelPart root()
     {
-        return ImmutableList.of(this.head, this.body, this.leftLeg, this.rightLeg, this.arms, this.rightArm, this.leftArm);
+        return this.root;
     }
 
     @Override
@@ -85,10 +56,10 @@ public class GreatDruidOfGaulsModel extends SegmentedModel<GreatDruidOfGaulsEnti
             this.rightLeg.zRot = -0.07853982F;
         } else
         {
-            this.leftLeg.xRot = MathHelper.cos(p1 * 0.6662F) * 1.4F * p2 * 0.5F;
+            this.leftLeg.xRot = Mth.cos(p1 * 0.6662F) * 1.4F * p2 * 0.5F;
             this.leftLeg.yRot = 0.0F;
             this.leftLeg.zRot = 0.0F;
-            this.rightLeg.xRot = MathHelper.cos(p1 * 0.6662F + (float) Math.PI) * 1.4F * p2 * 0.5F;
+            this.rightLeg.xRot = Mth.cos(p1 * 0.6662F + (float) Math.PI) * 1.4F * p2 * 0.5F;
             this.rightLeg.yRot = 0.0F;
             this.rightLeg.zRot = 0.0F;
         }
@@ -97,8 +68,8 @@ public class GreatDruidOfGaulsModel extends SegmentedModel<GreatDruidOfGaulsEnti
         this.rightArm.x = -5.0F;
         this.leftArm.z = 0.0F;
         this.leftArm.x = 5.0F;
-        this.rightArm.xRot = MathHelper.cos(p3 * 0.6662F) * 0.25F;
-        this.leftArm.xRot = MathHelper.cos(p3 * 0.6662F) * 0.25F;
+        this.rightArm.xRot = Mth.cos(p3 * 0.6662F) * 0.25F;
+        this.leftArm.xRot = Mth.cos(p3 * 0.6662F) * 0.25F;
         this.rightArm.zRot = 2.3561945F;
         this.leftArm.zRot = -2.3561945F;
         this.rightArm.yRot = 0.0F;
@@ -109,24 +80,24 @@ public class GreatDruidOfGaulsModel extends SegmentedModel<GreatDruidOfGaulsEnti
         this.rightArm.visible = true;
     }
 
-    private ModelRenderer getArm(HandSide handSide)
+    private ModelPart getArm(HumanoidArm handSide)
     {
-        return handSide == HandSide.LEFT ? this.leftArm : this.rightArm;
+        return handSide == HumanoidArm.LEFT ? this.leftArm : this.rightArm;
     }
 
-    public ModelRenderer getHat()
+    public ModelPart getHat()
     {
         return this.hat;
     }
 
     @Override
-    public ModelRenderer getHead()
+    public ModelPart getHead()
     {
         return this.head;
     }
 
     @Override
-    public void translateToHand(HandSide side, MatrixStack stack)
+    public void translateToHand(HumanoidArm side, PoseStack stack)
     {
         this.getArm(side).translateAndRotate(stack);
     }

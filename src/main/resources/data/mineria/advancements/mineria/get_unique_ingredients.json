@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:orange-blossom"
+            "items": ["mineria:orange-blossom"]
           }
         ]
       }
@@ -31,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:gum_arabic_jar"
+            "items": ["mineria:gum_arabic_jar"]
           }
         ]
       }
@@ -41,7 +41,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:cinnamon_dust"
+            "items": ["mineria:cinnamon_dust"]
           }
         ]
       }
@@ -51,7 +51,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:ginger"
+            "items": ["mineria:ginger"]
           }
         ]
       }

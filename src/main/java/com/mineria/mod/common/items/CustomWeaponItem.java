@@ -2,14 +2,16 @@ package com.mineria.mod.common.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CustomWeaponItem extends SwordItem implements IMineriaItem
 {
@@ -17,12 +19,12 @@ public class CustomWeaponItem extends SwordItem implements IMineriaItem
     private final Multimap<Attribute, AttributeModifier> attributeModifiers;
     private final int targetInvulnerableTime;
 
-    public CustomWeaponItem(IItemTier tier, float attackDamage, float attackSpeed, Properties properties)
+    public CustomWeaponItem(Tier tier, float attackDamage, float attackSpeed, Properties properties)
     {
         this(tier, attackDamage, attackSpeed, 20, properties);
     }
 
-    public CustomWeaponItem(IItemTier tier, float attackDamage, float attackSpeed, int targetInvulnerableTime, Properties properties)
+    public CustomWeaponItem(Tier tier, float attackDamage, float attackSpeed, int targetInvulnerableTime, Properties properties)
     {
         super(tier, 0, attackSpeed, properties);
         this.attackDamage = attackDamage;
@@ -40,9 +42,9 @@ public class CustomWeaponItem extends SwordItem implements IMineriaItem
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack)
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack)
     {
-        return slot == EquipmentSlotType.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot, stack);
+        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot, stack);
     }
 
     @Override

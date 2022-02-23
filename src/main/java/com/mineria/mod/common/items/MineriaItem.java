@@ -2,15 +2,14 @@ package com.mineria.mod.common.items;
 
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaItems;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.function.Supplier;
 
@@ -27,7 +26,7 @@ public class MineriaItem extends Item
 		return this == MineriaItems.LONSDALEITE;
 	}
 
-	public enum ItemTier implements IItemTier
+	public enum ItemTier implements Tier
 	{
 		COPPER(187, 3.5F, 1.5F, 2, 4, () -> Ingredient.of(MineriaItems.COPPER_INGOT)),
 		LEAD(294, 6.25F, 2.2F, 2, 12, () -> Ingredient.of(MineriaItems.LEAD_INGOT)),
@@ -42,7 +41,7 @@ public class MineriaItem extends Item
 		private final float attackDamage;
 		private final int harvestLevel;
 		private final int enchantability;
-		private final LazyValue<Ingredient> repairItem;
+		private final LazyLoadedValue<Ingredient> repairItem;
 
 		ItemTier(int maxUses, float efficiency, float attackDamage, int harvestLevel, int enchantability, Supplier<Ingredient> ingredientSupplier)
 		{
@@ -51,7 +50,7 @@ public class MineriaItem extends Item
 			this.attackDamage = attackDamage;
 			this.harvestLevel = harvestLevel;
 			this.enchantability = enchantability;
-			this.repairItem = new LazyValue<>(ingredientSupplier);
+			this.repairItem = new LazyLoadedValue<>(ingredientSupplier);
 		}
 
 		@Override
@@ -91,7 +90,7 @@ public class MineriaItem extends Item
 		}
 	}
 
-	public enum ArmorMaterial implements IArmorMaterial
+	public enum ArmorMaterial implements net.minecraft.world.item.ArmorMaterial
 	{
 		LONSDALEITE("lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(MineriaItems.LONSDALEITE), 4.0F, 0.3F),
 		SILVER("silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ARMOR_EQUIP_GOLD, () -> Ingredient.of(MineriaItems.SILVER_INGOT), 0.5F, 0F),
@@ -105,7 +104,7 @@ public class MineriaItem extends Item
 		private final int[] damageReductionAmount;
 		private final int enchantability;
 		private final SoundEvent equipmentSound;
-		private final LazyValue<Ingredient> repairMaterial;
+		private final LazyLoadedValue<Ingredient> repairMaterial;
 		private final float toughness;
 		private final float knockbackResistance;
 
@@ -116,19 +115,19 @@ public class MineriaItem extends Item
 			this.damageReductionAmount = damageReductionAmount;
 			this.enchantability = enchantability;
 			this.equipmentSound = equipmentSound;
-			this.repairMaterial = new LazyValue<>(repairMaterial);
+			this.repairMaterial = new LazyLoadedValue<>(repairMaterial);
 			this.toughness = toughness;
 			this.knockbackResistance = knockbackResistance;
 		}
 
 		@Override
-		public int getDurabilityForSlot(EquipmentSlotType slotIn)
+		public int getDurabilityForSlot(EquipmentSlot slotIn)
 		{
 			return HEALTH_PER_SLOT[slotIn.getIndex()] * durability;
 		}
 
 		@Override
-		public int getDefenseForSlot(EquipmentSlotType slotIn)
+		public int getDefenseForSlot(EquipmentSlot slotIn)
 		{
 			return this.damageReductionAmount[slotIn.getIndex()];
 		}

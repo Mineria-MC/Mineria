@@ -1,10 +1,10 @@
 package com.mineria.mod.common.capabilities;
 
 import com.mineria.mod.common.effects.PoisonSource;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface IPoisonExposure extends INBTSerializable<CompoundNBT>
+public interface IPoisonExposure extends INBTSerializable<CompoundTag>
 {
     void poison(PoisonSource source);
 

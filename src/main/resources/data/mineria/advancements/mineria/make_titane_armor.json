@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_helmet"
+            "items": ["mineria:titane_helmet"]
           }
         ]
       }
@@ -31,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_chestplate"
+            "items": ["mineria:titane_chestplate"]
           }
         ]
       }
@@ -41,7 +41,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_leggings"
+            "items": ["mineria:titane_leggings"]
           }
         ]
       }
@@ -51,7 +51,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_boots"
+            "items": ["mineria:titane_boots"]
           }
         ]
       }

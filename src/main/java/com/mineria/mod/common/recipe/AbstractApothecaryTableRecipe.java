@@ -3,14 +3,14 @@ package com.mineria.mod.common.recipe;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.blocks.apothecary_table.ApothecaryTableInventoryWrapper;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 
-public abstract class AbstractApothecaryTableRecipe implements IRecipe<ApothecaryTableInventoryWrapper>
+public abstract class AbstractApothecaryTableRecipe implements Recipe<ApothecaryTableInventoryWrapper>
 {
     public static final ResourceLocation RECIPE_ID = new ResourceLocation(Mineria.MODID, "apothecary_table");
 
@@ -48,7 +48,7 @@ public abstract class AbstractApothecaryTableRecipe implements IRecipe<Apothecar
     }
 
     @Override
-    public IRecipeType<?> getType()
+    public RecipeType<?> getType()
     {
         return MineriaRecipeSerializers.APOTHECARY_TABLE_TYPE;
     }

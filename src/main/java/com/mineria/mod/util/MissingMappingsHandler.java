@@ -1,21 +1,22 @@
 package com.mineria.mod.util;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import com.google.common.collect.ImmutableMap;
 import com.mineria.mod.Mineria;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent.MissingMappings;
+import net.minecraftforge.event.RegistryEvent.MissingMappings.Action;
+import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Field;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * Automatically remaps every old mapping from Mineria. 
@@ -23,63 +24,75 @@ import java.util.stream.Collectors;
 @Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class MissingMappingsHandler
 {
-    private static final Table<IForgeRegistry<?>, ResourceLocation, ResourceLocation> OLD_TO_NEW_MAPPINGS = Util.make(HashBasedTable.create(), table -> {
-        table.put(ForgeRegistries.ITEMS, modLoc("mineria_xp_orb"), modLoc("xp_orb"));
-        table.put(ForgeRegistries.ITEMS, modLoc("mrlulu_sword"), new ResourceLocation("diamond_sword"));
-        table.put(ForgeRegistries.ITEMS, modLoc("mathys_craft_sword"), new ResourceLocation("diamond_sword"));
-    });
+    private static final Logger LOGGER = LogManager.getLogger("Mineria Missing Mappings");
+
+    private static final ImmutableMap<IForgeRegistry<?>, Map<ResourceLocation, ResourceLocation>> MAPPINGS_MAP = ImmutableMap.<IForgeRegistry<?>, Map<ResourceLocation, ResourceLocation>>builder()
+            .put(ForgeRegistries.ITEMS,
+                    ImmutableMap.<ResourceLocation, ResourceLocation>builder()
+                            .put(modLoc("mineria_xp_orb"), modLoc("xp_orb"))
+                            .put(modLoc("mrlulu_sword"), new ResourceLocation("diamond_sword"))
+                            .put(modLoc("mathys_craft_sword"), new ResourceLocation("diamond_sword"))
+                            .put(modLoc("test_only"), new ResourceLocation("diamond"))
+                            .build())
+            .build();
 
     @SubscribeEvent
-    public static void fixMissingItemMappings(RegistryEvent.MissingMappings<Item> event)
+    public static void fixMissingMappings(MissingMappings<?> event)
     {
-        if(event.getAllMappings() != null)
-        {
-            List<RegistryEvent.MissingMappings.Mapping<Item>> MOD_MAPPINGS = getModMappings(event);
+        // get all missing mappings from mineria
+        List<? extends Mapping<?>> modMappings = event.getAllMappings().stream().filter(mapping -> mapping.key.getNamespace().equals("mineria")).toList();
 
-            if(!MOD_MAPPINGS.isEmpty())
+        if(modMappings.isEmpty())
+            return;
+
+        // get the key map related to the current registry
+        Map<ResourceLocation, ResourceLocation> keyMap = MAPPINGS_MAP.get(event.getRegistry());
+
+        for(Mapping<?> mapping : modMappings)
+        {
+            if(keyMap.containsKey(mapping.key))
             {
-                Mineria.LOGGER.info("Fixing missing Item mappings from modid mineria...");
-                OLD_TO_NEW_MAPPINGS.row(ForgeRegistries.ITEMS).forEach((oldName, newName) -> MOD_MAPPINGS.forEach(mapping -> {
-                    if(mapping.key.equals(oldName))
-                    {
-                        Item newItem = ForgeRegistries.ITEMS.getValue(newName);
-                        if(newItem == null)
-                            Mineria.LOGGER.error("Failed to fix " + mapping.key + ", could not find item with key " + newName + " ! Please report this error to the mod author.");
-                        else
-                            mapping.remap(newItem);
-                    }
-                }));
+                ResourceLocation newKey = keyMap.get(mapping.key);
+                IForgeRegistryEntry<?> entry = event.getRegistry().getValue(newKey);
+
+                if(entry == null)
+                {
+                    LOGGER.error("Failed to fix '{}', could not find entry with key '{}' in Forge Registry '{}'! Please report this error to the mod author.", mapping.key, newKey, mapping.registry.getRegistryName());
+                    continue;
+                }
+
+                try
+                {
+                    remap(mapping, entry);
+                } catch (NoSuchFieldException e)
+                {
+                    LOGGER.error("Failed to locate a field in RegistryEvent.MissingMapping.Mapping during reflection! This version of the mod may not be compatible with your Forge Version!", e);
+                } catch (IllegalAccessException e)
+                {
+                    LOGGER.error("Failed to access a field in RegistryEvent.MissingMapping.Mapping during reflection!", e);
+                }
             }
         }
     }
 
-    @SubscribeEvent
-    public static void fixMissingBlockMappings(RegistryEvent.MissingMappings<Block> event)
+    private static Field TARGET;
+    private static Field ACTION;
+
+    private static void remap(Mapping<?> mapping, IForgeRegistryEntry<?> entry) throws NoSuchFieldException, IllegalAccessException
     {
-        if(event.getAllMappings() != null)
+        if(TARGET == null)
         {
-            List<RegistryEvent.MissingMappings.Mapping<Block>> MOD_MAPPINGS = getModMappings(event);
-
-            if(!MOD_MAPPINGS.isEmpty())
-            {
-                Mineria.LOGGER.info("Fixing missing Block mappings from modid mineria...");
-                OLD_TO_NEW_MAPPINGS.row(ForgeRegistries.BLOCKS).forEach((oldName, newName) -> MOD_MAPPINGS.forEach(mapping -> {
-                    if(mapping.key.equals(oldName))
-                    {
-                        Block newBlock = ForgeRegistries.BLOCKS.getValue(newName);
-                        if(newBlock == null)
-                            Mineria.LOGGER.error("Failed to fix " + mapping.key + ", could not find block with key " + newName + " ! Please report this error to the mod author.");
-                        else
-                            mapping.remap(newBlock);
-                    }
-                }));
-            }
+            TARGET = Mapping.class.getDeclaredField("target");
+            TARGET.setAccessible(true);
         }
-    }
+        if(ACTION == null)
+        {
+            ACTION = Mapping.class.getDeclaredField("action");
+            ACTION.setAccessible(true);
+        }
 
-    private static <T extends IForgeRegistryEntry<T>> List<RegistryEvent.MissingMappings.Mapping<T>> getModMappings(RegistryEvent.MissingMappings<T> event)
-    {
-        return event.getAllMappings().stream().filter(mapping -> mapping.key.getNamespace().equals("mineria")).collect(Collectors.toList());
+        TARGET.set(mapping, entry); // We set the value using reflection otherwise we have issues with generic types
+        ACTION.set(mapping, Action.REMAP);
     }
 
     private static ResourceLocation modLoc(String name)

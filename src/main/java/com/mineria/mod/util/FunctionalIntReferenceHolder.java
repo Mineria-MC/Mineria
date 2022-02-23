@@ -1,6 +1,6 @@
 package com.mineria.mod.util;
 
-import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.world.inventory.DataSlot;
 
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
@@ -11,7 +11,7 @@ import java.util.function.IntSupplier;
  *
  * TODOLTR Replace with data slots (This works but not very well)
  */
-public class FunctionalIntReferenceHolder extends IntReferenceHolder
+public class FunctionalIntReferenceHolder extends DataSlot
 {
     private final IntSupplier getter;
     private final IntConsumer setter;

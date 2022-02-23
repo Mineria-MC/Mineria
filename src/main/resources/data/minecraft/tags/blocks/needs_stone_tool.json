@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:copper_ore",
+    "mineria:copper_block",
+    "mineria:xp_block",
+    "mineria:infuser",
+    "mineria:mineral_sand",
+    "mineria:xp_wall",
+    "mineria:copper_water_barrel",
+    "mineria:iron_fluid_barrel"
+  ]
+}

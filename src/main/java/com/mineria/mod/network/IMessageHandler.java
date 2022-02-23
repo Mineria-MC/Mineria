@@ -1,7 +1,7 @@
 package com.mineria.mod.network;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -25,7 +25,7 @@ public interface IMessageHandler<MSG>
      * @param msg the message instance
      * @param buf the buffer in which values can be written
      */
-    void encode(MSG msg, PacketBuffer buf);
+    void encode(MSG msg, FriendlyByteBuf buf);
 
     /**
      * Used to parse a message from the given buffer.
@@ -33,5 +33,5 @@ public interface IMessageHandler<MSG>
      * @param buf the buffer in which values can be read
      * @return a message instance from these values
      */
-    MSG decode(PacketBuffer buf);
+    MSG decode(FriendlyByteBuf buf);
 }

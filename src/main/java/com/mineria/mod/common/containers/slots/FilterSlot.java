@@ -1,7 +1,7 @@
 package com.mineria.mod.common.containers.slots;
 
 import com.mineria.mod.common.init.MineriaItems;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 

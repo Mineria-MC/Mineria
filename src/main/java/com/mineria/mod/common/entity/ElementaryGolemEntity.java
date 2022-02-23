@@ -1,20 +1,18 @@
 package com.mineria.mod.common.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.GolemEntity;
-import net.minecraft.util.CombatRules;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.CombatRules;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.AbstractGolem;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
-public abstract class ElementaryGolemEntity extends GolemEntity implements IMob
+public abstract class ElementaryGolemEntity extends AbstractGolem implements Enemy
 {
-    public ElementaryGolemEntity(EntityType<? extends ElementaryGolemEntity> type, World world)
+    public ElementaryGolemEntity(EntityType<? extends ElementaryGolemEntity> type, Level world)
     {
         super(type, world);
         this.xpReward = 20;

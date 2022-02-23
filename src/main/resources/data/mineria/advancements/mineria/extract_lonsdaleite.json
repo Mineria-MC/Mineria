@@ -20,7 +20,7 @@
       "trigger": "mineria:extracted_item",
       "conditions": {
         "item": {
-          "item": "mineria:lonsdaleite"
+          "items": ["mineria:lonsdaleite"]
         }
       }
     }

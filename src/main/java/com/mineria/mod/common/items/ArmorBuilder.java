@@ -1,27 +1,27 @@
 package com.mineria.mod.common.items;
 
 import com.mineria.mod.Mineria;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.util.TriConsumer;
 
 public class ArmorBuilder
 {
-    private final IArmorMaterial material;
-    private final EquipmentSlotType slot;
-    private ItemGroup group = Mineria.MINERIA_GROUP;
+    private final ArmorMaterial material;
+    private final EquipmentSlot slot;
+    private CreativeModeTab group = Mineria.MINERIA_GROUP;
     private boolean hasEffect = false;
-    private TriConsumer<ItemStack, World, PlayerEntity> function = (world, player, stack) -> {};
+    private TriConsumer<ItemStack, Level, Player> function = (world, player, stack) -> {};
 
-    public ArmorBuilder(IArmorMaterial material, EquipmentSlotType slot)
+    public ArmorBuilder(ArmorMaterial material, EquipmentSlot slot)
     {
         this.material = material;
         this.slot = slot;
     }
 
-    public ArmorBuilder setCreativeTab(ItemGroup group)
+    public ArmorBuilder setCreativeTab(CreativeModeTab group)
     {
         this.group = group;
         return this;
@@ -33,7 +33,7 @@ public class ArmorBuilder
         return this;
     }
 
-    public ArmorBuilder onArmorTick(TriConsumer<ItemStack, World, PlayerEntity> function)
+    public ArmorBuilder onArmorTick(TriConsumer<ItemStack, Level, Player> function)
     {
         this.function = function;
         return this;
@@ -61,7 +61,7 @@ public class ArmorBuilder
         }
 
         @Override
-        public void onArmorTick(ItemStack stack, World world, PlayerEntity player)
+        public void onArmorTick(ItemStack stack, Level world, Player player)
         {
             builder.function.accept(stack, world, player);
         }

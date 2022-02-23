@@ -3,40 +3,46 @@ package com.mineria.mod.common.blocks.barrel;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.init.MineriaCriteriaTriggers;
 import com.mineria.mod.util.KeyboardHelper;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.*;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.*;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public abstract class AbstractWaterBarrelBlock extends Block
+public abstract class AbstractWaterBarrelBlock extends Block implements EntityBlock
 {
     protected final int initialCapacity;
 
-    public AbstractWaterBarrelBlock(float hardness, float resistance, int harvestLevel, int initialCapacity)
+    public AbstractWaterBarrelBlock(float hardness, float resistance, int initialCapacity)
     {
-        super(AbstractBlock.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(hardness, resistance).harvestLevel(harvestLevel).harvestTool(ToolType.AXE));
+        super(BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(hardness, resistance));
         this.initialCapacity = initialCapacity;
     }
 
@@ -47,26 +53,20 @@ public abstract class AbstractWaterBarrelBlock extends Block
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
-    {
-        return true;
-    }
-
-    @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
     {
         if(!worldIn.isClientSide)
         {
-            TileEntity tileAtPos = worldIn.getBlockEntity(pos);
+            BlockEntity tileAtPos = worldIn.getBlockEntity(pos);
 
             if(tileAtPos instanceof AbstractWaterBarrelTileEntity)
                 interact(worldIn, pos, state, (AbstractWaterBarrelTileEntity) tileAtPos, player, hand, hit);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    protected void interact(World world, BlockPos pos, BlockState state, AbstractWaterBarrelTileEntity tile, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
+    protected void interact(Level world, BlockPos pos, BlockState state, AbstractWaterBarrelTileEntity tile, Player player, InteractionHand hand, BlockHitResult hit)
     {
         Item heldItem = player.getItemInHand(hand).getItem();
 
@@ -76,34 +76,34 @@ public abstract class AbstractWaterBarrelBlock extends Block
             removeWaterBucket(this, world, pos, player, tile, hand);
         else
         {
-            ITextComponent message = new StringTextComponent(tile.getBuckets() == 0 ? "There is no Water stored." : (tile.getBuckets() > 1 ? "There are " + tile.getBuckets() + " Water Buckets." : "There is 1 Water Bucket stored.")).withStyle(TextFormatting.GREEN);
+            Component message = new TextComponent(tile.getBuckets() == 0 ? "There is no Water stored." : (tile.getBuckets() > 1 ? "There are " + tile.getBuckets() + " Water Buckets." : "There is 1 Water Bucket stored.")).withStyle(ChatFormatting.GREEN);
             player.displayClientMessage(message, true);
         }
     }
 
-    protected static void addWaterBucket(AbstractWaterBarrelBlock block, World world, BlockPos pos, PlayerEntity player, AbstractWaterBarrelTileEntity tile, Hand hand)
+    protected static void addWaterBucket(AbstractWaterBarrelBlock block, Level world, BlockPos pos, Player player, AbstractWaterBarrelTileEntity tile, InteractionHand hand)
     {
         if(tile.addFluid())
         {
-            world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
             if(!player.isCreative())
             {
                 player.getItemInHand(hand).shrink(1);
                 player.setItemInHand(hand, new ItemStack(Items.BUCKET));
             }
 
-            if(player instanceof ServerPlayerEntity)
+            if(player instanceof ServerPlayer)
             {
-                MineriaCriteriaTriggers.FLUID_BARREL_FILLED.trigger((ServerPlayerEntity) player, block, tile.getCapacity(), tile.getBuckets());
+                MineriaCriteriaTriggers.FLUID_BARREL_FILLED.trigger((ServerPlayer) player, block, tile.getCapacity(), tile.getBuckets());
             }
         }
     }
 
-    protected static void removeWaterBucket(AbstractWaterBarrelBlock block, World world, BlockPos pos, PlayerEntity player, AbstractWaterBarrelTileEntity tile, Hand hand)
+    protected static void removeWaterBucket(AbstractWaterBarrelBlock block, Level world, BlockPos pos, Player player, AbstractWaterBarrelTileEntity tile, InteractionHand hand)
     {
         if(tile.removeFluid())
         {
-            world.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             if(!player.isCreative())
             {
@@ -116,9 +116,9 @@ public abstract class AbstractWaterBarrelBlock extends Block
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player)
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player)
     {
-        TileEntity tile = worldIn.getBlockEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
 
         if (tile instanceof AbstractWaterBarrelTileEntity)
         {
@@ -128,8 +128,8 @@ public abstract class AbstractWaterBarrelBlock extends Block
             if(barrel.shouldDrop())
             {
                 ItemStack stack = new ItemStack(MineriaBlocks.getItemFromBlock(this));
-                CompoundNBT compound = new CompoundNBT();
-                CompoundNBT blockEntityTag = new CompoundNBT();
+                CompoundTag compound = new CompoundTag();
+                CompoundTag blockEntityTag = new CompoundTag();
                 compound.put("BlockEntityTag", barrel.save(blockEntityTag));
                 stack.setTag(compound);
 
@@ -141,45 +141,39 @@ public abstract class AbstractWaterBarrelBlock extends Block
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundNBT stackTag = stack.getTag();
+        CompoundTag stackTag = stack.getTag();
 
         if(stackTag != null && stackTag.contains("BlockEntityTag", 10))
         {
-            CompoundNBT blockEntityTag = stackTag.getCompound("BlockEntityTag");
+            CompoundTag blockEntityTag = stackTag.getCompound("BlockEntityTag");
 
             if(blockEntityTag.contains("Buckets") && blockEntityTag.contains("Capacity"))
                 if(blockEntityTag.getInt("Buckets") >= 0)
-                    tooltip.add(new StringTextComponent(blockEntityTag.getInt("Buckets") + " " + I18n.get("tooltip.mineria.buckets") + " / " + this.initialCapacity).withStyle(TextFormatting.GRAY));
+                    tooltip.add(new TextComponent(blockEntityTag.getInt("Buckets") + " " + I18n.get("tooltip.mineria.buckets") + " / " + this.initialCapacity).withStyle(ChatFormatting.GRAY));
         }
 
         if(KeyboardHelper.isShiftKeyDown())
         {
-            tooltip.add(new TranslationTextComponent("tooltip.mineria.water_barrel.use").setStyle(Style.EMPTY.withColor(Color.fromRgb(ColorHelper.PackedColor.color(255, 31, 255, 244)))));
+            tooltip.add(new TranslatableComponent("tooltip.mineria.water_barrel.use").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(FastColor.ARGB32.color(255, 31, 255, 244)))));
             addInformationOnShift(stack, worldIn, tooltip, flagIn);
         }
         else
-            tooltip.add(new TranslationTextComponent("tooltip.mineria.water_barrel.hold_shift").withStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslatableComponent("tooltip.mineria.water_barrel.hold_shift").withStyle(ChatFormatting.GRAY));
     }
 
-    protected abstract void addInformationOnShift(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn);
+    protected abstract void addInformationOnShift(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn);
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager)
-    {
-        return false;
-    }
-
-    @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
     {
         return MineriaBlocks.getItemFromBlock(this).getDefaultInstance();
     }
@@ -195,7 +189,7 @@ public abstract class AbstractWaterBarrelBlock extends Block
         }
 
         @Override
-        public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> stacks)
+        public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks)
         {
             if(this.allowdedIn(group))
                 stacks.add(getDefaultInstance());
@@ -204,15 +198,15 @@ public abstract class AbstractWaterBarrelBlock extends Block
         @Override
         public ItemStack getDefaultInstance()
         {
-            CompoundNBT compound = new CompoundNBT();
-            CompoundNBT blockEntityTag = new CompoundNBT();
+            CompoundTag compound = new CompoundTag();
+            CompoundTag blockEntityTag = new CompoundTag();
             blockEntityTag.putInt("Buckets", this.barrel.initialCapacity < 0 ? -1 : 0);
             blockEntityTag.putInt("Capacity", this.barrel.initialCapacity);
             compound.put("BlockEntityTag", writeAdditional(blockEntityTag));
             return Util.make(new ItemStack(this), stack -> stack.setTag(compound));
         }
 
-        public CompoundNBT writeAdditional(CompoundNBT blockEntityTag)
+        public CompoundTag writeAdditional(CompoundTag blockEntityTag)
         {
             return blockEntityTag;
         }

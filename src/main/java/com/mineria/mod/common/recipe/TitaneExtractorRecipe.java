@@ -3,7 +3,7 @@ package com.mineria.mod.common.recipe;
 import com.google.common.collect.Lists;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.init.MineriaItems;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 

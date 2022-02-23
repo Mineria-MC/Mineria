@@ -1,9 +1,9 @@
 package com.mineria.mod.common.containers.slots;
 
 import com.mineria.mod.common.init.MineriaCriteriaTriggers;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class ExtractorOutputSlot extends OutputSlot
@@ -14,14 +14,13 @@ public class ExtractorOutputSlot extends OutputSlot
     }
 
     @Override
-    public ItemStack onTake(PlayerEntity player, ItemStack stack)
+    public void onTake(Player player, ItemStack stack)
     {
-        if(player instanceof ServerPlayerEntity)
+        if(player instanceof ServerPlayer)
         {
-            MineriaCriteriaTriggers.EXTRACTED_ITEM.trigger((ServerPlayerEntity) player, stack);
+            MineriaCriteriaTriggers.EXTRACTED_ITEM.trigger((ServerPlayer) player, stack);
         }
 
         super.onTake(player, stack);
-        return stack;
     }
 }

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.recipe.InfuserRecipe;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,18 +14,19 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
 
 public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe>
 {
     public static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "infuser");
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/gui/infuser_gui.png");
 
-    private final String name;
     private final IDrawable background;
     private final IDrawable icon;
 
@@ -34,7 +35,6 @@ public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe>
 
     public InfuserRecipeCategory(IGuiHelper helper)
     {
-        this.name = I18n.get("recipe_category.mineria.infuser");
         this.background = helper.createDrawable(TEXTURE, 8, 4, 159, 62);
         this.icon = helper.createDrawableIngredient(new ItemStack(MineriaBlocks.INFUSER));
 
@@ -58,9 +58,9 @@ public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe>
     }
 
     @Override
-    public String getTitle()
+    public Component getTitle()
     {
-        return name;
+        return new TranslatableComponent("recipe_category.mineria.infuser");
     }
 
     @Override
@@ -94,7 +94,7 @@ public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe>
     }
 
     @Override
-    public void draw(InfuserRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(InfuserRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY)
     {
         animatedFlame.draw(matrixStack, 149 - 8, 36 - 4);
         animatedBubbles.draw(matrixStack, 64 - 8, 36 - 4);

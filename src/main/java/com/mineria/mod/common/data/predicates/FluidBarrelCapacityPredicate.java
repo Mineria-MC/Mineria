@@ -3,7 +3,7 @@ package com.mineria.mod.common.data.predicates;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.util.GsonHelper;
 
 import javax.annotation.Nullable;
 
@@ -60,9 +60,9 @@ public class FluidBarrelCapacityPredicate
         if(jsonElement != null && !jsonElement.isJsonNull())
         {
             JsonObject json = jsonElement.getAsJsonObject();
-            boolean shouldBeFull = json.has("shouldBeFull") && JSONUtils.getAsBoolean(json, "shouldBeFull");
-            int capacity = json.has("capacity") && !shouldBeFull ? JSONUtils.getAsInt(json, "capacity") : -1;
-            int buckets = json.has("buckets") && !shouldBeFull ? JSONUtils.getAsInt(json, "buckets") : -1;
+            boolean shouldBeFull = json.has("shouldBeFull") && GsonHelper.getAsBoolean(json, "shouldBeFull");
+            int capacity = json.has("capacity") && !shouldBeFull ? GsonHelper.getAsInt(json, "capacity") : -1;
+            int buckets = json.has("buckets") && !shouldBeFull ? GsonHelper.getAsInt(json, "buckets") : -1;
             return new FluidBarrelCapacityPredicate(capacity, buckets, shouldBeFull);
         }
         return ANY;

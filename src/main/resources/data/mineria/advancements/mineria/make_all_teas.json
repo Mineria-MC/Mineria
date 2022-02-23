@@ -22,7 +22,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:plantain_tea"
+            "items": ["mineria:plantain_tea"]
           }
         ]
       }
@@ -32,7 +32,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:mint_tea"
+            "items": ["mineria:mint_tea"]
           }
         ]
       }
@@ -42,7 +42,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:thyme_tea"
+            "items": ["mineria:thyme_tea"]
           }
         ]
       }
@@ -52,7 +52,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:nettle_tea"
+            "items": ["mineria:nettle_tea"]
           }
         ]
       }
@@ -62,7 +62,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:pulmonary_tea"
+            "items": ["mineria:pulmonary_tea"]
           }
         ]
       }
@@ -72,7 +72,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:rhubarb_tea"
+            "items": ["mineria:rhubarb_tea"]
           }
         ]
       }
@@ -82,7 +82,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:senna_tea"
+            "items": ["mineria:senna_tea"]
           }
         ]
       }
@@ -92,7 +92,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:black_elderberry_tea"
+            "items": ["mineria:black_elderberry_tea"]
           }
         ]
       }
@@ -102,7 +102,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:elderberry_tea"
+            "items": ["mineria:elderberry_tea"]
           }
         ]
       }
@@ -112,7 +112,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:strychnos_toxifera_tea"
+            "items": ["mineria:strychnos_toxifera_tea"]
           }
         ]
       }
@@ -122,7 +122,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:strychnos_nux-vomica_tea"
+            "items": ["mineria:strychnos_nux-vomica_tea"]
           }
         ]
       }
@@ -132,7 +132,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:belladonna_tea"
+            "items": ["mineria:belladonna_tea"]
           }
         ]
       }
@@ -142,7 +142,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:mandrake_tea"
+            "items": ["mineria:mandrake_tea"]
           }
         ]
       }
@@ -152,7 +152,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:mandrake_root_tea"
+            "items": ["mineria:mandrake_root_tea"]
           }
         ]
       }
@@ -162,7 +162,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:goji_tea"
+            "items": ["mineria:goji_tea"]
           }
         ]
       }
@@ -172,7 +172,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:saussurea_costus_root_tea"
+            "items": ["mineria:saussurea_costus_root_tea"]
           }
         ]
       }
@@ -182,7 +182,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:five_flavor_fruit_tea"
+            "items": ["mineria:five_flavor_fruit_tea"]
           }
         ]
       }
@@ -192,7 +192,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:pulsatilla_chinensis_root_tea"
+            "items": ["mineria:pulsatilla_chinensis_root_tea"]
           }
         ]
       }

@@ -1,57 +1,58 @@
 package com.mineria.mod.client.models.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.Entity;
 
 // Made with Blockbench 3.9.3
 public class BlowgunRefillModel extends EntityModel<Entity>
 {
-    private final ModelRenderer stick;
-    private final ModelRenderer stick0;
-    private final ModelRenderer stick1;
-    private final ModelRenderer dart;
-    private final ModelRenderer dart0;
-    private final ModelRenderer dart1;
+    private final ModelPart stick;
+//    private final ModelPart stick0;
+//    private final ModelPart stick1;
+    private final ModelPart dart;
+//    private final ModelPart dart0;
+//    private final ModelPart dart1;
 
-    public BlowgunRefillModel()
+    public BlowgunRefillModel(ModelPart root)
     {
-        texWidth = 16;
-        texHeight = 16;
+        this.stick = root.getChild("stick");
+        this.dart = root.getChild("dart");
+    }
 
-        stick = new ModelRenderer(this);
-        stick.setPos(-4.0F, -4.0F, 4.0F);
+    public static LayerDefinition createLayerDefinition()
+    {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
 
+        PartDefinition stick = root.addOrReplaceChild("stick", CubeListBuilder.create(), PartPose.offset(-4.0F, -4.0F, 4.0F));
+        stick.addOrReplaceChild("stick0", CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(0.0F, -1.0F, 1.0F, 0.0F, 2.0F, 5.0F, false),
+                PartPose.offsetAndRotation(0.0F, 5.0F, -3.0F, 0.0F, 0.0F, -0.7854F));
+        stick.addOrReplaceChild("stick1", CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(0.0F, -1.0F, 1.0F, 0.0F, 2.0F, 5.0F, false),
+                PartPose.offsetAndRotation(0.0F, 5.0F, -3.0F, 0.0F, 0.0F, 0.7854F));
 
-        stick1 = new ModelRenderer(this);
-        stick1.setPos(0.0F, 5.0F, -3.0F);
-        stick.addChild(stick1);
-        setRotationAngle(stick1, 0.0F, 0.0F, -0.7854F);
-        stick1.texOffs(0, 0).addBox(0.0F, -1.0F, 1.0F, 0.0F, 2.0F, 5.0F, 0.0F, false);
+        PartDefinition dart = root.addOrReplaceChild("dart", CubeListBuilder.create(), PartPose.offset(-4.0F, -4.0F, 4.0F));
+        dart.addOrReplaceChild("dart0", CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(0.0F, -0.5F, -1.0F, 0.0F, 1.0F, 2.0F, false),
+                PartPose.offsetAndRotation(0.0F, 5.0F, -3.0F, 0.0F, 0.0F, -0.7854F));
+        dart.addOrReplaceChild("dart1", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(0.0F, -0.5F, -1.0F, 0.0F, 1.0F, 2.0F, false),
+                PartPose.offsetAndRotation(0.0F, 5.0F, -3.0F, 0.0F, 0.0F, 0.7854F));
 
-        stick0 = new ModelRenderer(this);
-        stick0.setPos(0.0F, 5.0F, -3.0F);
-        stick.addChild(stick0);
-        setRotationAngle(stick0, 0.0F, 0.0F, 0.7854F);
-        stick0.texOffs(0, 0).addBox(0.0F, -1.0F, 1.0F, 0.0F, 2.0F, 5.0F, 0.0F, false);
-
-        dart = new ModelRenderer(this);
-        dart.setPos(-4.0F, -4.0F, 4.0F);
-
-
-        dart1 = new ModelRenderer(this);
-        dart1.setPos(0.0F, 5.0F, -3.0F);
-        dart.addChild(dart1);
-        setRotationAngle(dart1, 0.0F, 0.0F, -0.7854F);
-        dart1.texOffs(0, 0).addBox(0.0F, -0.5F, -1.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
-
-        dart0 = new ModelRenderer(this);
-        dart0.setPos(0.0F, 5.0F, -3.0F);
-        dart.addChild(dart0);
-        setRotationAngle(dart0, 0.0F, 0.0F, 0.7854F);
-        dart0.texOffs(0, 0).addBox(0.0F, -0.5F, -1.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
+        return LayerDefinition.create(mesh, 16, 16);
     }
 
     @Override
@@ -60,16 +61,9 @@ public class BlowgunRefillModel extends EntityModel<Entity>
     }
 
     @Override
-    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
     {
         stick.render(matrixStack, buffer, packedLight, packedOverlay);
         dart.render(matrixStack, buffer, packedLight, packedOverlay);
-    }
-
-    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z)
-    {
-        modelRenderer.xRot = x;
-        modelRenderer.yRot = y;
-        modelRenderer.zRot = z;
     }
 }

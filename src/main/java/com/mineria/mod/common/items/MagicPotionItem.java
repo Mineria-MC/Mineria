@@ -2,28 +2,30 @@ package com.mineria.mod.common.items;
 
 import com.mineria.mod.Mineria;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringUtils;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.util.StringUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class MagicPotionItem extends Item
 {
@@ -33,24 +35,24 @@ public class MagicPotionItem extends Item
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity living)
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity living)
     {
-        PlayerEntity player = living instanceof PlayerEntity ? (PlayerEntity) living : null;
-        if (player instanceof ServerPlayerEntity)
+        Player player = living instanceof Player ? (Player) living : null;
+        if (player instanceof ServerPlayer)
         {
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) player, stack);
+            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer) player, stack);
         }
 
         if(!world.isClientSide)
         {
-            living.addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 20 * 30, 5));
-            living.addEffect(new EffectInstance(Effects.ABSORPTION, 20 * 30, 4));
+            living.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 30, 5));
+            living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 20 * 30, 4));
         }
 
         if (player != null)
         {
             player.awardStat(Stats.ITEM_USED.get(this));
-            if (!player.abilities.instabuild)
+            if (!player.getAbilities().instabuild)
             {
                 stack.shrink(1);
             }
@@ -66,31 +68,31 @@ public class MagicPotionItem extends Item
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack)
+    public UseAnim getUseAnimation(ItemStack stack)
     {
-        return UseAction.DRINK;
+        return UseAnim.DRINK;
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
-        return DrinkHelper.useDrink(world, player, hand);
+        return ItemUtils.startUsingInstantly(world, player, hand);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag)
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag)
     {
-        tooltip.add(new TranslationTextComponent("potion.withDuration",
-                new TranslationTextComponent("potion.withAmplifier",
-                        new TranslationTextComponent(Effects.DAMAGE_BOOST.getDescriptionId()),
-                        new TranslationTextComponent("potion.potency.5")),
-                StringUtils.formatTickDuration(30 * 20)).withStyle(TextFormatting.BLUE)
+        tooltip.add(new TranslatableComponent("potion.withDuration",
+                new TranslatableComponent("potion.withAmplifier",
+                        new TranslatableComponent(MobEffects.DAMAGE_BOOST.getDescriptionId()),
+                        new TranslatableComponent("potion.potency.5")),
+                StringUtil.formatTickDuration(30 * 20)).withStyle(ChatFormatting.BLUE)
         );
-        tooltip.add(new TranslationTextComponent("potion.withDuration",
-                new TranslationTextComponent("potion.withAmplifier",
-                        new TranslationTextComponent(Effects.ABSORPTION.getDescriptionId()),
-                        new TranslationTextComponent("potion.potency.4")),
-                StringUtils.formatTickDuration(30 * 20)).withStyle(TextFormatting.BLUE)
+        tooltip.add(new TranslatableComponent("potion.withDuration",
+                new TranslatableComponent("potion.withAmplifier",
+                        new TranslatableComponent(MobEffects.ABSORPTION.getDescriptionId()),
+                        new TranslatableComponent("potion.potency.4")),
+                StringUtil.formatTickDuration(30 * 20)).withStyle(ChatFormatting.BLUE)
         );
     }
 }

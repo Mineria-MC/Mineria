@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:vanadium_ingot"
+            "items": ["mineria:vanadium_ingot"]
           }
         ]
       }

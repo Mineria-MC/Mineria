@@ -3,43 +3,51 @@ package com.mineria.mod.common.entity;
 import com.mineria.mod.common.effects.CustomEffectInstance;
 import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.common.init.MineriaItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
-public class MineriaPotionEntity extends ProjectileItemEntity implements IRendersAsItem
+@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
+public class MineriaPotionEntity extends ThrowableItemProjectile implements ItemSupplier
 {
-    public MineriaPotionEntity(EntityType<? extends MineriaPotionEntity> type, World world)
+    public MineriaPotionEntity(EntityType<? extends MineriaPotionEntity> type, Level world)
     {
         super(type, world);
     }
 
-    public MineriaPotionEntity(World world, LivingEntity living)
+    public MineriaPotionEntity(Level world, LivingEntity living)
     {
         super(MineriaEntities.MINERIA_POTION.get(), living, world);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public MineriaPotionEntity(World world, double x, double y, double z)
+    public MineriaPotionEntity(Level world, double x, double y, double z)
     {
         super(MineriaEntities.MINERIA_POTION.get(), x, y, z, world);
     }
@@ -57,14 +65,14 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
     }
 
     @Override
-    protected void onHitBlock(BlockRayTraceResult rayTraceResult)
+    protected void onHitBlock(BlockHitResult rayTraceResult)
     {
         super.onHitBlock(rayTraceResult);
         if (!this.level.isClientSide)
         {
             ItemStack itemstack = this.getItem();
             Potion potion = PotionUtils.getPotion(itemstack);
-            List<EffectInstance> list = PotionUtils.getMobEffects(itemstack);
+            List<MobEffectInstance> list = PotionUtils.getMobEffects(itemstack);
             boolean flag = potion == Potions.WATER && list.isEmpty();
             Direction direction = rayTraceResult.getDirection();
             BlockPos blockpos = rayTraceResult.getBlockPos();
@@ -84,14 +92,14 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
     }
 
     @Override
-    protected void onHit(RayTraceResult rayTraceResult)
+    protected void onHit(HitResult rayTraceResult)
     {
         super.onHit(rayTraceResult);
         if (!this.level.isClientSide)
         {
             ItemStack itemstack = this.getItem();
             Potion potion = PotionUtils.getPotion(itemstack);
-            List<EffectInstance> list = PotionUtils.getMobEffects(itemstack);
+            List<MobEffectInstance> list = PotionUtils.getMobEffects(itemstack);
             boolean water = potion == Potions.WATER && list.isEmpty();
             if (water)
             {
@@ -103,19 +111,19 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
                     this.makeAreaOfEffectCloud(itemstack, potion);
                 } else
                 {
-                    this.applySplash(list, rayTraceResult.getType() == RayTraceResult.Type.ENTITY ? ((EntityRayTraceResult) rayTraceResult).getEntity() : null);
+                    this.applySplash(list, rayTraceResult.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) rayTraceResult).getEntity() : null);
                 }
             }
 
             int i = potion.hasInstantEffects() ? 2007 : 2002;
             this.level.levelEvent(i, this.blockPosition(), PotionUtils.getColor(itemstack));
-            this.remove();
+            this.discard();
         }
     }
 
     private void applyWater()
     {
-        AxisAlignedBB axisalignedbb = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+        AABB axisalignedbb = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb, LivingEntity::isSensitiveToWater);
         if (!list.isEmpty())
         {
@@ -130,9 +138,9 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
         }
     }
 
-    private void applySplash(List<EffectInstance> effects, @Nullable Entity target)
+    private void applySplash(List<MobEffectInstance> effects, @Nullable Entity target)
     {
-        AxisAlignedBB boundingBox = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+        AABB boundingBox = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, boundingBox);
 
         if (!entities.isEmpty())
@@ -150,9 +158,9 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
                             distance = 1.0D;
                         }
 
-                        for (EffectInstance instance : effects)
+                        for (MobEffectInstance instance : effects)
                         {
-                            Effect effect = instance.getEffect();
+                            MobEffect effect = instance.getEffect();
                             if (effect.isInstantenous())
                             {
                                 effect.applyInstantenousEffect(this, this.getOwner(), living, instance.getAmplifier(), distance);
@@ -167,7 +175,7 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
                                         living.addEffect(instance);
                                     }
                                     else
-                                        living.addEffect(new EffectInstance(effect, newDuration, instance.getAmplifier(), instance.isAmbient(), instance.isVisible()));
+                                        living.addEffect(new MobEffectInstance(effect, newDuration, instance.getAmplifier(), instance.isAmbient(), instance.isVisible()));
                                 }
                             }
                         }
@@ -194,12 +202,12 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
         effectCloud.setRadiusPerTick(-effectCloud.getRadius() / (float) effectCloud.getDuration());
         effectCloud.setPotion(potion);
 
-        for (EffectInstance effect : PotionUtils.getCustomEffects(stack))
+        for (MobEffectInstance effect : PotionUtils.getCustomEffects(stack))
         {
             effectCloud.addEffect(CustomEffectInstance.copyEffect(effect));
         }
 
-        CompoundNBT nbt = stack.getTag();
+        CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("CustomPotionColor", 99))
         {
             effectCloud.setFixedColor(nbt.getInt("CustomPotionColor"));
@@ -222,7 +230,7 @@ public class MineriaPotionEntity extends ProjectileItemEntity implements IRender
         } else if (CampfireBlock.isLitCampfire(state))
         {
             this.level.levelEvent(null, 1009, pos, 0);
-            CampfireBlock.dowse(this.level, pos, state);
+            CampfireBlock.dowse(this.getOwner(), this.level, pos, state);
             this.level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
         }
     }

@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:copper_sword"
+            "items": ["mineria:copper_sword"]
           }
         ]
       }

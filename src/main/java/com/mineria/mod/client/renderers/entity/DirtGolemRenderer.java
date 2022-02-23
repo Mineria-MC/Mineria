@@ -1,25 +1,27 @@
 package com.mineria.mod.client.renderers.entity;
 
 import com.mineria.mod.Mineria;
-import com.mineria.mod.common.entity.DirtGolemEntity;
 import com.mineria.mod.client.models.entity.DirtGolemModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mineria.mod.common.entity.DirtGolemEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
 
 public class DirtGolemRenderer extends MobRenderer<DirtGolemEntity, DirtGolemModel>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/entity/dirt_golem.png");
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(Mineria.MODID, "dirt_golem"), "main");
 
-    public DirtGolemRenderer(EntityRendererManager manager)
+    public DirtGolemRenderer(EntityRendererProvider.Context ctx)
     {
-        super(manager, new DirtGolemModel(), 0.7F);
+        super(ctx, new DirtGolemModel(ctx.bakeLayer(LAYER)), 0.7F);
     }
 
     @Override
-    protected void setupRotations(DirtGolemEntity golem, MatrixStack stack, float p_225621_3_, float p_225621_4_, float p_225621_5_)
+    protected void setupRotations(DirtGolemEntity golem, PoseStack stack, float p_225621_3_, float p_225621_4_, float p_225621_5_)
     {
         super.setupRotations(golem, stack, p_225621_3_, p_225621_4_, p_225621_5_);
         if (!((double) golem.animationSpeed < 0.01D))

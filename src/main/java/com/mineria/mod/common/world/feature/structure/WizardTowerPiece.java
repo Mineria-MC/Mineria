@@ -5,37 +5,42 @@ import com.mineria.mod.common.entity.WizardEntity;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.common.init.MineriaStructures;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LecternBlock;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.tileentity.LecternTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 import java.util.Random;
 
-public class WizardTowerPiece extends TemplateStructurePiece
-{
-    private Rotation rotation;
+import net.minecraft.Util;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 
-    public WizardTowerPiece(TemplateManager templateManagerIn, BlockPos pos, Rotation rotationIn)
+public class WizardTowerPiece /*extends TemplateStructurePiece*/
+{
+    /*private Rotation rotation;
+
+    public WizardTowerPiece(StructureManager templateManagerIn, BlockPos pos, Rotation rotationIn)
     {
         super(MineriaStructures.WTP, 0);
         this.templatePosition = pos.below();
@@ -43,16 +48,16 @@ public class WizardTowerPiece extends TemplateStructurePiece
         this.setupPiece(templateManagerIn);
     }
 
-    public WizardTowerPiece(TemplateManager templateManagerIn, CompoundNBT nbt)
+    public WizardTowerPiece(StructureManager templateManagerIn, CompoundTag nbt)
     {
         super(MineriaStructures.WTP, nbt);
         this.rotation = Rotation.valueOf(nbt.getString("Rot"));
         this.setupPiece(templateManagerIn);
     }
 
-    private void setupPiece(TemplateManager templateManager)
+    private void setupPiece(StructureManager templateManager)
     {
-        PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
+        StructurePlaceSettings placementsettings = (new StructurePlaceSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
         this.template = templateManager.getOrCreate(new ResourceLocation(Mineria.MODID, "wizard_tower"));
         this.setOrientation(Direction.NORTH);
         this.placeSettings = placementsettings;
@@ -60,14 +65,14 @@ public class WizardTowerPiece extends TemplateStructurePiece
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT tagCompound)
+    protected void addAdditionalSaveData(CompoundTag tagCompound)
     {
         super.addAdditionalSaveData(tagCompound);
         tagCompound.putString("Rot", this.rotation.name());
     }
 
     @Override
-    protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb)
+    protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox sbb)
     {
         switch (function)
         {
@@ -82,14 +87,14 @@ public class WizardTowerPiece extends TemplateStructurePiece
                 worldIn.removeBlock(pos, false);
                 break;
             case "lectern":
-                TileEntity tile = worldIn.getBlockEntity(pos.below());
-                if(tile instanceof LecternTileEntity)
+                BlockEntity tile = worldIn.getBlockEntity(pos.below());
+                if(tile instanceof LecternBlockEntity)
                 {
-                    LecternTileEntity lectern = (LecternTileEntity) tile;
+                    LecternBlockEntity lectern = (LecternBlockEntity) tile;
                     worldIn.setBlock(pos.below(), worldIn.getBlockState(pos.below()).setValue(LecternBlock.HAS_BOOK, true), 2);
                     lectern.setBook(Util.make(new ItemStack(Items.WRITTEN_BOOK), stack -> {
-                        CompoundNBT nbt = new CompoundNBT();
-                        nbt.putString("title", TextFormatting.ITALIC + "*No Title*");
+                        CompoundTag nbt = new CompoundTag();
+                        nbt.putString("title", ChatFormatting.ITALIC + "*No Title*");
                         nbt.putString("author", "A Random Wizard");
                         nbt.put("pages", generateBook(rand));
                         nbt.putBoolean("resolved", true);
@@ -105,10 +110,10 @@ public class WizardTowerPiece extends TemplateStructurePiece
                     WizardEntity entity = MineriaEntities.WIZARD.get().create(worldIn.getLevel());
                     if(entity != null)
                     {
-                        entity.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, MathHelper.wrapDegrees(rand.nextFloat() * 360F), 0);
+                        entity.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Mth.wrapDegrees(rand.nextFloat() * 360F), 0);
                         entity.yHeadRot = entity.yRot;
                         entity.yBodyRot = entity.yRot;
-                        entity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.STRUCTURE, null, null);
+                        entity.finalizeSpawn(worldIn, worldIn.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.STRUCTURE, null, null);
                         worldIn.addFreshEntityWithPassengers(entity);
                     }
                 }
@@ -116,18 +121,18 @@ public class WizardTowerPiece extends TemplateStructurePiece
         }
     }
 
-    public static ListNBT generateBook(Random random)
+    public static ListTag generateBook(Random random)
     {
-        ListNBT nbt = new ListNBT();
+        ListTag nbt = new ListTag();
         for(int pageIndex = 0; pageIndex < 2 + random.nextInt(10); pageIndex++)
         {
-            String format = random.nextInt(14) == 0 ? TextFormatting.GOLD.toString().concat(TextFormatting.OBFUSCATED.toString()) : TextFormatting.OBFUSCATED.toString();
-            nbt.add(StringNBT.valueOf(format.concat(RandomStringUtils.random(random.nextInt(600) + 40))));
+            String format = random.nextInt(14) == 0 ? ChatFormatting.GOLD.toString().concat(ChatFormatting.OBFUSCATED.toString()) : ChatFormatting.OBFUSCATED.toString();
+            nbt.add(StringTag.valueOf(format.concat(RandomStringUtils.random(random.nextInt(600) + 40))));
         }
         return nbt;
     }
 
-    public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random)
+    public static void start(StructureManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random)
     {
         int x = pos.getX();
         int z = pos.getZ();
@@ -135,5 +140,5 @@ public class WizardTowerPiece extends TemplateStructurePiece
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
         BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
         pieceList.add(new WizardTowerPiece(templateManager, blockpos, rotation));
-    }
+    }*/
 }

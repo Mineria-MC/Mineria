@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:titane_ore",
+    "mineria:lonsdaleite_ore",
+    "mineria:titane_block",
+    "mineria:lonsdaleite_block",
+    "mineria:compressed_lead_block"
+  ]
+}

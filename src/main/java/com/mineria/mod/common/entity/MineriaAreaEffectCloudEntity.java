@@ -4,31 +4,31 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mineria.mod.common.effects.CustomEffectInstance;
 import com.mineria.mod.common.init.MineriaEntities;
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.Map;
 
-public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
+public class MineriaAreaEffectCloudEntity extends AreaEffectCloud
 {
     private final Map<Entity, Integer> victims = Maps.newHashMap();
 
-    public MineriaAreaEffectCloudEntity(EntityType<? extends MineriaAreaEffectCloudEntity> type, World world)
+    public MineriaAreaEffectCloudEntity(EntityType<? extends MineriaAreaEffectCloudEntity> type, Level world)
     {
         super(type, world);
     }
 
-    public MineriaAreaEffectCloudEntity(World world, double x, double y, double z)
+    public MineriaAreaEffectCloudEntity(Level world, double x, double y, double z)
     {
         this(MineriaEntities.MINERIA_AREA_EFFECT_CLOUD.get(), world);
         setPos(x, y, z);
@@ -38,7 +38,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
     public void tick()
     {
         if (!this.level.isClientSide) {
-            this.setSharedFlag(6, this.isGlowing());
+            this.setSharedFlag(6, this.isCurrentlyGlowing());
         }
 
         this.baseTick();
@@ -47,7 +47,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
 
         if (this.level.isClientSide)
         {
-            IParticleData particle = this.getParticle();
+            ParticleOptions particle = this.getParticle();
             if (waiting)
             {
                 if (this.random.nextBoolean())
@@ -55,9 +55,9 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                     for (int i = 0; i < 2; ++i)
                     {
                         float angle = this.random.nextFloat() * ((float) Math.PI * 2F);
-                        float factor = MathHelper.sqrt(this.random.nextFloat()) * 0.2F;
-                        float dx = MathHelper.cos(angle) * factor;
-                        float dz = MathHelper.sin(angle) * factor;
+                        float factor = Mth.sqrt(this.random.nextFloat()) * 0.2F;
+                        float dx = Mth.cos(angle) * factor;
+                        float dz = Mth.sin(angle) * factor;
                         if (particle.getType() == ParticleTypes.ENTITY_EFFECT)
                         {
                             int color = this.random.nextBoolean() ? 16777215 : this.getColor();
@@ -78,9 +78,9 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                 for (int pos = 0; (float) pos < circleArea; ++pos)
                 {
                     float angle = this.random.nextFloat() * ((float) Math.PI * 2F);
-                    float factor = MathHelper.sqrt(this.random.nextFloat()) * radius;
-                    float dx = MathHelper.cos(angle) * factor;
-                    float dz = MathHelper.sin(angle) * factor;
+                    float factor = Mth.sqrt(this.random.nextFloat()) * radius;
+                    float dx = Mth.cos(angle) * factor;
+                    float dz = Mth.sin(angle) * factor;
                     if (particle.getType() == ParticleTypes.ENTITY_EFFECT)
                     {
                         int color = this.getColor();
@@ -98,7 +98,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
         {
             if (this.tickCount >= this.waitTime + this.getDuration())
             {
-                this.remove();
+                this.discard();
                 return;
             }
 
@@ -118,7 +118,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                 radius += this.radiusPerTick;
                 if (radius < 0.5F)
                 {
-                    this.remove();
+                    this.discard();
                     return;
                 }
 
@@ -129,9 +129,9 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
             {
                 this.victims.entrySet().removeIf(entry -> this.tickCount >= entry.getValue());
 
-                List<EffectInstance> effects = Lists.newArrayList();
+                List<MobEffectInstance> effects = Lists.newArrayList();
 
-                for (EffectInstance effectInstance : this.potion.getEffects())
+                for (MobEffectInstance effectInstance : this.potion.getEffects())
                 {
                     if(effectInstance instanceof CustomEffectInstance)
                     {
@@ -139,7 +139,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                         effects.add(effectInstance);
                     }
                     else
-                        effects.add(new EffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 4, effectInstance.getAmplifier(), effectInstance.isAmbient(), effectInstance.isVisible()));
+                        effects.add(new MobEffectInstance(effectInstance.getEffect(), effectInstance.getDuration() / 4, effectInstance.getAmplifier(), effectInstance.isAmbient(), effectInstance.isVisible()));
                 }
 
                 effects.addAll(this.effects);
@@ -162,7 +162,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                                 {
                                     this.victims.put(living, this.tickCount + this.reapplicationDelay);
 
-                                    for (EffectInstance effect : effects)
+                                    for (MobEffectInstance effect : effects)
                                     {
                                         if (effect.getEffect().isInstantenous())
                                         {
@@ -178,7 +178,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                                         radius += this.radiusOnUse;
                                         if (radius < 0.5F)
                                         {
-                                            this.remove();
+                                            this.discard();
                                             return;
                                         }
 
@@ -190,7 +190,7 @@ public class MineriaAreaEffectCloudEntity extends AreaEffectCloudEntity
                                         this.setDuration(this.getDuration() + this.durationOnUse);
                                         if (this.getDuration() <= 0)
                                         {
-                                            this.remove();
+                                            this.discard();
                                             return;
                                         }
                                     }

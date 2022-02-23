@@ -4,13 +4,13 @@ import com.google.gson.JsonObject;
 import com.mineria.mod.common.blocks.apothecary_table.ApothecaryTableInventoryWrapper;
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -30,7 +30,7 @@ public class ApothecaryTableRecipe extends AbstractApothecaryTableRecipe
     }
 
     @Override
-    public boolean matches(ApothecaryTableInventoryWrapper wrapper, @Nullable World world)
+    public boolean matches(ApothecaryTableInventoryWrapper wrapper, @Nullable Level world)
     {
         return input.test(wrapper.getItem(1)) && poisonSource.equals(wrapper.getPoisonSource());
     }
@@ -48,7 +48,7 @@ public class ApothecaryTableRecipe extends AbstractApothecaryTableRecipe
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer()
+    public RecipeSerializer<?> getSerializer()
     {
         return MineriaRecipeSerializers.APOTHECARY_TABLE.get();
     }
@@ -58,27 +58,27 @@ public class ApothecaryTableRecipe extends AbstractApothecaryTableRecipe
         return poisonSource;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ApothecaryTableRecipe>
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ApothecaryTableRecipe>
     {
         @Override
         public ApothecaryTableRecipe fromJson(ResourceLocation id, JsonObject json)
         {
-            Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
-            PoisonSource poisonSource = PoisonSource.byName(ResourceLocation.tryParse(JSONUtils.getAsString(json, "poison_source")));
-            ItemStack output = CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "output"), true);
+            Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
+            PoisonSource poisonSource = PoisonSource.byName(ResourceLocation.tryParse(GsonHelper.getAsString(json, "poison_source")));
+            ItemStack output = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "output"), true);
 
             return new ApothecaryTableRecipe(id, input, poisonSource, output);
         }
 
         @Nullable
         @Override
-        public ApothecaryTableRecipe fromNetwork(ResourceLocation id, PacketBuffer buf)
+        public ApothecaryTableRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf)
         {
             return new ApothecaryTableRecipe(id, Ingredient.fromNetwork(buf), PoisonSource.byName(buf.readResourceLocation()), buf.readItem());
         }
 
         @Override
-        public void toNetwork(PacketBuffer buf, ApothecaryTableRecipe recipe)
+        public void toNetwork(FriendlyByteBuf buf, ApothecaryTableRecipe recipe)
         {
             recipe.input.toNetwork(buf);
             buf.writeResourceLocation(recipe.poisonSource.getId());

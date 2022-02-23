@@ -6,18 +6,18 @@ import com.mineria.mod.common.effects.IEffectInstanceSerializer;
 import com.mineria.mod.common.init.MineriaEffects;
 import com.mineria.mod.common.init.MineriaEffectInstanceSerializers;
 import com.mineria.mod.util.MineriaUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -41,7 +41,7 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
         this(duration, duration, amplifier, false, true, true, null, ticksUntilEffectsCured, 200, 2.0F, source);
     }
 
-    protected BowelSoundEffectInstance(int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable Effect parentEffect, int ticksUntilEffectsCured, int defaultDelay, float defaultVolume, Item source)
+    protected BowelSoundEffectInstance(int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable MobEffect parentEffect, int ticksUntilEffectsCured, int defaultDelay, float defaultVolume, Item source)
     {
         super(MineriaEffects.BOWEL_SOUNDS.get(), duration, maxDuration, amplifier, ambient, showParticles, showIcon, parentEffect);
         this.ticksUntilEffectsCured = ticksUntilEffectsCured;
@@ -51,12 +51,10 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
     }
 
     @Override
-    public boolean update(EffectInstance effectInstance)
+    public boolean update(MobEffectInstance effectInstance)
     {
-        if (effectInstance instanceof BowelSoundEffectInstance)
+        if (effectInstance instanceof BowelSoundEffectInstance other)
         {
-            BowelSoundEffectInstance other = (BowelSoundEffectInstance) effectInstance;
-
             boolean combined = false;
             if(this.source != other.source)
             {
@@ -127,7 +125,7 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
         if(this.maxDuration - this.duration == this.ticksUntilEffectsCured)
         {
             if(living.curePotionEffects(new ItemStack(Items.MILK_BUCKET)) || living.curePotionEffects(new ItemStack(this.source)))
-                living.getCommandSenderWorld().playSound(living instanceof PlayerEntity ? (PlayerEntity) living : null, living.getX(), living.getY(), living.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundCategory.NEUTRAL, 1.5F, MineriaUtils.randomPitch());
+                living.getCommandSenderWorld().playSound(living instanceof Player ? (Player) living : null, living.getX(), living.getY(), living.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.NEUTRAL, 1.5F, MineriaUtils.randomPitch());
         }
 
         return super.tick(living, onChangedPotionEffect);
@@ -164,7 +162,7 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         super.save(nbt);
         nbt.putInt("TicksUntilEffectsCured", this.ticksUntilEffectsCured);
@@ -189,7 +187,7 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
     public static class Serializer extends ForgeRegistryEntry<IEffectInstanceSerializer<?>> implements IEffectInstanceSerializer<BowelSoundEffectInstance>
     {
         @Override
-        public void encodePacket(BowelSoundEffectInstance effect, PacketBuffer buf)
+        public void encodePacket(BowelSoundEffectInstance effect, FriendlyByteBuf buf)
         {
             MineriaEffectInstanceSerializers.CUSTOM.get().encodePacket(effect, buf);
             buf.writeInt(effect.ticksUntilEffectsCured);
@@ -199,7 +197,7 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
         }
 
         @Override
-        public BowelSoundEffectInstance decodePacket(PacketBuffer buf)
+        public BowelSoundEffectInstance decodePacket(FriendlyByteBuf buf)
         {
             CustomEffectInstance custom = MineriaEffectInstanceSerializers.CUSTOM.get().decodePacket(buf);
 
@@ -207,7 +205,7 @@ public class BowelSoundEffectInstance extends CustomEffectInstance
         }
 
         @Override
-        public BowelSoundEffectInstance deserialize(Effect effect, CompoundNBT nbt)
+        public BowelSoundEffectInstance deserialize(MobEffect effect, CompoundTag nbt)
         {
             CustomEffectInstance custom = MineriaEffectInstanceSerializers.CUSTOM.get().deserialize(effect, nbt);
 

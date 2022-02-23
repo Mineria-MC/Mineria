@@ -5,17 +5,14 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -44,7 +41,7 @@ public class ShapedRecipePredicate
         this.result = result;
     }
 
-    public boolean matches(CraftingInventory inv)
+    public boolean matches(CraftingContainer inv)
     {
         if(this == ANY)
         {
@@ -67,7 +64,7 @@ public class ShapedRecipePredicate
         }
     }
 
-    private boolean matches(CraftingInventory inv, int column, int width, boolean strict)
+    private boolean matches(CraftingContainer inv, int column, int width, boolean strict)
     {
         for (int oColumn = 0; oColumn < inv.getWidth(); ++oColumn)
         {
@@ -97,11 +94,11 @@ public class ShapedRecipePredicate
     {
         if(jsonElement != null && !jsonElement.isJsonNull())
         {
-            JsonObject json = JSONUtils.convertToJsonObject(jsonElement, "recipe");
+            JsonObject json = GsonHelper.convertToJsonObject(jsonElement, "recipe");
 
-            Map<String, Ingredient> keyToIngredient = keyFromJson(JSONUtils.getAsJsonObject(json, "key"));
-            String[] pattern = shrink(patternFromJson(JSONUtils.getAsJsonArray(json, "pattern")));
-            ItemStack result = itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+            Map<String, Ingredient> keyToIngredient = keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
+            String[] pattern = shrink(patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
+            ItemStack result = itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
             return new ShapedRecipePredicate(keyToIngredient, pattern, result);
         }
         else
@@ -163,7 +160,7 @@ public class ShapedRecipePredicate
         {
             for (int row = 0; row < result.length; ++row)
             {
-                String keyRow = JSONUtils.convertToString(pattern.get(row), "pattern[" + row + "]");
+                String keyRow = GsonHelper.convertToString(pattern.get(row), "pattern[" + row + "]");
 
                 if (keyRow.length() > maxWidth)
                     throw new JsonSyntaxException("Invalid pattern: too many columns, " + maxWidth + " is maximum");
@@ -270,7 +267,7 @@ public class ShapedRecipePredicate
 
     public static ItemStack itemFromJson(JsonObject json)
     {
-        String itemId = JSONUtils.getAsString(json, "id");
+        String itemId = GsonHelper.getAsString(json, "id");
         return ItemStack.CODEC.parse(JsonOps.INSTANCE, json).result().orElseThrow(() -> new JsonSyntaxException("Failed to parse ItemStack with id '" + itemId + "'"));
         /*if(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)) == null)
             throw new JsonSyntaxException("Unknown item '" + itemId + "'");

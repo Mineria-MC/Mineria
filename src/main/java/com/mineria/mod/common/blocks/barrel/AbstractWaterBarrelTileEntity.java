@@ -1,44 +1,45 @@
 package com.mineria.mod.common.blocks.barrel;
 
 import com.mineria.mod.common.init.MineriaBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 // TODOLTR Add IFluidHandler capability
-public abstract class AbstractWaterBarrelTileEntity extends TileEntity
+public abstract class AbstractWaterBarrelTileEntity extends BlockEntity
 {
     private int capacity;
     private int buckets;
     private boolean destroyedByCreativePlayer;
 
-    public AbstractWaterBarrelTileEntity(TileEntityType<? extends AbstractWaterBarrelTileEntity> type)
+    public AbstractWaterBarrelTileEntity(BlockEntityType<? extends AbstractWaterBarrelTileEntity> type, BlockPos pos, BlockState state)
     {
-        super(type);
+        super(type, pos, state);
         this.capacity = 0;
     }
 
-    public AbstractWaterBarrelTileEntity(TileEntityType<? extends AbstractWaterBarrelTileEntity> type, int capacity)
+    public AbstractWaterBarrelTileEntity(BlockEntityType<? extends AbstractWaterBarrelTileEntity> type, BlockPos pos, BlockState state, int capacity)
     {
-        super(type);
+        super(type, pos, state);
         this.capacity = capacity < 0 ? -1 : capacity;
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.load(state, nbt);
+        super.load(nbt);
         this.buckets = nbt.contains("Water") ? nbt.getInt("Water") : nbt.getInt("Buckets");
         this.capacity = nbt.contains("MaxWater") ? nbt.getInt("MaxWater") : nbt.getInt("Capacity");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.putInt("Buckets", this.buckets);
@@ -110,10 +111,10 @@ public abstract class AbstractWaterBarrelTileEntity extends TileEntity
 
     public static boolean checkFluidFromStack(ItemStack barrel)
     {
-        CompoundNBT stackTag = barrel.getTag();
+        CompoundTag stackTag = barrel.getTag();
         if(stackTag == null || !stackTag.contains("BlockEntityTag", 10))
             return false;
-        CompoundNBT blockEntityTag = stackTag.getCompound("BlockEntityTag");
+        CompoundTag blockEntityTag = stackTag.getCompound("BlockEntityTag");
         if(!blockEntityTag.contains("Buckets"))
             return false;
         return blockEntityTag.getInt("Buckets") != 0;
@@ -128,8 +129,8 @@ public abstract class AbstractWaterBarrelTileEntity extends TileEntity
         {
             if(waterSource.getItem().equals(MineriaBlocks.getItemFromBlock(MineriaBlocks.IRON_FLUID_BARREL)))
             {
-                CompoundNBT stackTag = waterSource.getTag();
-                CompoundNBT blockEntityTag = stackTag.getCompound("BlockEntityTag");
+                CompoundTag stackTag = waterSource.getTag();
+                CompoundTag blockEntityTag = stackTag.getCompound("BlockEntityTag");
                 return blockEntityTag.contains("StoredFluid") && blockEntityTag.getString("StoredFluid").equals(Fluids.WATER.getRegistryName().toString());
             }
             return true;
@@ -142,8 +143,8 @@ public abstract class AbstractWaterBarrelTileEntity extends TileEntity
         if(waterSource.getItem() instanceof BucketItem && ((BucketItem) waterSource.getItem()).getFluid().equals(Fluids.WATER))
             return new ItemStack(Items.BUCKET);
 
-        CompoundNBT stackTag = waterSource.getTag();
-        CompoundNBT blockEntityTag = stackTag.getCompound("BlockEntityTag");
+        CompoundTag stackTag = waterSource.getTag();
+        CompoundTag blockEntityTag = stackTag.getCompound("BlockEntityTag");
         int fluidBuckets = blockEntityTag.getInt("Buckets");
         blockEntityTag.putInt("Buckets", fluidBuckets < 0 ? fluidBuckets : --fluidBuckets);
         return waterSource;

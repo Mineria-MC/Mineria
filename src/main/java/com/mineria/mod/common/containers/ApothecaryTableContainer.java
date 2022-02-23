@@ -7,13 +7,11 @@ import com.mineria.mod.common.init.MineriaCriteriaTriggers;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
 import com.mineria.mod.common.recipe.AbstractApothecaryTableRecipe;
 import com.mineria.mod.util.FunctionalIntReferenceHolder;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.SlotItemHandler;
@@ -28,7 +26,7 @@ public class ApothecaryTableContainer extends MineriaContainer<ApothecaryTableTi
     private final FunctionalIntReferenceHolder poisonSource;
 //    private IIntArray data; TODOLTR May fix this later
 
-    public ApothecaryTableContainer(int id, PlayerInventory playerInv, ApothecaryTableTileEntity tileEntity)
+    public ApothecaryTableContainer(int id, Inventory playerInv, ApothecaryTableTileEntity tileEntity)
     {
         super(MineriaContainerTypes.APOTHECARY_TABLE.get(), id, tileEntity);
 
@@ -51,7 +49,7 @@ public class ApothecaryTableContainer extends MineriaContainer<ApothecaryTableTi
         this.addDataSlots(data);
     }*/
 
-    public static ApothecaryTableContainer create(int id, PlayerInventory playerInv, PacketBuffer buffer)
+    public static ApothecaryTableContainer create(int id, Inventory playerInv, FriendlyByteBuf buffer)
     {
         return new ApothecaryTableContainer(id, playerInv, getTileEntity(ApothecaryTableTileEntity.class, playerInv, buffer)/*, new IntArray(3)*/);
     }
@@ -63,15 +61,14 @@ public class ApothecaryTableContainer extends MineriaContainer<ApothecaryTableTi
         this.addSlot(new SlotItemHandler(tile.getInventory(), 1, 84, 35));
         this.addSlot(new SlotItemHandler(tile.getInventory(), 2, 141, 35) {
             @Override
-            public ItemStack onTake(PlayerEntity player, ItemStack stack)
+            public void onTake(Player player, ItemStack stack)
             {
-                if(player instanceof ServerPlayerEntity)
+                if(player instanceof ServerPlayer)
                 {
-                    MineriaCriteriaTriggers.USED_APOTHECARY_TABLE.trigger((ServerPlayerEntity) player, stack);
+                    MineriaCriteriaTriggers.USED_APOTHECARY_TABLE.trigger((ServerPlayer) player, stack);
                 }
 
                 super.onTake(player, stack);
-                return stack;
             }
         });
     }

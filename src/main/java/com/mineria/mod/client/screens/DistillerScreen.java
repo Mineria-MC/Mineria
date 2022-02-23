@@ -2,18 +2,19 @@ package com.mineria.mod.client.screens;
 
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.containers.DistillerContainer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
-public class DistillerScreen extends ContainerScreen<DistillerContainer>
+public class DistillerScreen extends AbstractContainerScreen<DistillerContainer>
 {
     private static final ResourceLocation TEXTURES = new ResourceLocation(Mineria.MODID, "textures/gui/distiller.png");
 
-    public DistillerScreen(DistillerContainer distillerContainer, PlayerInventory playerInv, ITextComponent title)
+    public DistillerScreen(DistillerContainer distillerContainer, Inventory playerInv, Component title)
     {
         super(distillerContainer, playerInv, title);
 
@@ -24,7 +25,7 @@ public class DistillerScreen extends ContainerScreen<DistillerContainer>
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks)
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks)
     {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
@@ -32,10 +33,11 @@ public class DistillerScreen extends ContainerScreen<DistillerContainer>
     }
 
     @Override
-    protected void renderBg(MatrixStack stack, float partialTicks, int x, int y)
+    protected void renderBg(PoseStack stack, float partialTicks, int x, int y)
     {
-        RenderSystem.color4f(1, 1, 1, 1);
-        this.minecraft.getTextureManager().bind(TEXTURES);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TEXTURES);
         this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
         if(this.menu.getTileEntity().isBurning())
@@ -47,7 +49,7 @@ public class DistillerScreen extends ContainerScreen<DistillerContainer>
         renderParts(stack);
     }
 
-    private void renderParts(MatrixStack stack)
+    private void renderParts(PoseStack stack)
     {
         int distillationTime = this.menu.getDistillationTime();
         int totalDistillationTime = this.menu.getTotalDistillationTime();
@@ -80,7 +82,7 @@ public class DistillerScreen extends ContainerScreen<DistillerContainer>
             //renderPart5();*/
     }
 
-    private void renderPart(MatrixStack stack, int index, int currentDistillationTime, int totalDistillationTime)
+    private void renderPart(PoseStack stack, int index, int currentDistillationTime, int totalDistillationTime)
     {
         int distillationTime = Math.min(currentDistillationTime, totalDistillationTime);
         int time;
@@ -122,7 +124,7 @@ public class DistillerScreen extends ContainerScreen<DistillerContainer>
         }
     }
 
-    private void renderPart(MatrixStack stack, int x, int y, int textureX, int textureY, int width, int height)
+    private void renderPart(PoseStack stack, int x, int y, int textureX, int textureY, int width, int height)
     {
         this.blit(stack, this.leftPos + x, this.topPos + y, textureX, textureY, width, height);
     }

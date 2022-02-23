@@ -1,11 +1,12 @@
 package com.mineria.mod.util;
 
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,9 +28,9 @@ public class MineriaUtils
      * @param <V> the recipe
      * @return the registered recipe type
      */
-    public static <V extends IRecipe<?>> IRecipeType<V> registerRecipeType(ResourceLocation id)
+    public static <V extends Recipe<?>> RecipeType<V> registerRecipeType(ResourceLocation id)
     {
-        return IRecipeType.register(id.toString());
+        return RecipeType.register(id.toString());
     }
 
     /**
@@ -39,7 +40,7 @@ public class MineriaUtils
      * @param world the server world
      * @return a {@link Set} of all the recipes
      */
-    public static <T extends IRecipe<?>> Set<T> findRecipesByType(IRecipeType<?> typeIn, World world)
+    public static <T extends Recipe<?>> Set<T> findRecipesByType(RecipeType<?> typeIn, Level world)
     {
         return world != null ? (Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : new HashSet<>();
     }
@@ -51,7 +52,7 @@ public class MineriaUtils
      * @return a {@link Set} of all the recipes
      */
     @OnlyIn(Dist.CLIENT)
-    public static <T extends IRecipe<?>> Set<T> findRecipesByType(IRecipeType<T> type)
+    public static <T extends Recipe<?>> Set<T> findRecipesByType(RecipeType<T> type)
     {
         return findRecipesByType(type, recipe -> true);
     }
@@ -64,10 +65,10 @@ public class MineriaUtils
      * @return a {@link Set} of all the recipes.
      */
     @OnlyIn(Dist.CLIENT)
-    public static <T extends IRecipe<?>> Set<T> findRecipesByType(IRecipeType<T> type, Predicate<T> filter)
+    public static <T extends Recipe<?>> Set<T> findRecipesByType(RecipeType<T> type, Predicate<T> filter)
     {
-        ClientWorld world = Minecraft.getInstance().level;
-        return world != null ? (Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == type).filter(recipe -> filter.test((T) recipe)).collect(Collectors.toSet()) : new HashSet<>();
+        ClientLevel world = Minecraft.getInstance().level;
+        return world != null ? ImmutableSet.copyOf((Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == type && filter.test((T) recipe)).collect(Collectors.toSet())) : Collections.emptySet();
     }
 
     /**
@@ -82,10 +83,11 @@ public class MineriaUtils
     public static <T> boolean doIf(T obj, Predicate<T> condition, Consumer<T> action)
     {
         boolean test = condition.test(obj);
-        if(test)
-            action.accept(obj);
+        if(test) action.accept(obj);
         return test;
     }
+
+    private static final Random RANDOM = new Random();
 
     /**
      * Calculates a random pitch value.
@@ -94,11 +96,7 @@ public class MineriaUtils
      */
     public static float randomPitch()
     {
-        Random rand = new Random();
-
-        float floatDif = rand.nextFloat() / 2;
-
-        return rand.nextBoolean() ? 1.0F - floatDif : 1.0F + floatDif;
+        return RANDOM.nextFloat() + 0.5F;
     }
 
     /**
@@ -110,7 +108,7 @@ public class MineriaUtils
      */
     public static <E> E getRandomElement(Collection<E> collection)
     {
-        int num = (int) (Math.random() * collection.size());
+        int num = (int) (RANDOM.nextDouble() * collection.size());
         for(E element : collection)
             if (--num < 0) return element;
         throw new AssertionError();

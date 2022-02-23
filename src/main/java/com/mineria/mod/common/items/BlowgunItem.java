@@ -4,22 +4,24 @@ import com.mineria.mod.Mineria;
 import com.mineria.mod.common.entity.BlowgunRefillEntity;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaCriteriaTriggers;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShootableItem;
-import net.minecraft.item.UseAction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Predicate;
 
-public class BlowgunItem extends ShootableItem
+import net.minecraft.world.item.Item.Properties;
+
+public class BlowgunItem extends ProjectileWeaponItem
 {
     public BlowgunItem()
     {
@@ -27,39 +29,38 @@ public class BlowgunItem extends ShootableItem
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity living)
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity living)
     {
-        if (living instanceof PlayerEntity)
+        if (living instanceof Player player)
         {
-            PlayerEntity player = (PlayerEntity) living;
             ItemStack ammo = player.getProjectile(stack);
 
-            if (!ammo.isEmpty() || player.abilities.instabuild)
+            if (!ammo.isEmpty() || player.getAbilities().instabuild)
             {
                 if (ammo.isEmpty())
                     ammo = new ItemStack(MineriaItems.BLOWGUN_REFILL);
 
-                if(player instanceof ServerPlayerEntity)
+                if(player instanceof ServerPlayer)
                 {
-                    MineriaCriteriaTriggers.SHOT_BLOWGUN.trigger((ServerPlayerEntity) player, stack, ammo);
+                    MineriaCriteriaTriggers.SHOT_BLOWGUN.trigger((ServerPlayer) player, stack, ammo);
                 }
 
                 if (!world.isClientSide)
                 {
                     stack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(living.getUsedItemHand()));
                     BlowgunRefillEntity dart = new BlowgunRefillEntity(world, player, JarItem.getPoisonSourceFromStack(ammo));
-                    dart.shootFromRotation(player, player.xRot, player.yRot, 0.0F, 1.5F, 1.0F);
+                    dart.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
 
                     world.addFreshEntity(dart);
                 }
 
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) * 0.5F);
-                if (!player.abilities.instabuild)
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) * 0.5F);
+                if (!player.getAbilities().instabuild)
                 {
                     ammo.shrink(1);
                     if (ammo.isEmpty())
                     {
-                        player.inventory.removeItem(ammo);
+                        player.getInventory().removeItem(ammo);
                     }
                 }
 
@@ -71,9 +72,9 @@ public class BlowgunItem extends ShootableItem
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack)
+    public UseAnim getUseAnimation(ItemStack stack)
     {
-        return UseAction.BOW;
+        return UseAnim.BOW;
     }
 
     @Override
@@ -83,11 +84,11 @@ public class BlowgunItem extends ShootableItem
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
         ItemStack blowgun = player.getItemInHand(hand);
         player.startUsingItem(hand);
-        return ActionResult.consume(blowgun);
+        return InteractionResultHolder.consume(blowgun);
     }
 
     @Override

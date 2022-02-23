@@ -3,28 +3,28 @@ package com.mineria.mod.common.effects;
 import com.google.common.collect.Lists;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.util.VanillaOverride;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.damagesource.DamageSource;
 
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class PoisonEffect extends Effect implements IPoisonEffect, VanillaOverride
+public class PoisonEffect extends MobEffect implements IPoisonEffect, VanillaOverride
 {
     private static final UUID CONVULSION_SLOWDOWN_UUID = UUID.fromString("660f9ea9-a977-4647-8b56-51d752401bf2");
 
     public PoisonEffect()
     {
-        super(EffectType.HARMFUL, 5149489);
+        super(MobEffectCategory.HARMFUL, 5149489);
         setVanillaName("poison");
     }
 
@@ -65,37 +65,30 @@ public class PoisonEffect extends Effect implements IPoisonEffect, VanillaOverri
 
     public static boolean isImmune(LivingEntity living)
     {
-        return living instanceof PlayerEntity && ((PlayerEntity) living).abilities.mayfly;
+        return living instanceof Player && ((Player) living).getAbilities().mayfly;
     }
 
     private float getDamageToDeal(float health, int potionClass)
     {
-        switch (potionClass)
-        {
-            case 0:
-            case 2:
-                return health - 2 < 1 ? 1 : 2;
-            case 1:
-                return 1;
-            case 3:
-                return health > 10 ? 2 : 1;
-        }
-        return 0;
+        return switch (potionClass)
+                {
+                    case 0, 2 -> health - 2 < 1 ? 1 : 2;
+                    case 1 -> 1;
+                    case 3 -> health > 10 ? 2 : 1;
+                    default -> 0;
+                };
     }
 
     @Override
     public boolean doSpasms(int duration, int maxDuration, int potionClass)
     {
-        switch (potionClass)
-        {
-            case 0:
-                return maxDuration - duration >= 2400; // If the potion is applied for 2 minutes (20 * 60 * 2)
-            case 1:
-                return maxDuration - duration >= 3600; // If the potion is applied for 3 minutes (20 * 60 * 3)
-            case 2:
-                return maxDuration - duration >= 1200; // If the potion is applied for 1 minutes (20 * 60)
-        }
-        return false;
+        return switch (potionClass)
+                {
+                    case 0 -> maxDuration - duration >= 2400; // If the potion is applied for 2 minutes (20 * 60 * 2)
+                    case 1 -> maxDuration - duration >= 3600; // If the potion is applied for 3 minutes (20 * 60 * 3)
+                    case 2 -> maxDuration - duration >= 1200; // If the potion is applied for 1 minutes (20 * 60)
+                    default -> false;
+                };
     }
 
     @Override
@@ -114,18 +107,14 @@ public class PoisonEffect extends Effect implements IPoisonEffect, VanillaOverri
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier, int potionClass)
     {
-        switch (potionClass)
-        {
-            case 0:
-                return duration % 60 == 0; // 3 seconds delay
-            case 1:
-                return duration % 40 == 0; // 2 seconds delay
-            case 2:
-                return duration % 30 == 0; // 1.5 seconds delay
-            case 3:
-                return duration % 20 == 0; // 1-second delay
-        }
-        return false;
+        return switch (potionClass)
+                {
+                    case 0 -> duration % 60 == 0; // 3 seconds delay
+                    case 1 -> duration % 40 == 0; // 2 seconds delay
+                    case 2 -> duration % 30 == 0; // 1.5 seconds delay
+                    case 3 -> duration % 20 == 0; // 1-second delay
+                    default -> false;
+                };
     }
 
     @Deprecated
@@ -208,7 +197,7 @@ public class PoisonEffect extends Effect implements IPoisonEffect, VanillaOverri
 
     private void addMovementSpeedModifier(LivingEntity living, int amplifier)
     {
-        ModifiableAttributeInstance attributeInstance = living.getAttribute(Attributes.MOVEMENT_SPEED);
+        AttributeInstance attributeInstance = living.getAttribute(Attributes.MOVEMENT_SPEED);
         if(attributeInstance != null)
         {
             AttributeModifier modifier = new AttributeModifier(CONVULSION_SLOWDOWN_UUID, this::getDescriptionId, -15, AttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -221,7 +210,7 @@ public class PoisonEffect extends Effect implements IPoisonEffect, VanillaOverri
 
     public void removeMovementSpeedModifier(LivingEntity living)
     {
-        ModifiableAttributeInstance attributeInstance = living.getAttribute(Attributes.MOVEMENT_SPEED);
+        AttributeInstance attributeInstance = living.getAttribute(Attributes.MOVEMENT_SPEED);
         if(attributeInstance != null)
         {
             attributeInstance.removePermanentModifier(CONVULSION_SLOWDOWN_UUID);

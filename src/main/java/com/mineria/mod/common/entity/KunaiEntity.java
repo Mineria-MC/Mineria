@@ -4,42 +4,44 @@ import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.items.KunaiItem;
 import com.mineria.mod.util.DamageSourceUtil;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class KunaiEntity extends AbstractArrowEntity
+import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
+
+public class KunaiEntity extends AbstractArrow
 {
-    private static final DataParameter<Boolean> ENCHANTED = EntityDataManager.defineId(KunaiEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ENCHANTED = SynchedEntityData.defineId(KunaiEntity.class, EntityDataSerializers.BOOLEAN);
     private ItemStack kunaiItem = new ItemStack(MineriaItems.KUNAI);
     private boolean dealtDamage;
     public int clientSideReturnKunaiTickCount;
 
-    public KunaiEntity(EntityType<? extends KunaiEntity> type, World world)
+    public KunaiEntity(EntityType<? extends KunaiEntity> type, Level world)
     {
         super(type, world);
     }
 
-    public KunaiEntity(LivingEntity living, World world, ItemStack stack)
+    public KunaiEntity(LivingEntity living, Level world, ItemStack stack)
     {
         super(MineriaEntities.KUNAI.get(), living, world);
         this.kunaiItem = stack;
@@ -47,7 +49,7 @@ public class KunaiEntity extends AbstractArrowEntity
     }
 
     @OnlyIn(Dist.CLIENT)
-    public KunaiEntity(double x, double y, double z, World world)
+    public KunaiEntity(double x, double y, double z, Level world)
     {
         super(MineriaEntities.KUNAI.get(), x, y, z, world);
     }
@@ -71,22 +73,22 @@ public class KunaiEntity extends AbstractArrowEntity
         if(dealtDamage || isNoPhysics())
         {
             if(this.kunaiItem.isEmpty())
-                this.remove();
+                this.discard();
             else if(entity != null)
             {
                 if (!this.isAcceptibleReturnOwner())
                 {
-                    if (!this.level.isClientSide && this.pickup == AbstractArrowEntity.PickupStatus.ALLOWED)
+                    if (!this.level.isClientSide && this.pickup == AbstractArrow.Pickup.ALLOWED)
                     {
                         this.spawnAtLocation(this.getPickupItem(), 0.1F);
                     }
 
-                    this.remove();
+                    this.discard();
                 }
                 else
                 {
                     this.setNoPhysics(true);
-                    Vector3d vec3 = new Vector3d(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
+                    Vec3 vec3 = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
                     this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.075D, this.getZ());
 
                     if (this.level.isClientSide)
@@ -113,7 +115,7 @@ public class KunaiEntity extends AbstractArrowEntity
         Entity owner = this.getOwner();
         if (owner != null && owner.isAlive())
         {
-            return !(owner instanceof ServerPlayerEntity) || !owner.isSpectator();
+            return !(owner instanceof ServerPlayer) || !owner.isSpectator();
         } else
         {
             return false;
@@ -134,13 +136,13 @@ public class KunaiEntity extends AbstractArrowEntity
 
     @Override
     @Nullable
-    protected EntityRayTraceResult findHitEntity(Vector3d vec0, Vector3d vec1)
+    protected EntityHitResult findHitEntity(Vec3 vec0, Vec3 vec1)
     {
         return this.dealtDamage ? null : super.findHitEntity(vec0, vec1);
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult rayTraceResult)
+    protected void onHitEntity(EntityHitResult rayTraceResult)
     {
         Entity target = rayTraceResult.getEntity();
         float dmg = KunaiItem.getRangedAttackDamage(this.kunaiItem);
@@ -186,7 +188,7 @@ public class KunaiEntity extends AbstractArrowEntity
     }
 
     @Override
-    public void playerTouch(PlayerEntity player)
+    public void playerTouch(Player player)
     {
         Entity owner = this.getOwner();
         if (owner == null || owner.getUUID() == player.getUUID())
@@ -196,7 +198,7 @@ public class KunaiEntity extends AbstractArrowEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound)
+    public void readAdditionalSaveData(CompoundTag compound)
     {
         super.readAdditionalSaveData(compound);
         this.dealtDamage = compound.getBoolean("DealtDamage");
@@ -205,17 +207,17 @@ public class KunaiEntity extends AbstractArrowEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound)
+    public void addAdditionalSaveData(CompoundTag compound)
     {
         super.addAdditionalSaveData(compound);
-        compound.put("KunaiItem", this.kunaiItem.save(new CompoundNBT()));
+        compound.put("KunaiItem", this.kunaiItem.save(new CompoundTag()));
         compound.putBoolean("DealtDamage", this.dealtDamage);
     }
 
     @Override
     protected void tickDespawn()
     {
-        if(this.pickup != PickupStatus.ALLOWED)
+        if(this.pickup != Pickup.ALLOWED)
             super.tickDespawn();
     }
 

@@ -3,24 +3,25 @@ package com.mineria.mod.common.blocks.barrel.iron;
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelTileEntity;
 import com.mineria.mod.common.init.MineriaTileEntities;
 import com.mineria.mod.util.MineriaUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class IronFluidBarrelTileEntity extends AbstractWaterBarrelTileEntity implements FluidBarrel
 {
     private Fluid storedFluid = Fluids.EMPTY;
 
-    public IronFluidBarrelTileEntity()
+    public IronFluidBarrelTileEntity(BlockPos pos, BlockState state)
     {
-        super(MineriaTileEntities.IRON_FLUID_BARREL.get(), 24);
+        super(MineriaTileEntities.IRON_FLUID_BARREL.get(), pos, state, 24);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.putString("StoredFluid", storedFluid.getRegistryName().toString());
@@ -28,9 +29,9 @@ public class IronFluidBarrelTileEntity extends AbstractWaterBarrelTileEntity imp
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.load(state, nbt);
+        super.load(nbt);
         this.storedFluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(nbt.getString("StoredFluid")));
     }
 

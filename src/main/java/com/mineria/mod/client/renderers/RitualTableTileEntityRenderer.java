@@ -1,25 +1,25 @@
 package com.mineria.mod.client.renderers;
 
 import com.mineria.mod.common.blocks.ritual_table.RitualTableTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemStack;
+import com.mojang.math.Vector3f;
 
-public class RitualTableTileEntityRenderer extends TileEntityRenderer<RitualTableTileEntity>
+public class RitualTableTileEntityRenderer implements BlockEntityRenderer<RitualTableTileEntity>
 {
-    public RitualTableTileEntityRenderer(TileEntityRendererDispatcher dispatcher)
+    public RitualTableTileEntityRenderer(BlockEntityRendererProvider.Context dispatcher)
     {
-        super(dispatcher);
     }
 
     @Override
-    public void render(RitualTableTileEntity tile, float p_225616_2_, MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, int overlay)
+    public void render(RitualTableTileEntity tile, float p_225616_2_, PoseStack stack, MultiBufferSource buffer, int packedLight, int overlay)
     {
         stack.pushPose();
         ItemStack placedItem = tile.getPlacedItem();
@@ -29,8 +29,8 @@ public class RitualTableTileEntityRenderer extends TileEntityRenderer<RitualTabl
             stack.scale(0.5F, 0.5F, 0.5F);
             stack.mulPose(Vector3f.XP.rotationDegrees(90));
             stack.mulPose(Vector3f.ZP.rotationDegrees(35));
-            packedLight = tile.getLevel() == null ? 15728880 : WorldRenderer.getLightColor(tile.getLevel(), tile.getBlockPos().above());
-            Minecraft.getInstance().getItemRenderer().renderStatic(placedItem, ItemCameraTransforms.TransformType.FIXED, packedLight, overlay, stack, buffer);
+            packedLight = tile.getLevel() == null ? 15728880 : LevelRenderer.getLightColor(tile.getLevel(), tile.getBlockPos().above());
+            Minecraft.getInstance().getItemRenderer().renderStatic(placedItem, ItemTransforms.TransformType.FIXED, packedLight, overlay, stack, buffer, 0);
         }
         stack.popPose();
     }

@@ -1,64 +1,66 @@
 package com.mineria.mod.common.blocks.xp_block;
 
 import com.mineria.mod.common.init.MineriaTileEntities;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class XpBlock extends Block
+public class XpBlock extends Block implements EntityBlock
 {
     public XpBlock()
     {
-        super(AbstractBlock.Properties.of(Material.METAL).strength(2.5F, 5.0F).sound(SoundType.METAL).harvestLevel(1).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops());
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state)
-    {
-        return true;
+        super(BlockBehaviour.Properties.of(Material.METAL).strength(2.5F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops());
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState)
     {
-        return MineriaTileEntities.XP_BLOCK.get().create();
+        return new XpBlockTileEntity(pPos, pState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
+    {
+        return level.isClientSide || blockEntityType != MineriaTileEntities.XP_BLOCK.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> XpBlockTileEntity.serverTick(pLevel, pPos, pState, (XpBlockTileEntity) pBlockEntity);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
         XpBlockTileEntity xpTile = (XpBlockTileEntity)worldIn.getBlockEntity(pos);
         if(!worldIn.isClientSide)
         {
-            NetworkHooks.openGui((ServerPlayerEntity) player, xpTile, pos);
-            return ActionResultType.SUCCESS;
+            NetworkHooks.openGui((ServerPlayer) player, xpTile, pos);
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tile = worldIn.getBlockEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
         if(tile instanceof XpBlockTileEntity && state.getBlock() != newState.getBlock())
-            InventoryHelper.dropContents(worldIn, pos, ((XpBlockTileEntity)tile).getInventory().toNonNullList());
+            Containers.dropContents(worldIn, pos, ((XpBlockTileEntity)tile).getInventory().toNonNullList());
 
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }

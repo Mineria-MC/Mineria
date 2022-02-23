@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:lead_ingot"
+            "items": ["mineria:lead_ingot"]
           }
         ]
       }

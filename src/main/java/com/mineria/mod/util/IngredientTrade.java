@@ -1,20 +1,20 @@
 package com.mineria.mod.util;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
- * An {@link net.minecraft.entity.merchant.villager.VillagerTrades.ITrade} implementation for prices that are Ingredients.
- * These get resolved to a random stack when {@link net.minecraft.entity.merchant.villager.VillagerTrades.ITrade#getOffer(Entity, Random)} is called.
+ * An {@link net.minecraft.world.entity.npc.VillagerTrades.ItemListing} implementation for prices that are Ingredients. <br/>
+ * These get resolved to a random stack when {@link net.minecraft.world.entity.npc.VillagerTrades.ItemListing#getOffer(Entity, Random)} is called.
  */
-public class IngredientTrade implements VillagerTrades.ITrade
+public class IngredientTrade implements VillagerTrades.ItemListing
 {
     protected final Pair<Ingredient, Integer> price;
     protected final Pair<Ingredient, Integer> price2;
@@ -53,12 +53,8 @@ public class IngredientTrade implements VillagerTrades.ITrade
 
     private ItemStack getRandomItemStack(Ingredient ingredient, Random random)
     {
-        if(ingredient.isEmpty())
-            return ItemStack.EMPTY;
-
-        if(ingredient.getItems().length > 1)
-            return ingredient.getItems()[random.nextInt(ingredient.getItems().length)];
-        else
-            return ingredient.getItems()[0];
+        if(ingredient.isEmpty()) return ItemStack.EMPTY;
+        ItemStack[] items = ingredient.getItems();
+        return items.length > 1 ? items[random.nextInt(items.length)] : items[0];
     }
 }

@@ -1,11 +1,12 @@
 package com.mineria.mod.common.world.feature;
 
-import net.minecraft.block.VineBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,13 @@ public class ModVinesFeature extends Feature<ModVinesFeatureConfig>
     }
 
     @Override
-    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, ModVinesFeatureConfig config)
+    public boolean place(FeaturePlaceContext<ModVinesFeatureConfig> pContext)
     {
-        BlockPos.Mutable mutablePos = pos.mutable();
+        BlockPos pos = pContext.origin();
+        Random rand = pContext.random();
+        WorldGenLevel reader = pContext.level();
+        ModVinesFeatureConfig config = pContext.config();
+        BlockPos.MutableBlockPos mutablePos = pos.mutable();
 
         for (int i = 64; i < 256; ++i)
         {
@@ -49,7 +54,7 @@ public class ModVinesFeature extends Feature<ModVinesFeatureConfig>
         return true;
     }
 
-    private static void generateVines(ISeedReader reader, ModVinesFeatureConfig config, BlockPos.Mutable mutablePos, Direction direction, int count)
+    private static void generateVines(WorldGenLevel reader, ModVinesFeatureConfig config, BlockPos.MutableBlockPos mutablePos, Direction direction, int count)
     {
         List<BlockPos> generatingPositions = new ArrayList<>();
 

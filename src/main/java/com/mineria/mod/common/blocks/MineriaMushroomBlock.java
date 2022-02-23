@@ -1,17 +1,19 @@
 package com.mineria.mod.common.blocks;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.MushroomBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.MushroomBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.PlantType;
 
 import java.util.Random;
@@ -20,11 +22,12 @@ public class MineriaMushroomBlock extends MushroomBlock
 {
     public MineriaMushroomBlock(MaterialColor color)
     {
-        super(AbstractBlock.Properties.of(Material.PLANT, color).noCollission().randomTicks().instabreak().sound(SoundType.GRASS).lightLevel((a) -> 1).hasPostProcess((a, b, c) -> true));
+        // TODO
+        super(BlockBehaviour.Properties.of(Material.PLANT, color).noCollission().randomTicks().instabreak().sound(SoundType.GRASS).lightLevel((a) -> 1).hasPostProcess((a, b, c) -> true), () -> Feature.NO_OP.configured(NoneFeatureConfiguration.INSTANCE));
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random rand)
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random rand)
     {
         if (rand.nextInt(25) == 0)
         {
@@ -55,16 +58,22 @@ public class MineriaMushroomBlock extends MushroomBlock
     }
 
     @Override
-    public PlantType getPlantType(IBlockReader world, BlockPos pos)
+    public PlantType getPlantType(BlockGetter world, BlockPos pos)
     {
         return PlantType.CAVE;
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos)
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos)
     {
         BlockPos below = pos.below();
         BlockState belowState = world.getBlockState(below);
         return belowState.is(BlockTags.MUSHROOM_GROW_BLOCK) || belowState.canSustainPlant(world, below, Direction.UP, this);
+    }
+
+    @Override
+    public boolean isValidBonemealTarget(BlockGetter pLevel, BlockPos pPos, BlockState pState, boolean pIsClient)
+    {
+        return false;
     }
 }

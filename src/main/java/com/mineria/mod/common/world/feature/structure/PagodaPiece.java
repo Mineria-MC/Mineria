@@ -6,29 +6,34 @@ import com.mineria.mod.common.entity.BuddhistEntity;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.common.init.MineriaStructures;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import java.util.List;
 import java.util.Random;
 
-public class PagodaPiece extends TemplateStructurePiece
+public class PagodaPiece /*extends TemplateStructurePiece*/
 {
-    private Rotation rotation;
+    /*private Rotation rotation;
 
-    public PagodaPiece(TemplateManager templateManagerIn, BlockPos pos, Rotation rotationIn)
+    public PagodaPiece(StructureManager templateManagerIn, BlockPos pos, Rotation rotationIn)
     {
         super(MineriaStructures.PMP, 0);
         this.templatePosition = pos;
@@ -36,29 +41,29 @@ public class PagodaPiece extends TemplateStructurePiece
         this.setupPiece(templateManagerIn);
     }
 
-    public PagodaPiece(TemplateManager templateManagerIn, CompoundNBT nbt)
+    public PagodaPiece(StructureManager templateManagerIn, CompoundTag nbt)
     {
         super(MineriaStructures.PMP, nbt);
         this.rotation = Rotation.valueOf(nbt.getString("Rot"));
         this.setupPiece(templateManagerIn);
     }
 
-    private void setupPiece(TemplateManager templateManager)
+    private void setupPiece(StructureManager templateManager)
     {
-        Template template = templateManager.getOrCreate(new ResourceLocation(Mineria.MODID, "pagoda"));
-        PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
+        StructureTemplate template = templateManager.getOrCreate(new ResourceLocation(Mineria.MODID, "pagoda"));
+        StructurePlaceSettings placementsettings = (new StructurePlaceSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
         this.setup(template, this.templatePosition, placementsettings);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT tagCompound)
+    protected void addAdditionalSaveData(ServerLevel pLevel, CompoundTag tagCompound)
     {
-        super.addAdditionalSaveData(tagCompound);
+        super.addAdditionalSaveData(pLevel, tagCompound);
         tagCompound.putString("Rot", this.rotation.name());
     }
 
     @Override
-    protected void handleDataMarker(String function, BlockPos pos, IServerWorld world, Random rand, MutableBoundingBox boundingBox)
+    protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor world, Random rand, BoundingBox boundingBox)
     {
         switch(function)
         {
@@ -68,28 +73,27 @@ public class PagodaPiece extends TemplateStructurePiece
                 break;
             case "flower_pot":
                 world.removeBlock(pos, false);
-                WeightedList<Block> list = Util.make(new WeightedList<>(), lst -> {
-                    lst.add(Blocks.POTTED_JUNGLE_SAPLING, 20);
-                    lst.add(Blocks.POTTED_BAMBOO, 20);
-                    lst.add(Blocks.POTTED_DARK_OAK_SAPLING, 15);
-                    lst.add(Blocks.POTTED_LILY_OF_THE_VALLEY, 10);
-                    lst.add(MineriaBlocks.POTTED_SAKURA_SAPLING, 10);
-                    lst.add(MineriaBlocks.POTTED_NETTLE, 5);
-                    lst.add(MineriaBlocks.POTTED_PLANTAIN, 5);
-                    lst.add(MineriaBlocks.POTTED_THYME, 5);
-                    lst.add(Blocks.POTTED_WITHER_ROSE, 1);
-                });
-                world.setBlock(pos, list.getOne(rand).defaultBlockState(), 2);
+                SimpleWeightedRandomList<Block> list = new SimpleWeightedRandomList.Builder<Block>()
+                        .add(Blocks.POTTED_JUNGLE_SAPLING, 20)
+                        .add(Blocks.POTTED_BAMBOO, 20)
+                        .add(Blocks.POTTED_DARK_OAK_SAPLING, 15)
+                        .add(Blocks.POTTED_LILY_OF_THE_VALLEY, 10)
+                        .add(MineriaBlocks.POTTED_SAKURA_SAPLING, 10)
+                        .add(MineriaBlocks.POTTED_NETTLE, 5)
+                        .add(MineriaBlocks.POTTED_PLANTAIN, 5)
+                        .add(MineriaBlocks.POTTED_THYME, 5)
+                        .add(Blocks.POTTED_WITHER_ROSE, 1).build();
+                list.getRandomValue(rand).ifPresent(block -> world.setBlock(pos, block.defaultBlockState(), 2));
                 break;
             case "buddhist":
                 world.removeBlock(pos, false);
                 BuddhistEntity buddhist = MineriaEntities.BUDDHIST.get().create(world.getLevel());
                 if(buddhist != null)
                 {
-                    buddhist.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, MathHelper.wrapDegrees(rand.nextFloat() * 360F), 0);
-                    buddhist.yHeadRot = buddhist.yRot;
-                    buddhist.yBodyRot = buddhist.yRot;
-                    buddhist.finalizeSpawn(world, world.getCurrentDifficultyAt(buddhist.blockPosition()), SpawnReason.STRUCTURE, null, null);
+                    buddhist.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Mth.wrapDegrees(rand.nextFloat() * 360F), 0);
+                    buddhist.yHeadRot = buddhist.getYRot();
+                    buddhist.yBodyRot = buddhist.getYRot();
+                    buddhist.finalizeSpawn(world, world.getCurrentDifficultyAt(buddhist.blockPosition()), MobSpawnType.STRUCTURE, null, null);
                     world.addFreshEntityWithPassengers(buddhist);
                 }
                 break;
@@ -98,17 +102,17 @@ public class PagodaPiece extends TemplateStructurePiece
                 AsiaticHerbalistEntity asiaticHerbalist = MineriaEntities.ASIATIC_HERBALIST.get().create(world.getLevel());
                 if(asiaticHerbalist != null)
                 {
-                    asiaticHerbalist.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, MathHelper.wrapDegrees(rand.nextFloat() * 360F), 0);
-                    asiaticHerbalist.yHeadRot = asiaticHerbalist.yRot;
-                    asiaticHerbalist.yBodyRot = asiaticHerbalist.yRot;
-                    asiaticHerbalist.finalizeSpawn(world, world.getCurrentDifficultyAt(asiaticHerbalist.blockPosition()), SpawnReason.STRUCTURE, null, null);
+                    asiaticHerbalist.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Mth.wrapDegrees(rand.nextFloat() * 360F), 0);
+                    asiaticHerbalist.yHeadRot = asiaticHerbalist.getYRot();
+                    asiaticHerbalist.yBodyRot = asiaticHerbalist.getYRot();
+                    asiaticHerbalist.finalizeSpawn(world, world.getCurrentDifficultyAt(asiaticHerbalist.blockPosition()), MobSpawnType.STRUCTURE, null, null);
                     world.addFreshEntityWithPassengers(asiaticHerbalist);
                 }
                 break;
         }
     }
 
-    public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random)
+    public static void start(StructureManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random)
     {
         int x = pos.getX();
         int z = pos.getZ();
@@ -116,5 +120,5 @@ public class PagodaPiece extends TemplateStructurePiece
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
         BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
         pieceList.add(new PagodaPiece(templateManager, blockpos, rotation));
-    }
+    }*/
 }

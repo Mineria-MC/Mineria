@@ -2,21 +2,21 @@ package com.mineria.mod.common.entity;
 
 import com.mineria.mod.common.init.MineriaEntities;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class MineriaLightningBoltEntity extends LightningBoltEntity
+public class MineriaLightningBoltEntity extends LightningBolt
 {
     protected int life;
     public long seed;
@@ -34,10 +34,10 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
     protected int fireRadius = 4;
     protected Predicate<Entity> targetPredicate = entity -> true;
     @Nullable
-    protected ServerPlayerEntity cause;
+    protected ServerPlayer cause;
     protected float damage = 5.0F;
 
-    public MineriaLightningBoltEntity(EntityType<? extends MineriaLightningBoltEntity> type, World world)
+    public MineriaLightningBoltEntity(EntityType<? extends MineriaLightningBoltEntity> type, Level world)
     {
         super(type, world);
         this.noCulling = true;
@@ -53,13 +53,13 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
     }
 
     @Override
-    public SoundCategory getSoundSource()
+    public SoundSource getSoundSource()
     {
-        return SoundCategory.WEATHER;
+        return SoundSource.WEATHER;
     }
 
     @Override
-    public void setCause(@Nullable ServerPlayerEntity cause)
+    public void setCause(@Nullable ServerPlayer cause)
     {
         this.cause = cause;
     }
@@ -98,7 +98,7 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
     public void tick()
     {
         if (!this.level.isClientSide) {
-            this.setSharedFlag(6, this.isGlowing());
+            this.setSharedFlag(6, this.isCurrentlyGlowing());
         }
 
         this.baseTick();
@@ -110,8 +110,8 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
                 this.spawnFire(this.fireRadius);
             }
 
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 10000.0F, 0.8F + this.random.nextFloat() * 0.2F);
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 10000.0F, 0.8F + this.random.nextFloat() * 0.2F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 2.0F, 0.5F + this.random.nextFloat() * 0.2F);
         }
 
         --this.life;
@@ -119,7 +119,7 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
         {
             if (this.flashes == 0)
             {
-                this.remove();
+                this.discard();
             } else if (this.life < -this.random.nextInt(10))
             {
                 --this.flashes;
@@ -131,17 +131,17 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
 
         if (this.life >= 0)
         {
-            if (!(this.level instanceof ServerWorld))
+            if (!(this.level instanceof ServerLevel))
             {
                 this.level.setSkyFlashTime(2);
             } else if (!this.visualOnly)
             {
-                List<Entity> entities = this.level.getEntities(this, new AxisAlignedBB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
+                List<Entity> entities = this.level.getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
 
                 for (Entity entity : entities)
                 {
                     if (!ForgeEventFactory.onEntityStruckByLightning(entity, this) && this.targetPredicate.test(entity))
-                        entity.thunderHit((ServerWorld) this.level, this);
+                        entity.thunderHit((ServerLevel) this.level, this);
                 }
 
                 if (this.cause != null)
@@ -158,8 +158,8 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
         if (!this.visualOnly && !this.level.isClientSide && this.level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK) && this.spawnsFire)
         {
             BlockPos pos = this.blockPosition();
-            BlockState state = AbstractFireBlock.getState(this.level, pos);
-            if (this.level.getBlockState(pos).isAir(level, pos) && state.canSurvive(this.level, pos))
+            BlockState state = BaseFireBlock.getState(this.level, pos);
+            if (this.level.getBlockState(pos).isAir() && state.canSurvive(this.level, pos))
             {
                 this.level.setBlockAndUpdate(pos, state);
             }
@@ -167,8 +167,8 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
             for (int i = 0; i < radius; ++i)
             {
                 BlockPos pos1 = pos.offset(this.random.nextInt(3) - 1, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1);
-                state = AbstractFireBlock.getState(this.level, pos1);
-                if (this.level.getBlockState(pos1).isAir(level, pos) && state.canSurvive(this.level, pos1))
+                state = BaseFireBlock.getState(this.level, pos1);
+                if (this.level.getBlockState(pos1).isAir() && state.canSurvive(this.level, pos1))
                 {
                     this.level.setBlockAndUpdate(pos1, state);
                 }
@@ -176,7 +176,7 @@ public class MineriaLightningBoltEntity extends LightningBoltEntity
         }
     }
 
-    public static Optional<MineriaLightningBoltEntity> create(ServerWorld world, BlockPos pos, SpawnReason reason, boolean spawnsFire, int fireRadius, Predicate<Entity> targetPredicate)
+    public static Optional<MineriaLightningBoltEntity> create(ServerLevel world, BlockPos pos, MobSpawnType reason, boolean spawnsFire, int fireRadius, Predicate<Entity> targetPredicate)
     {
         return Optional.ofNullable(MineriaEntities.MINERIA_LIGHTNING_BOLT.get().create(world, null, null, null, pos, reason, false, false)).map(entity -> entity.setSpawnsFire(spawnsFire).setFireRadius(fireRadius).setTargetPredicate(targetPredicate));
     }

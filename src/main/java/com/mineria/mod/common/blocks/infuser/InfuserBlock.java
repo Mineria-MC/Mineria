@@ -1,80 +1,88 @@
 package com.mineria.mod.common.blocks.infuser;
 
 import com.mineria.mod.common.init.MineriaTileEntities;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class InfuserBlock extends Block
+public class InfuserBlock extends Block implements EntityBlock
 {
-    public static final DirectionProperty FACING = HorizontalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BooleanProperty.create("lit");
 
-    public InfuserBlock()
-    {
-        super(AbstractBlock.Properties.of(Material.METAL).sound(SoundType.WOOD).harvestTool(ToolType.AXE).harvestLevel(1).requiresCorrectToolForDrops().strength(5.0F));
-        registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
-    }
-
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState)
     {
-        return true;
+        return new InfuserTileEntity(pPos, pState);
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
     {
-        return MineriaTileEntities.INFUSER.get().create();
+        return level.isClientSide || blockEntityType != MineriaTileEntities.INFUSER.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> InfuserTileEntity.serverTick(pLevel, pPos, pState, (InfuserTileEntity) pBlockEntity);
+    }
+
+    public InfuserBlock()
+    {
+        super(BlockBehaviour.Properties.of(Material.METAL).sound(SoundType.WOOD).requiresCorrectToolForDrops().strength(5.0F));
+        registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
         if (!worldIn.isClientSide)
         {
-            TileEntity tile = worldIn.getBlockEntity(pos);
+            BlockEntity tile = worldIn.getBlockEntity(pos);
             if (tile instanceof InfuserTileEntity)
             {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (InfuserTileEntity) tile, pos);
+                NetworkHooks.openGui((ServerPlayer) player, (InfuserTileEntity) tile, pos);
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tile = worldIn.getBlockEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof InfuserTileEntity && state.getBlock() != newState.getBlock())
-            InventoryHelper.dropContents(worldIn, pos, ((InfuserTileEntity)tile).getInventory().toNonNullList());
+            Containers.dropContents(worldIn, pos, ((InfuserTileEntity)tile).getInventory().toNonNullList());
 
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
         builder.add(FACING, LIT);
@@ -87,25 +95,25 @@ public class InfuserBlock extends Block
     }
 
     @Override
-    public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation direction)
+    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation direction)
     {
         return state.setValue(FACING, direction.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos)
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos)
     {
-        return state.getValue(LIT) ? 14 : super.getLightValue(state, world, pos);
+        return state.getValue(LIT) ? 14 : super.getLightEmission(state, world, pos);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand)
     {
         if (stateIn.getValue(LIT))
         {
@@ -117,7 +125,7 @@ public class InfuserBlock extends Block
 
             if (rand.nextDouble() < 0.1D)
             {
-                worldIn.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                worldIn.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
 
             switch (direction)

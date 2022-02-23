@@ -1,16 +1,16 @@
 package com.mineria.mod.mixin;
 
 import com.mineria.mod.common.entity.profession.IMineriaProfession;
-import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(VillagerEntity.class)
-public abstract class VillagerEntityMixin
+@Mixin(Villager.class)
+public abstract class VillagerMixin
 {
     @Shadow public abstract VillagerData getVillagerData();
 

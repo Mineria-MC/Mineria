@@ -1,26 +1,26 @@
 package com.mineria.mod.common.entity.goal;
 
 import com.google.common.collect.Lists;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlertTeamHurtByTargetGoal extends HurtByTargetGoal
 {
-    protected Class<? extends MobEntity>[] entitiesToAlert;
+    protected Class<? extends Mob>[] entitiesToAlert;
 
-    public AlertTeamHurtByTargetGoal(CreatureEntity entity, Class<?>... toIgnoreDamage)
+    public AlertTeamHurtByTargetGoal(PathfinderMob entity, Class<?>... toIgnoreDamage)
     {
         super(entity, toIgnoreDamage);
     }
 
     @SafeVarargs
-    public final AlertTeamHurtByTargetGoal setAlertEntities(Class<? extends MobEntity>... entities)
+    public final AlertTeamHurtByTargetGoal setAlertEntities(Class<? extends Mob>... entities)
     {
         this.setAlertOthers();
         this.entitiesToAlert = entities;
@@ -31,16 +31,16 @@ public class AlertTeamHurtByTargetGoal extends HurtByTargetGoal
     protected void alertOthers()
     {
         double followDistance = this.getFollowDistance();
-        AxisAlignedBB aabb = AxisAlignedBB.unitCubeFromLowerCorner(this.mob.position()).inflate(followDistance, 10.0D, followDistance);
-        List<MobEntity> entities = Lists.newArrayList(this.mob.level.getLoadedEntitiesOfClass(this.mob.getClass(), aabb));
+        AABB aabb = AABB.unitCubeFromLowerCorner(this.mob.position()).inflate(followDistance, 10.0D, followDistance);
+        List<Mob> entities = Lists.newArrayList(this.mob.level.getEntitiesOfClass(this.mob.getClass(), aabb));
 
-        for(Class<? extends MobEntity> clazz : entitiesToAlert)
+        for(Class<? extends Mob> clazz : entitiesToAlert)
         {
-            entities.addAll(this.mob.level.getLoadedEntitiesOfClass(clazz, aabb));
+            entities.addAll(this.mob.level.getEntitiesOfClass(clazz, aabb));
         }
 
-        for(MobEntity entity : entities)
-            if(this.mob != entity && entity.getTarget() == null && this.mob.getLastHurtByMob() != null && (!(this.mob instanceof TameableEntity) || ((TameableEntity)this.mob).getOwner() == ((TameableEntity)entity).getOwner()) && !entity.isAlliedTo(this.mob.getLastHurtByMob()))
+        for(Mob entity : entities)
+            if(this.mob != entity && entity.getTarget() == null && this.mob.getLastHurtByMob() != null && (!(this.mob instanceof TamableAnimal) || ((TamableAnimal)this.mob).getOwner() == ((TamableAnimal)entity).getOwner()) && !entity.isAlliedTo(this.mob.getLastHurtByMob()))
                 this.alertOther(entity, this.mob.getLastHurtByMob());
     }
 }

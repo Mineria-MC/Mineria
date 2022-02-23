@@ -4,21 +4,21 @@ import com.mineria.mod.Mineria;
 import com.mineria.mod.common.blocks.xp_block.XpBlockTileEntity;
 import com.mineria.mod.common.containers.slots.XpBlockSlot;
 import com.mineria.mod.common.init.MineriaContainerTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class XpBlockContainer extends MineriaContainer<XpBlockTileEntity>
 {
-    private final IIntArray data;
+    private final ContainerData data;
 
-    public XpBlockContainer(int id, PlayerInventory playerInv, XpBlockTileEntity tileEntity, IIntArray dataSlots)
+    public XpBlockContainer(int id, Inventory playerInv, XpBlockTileEntity tileEntity, ContainerData dataSlots)
     {
         super(MineriaContainerTypes.XP_BLOCK.get(), id, tileEntity);
         this.data = dataSlots;
@@ -32,7 +32,7 @@ public class XpBlockContainer extends MineriaContainer<XpBlockTileEntity>
         this.addDataSlots(dataSlots);
     }
 
-    public static XpBlockContainer create(int id, PlayerInventory playerInv, PacketBuffer buffer)
+    public static XpBlockContainer create(int id, Inventory playerInv, FriendlyByteBuf buffer)
     {
         XpBlockTileEntity tile = getTileEntity(XpBlockTileEntity.class, playerInv, buffer);
         return new XpBlockContainer(id, playerInv, tile, tile.dataSlots);
@@ -52,10 +52,10 @@ public class XpBlockContainer extends MineriaContainer<XpBlockTileEntity>
     }
 
     @Override
-    public void removed(PlayerEntity playerIn)
+    public void removed(Player playerIn)
     {
         super.removed(playerIn);
-        this.worldPosCallable.execute((world, pos) -> this.clearContainer(playerIn, world, new Inventory(this.tile.getInventory().toNonNullList().toArray(new ItemStack[0]))));
+        this.worldPosCallable.execute((world, pos) -> this.clearContainer(playerIn, new SimpleContainer(this.tile.getInventory().toNonNullList().toArray(new ItemStack[0]))));
         this.tile.clearContent();
     }
 

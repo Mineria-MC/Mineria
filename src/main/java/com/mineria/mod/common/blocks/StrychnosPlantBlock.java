@@ -1,15 +1,19 @@
 package com.mineria.mod.common.blocks;
 
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
 
 import java.util.Random;
 
@@ -19,12 +23,12 @@ public class StrychnosPlantBlock extends VineBlock
 
     public StrychnosPlantBlock()
     {
-        super(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE));
+        super(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE));
         registerDefaultState(this.stateDefinition.any().setValue(UP, false).setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(AGE, 0));
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
+    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random)
     {
         if (worldIn.random.nextInt(8) == 0 && worldIn.isAreaLoaded(pos, 4))
         {
@@ -38,7 +42,7 @@ public class StrychnosPlantBlock extends VineBlock
                     BlockPos newPos = pos.relative(direction);
                     BlockState newState = worldIn.getBlockState(newPos);
 
-                    if (newState.isAir(worldIn, newPos))
+                    if (newState.isAir())
                     {
                         Direction clockWise = direction.getClockWise();
                         Direction counterClockWise = direction.getCounterClockWise();
@@ -112,7 +116,7 @@ public class StrychnosPlantBlock extends VineBlock
                 {
                     BlockPos below = pos.below();
                     BlockState belowState = worldIn.getBlockState(below);
-                    boolean air = belowState.isAir(worldIn, below);
+                    boolean air = belowState.isAir();
 
                     if (air || belowState.is(this))
                     {
@@ -157,7 +161,7 @@ public class StrychnosPlantBlock extends VineBlock
         return state.getValue(NORTH) || state.getValue(EAST) || state.getValue(SOUTH) || state.getValue(WEST);
     }
 
-    private boolean canSpread(IBlockReader reader, BlockPos pos)
+    private boolean canSpread(BlockGetter reader, BlockPos pos)
     {
         Iterable<BlockPos> iterable = BlockPos.betweenClosed(pos.getX() - 4, pos.getY() - 1, pos.getZ() - 4, pos.getX() + 4, pos.getY() + 1, pos.getZ() + 4);
         int j = 5;
@@ -177,7 +181,7 @@ public class StrychnosPlantBlock extends VineBlock
         return true;
     }
 
-    private boolean canSupportAtFace(IBlockReader world, BlockPos pos, Direction dir)
+    private boolean canSupportAtFace(BlockGetter world, BlockPos pos, Direction dir)
     {
         if (dir == Direction.DOWN)
         {
@@ -201,7 +205,7 @@ public class StrychnosPlantBlock extends VineBlock
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder.add(AGE));
     }

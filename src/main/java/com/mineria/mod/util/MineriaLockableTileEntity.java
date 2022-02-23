@@ -1,16 +1,17 @@
 package com.mineria.mod.util;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,13 +21,14 @@ import javax.annotation.Nullable;
 /**
  * Abstract class for Mineria tile entities.
  */
-public abstract class MineriaLockableTileEntity extends LockableTileEntity
+// TODO
+public abstract class MineriaLockableTileEntity extends BaseContainerBlockEntity
 {
     protected final CustomItemStackHandler inventory;
 
-    protected MineriaLockableTileEntity(TileEntityType<?> typeIn, CustomItemStackHandler inventory)
+    protected MineriaLockableTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state, CustomItemStackHandler inventory)
     {
-        super(typeIn);
+        super(typeIn, pos, state);
         this.inventory = inventory;
     }
 
@@ -68,7 +70,7 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player)
+    public boolean stillValid(Player player)
     {
         return this.level.getBlockEntity(this.worldPosition) == this && player.distanceToSqr((double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D) <= 64.0D;
     }
@@ -80,7 +82,7 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.put("Inventory", this.inventory.serializeNBT());
@@ -88,9 +90,9 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.load(state, nbt);
+        super.load(nbt);
         if(nbt.contains("Items")) deserializeOld(nbt, this.inventory); // Used if the NBT data is not up to date.
         else this.inventory.deserializeNBT(nbt.getCompound("Inventory"));
     }
@@ -102,34 +104,33 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
+    public ClientboundBlockEntityDataPacket getUpdatePacket()
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         this.save(nbt);
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, nbt);
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbt);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
     {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         this.save(nbt);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag)
+    public void handleUpdateTag(CompoundTag tag)
     {
-        this.load(state, tag);
+        this.load(tag);
     }
 
-    @Nullable
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side)
     {
@@ -150,11 +151,10 @@ public abstract class MineriaLockableTileEntity extends LockableTileEntity
         return 0;
     }*/
 
-    @Deprecated
-    private static void deserializeOld(CompoundNBT nbt, CustomItemStackHandler inventory)
+    private static void deserializeOld(CompoundTag nbt, CustomItemStackHandler inventory)
     {
         NonNullList<ItemStack> inv = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(nbt, inv);
+        ContainerHelper.loadAllItems(nbt, inv);
         inventory.setNonNullList(inv);
     }
 }

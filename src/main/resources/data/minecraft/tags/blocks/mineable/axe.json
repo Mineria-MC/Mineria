@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "mineria:infuser",
+    "mineria:apothecary_table",
+    "mineria:water_barrel",
+    "mineria:infinite_water_barrel",
+    "mineria:copper_water_barrel",
+    "mineria:iron_fluid_barrel",
+    "mineria:golden_water_barrel",
+    "mineria:tnt_barrel"
+  ]
+}

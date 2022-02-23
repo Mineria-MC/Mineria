@@ -3,9 +3,9 @@ package com.mineria.mod.common.init;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.world.feature.ModVinesFeature;
 import com.mineria.mod.common.world.feature.ModVinesFeatureConfig;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraftforge.event.RegistryEvent;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class MineriaFeatures
 
     public static final Feature<ModVinesFeatureConfig> MOD_VINES = registerFeature("mod_vines", new ModVinesFeature());
 
-    private static <FC extends IFeatureConfig> Feature<FC> registerFeature(String name, Feature<FC> feature)
+    private static <FC extends FeatureConfiguration> Feature<FC> registerFeature(String name, Feature<FC> feature)
     {
         FEATURES.add(feature.setRegistryName(new ResourceLocation(Mineria.MODID, name)));
         return feature;

@@ -3,17 +3,17 @@ package com.mineria.mod.common.enchantments;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.capabilities.CapabilityRegistry;
 import com.mineria.mod.common.entity.ElementalOrbEntity;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +23,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 
+import net.minecraft.world.item.enchantment.Enchantment.Rarity;
+
 @Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class FourElementsEnchantment extends Enchantment
 {
@@ -30,7 +32,7 @@ public class FourElementsEnchantment extends Enchantment
 
     public FourElementsEnchantment(ElementType elementType)
     {
-        super(Rarity.VERY_RARE, EnchantmentType.ARMOR_CHEST, new EquipmentSlotType[] { EquipmentSlotType.CHEST });
+        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR_CHEST, new EquipmentSlot[] { EquipmentSlot.CHEST });
         this.elementType = elementType;
     }
 
@@ -65,9 +67,9 @@ public class FourElementsEnchantment extends Enchantment
     }
 
     @Override
-    public ITextComponent getFullname(int level)
+    public Component getFullname(int level)
     {
-        return new TranslationTextComponent(this.getDescriptionId()).withStyle(style -> style.withColor(Color.fromRgb(this.elementType.getColor())));
+        return new TranslatableComponent(this.getDescriptionId()).withStyle(style -> style.withColor(TextColor.fromRgb(this.elementType.getColor())));
     }
 
     public enum ElementType
@@ -113,9 +115,9 @@ public class FourElementsEnchantment extends Enchantment
     @SubscribeEvent
     public static void onEnchantmentApplied(TickEvent.PlayerTickEvent event)
     {
-        PlayerEntity player = event.player;
-        World world = player.getCommandSenderWorld();
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(player.inventory.armor.get(2));
+        Player player = event.player;
+        Level world = player.getCommandSenderWorld();
+        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(player.getInventory().armor.get(2));
 
         if(!world.isClientSide())
         {
@@ -125,7 +127,7 @@ public class FourElementsEnchantment extends Enchantment
                 player.getCapability(CapabilityRegistry.ATTACHED_ENTITY).ifPresent(cap -> {
                     cap.updateAttachedEntities(world);
 
-                    cap.removeAttachedEntities(entity -> entity instanceof ElementalOrbEntity && !((ElementalOrbEntity) entity).getElementType().equals(enchantment.getElementType())).forEach(Entity::remove);
+                    cap.removeAttachedEntities(entity -> entity instanceof ElementalOrbEntity && !((ElementalOrbEntity) entity).getElementType().equals(enchantment.getElementType())).forEach(entity -> entity.remove(Entity.RemovalReason.KILLED));
 
                     for(int i = cap.getAttachedEntities().size(); i < 3; i++)
                     {
@@ -137,7 +139,7 @@ public class FourElementsEnchantment extends Enchantment
                 });
             } else
             {
-                player.getCapability(CapabilityRegistry.ATTACHED_ENTITY).ifPresent(cap -> cap.removeAttachedEntities(entity -> entity instanceof ElementalOrbEntity).forEach(Entity::remove));
+                player.getCapability(CapabilityRegistry.ATTACHED_ENTITY).ifPresent(cap -> cap.removeAttachedEntities(entity -> entity instanceof ElementalOrbEntity).forEach(entity -> entity.remove(Entity.RemovalReason.KILLED)));
             }
         }
     }

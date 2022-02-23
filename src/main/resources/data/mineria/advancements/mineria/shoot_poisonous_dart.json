@@ -20,7 +20,7 @@
       "trigger": "mineria:shot_blowgun",
       "conditions": {
         "ammo": {
-          "item": "mineria:blowgun_refill",
+          "items": ["mineria:blowgun_refill"],
           "nbt": "{PoisonSource:\"mineria:elderberry\"}"
         }
       }
@@ -29,7 +29,7 @@
       "trigger": "mineria:shot_blowgun",
       "conditions": {
         "ammo": {
-          "item": "mineria:blowgun_refill",
+          "items": ["mineria:blowgun_refill"],
           "nbt": "{PoisonSource:\"mineria:strychnos_toxifera\"}"
         }
       }
@@ -38,7 +38,7 @@
       "trigger": "mineria:shot_blowgun",
       "conditions": {
         "ammo": {
-          "item": "mineria:blowgun_refill",
+          "items": ["mineria:blowgun_refill"],
           "nbt": "{PoisonSource:\"mineria:strychnos_nux_vomica\"}"
         }
       }
@@ -47,7 +47,7 @@
       "trigger": "mineria:shot_blowgun",
       "conditions": {
         "ammo": {
-          "item": "mineria:blowgun_refill",
+          "items": ["mineria:blowgun_refill"],
           "nbt": "{PoisonSource:\"mineria:belladonna\"}"
         }
       }
@@ -56,7 +56,7 @@
       "trigger": "mineria:shot_blowgun",
       "conditions": {
         "ammo": {
-          "item": "mineria:blowgun_refill",
+          "items": ["mineria:blowgun_refill"],
           "nbt": "{PoisonSource:\"mineria:mandrake\"}"
         }
       }

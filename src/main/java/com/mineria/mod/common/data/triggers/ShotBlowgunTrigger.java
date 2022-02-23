@@ -2,17 +2,17 @@ package com.mineria.mod.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import com.mineria.mod.Mineria;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
 
-public class ShotBlowgunTrigger extends AbstractCriterionTrigger<ShotBlowgunTrigger.Instance>
+public class ShotBlowgunTrigger extends SimpleCriterionTrigger<ShotBlowgunTrigger.Instance>
 {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "shot_blowgun");
 
@@ -23,24 +23,24 @@ public class ShotBlowgunTrigger extends AbstractCriterionTrigger<ShotBlowgunTrig
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate andPredicate, ConditionArrayParser parser)
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser)
     {
         ItemPredicate blowgun = ItemPredicate.fromJson(json.get("blowgun"));
         ItemPredicate ammo = ItemPredicate.fromJson(json.get("ammo"));
         return new Instance(andPredicate, blowgun, ammo);
     }
 
-    public void trigger(ServerPlayerEntity player, ItemStack blowgun, ItemStack ammo)
+    public void trigger(ServerPlayer player, ItemStack blowgun, ItemStack ammo)
     {
         this.trigger(player, instance -> instance.matches(blowgun, ammo));
     }
 
-    public static class Instance extends CriterionInstance
+    public static class Instance extends AbstractCriterionTriggerInstance
     {
         private final ItemPredicate blowgun;
         private final ItemPredicate ammo;
 
-        public Instance(EntityPredicate.AndPredicate andPredicate, ItemPredicate blowgun, ItemPredicate ammo)
+        public Instance(EntityPredicate.Composite andPredicate, ItemPredicate blowgun, ItemPredicate ammo)
         {
             super(ID, andPredicate);
             this.blowgun = blowgun;
@@ -53,7 +53,7 @@ public class ShotBlowgunTrigger extends AbstractCriterionTrigger<ShotBlowgunTrig
         }
 
         @Override
-        public JsonObject serializeToJson(ConditionArraySerializer serializer)
+        public JsonObject serializeToJson(SerializationContext serializer)
         {
             JsonObject json = super.serializeToJson(serializer);
             json.add("blowgun", this.blowgun.serializeToJson());

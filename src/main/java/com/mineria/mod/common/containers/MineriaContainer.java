@@ -3,19 +3,19 @@ package com.mineria.mod.common.containers;
 import com.mineria.mod.util.MineriaUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
@@ -24,27 +24,27 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class MineriaContainer<T extends TileEntity> extends Container
+public abstract class MineriaContainer<T extends BlockEntity> extends AbstractContainerMenu
 {
     protected final T tile;
-    protected final IWorldPosCallable worldPosCallable;
+    protected final ContainerLevelAccess worldPosCallable;
 
-    public MineriaContainer(@Nullable ContainerType<?> type, int id, T tileEntity)
+    public MineriaContainer(@Nullable MenuType<?> type, int id, T tileEntity)
     {
         super(type, id);
 
         this.tile = tileEntity;
-        this.worldPosCallable = IWorldPosCallable.create(tileEntity.getLevel(), tileEntity.getBlockPos());
+        this.worldPosCallable = ContainerLevelAccess.create(tileEntity.getLevel(), tileEntity.getBlockPos());
 
         this.createInventorySlots(tileEntity);
     }
 
     @SuppressWarnings("unchecked")
-    protected static <T extends TileEntity> T getTileEntity(Class<T> clazz, PlayerInventory playerInv, PacketBuffer data)
+    protected static <T extends BlockEntity> T getTileEntity(Class<T> clazz, Inventory playerInv, FriendlyByteBuf data)
     {
         Objects.requireNonNull(playerInv, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
+        final BlockEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
         if(tileAtPos != null)
         {
             if (tileAtPos.getClass().equals(clazz))
@@ -55,7 +55,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
         throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
     }
 
-    protected void createPlayerInventorySlots(PlayerInventory playerInv, int startX, int startY)
+    protected void createPlayerInventorySlots(Inventory playerInv, int startX, int startY)
     {
         int slotSizePlus2 = 18;
 
@@ -78,7 +78,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
     protected abstract void createInventorySlots(T tile);
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn)
+    public boolean stillValid(Player playerIn)
     {
         return stillValid(worldPosCallable, playerIn, this.tile.getBlockState().getBlock());
     }
@@ -89,7 +89,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index)
+    public ItemStack quickMoveStack(Player player, int index)
     {
         StackTransferHandler handler = this.getStackTransferHandler();
         if(handler == StackTransferHandler.NONE || handler.maxOutputIndex < 0)
@@ -179,9 +179,9 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
 
     protected abstract int getIndexForRecipe(ItemStack stack);
 
-    protected <R extends IRecipe<?>> int getIndexForRecipe(ItemStack stack, IRecipeType<R> type, Class<R> recipeClass)
+    protected <R extends Recipe<?>> int getIndexForRecipe(ItemStack stack, RecipeType<R> type, Class<R> recipeClass)
     {
-        IRecipe<?> recipe = findRecipeForStack(stack, type, recipeClass);
+        Recipe<?> recipe = findRecipeForStack(stack, type, recipeClass);
         if(recipe != null)
         {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
@@ -196,12 +196,12 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
     }
 
     @Nullable
-    protected <R extends IRecipe<?>> IRecipe<?> findRecipeForStack(ItemStack stack, IRecipeType<R> type, Class<R> recipeClass)
+    protected <R extends Recipe<?>> Recipe<?> findRecipeForStack(ItemStack stack, RecipeType<R> type, Class<R> recipeClass)
     {
-        Set<IRecipe<?>> recipes = MineriaUtils.findRecipesByType(type, this.tile.getLevel());
+        Set<Recipe<?>> recipes = MineriaUtils.findRecipesByType(type, this.tile.getLevel());
         if(recipes != null)
         {
-            for(IRecipe<?> recipe : recipes.stream().filter(recipeClass::isInstance).collect(Collectors.toList()))
+            for(Recipe<?> recipe : recipes.stream().filter(recipeClass::isInstance).collect(Collectors.toList()))
             {
                 if(recipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack)))
                     return recipe;
@@ -212,7 +212,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
     }
 
     /**
-     * A class used to handle stack transferring in {@link MineriaContainer#quickMoveStack(PlayerEntity, int)}.
+     * A class used to handle stack transferring in {@link MineriaContainer#quickMoveStack(Player, int)}.
      * Better for less code copy-pasting.
      */
     public static class StackTransferHandler
@@ -226,7 +226,7 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
         private final int maxOutputIndex;
         private int fuelIndex = -1;
         @Nullable
-        private IRecipeType<?> fuelType;
+        private RecipeType<?> fuelType;
         private final Int2ObjectMap<Predicate<ItemStack>> specialInputs;
 
         public StackTransferHandler(int outputIndex)
@@ -245,11 +245,12 @@ public abstract class MineriaContainer<T extends TileEntity> extends Container
          * This method specifies an index where fuel may be transferred to.
          *
          * @param fuelIndex the index where the fuel should go.
-         * @param type the recipe type of the fuel. Null for default. See {@link ForgeHooks#getBurnTime(ItemStack, IRecipeType)}
+         * @param type the recipe type of the fuel. Null for default. See {@link ForgeHooks#getBurnTime(ItemStack, RecipeType)}
          * @return the current instance of the StackTransferHandler.
          */
-        public StackTransferHandler withFuel(int fuelIndex, @Nullable IRecipeType<?> type)
+        public StackTransferHandler withFuel(int fuelIndex, @Nullable RecipeType<?> type)
         {
+            if(this == StackTransferHandler.NONE) return this;
             this.fuelIndex = fuelIndex;
             this.fuelType = type;
             return this;

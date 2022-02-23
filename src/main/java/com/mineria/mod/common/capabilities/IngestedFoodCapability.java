@@ -1,9 +1,9 @@
 package com.mineria.mod.common.capabilities;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
@@ -64,13 +64,13 @@ public class IngestedFoodCapability implements IIngestedFood
     }
 
     @Override
-    public CompoundNBT serializeNBT()
+    public CompoundTag serializeNBT()
     {
-        CompoundNBT nbt = new CompoundNBT();
-        CompoundNBT ingestedFoodMap = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
+        CompoundTag ingestedFoodMap = new CompoundTag();
 
         this.ingestedFoodMap.forEach((food, pair) -> {
-            CompoundNBT pairNbt = new CompoundNBT();
+            CompoundTag pairNbt = new CompoundTag();
             pairNbt.putLong("Ticks", pair.getFirst());
             pairNbt.putInt("Count", pair.getSecond());
             ingestedFoodMap.put(food.getRegistryName().toString(), pairNbt);
@@ -82,13 +82,13 @@ public class IngestedFoodCapability implements IIngestedFood
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt)
+    public void deserializeNBT(CompoundTag nbt)
     {
-        CompoundNBT ingestedFoodMap = nbt.getCompound("IngestedFoodMap");
+        CompoundTag ingestedFoodMap = nbt.getCompound("IngestedFoodMap");
 
         ingestedFoodMap.getAllKeys().forEach(key -> {
             Item food = ForgeRegistries.ITEMS.getValue(new ResourceLocation(key));
-            CompoundNBT pair = ingestedFoodMap.getCompound(key);
+            CompoundTag pair = ingestedFoodMap.getCompound(key);
             this.ingestedFoodMap.put(food, Pair.of(pair.getLong("Ticks"), pair.getInt("Count")));
         });
     }

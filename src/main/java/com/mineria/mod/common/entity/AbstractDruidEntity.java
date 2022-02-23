@@ -1,49 +1,57 @@
 package com.mineria.mod.common.entity;
 
 import com.mineria.mod.common.blocks.ritual_table.RitualTableTileEntity;
-import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaCriteriaTriggers;
+import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaSounds;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.VillagerTradeTrigger;
-import net.minecraft.block.pattern.BlockPattern;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.brain.BrainUtil;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.merchant.IMerchant;
-import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
-import net.minecraft.loot.LootContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.TradeTrigger;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.util.TimeUtil;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.Merchant;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.pattern.BlockPattern;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
@@ -51,14 +59,14 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class AbstractDruidEntity extends MonsterEntity implements IMerchant, IAngerable
+public abstract class AbstractDruidEntity extends Monster implements Merchant, NeutralMob
 {
-    private static final DataParameter<Byte> DATA_SPELL_CASTING_ID = EntityDataManager.defineId(AbstractDruidEntity.class, DataSerializers.BYTE);
-    private static final DataParameter<Optional<BlockPos>> RITUAL_POSITION = EntityDataManager.defineId(AbstractDruidEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
-    private static final DataParameter<Optional<BlockPos>> RITUAL_TABLE_POSITION = EntityDataManager.defineId(AbstractDruidEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+    private static final EntityDataAccessor<Byte> DATA_SPELL_CASTING_ID = SynchedEntityData.defineId(AbstractDruidEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Optional<BlockPos>> RITUAL_POSITION = SynchedEntityData.defineId(AbstractDruidEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
+    private static final EntityDataAccessor<Optional<BlockPos>> RITUAL_TABLE_POSITION = SynchedEntityData.defineId(AbstractDruidEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     protected int spellCastingTickCount;
     private SpellType currentSpell = SpellType.NONE;
-    private static final RangedInteger PERSISTENT_ANGER_TIME = TickRangeConverter.rangeOfSeconds(20, 39);
+    private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
     private int tradeXp;
     private int updateMerchantTimer;
     private boolean increaseProfessionLevelOnUpdate;
@@ -66,19 +74,19 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
     private int tradeLevel = 1;
     private UUID persistentAngerTarget;
     @Nullable
-    private PlayerEntity tradingPlayer;
+    private Player tradingPlayer;
     @Nullable
     private MerchantOffers offers;
     private long lastRestockGameTime;
 
-    public AbstractDruidEntity(EntityType<? extends MonsterEntity> type, World world)
+    public AbstractDruidEntity(EntityType<? extends Monster> type, Level world)
     {
         super(type, world);
         this.xpReward = 15;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
         MerchantOffers offers = this.getOffers();
@@ -90,7 +98,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         nbt.putLong("LastRestock", this.lastRestockGameTime);
         if(getRitualPosition().isPresent())
         {
-            CompoundNBT ritualPosNbt = new CompoundNBT();
+            CompoundTag ritualPosNbt = new CompoundTag();
             BlockPos ritualPos = getRitualPosition().get();
             ritualPosNbt.putInt("X", ritualPos.getX());
             ritualPosNbt.putInt("Y", ritualPos.getY());
@@ -99,7 +107,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         }
         if(getRitualTablePosition().isPresent())
         {
-            CompoundNBT ritualTablePosNbt = new CompoundNBT();
+            CompoundTag ritualTablePosNbt = new CompoundTag();
             BlockPos ritualTablePos = getRitualTablePosition().get();
             ritualTablePosNbt.putInt("X", ritualTablePos.getX());
             ritualTablePosNbt.putInt("Y", ritualTablePos.getY());
@@ -111,7 +119,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("Offers", 10))
@@ -124,16 +132,16 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         this.lastRestockGameTime = nbt.getLong("LastRestock");
         if(nbt.contains("RitualPosition"))
         {
-            CompoundNBT ritualPosNbt = nbt.getCompound("RitualPosition");
+            CompoundTag ritualPosNbt = nbt.getCompound("RitualPosition");
             setRitualPosition(new BlockPos(ritualPosNbt.getInt("X"), ritualPosNbt.getInt("Y"), ritualPosNbt.getInt("Z")));
         }
         if(nbt.contains("RitualTablePosition"))
         {
-            CompoundNBT ritualTablePosNbt = nbt.getCompound("RitualTablePosition");
+            CompoundTag ritualTablePosNbt = nbt.getCompound("RitualTablePosition");
             setRitualTablePosition(new BlockPos(ritualTablePosNbt.getInt("X"), ritualTablePosNbt.getInt("Y"), ritualTablePosNbt.getInt("Z")));
         }
 
-        if(!level.isClientSide) readPersistentAngerSaveData((ServerWorld)level, nbt);
+        if(!level.isClientSide) readPersistentAngerSaveData((ServerLevel)level, nbt);
     }
 
     @Override
@@ -147,7 +155,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
                     this.increaseProfessionLevelOnUpdate = false;
                 }
 
-                this.addEffect(new EffectInstance(Effects.REGENERATION, 200, 0));
+                this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
             }
         }
 
@@ -165,17 +173,17 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
         if(shouldRestock()) restock();
 
-        for(LivingEntity living : this.level.getNearbyEntities(LivingEntity.class, EntityPredicate.DEFAULT, this, this.getBoundingBox().inflate(20, 8, 20)))
+        for(LivingEntity living : this.level.getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, this, this.getBoundingBox().inflate(20, 8, 20)))
         {
             if(living.isInWater() && !living.equals(this.getTarget()))
             {
-                living.addEffect(new EffectInstance(Effects.REGENERATION, 50));
+                living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50));
             }
         }
 
         if(getRitualTablePosition().isPresent())
         {
-            TileEntity tile = this.level.getBlockEntity(this.getRitualTablePosition().get());
+            BlockEntity tile = this.level.getBlockEntity(this.getRitualTablePosition().get());
             if(!(tile instanceof RitualTableTileEntity))
             {
                 setRitualTablePosition(null);
@@ -194,9 +202,9 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
             double red = spell.spellColor[0];
             double green = spell.spellColor[1];
             double blue = spell.spellColor[2];
-            float f = this.yBodyRot * ((float)Math.PI / 180F) + MathHelper.cos((float)this.tickCount * 0.6662F) * 0.25F;
-            float dx = MathHelper.cos(f);
-            float dz = MathHelper.sin(f);
+            float f = this.yBodyRot * ((float)Math.PI / 180F) + Mth.cos((float)this.tickCount * 0.6662F) * 0.25F;
+            float dx = Mth.cos(f);
+            float dz = Mth.sin(f);
             this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)dx * 0.6D, this.getY() + 1.8D, this.getZ() + (double)dz * 0.6D, red, green, blue);
             this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)dx * 0.6D, this.getY() + 1.8D, this.getZ() - (double)dz * 0.6D, red, green, blue);
         }
@@ -299,14 +307,14 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
     @Nullable
     @Override
-    public Entity changeDimension(ServerWorld p_241206_1_, ITeleporter teleporter)
+    public Entity changeDimension(ServerLevel p_241206_1_, ITeleporter teleporter)
     {
         stopTrading();
         return getRitualPosition().isPresent() ? null : super.changeDimension(p_241206_1_, teleporter);
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand)
+    protected InteractionResult mobInteract(Player player, InteractionHand hand)
     {
         if(isAlive() && !isTrading() && !player.isSecondaryUseActive() && !player.equals(this.getTarget()) && !getRitualPosition().isPresent())
         {
@@ -319,7 +327,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
                 }
 
             }
-            return ActionResultType.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
         return super.mobInteract(player, hand);
     }
@@ -352,7 +360,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
     @Override
     public void startPersistentAngerTimer()
     {
-        setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.randomValue(this.random));
+        setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
     }
 
     @Override
@@ -361,7 +369,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         return source == DamageSource.LIGHTNING_BOLT || super.isInvulnerableTo(source);
     }
 
-    protected abstract Int2ObjectMap<List<VillagerTrades.ITrade>> getTrades();
+    protected abstract Int2ObjectMap<List<VillagerTrades.ItemListing>> getTrades();
 
     protected void rewardTradeXp(MerchantOffer offer)
     {
@@ -376,7 +384,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
         if (offer.shouldRewardExp())
         {
-            this.level.addFreshEntity(new ExperienceOrbEntity(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), xp));
+            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), xp));
         }
     }
 
@@ -387,28 +395,28 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
     protected void updateTrades()
     {
-        List<VillagerTrades.ITrade> trades = getTrades().get(tradeLevel);
+        List<VillagerTrades.ItemListing> trades = getTrades().get(tradeLevel);
         if (trades != null)
         {
             this.addOffersFromItemListings(this.getOffers(), trades, 10);
         }
     }
 
-    protected void addOffersFromItemListings(MerchantOffers offers, List<VillagerTrades.ITrade> trades, int tradeAmount)
+    protected void addOffersFromItemListings(MerchantOffers offers, List<VillagerTrades.ItemListing> trades, int tradeAmount)
     {
-        List<VillagerTrades.ITrade> copy = new ArrayList<>(trades);
+        List<VillagerTrades.ItemListing> copy = new ArrayList<>(trades);
         if (trades.size() > tradeAmount)
         {
             for (int i = 0; i < tradeAmount; i++)
             {
-                VillagerTrades.ITrade trade = copy.remove(random.nextInt(tradeAmount));
+                VillagerTrades.ItemListing trade = copy.remove(random.nextInt(tradeAmount));
                 MerchantOffer offer = trade.getOffer(this, this.random);
                 if(offer != null)
                     offers.add(offer);
             }
         } else
         {
-            for (VillagerTrades.ITrade trade : trades)
+            for (VillagerTrades.ItemListing trade : trades)
             {
                 MerchantOffer offer = trade.getOffer(this, this.random);
                 if (offer != null)
@@ -440,14 +448,14 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
     }
 
     @Override
-    public void setTradingPlayer(@Nullable PlayerEntity player)
+    public void setTradingPlayer(@Nullable Player player)
     {
         this.tradingPlayer = player;
     }
 
     @Nullable
     @Override
-    public PlayerEntity getTradingPlayer()
+    public Player getTradingPlayer()
     {
         return this.tradingPlayer;
     }
@@ -475,18 +483,18 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         offer.increaseUses();
         this.ambientSoundTime = -this.getAmbientSoundInterval();
         rewardTradeXp(offer);
-        if (this.tradingPlayer instanceof ServerPlayerEntity)
+        if (this.tradingPlayer instanceof ServerPlayer)
         {
-            triggerTrade((ServerPlayerEntity) this.tradingPlayer, this, offer.getResult());
+            triggerTrade((ServerPlayer) this.tradingPlayer, this, offer.getResult());
         }
         giveBonusRewards(offer.getResult());
     }
 
-    private static void triggerTrade(ServerPlayerEntity player, Entity entity, ItemStack stack)
+    private static void triggerTrade(ServerPlayer player, Entity entity, ItemStack stack)
     {
-        LootContext ctx = net.minecraft.advancements.criterion.EntityPredicate.createContext(player, entity);
-        Method triggerMethod = ObfuscationReflectionHelper.findMethod(AbstractCriterionTrigger.class, "func_235959_a_", ServerPlayerEntity.class, Predicate.class);
-        Predicate<VillagerTradeTrigger.Instance> condition = instance -> instance.matches(ctx, stack);
+        LootContext ctx = net.minecraft.advancements.critereon.EntityPredicate.createContext(player, entity);
+        Method triggerMethod = ObfuscationReflectionHelper.findMethod(SimpleCriterionTrigger.class, "m_66234_", ServerPlayer.class, Predicate.class);
+        Predicate<TradeTrigger.TriggerInstance> condition = instance -> instance.matches(ctx, stack);
         try
         {
             triggerMethod.invoke(CriteriaTriggers.TRADE, player, condition);
@@ -498,10 +506,10 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
     private void giveBonusRewards(ItemStack result)
     {
-        PlayerEntity player = getTradingPlayer();
+        Player player = getTradingPlayer();
         if(player != null)
         {
-            Item heldItem = player.getItemInHand(Hand.OFF_HAND).getItem();
+            Item heldItem = player.getItemInHand(InteractionHand.OFF_HAND).getItem();
             boolean bonus = false;
             if(heldItem.equals(MineriaItems.MISTLETOE))
                 bonus = random.nextFloat() < 0.4F;
@@ -514,10 +522,10 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
             if(bonus)
             {
-                BrainUtil.throwItem(this, result, player.position());
-                if(player instanceof ServerPlayerEntity)
+                BehaviorUtils.throwItem(this, result, player.position());
+                if(player instanceof ServerPlayer)
                 {
-                    MineriaCriteriaTriggers.OBTAINED_TRADE_BONUS_REWARDS.trigger((ServerPlayerEntity) player, this, result);
+                    MineriaCriteriaTriggers.OBTAINED_TRADE_BONUS_REWARDS.trigger((ServerPlayer) player, this, result);
                 }
             }
         }
@@ -534,7 +542,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
     }
 
     @Override
-    public World getLevel()
+    public Level getLevel()
     {
         return this.level;
     }
@@ -605,9 +613,9 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
 
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT nbt)
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt)
     {
-        setDropChance(EquipmentSlotType.MAINHAND, 0.0F);
+        setDropChance(EquipmentSlot.MAINHAND, 0.0F);
         this.restrictTo(this.blockPosition(), 16);
         return super.finalizeSpawn(world, difficulty, reason, data, nbt);
     }
@@ -617,7 +625,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         return trade ? MineriaSounds.DRUID_YES.get() : MineriaSounds.DRUID_NO.get();
     }
 
-    public void callForRitual(BlockPattern.PatternHelper patternHelper, int index)
+    public void callForRitual(BlockPattern.BlockPatternMatch patternHelper, int index)
     {
         BlockPos topFrontLeft = patternHelper.getFrontTopLeft();
         setRitualTablePosition(topFrontLeft.offset(3, -1, 3));
@@ -667,9 +675,9 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         this.entityData.set(RITUAL_TABLE_POSITION, Optional.ofNullable(pos));
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MAX_HEALTH, 25.0D).add(Attributes.MOVEMENT_SPEED, 0.25D);
+        return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 25.0D).add(Attributes.MOVEMENT_SPEED, 0.25D);
     }
 
     public enum ArmPose
@@ -821,7 +829,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         protected abstract AbstractDruidEntity.SpellType getSpell();
     }
 
-    public class DruidRandomWalkingGoal extends RandomWalkingGoal
+    public class DruidRandomWalkingGoal extends RandomStrollGoal
     {
         public DruidRandomWalkingGoal(double speedModifier)
         {
@@ -835,7 +843,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         }
     }
 
-    public class DruidLookAtGoal extends LookAtGoal
+    public class DruidLookAtGoal extends LookAtPlayerGoal
     {
         public DruidLookAtGoal(Class<? extends LivingEntity> targetClasses, float lookDistance)
         {
@@ -898,7 +906,7 @@ public abstract class AbstractDruidEntity extends MonsterEntity implements IMerc
         public void tick()
         {
             if(getRitualTablePosition().isPresent())
-                lookControl.setLookAt(Vector3d.atCenterOf(getRitualTablePosition().get().above()));
+                lookControl.setLookAt(Vec3.atCenterOf(getRitualTablePosition().get().above()));
         }
     }
 }

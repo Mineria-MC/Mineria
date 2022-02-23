@@ -4,27 +4,27 @@ import com.mineria.mod.common.blocks.barrel.golden.GoldenWaterBarrelTileEntity;
 import com.mineria.mod.common.init.MineriaContainerTypes;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.items.DrinkItem;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.GlassBottleItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.PotionItem;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BottleItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
 public class GoldenWaterBarrelContainer extends MineriaContainer<GoldenWaterBarrelTileEntity>
 {
-    public GoldenWaterBarrelContainer(int id, PlayerInventory playerInv, GoldenWaterBarrelTileEntity tileEntity)
+    public GoldenWaterBarrelContainer(int id, Inventory playerInv, GoldenWaterBarrelTileEntity tileEntity)
     {
         super(MineriaContainerTypes.GOLDEN_WATER_BARREL.get(), id, tileEntity);
 
         this.createPlayerInventorySlots(playerInv, 8, 98);
     }
 
-    public static GoldenWaterBarrelContainer create(int id, PlayerInventory playerInv, PacketBuffer data)
+    public static GoldenWaterBarrelContainer create(int id, Inventory playerInv, FriendlyByteBuf data)
     {
         return new GoldenWaterBarrelContainer(id, playerInv, getTileEntity(GoldenWaterBarrelTileEntity.class, playerInv, data));
     }
@@ -53,7 +53,7 @@ public class GoldenWaterBarrelContainer extends MineriaContainer<GoldenWaterBarr
                     @Override
                     public boolean mayPlace(@Nonnull ItemStack stack)
                     {
-                        return stack.getItem() instanceof PotionItem || stack.getItem() instanceof GlassBottleItem;
+                        return stack.getItem() instanceof PotionItem || stack.getItem() instanceof BottleItem;
                     }
                 });
             }
@@ -61,7 +61,7 @@ public class GoldenWaterBarrelContainer extends MineriaContainer<GoldenWaterBarr
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index)
+    public ItemStack quickMoveStack(Player playerIn, int index)
     {
         ItemStack stackToTransfer = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -85,7 +85,7 @@ public class GoldenWaterBarrelContainer extends MineriaContainer<GoldenWaterBarr
                     if(!this.moveItemStackTo(slotStack, 0, 4, false))
                         return ItemStack.EMPTY;
                 }
-                else if(slotStack.getItem() instanceof PotionItem || slotStack.getItem() instanceof GlassBottleItem)
+                else if(slotStack.getItem() instanceof PotionItem || slotStack.getItem() instanceof BottleItem)
                 {
                     if(!this.moveItemStackTo(slotStack, 4, 20, false))
                         return ItemStack.EMPTY;

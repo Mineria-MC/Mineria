@@ -1,32 +1,37 @@
 package com.mineria.mod.common.entity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BrownBearEntity extends CreatureEntity
+public class BrownBearEntity extends PathfinderMob
 {
-    private static final DataParameter<Boolean> DATA_STANDING_ID = EntityDataManager.defineId(BrownBearEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_STANDING_ID = SynchedEntityData.defineId(BrownBearEntity.class, EntityDataSerializers.BOOLEAN);
     private float clientSideStandAnimationO;
     private float clientSideStandAnimation;
     public final boolean isLightBrown;
 
-    public BrownBearEntity(EntityType<? extends BrownBearEntity> type, World world)
+    public BrownBearEntity(EntityType<? extends BrownBearEntity> type, Level world)
     {
         super(type, world);
         this.xpReward = 5;
@@ -37,19 +42,19 @@ public class BrownBearEntity extends CreatureEntity
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal());
-        this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, FoxEntity.class, 10, true, true, null));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Fox.class, 10, true, true, null));
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 6.0D);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 6.0D);
     }
 
     @Override
@@ -97,16 +102,16 @@ public class BrownBearEntity extends CreatureEntity
             this.clientSideStandAnimationO = this.clientSideStandAnimation;
             if (this.isStanding())
             {
-                this.clientSideStandAnimation = MathHelper.clamp(this.clientSideStandAnimation + 1.0F, 0.0F, 6.0F);
+                this.clientSideStandAnimation = Mth.clamp(this.clientSideStandAnimation + 1.0F, 0.0F, 6.0F);
             } else
             {
-                this.clientSideStandAnimation = MathHelper.clamp(this.clientSideStandAnimation - 1.0F, 0.0F, 6.0F);
+                this.clientSideStandAnimation = Mth.clamp(this.clientSideStandAnimation - 1.0F, 0.0F, 6.0F);
             }
         }
     }
 
     @Override
-    public EntitySize getDimensions(Pose pose)
+    public EntityDimensions getDimensions(Pose pose)
     {
         if (this.clientSideStandAnimation > 0.0F)
         {
@@ -141,7 +146,7 @@ public class BrownBearEntity extends CreatureEntity
     @OnlyIn(Dist.CLIENT)
     public float getStandingAnimationScale(float p_189795_1_)
     {
-        return MathHelper.lerp(p_189795_1_, this.clientSideStandAnimationO, this.clientSideStandAnimation) / 6.0F;
+        return Mth.lerp(p_189795_1_, this.clientSideStandAnimationO, this.clientSideStandAnimation) / 6.0F;
     }
 
     @Override
@@ -150,7 +155,7 @@ public class BrownBearEntity extends CreatureEntity
         return 0.98F;
     }
 
-    class MeleeAttackGoal extends net.minecraft.entity.ai.goal.MeleeAttackGoal {
+    class MeleeAttackGoal extends net.minecraft.world.entity.ai.goal.MeleeAttackGoal {
         public MeleeAttackGoal()
         {
             super(BrownBearEntity.this, 1.25D, true);

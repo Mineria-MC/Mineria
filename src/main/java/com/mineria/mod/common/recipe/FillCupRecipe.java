@@ -4,13 +4,13 @@ import com.mineria.mod.common.blocks.apothecary_table.ApothecaryTableInventoryWr
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class FillCupRecipe extends AbstractApothecaryTableRecipe
     }
 
     @Override
-    public boolean matches(ApothecaryTableInventoryWrapper wrapper, World world)
+    public boolean matches(ApothecaryTableInventoryWrapper wrapper, Level world)
     {
         return this.input.test(wrapper.getItem(1)) && wrapper.getPoisonSource() != null;
     }
@@ -50,7 +50,7 @@ public class FillCupRecipe extends AbstractApothecaryTableRecipe
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer()
+    public RecipeSerializer<?> getSerializer()
     {
         return MineriaRecipeSerializers.FILL_CUP.get();
     }

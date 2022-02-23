@@ -7,14 +7,11 @@ import com.mineria.mod.common.init.MineriaContainerTypes;
 import com.mineria.mod.common.init.MineriaRecipeSerializers;
 import com.mineria.mod.common.recipe.DistillerRecipe;
 import com.mineria.mod.util.FunctionalIntReferenceHolder;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DistillerContainer extends MineriaContainer<DistillerTileEntity>
@@ -24,7 +21,7 @@ public class DistillerContainer extends MineriaContainer<DistillerTileEntity>
     private final FunctionalIntReferenceHolder burnTime;
     private final FunctionalIntReferenceHolder currentBurnTime;
 
-    public DistillerContainer(int id, PlayerInventory playerInv, DistillerTileEntity distillerTile)
+    public DistillerContainer(int id, Inventory playerInv, DistillerTileEntity distillerTile)
     {
         super(MineriaContainerTypes.DISTILLER.get(), id, distillerTile);
 
@@ -37,7 +34,7 @@ public class DistillerContainer extends MineriaContainer<DistillerTileEntity>
         this.addDataSlot(currentBurnTime = new FunctionalIntReferenceHolder(() -> distillerTile.currentBurnTime, value -> distillerTile.currentBurnTime = value));
     }
 
-    public static DistillerContainer create(int id, PlayerInventory playerInv, PacketBuffer buffer)
+    public static DistillerContainer create(int id, Inventory playerInv, FriendlyByteBuf buffer)
     {
         return new DistillerContainer(id, playerInv, getTileEntity(DistillerTileEntity.class, playerInv, buffer));
     }

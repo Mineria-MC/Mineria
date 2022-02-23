@@ -1,19 +1,19 @@
 package com.mineria.mod.common.effects;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
 
-public class DrowningEffect extends Effect
+public class DrowningEffect extends MobEffect
 {
     public DrowningEffect()
     {
-        super(EffectType.HARMFUL, 37);
+        super(MobEffectCategory.HARMFUL, 37);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class DrowningEffect extends Effect
     {
         if(living.getAirSupply() < 0)
         {
-            Vector3d delta = living.getDeltaMovement();
+            Vec3 delta = living.getDeltaMovement();
 
             for (int i = 0; i < 8; ++i)
             {

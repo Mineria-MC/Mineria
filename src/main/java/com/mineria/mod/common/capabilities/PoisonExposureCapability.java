@@ -2,8 +2,8 @@ package com.mineria.mod.common.capabilities;
 
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,13 +63,13 @@ public class PoisonExposureCapability implements IPoisonExposure
     }
 
     @Override
-    public CompoundNBT serializeNBT()
+    public CompoundTag serializeNBT()
     {
-        CompoundNBT nbt = new CompoundNBT();
-        CompoundNBT exposureMap = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
+        CompoundTag exposureMap = new CompoundTag();
 
         this.exposureMap.forEach((source, pair) -> {
-            CompoundNBT pairNbt = new CompoundNBT();
+            CompoundTag pairNbt = new CompoundTag();
             pairNbt.putLong("Ticks", pair.getFirst());
             pairNbt.putInt("Count", pair.getSecond());
             exposureMap.put(source.getId().toString(), pairNbt);
@@ -81,13 +81,13 @@ public class PoisonExposureCapability implements IPoisonExposure
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt)
+    public void deserializeNBT(CompoundTag nbt)
     {
-        CompoundNBT exposureMap = nbt.getCompound("ExposureMap");
+        CompoundTag exposureMap = nbt.getCompound("ExposureMap");
 
         exposureMap.getAllKeys().forEach(key -> {
             PoisonSource source = PoisonSource.byName(ResourceLocation.tryParse(key));
-            CompoundNBT pair = exposureMap.getCompound(key);
+            CompoundTag pair = exposureMap.getCompound(key);
             this.exposureMap.put(source, Pair.of(pair.getLong("Ticks"), pair.getInt("Count")));
         });
     }

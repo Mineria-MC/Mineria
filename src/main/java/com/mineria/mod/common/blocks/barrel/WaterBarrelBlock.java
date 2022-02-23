@@ -1,11 +1,12 @@
 package com.mineria.mod.common.blocks.barrel;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -14,18 +15,18 @@ public class WaterBarrelBlock extends AbstractWaterBarrelBlock
 {
     public WaterBarrelBlock(int initialCapacity)
     {
-        super(2, 10, 0, initialCapacity);
+        super(2, 10, initialCapacity);
     }
 
     @Override
-    protected void addInformationOnShift(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    protected void addInformationOnShift(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return new WaterBarrelTileEntity(initialCapacity);
+        return new WaterBarrelTileEntity(initialCapacity, pos, state);
     }
 }

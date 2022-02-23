@@ -1,16 +1,21 @@
 package com.mineria.mod.common.blocks;
 
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.PlantType;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class PlantBlock extends BushBlock
 {
@@ -20,32 +25,32 @@ public class PlantBlock extends BushBlock
 
     public PlantBlock(MaterialColor color, boolean isBush)
     {
-        this(AbstractBlock.Properties.of(Material.PLANT, color).noCollission().strength(isBush ? 0.5F : 0).sound(SoundType.GRASS), isBush);
+        this(BlockBehaviour.Properties.of(Material.PLANT, color).noCollission().strength(isBush ? 0.5F : 0).sound(SoundType.GRASS), isBush);
     }
 
-    protected PlantBlock(AbstractBlock.Properties properties, boolean isBush)
+    protected PlantBlock(BlockBehaviour.Properties properties, boolean isBush)
     {
         super(properties);
         this.isBush = isBush;
     }
 
     @Override
-    public PlantType getPlantType(IBlockReader world, BlockPos pos)
+    public PlantType getPlantType(BlockGetter world, BlockPos pos)
     {
         return PlantType.PLAINS;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return this.isBush ? super.getShape(state, worldIn, pos, context) : PLANT_SHAPE;
     }
 
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn)
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn)
     {
         if(this.isBush)
-            entityIn.makeStuckInBlock(state, new Vector3d(0.95F, 0.75D, 0.95F));
+            entityIn.makeStuckInBlock(state, new Vec3(0.95F, 0.75D, 0.95F));
     }
 }

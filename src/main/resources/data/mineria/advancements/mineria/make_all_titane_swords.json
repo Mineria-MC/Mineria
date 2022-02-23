@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_sword"
+            "items": ["mineria:titane_sword"]
           }
         ]
       }
@@ -31,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_sword_with_copper_handle"
+            "items": ["mineria:titane_sword_with_copper_handle"]
           }
         ]
       }
@@ -41,7 +41,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_sword_with_iron_handle"
+            "items": ["mineria:titane_sword_with_iron_handle"]
           }
         ]
       }
@@ -51,7 +51,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_sword_with_gold_handle"
+            "items": ["mineria:titane_sword_with_gold_handle"]
           }
         ]
       }
@@ -61,7 +61,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:titane_sword_with_silver_handle"
+            "items": ["mineria:titane_sword_with_silver_handle"]
           }
         ]
       }

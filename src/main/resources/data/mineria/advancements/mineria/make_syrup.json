@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:syrup"
+            "items": ["mineria:syrup"]
           }
         ]
       }

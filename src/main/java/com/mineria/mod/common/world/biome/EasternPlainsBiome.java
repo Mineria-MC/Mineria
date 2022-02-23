@@ -1,15 +1,14 @@
 package com.mineria.mod.common.world.biome;
 
 import com.mineria.mod.common.world.feature.MineriaConfiguredFeatures;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeAmbience;
-import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.biome.MoodSoundAmbience;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Features;
-import net.minecraft.world.gen.feature.structure.StructureFeatures;
-import net.minecraft.world.gen.placement.ChanceConfig;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.data.worldgen.SurfaceBuilders;
+import net.minecraft.world.level.biome.*;
+import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.data.worldgen.Features;
+import net.minecraft.data.worldgen.StructureFeatures;
+import net.minecraft.world.level.levelgen.placement.ChanceDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
@@ -22,66 +21,66 @@ public class EasternPlainsBiome extends MineriaBiome
     public EasternPlainsBiome()
     {
         super("eastern_plains", 8, BiomeManager.BiomeType.COOL,
-                new Biome.Builder()
-                .precipitation(Biome.RainType.RAIN)
-                .biomeCategory(Biome.Category.PLAINS)
+                new Biome.BiomeBuilder()
+                .precipitation(Biome.Precipitation.RAIN)
+                .biomeCategory(Biome.BiomeCategory.PLAINS)
                 .depth(-0.005F).scale(0.04F)
                 .temperature(0.9F).downfall(0.4F)
-                .specialEffects((new BiomeAmbience.Builder())
+                .specialEffects((new BiomeSpecialEffects.Builder())
                         .waterColor(4159204)
                         .waterFogColor(329011)
                         .fogColor(12638463)
                         .foliageColorOverride(8958511)
                         .grassColorOverride(8958511)
                         .skyColor(getSkyColorWithTemperatureModifier(0.8F))
-                        .ambientMoodSound(MoodSoundAmbience.LEGACY_CAVE_SETTINGS).build())
-                .mobSpawnSettings(spawnInfoBuilder.build())
-                .generationSettings(settingsBuilder.build()).build());
+                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS).build())
+                .mobSpawnSettings(new MobSpawnSettings.Builder().build())
+                .generationSettings(new BiomeGenerationSettings.Builder().surfaceBuilder(SurfaceBuilders.GRASS).build()).build());
     }
 
     @Override
     public void addFeatures(BiomeGenerationSettingsBuilder builder)
     {
-        DefaultBiomeFeatures.addDefaultOverworldLandStructures(builder);
+        BiomeDefaultFeatures.addDefaultOverworldLandStructures(builder);
         builder.addStructureStart(StructureFeatures.RUINED_PORTAL_STANDARD);
-        DefaultBiomeFeatures.addDefaultCarvers(builder);
-        builder.addFeature(GenerationStage.Decoration.LAKES, Features.LAKE_LAVA.decorated(Placement.LAVA_LAKE.configured(new ChanceConfig(120))));
-        DefaultBiomeFeatures.addLightBambooVegetation(builder);
-        DefaultBiomeFeatures.addDefaultMonsterRoom(builder);
-        DefaultBiomeFeatures.addPlainGrass(builder);
+        BiomeDefaultFeatures.addDefaultCarvers(builder);
+        builder.addFeature(GenerationStep.Decoration.LAKES, Features.LAKE_LAVA.decorated(FeatureDecorator.LAVA_LAKE.configured(new ChanceDecoratorConfiguration(120))));
+        BiomeDefaultFeatures.addLightBambooVegetation(builder);
+        BiomeDefaultFeatures.addDefaultMonsterRoom(builder);
+        BiomeDefaultFeatures.addPlainGrass(builder);
 
-        DefaultBiomeFeatures.addDefaultUndergroundVariety(builder);
-        DefaultBiomeFeatures.addDefaultOres(builder);
-        DefaultBiomeFeatures.addDefaultSoftDisks(builder);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.SAKURA_TREE);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.EASTERN_JUGLE_TREE);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Features.FLOWER_PLAIN_DECORATED);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Features.PATCH_GRASS_PLAIN);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.RHUBARB_EASTERN_PLAINS);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.LYCIUM_BARBARUM_EASTERN_PLAINS);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.SAUSSUREA_COSTUS_EASTERN_PLAINS);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.SCHISANDRA_CHINENSIS_EASTERN_PLAINS);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.PULSATILLA_CHINENSIS_EASTERN_PLAINS);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.WATERLILLY_EASTERN_PLAINS);
-        builder.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.LILAC_EASTERN_PLAINS);
+        BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
+        BiomeDefaultFeatures.addDefaultOres(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.SAKURA_TREE);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.EASTERN_JUGLE_TREE);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Features.FLOWER_PLAIN_DECORATED);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Features.PATCH_GRASS_PLAIN);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.RHUBARB_EASTERN_PLAINS);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.LYCIUM_BARBARUM_EASTERN_PLAINS);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.SAUSSUREA_COSTUS_EASTERN_PLAINS);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.SCHISANDRA_CHINENSIS_EASTERN_PLAINS);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.PULSATILLA_CHINENSIS_EASTERN_PLAINS);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.WATERLILLY_EASTERN_PLAINS);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MineriaConfiguredFeatures.LILAC_EASTERN_PLAINS);
 
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
-        DefaultBiomeFeatures.addDefaultExtraVegetation(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultExtraVegetation(builder);
 
-        DefaultBiomeFeatures.addDefaultSprings(builder);
-        DefaultBiomeFeatures.addSurfaceFreezing(builder);
+        BiomeDefaultFeatures.addDefaultSprings(builder);
+        BiomeDefaultFeatures.addSurfaceFreezing(builder);
     }
 
     @Override
     public void addSpawns(MobSpawnInfoBuilder builder)
     {
-        DefaultBiomeFeatures.plainsSpawns(builder);
+        BiomeDefaultFeatures.plainsSpawns(builder);
         builder.setPlayerCanSpawn();
     }
 
     @Override
     public void addTypes(List<Type> types)
     {
-        types.add(Type.fromVanilla(Biome.Category.PLAINS));
+        types.add(Type.fromVanilla(Biome.BiomeCategory.PLAINS));
     }
 }

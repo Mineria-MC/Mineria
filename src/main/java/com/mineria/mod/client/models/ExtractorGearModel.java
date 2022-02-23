@@ -1,63 +1,74 @@
 package com.mineria.mod.client.models;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.RenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.resources.ResourceLocation;
 
 public class ExtractorGearModel extends Model
 {
-    private final ModelRenderer gear;
-    private final ModelRenderer cube_r1;
-    private final ModelRenderer cube_r2;
-    private final ModelRenderer cube_r3;
-    private final ModelRenderer cube_r4;
+    private final ModelPart gear;
+//    private final ModelPart part0;
+//    private final ModelPart part1;
+//    private final ModelPart part2;
+//    private final ModelPart part3;
 
-    public ExtractorGearModel()
+    public ExtractorGearModel(ModelPart root)
     {
         super(ExtractorGearModel::getRenderType);
-        texWidth = 16;
-        texHeight = 16;
+        this.gear = root.getChild("gear");
+//        this.part0 = root.getChild("part0");
+//        this.part1 = root.getChild("part1");
+//        this.part2 = root.getChild("part2");
+//        this.part3 = root.getChild("part3");
+    }
 
-        gear = new ModelRenderer(this);
-        gear.setPos(8.0F, 16.0F, 0.0F);
-        gear.texOffs(1, 1).addBox(-1.1F, -3.0F, -3.0F, 1.0F, 6.0F, 6.0F, 0.0F, false);
-        gear.texOffs(1, 2).addBox(-1.0F, -1.0F, -7.0F, 1.0F, 2.0F, 4.0F, 0.0F, false);
-        gear.texOffs(5, 1).addBox(-1.0F, -1.0F, 3.0F, 1.0F, 2.0F, 4.0F, 0.0F, false);
-        gear.texOffs(1, 3).addBox(-1.0F, -7.0F, -1.0F, 1.0F, 4.0F, 2.0F, 0.0F, false);
-        gear.texOffs(1, 0).addBox(-1.0F, 3.0F, -1.0F, 1.0F, 4.0F, 2.0F, 0.0F, false);
+    public static LayerDefinition createLayerDefinition()
+    {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
 
-        cube_r1 = new ModelRenderer(this);
-        cube_r1.setPos(0.0F, -8.0F, -8.0F);
-        gear.addChild(cube_r1);
-        setRotationAngle(cube_r1, -0.7854F, 0.0F, 0.0F);
-        cube_r1.texOffs(1, 0).addBox(-1.0F, 3.0F, 10.5F, 1.0F, 4.0F, 2.0F, 0.0F, false);
+        PartDefinition gear = root.addOrReplaceChild("gear", CubeListBuilder.create()
+                .texOffs(1, 1).addBox(-1.1F, -3.0F, -3.0F, 1.0F, 6.0F, 6.0F, false)
+                .texOffs(1, 2).addBox(-1.0F, -1.0F, -7.0F, 1.0F, 2.0F, 4.0F, false)
+                .texOffs(5, 1).addBox(-1.0F, -1.0F, 3.0F, 1.0F, 2.0F, 4.0F, false)
+                .texOffs(1, 3).addBox(-1.0F, -7.0F, -1.0F, 1.0F, 4.0F, 2.0F, false)
+                .texOffs(1, 0).addBox(-1.0F, 3.0F, -1.0F, 1.0F, 4.0F, 2.0F, false),
+                PartPose.offset(8.0F, 16.0F, 0.0F));
 
-        cube_r2 = new ModelRenderer(this);
-        cube_r2.setPos(0.0F, -8.0F, 8.0F);
-        gear.addChild(cube_r2);
-        setRotationAngle(cube_r2, 0.7854F, 0.0F, 0.0F);
-        cube_r2.texOffs(3, 2).addBox(-1.0F, 3.0F, -12.5F, 1.0F, 4.0F, 2.0F, 0.0F, false);
+        PartDefinition part0 = gear.addOrReplaceChild("part0", CubeListBuilder.create()
+                .texOffs(1, 0).addBox(-1.0F, 3.0F, 10.5F, 1.0F, 4.0F, 2.0F, false),
+                PartPose.offsetAndRotation(0.0F, -8.0F, -8.0F, -0.7854F, 0.0F, 0.0F));
 
-        cube_r3 = new ModelRenderer(this);
-        cube_r3.setPos(0.0F, 8.0F, 8.0F);
-        gear.addChild(cube_r3);
-        setRotationAngle(cube_r3, -0.7854F, 0.0F, 0.0F);
-        cube_r3.texOffs(4, 1).addBox(-1.0F, -7.0F, -12.5F, 1.0F, 4.0F, 2.0F, 0.0F, false);
+        PartDefinition part1 = gear.addOrReplaceChild("part1", CubeListBuilder.create()
+                        .texOffs(3, 2).addBox(-1.0F, 3.0F, -12.5F, 1.0F, 4.0F, 2.0F, false),
+                PartPose.offsetAndRotation(0.0F, -8.0F, 8.0F, 0.7854F, 0.0F, 0.0F));
 
-        cube_r4 = new ModelRenderer(this);
-        cube_r4.setPos(0.0F, 8.0F, -8.0F);
-        gear.addChild(cube_r4);
-        setRotationAngle(cube_r4, 0.7854F, 0.0F, 0.0F);
-        cube_r4.texOffs(1, 2).addBox(-1.0F, -7.0F, 10.5F, 1.0F, 4.0F, 2.0F, 0.0F, false);
+        PartDefinition part2 = gear.addOrReplaceChild("part2", CubeListBuilder.create()
+                        .texOffs(4, 1).addBox(-1.0F, -7.0F, -12.5F, 1.0F, 4.0F, 2.0F, false),
+                PartPose.offsetAndRotation(0.0F, 8.0F, 8.0F, -0.7854F, 0.0F, 0.0F));
+
+        PartDefinition part3 = gear.addOrReplaceChild("part3", CubeListBuilder.create()
+                        .texOffs(1, 2).addBox(-1.0F, -7.0F, 10.5F, 1.0F, 4.0F, 2.0F, false),
+                PartPose.offsetAndRotation(0.0F, 8.0F, -8.0F, 0.7854F, 0.0F, 0.0F));
+
+
+        return LayerDefinition.create(mesh, 16, 16);
     }
 
     @Override
-    public void renderToBuffer(MatrixStack stack, IVertexBuilder buffer, int p_225598_3_, int p_225598_4_, float red, float green, float blue, float alpha)
+    public void renderToBuffer(PoseStack stack, VertexConsumer buffer, int p_225598_3_, int p_225598_4_, float red, float green, float blue, float alpha)
     {
         gear.render(stack, buffer, p_225598_3_, p_225598_4_);
     }
@@ -69,20 +80,13 @@ public class ExtractorGearModel extends Model
         else this.gear.xRot += 0.002F;
     }
 
-    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z)
-    {
-        modelRenderer.xRot = x;
-        modelRenderer.yRot = y;
-        modelRenderer.zRot = z;
-    }
-
     private static RenderType getRenderType(ResourceLocation location)
     {
-        return RenderType.create("solid", DefaultVertexFormats.BLOCK, 7, 256, true, false,
-                RenderType.State.builder()
-                        .setShadeModelState(new RenderState.ShadeModelState(true))
-                        .setLightmapState(new RenderState.LightmapState(true))
-                        .setTextureState(new RenderState.TextureState(location, false, true))
+        return RenderType.create("solid", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, true, false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeSolidShader))
+                        .setLightmapState(new RenderStateShard.LightmapStateShard(true))
+                        .setTextureState(new RenderStateShard.TextureStateShard(location, false, true))
                         .createCompositeState(true));
     }
 }

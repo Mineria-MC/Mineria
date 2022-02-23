@@ -16,15 +16,16 @@ import com.mineria.mod.common.blocks.titane_extractor.TitaneExtractorBlock;
 import com.mineria.mod.common.blocks.xp_block.XpBlock;
 import com.mineria.mod.common.world.feature.SakuraTree;
 import com.mineria.mod.common.world.feature.SpruceYewTree;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -41,20 +42,20 @@ public class MineriaBlocks
 	public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Mineria.MODID);
 
 	// Ores
-	public static final Block LEAD_ORE = register("lead_ore", new MineriaOre(2, 4.0F, 5.0F, SoundType.STONE));
-	public static final Block TITANE_ORE = register("titane_ore", new MineriaOre(3, 6F, 10F, SoundType.STONE));
-	public static final Block COPPER_ORE = register("copper_ore", new MineriaOre(1, 3F, 5F, SoundType.STONE));
-	public static final Block LONSDALEITE_ORE = register("lonsdaleite_ore", new MineriaOre(3, 6F, 10F, SoundType.STONE));
-	public static final Block NETHER_GOLD_ORE = register("nether_gold_ore", new MineriaOre(2, 1.75F, 1F, SoundType.STONE));
-	public static final Block SILVER_ORE = register("silver_ore", new MineriaOre(2, 3F, 5F, SoundType.STONE));
+	public static final Block LEAD_ORE = register("lead_ore", new OreBlock(ore(4.0F, 5.0F, SoundType.STONE)));
+	public static final Block TITANE_ORE = register("titane_ore", new OreBlock(ore(6F, 10F, SoundType.STONE)));
+	public static final Block COPPER_ORE = register("copper_ore", new OreBlock(ore(3F, 5F, SoundType.STONE)));
+	public static final Block LONSDALEITE_ORE = register("lonsdaleite_ore", new OreBlock(ore(6F, 10F, SoundType.STONE), UniformInt.of(4, 10)));
+	public static final Block NETHER_GOLD_ORE = register("nether_gold_ore", new OreBlock(ore(1.75F, 1F, SoundType.STONE)));
+	public static final Block SILVER_ORE = register("silver_ore", new OreBlock(ore(3F, 5F, SoundType.STONE)));
 	
 	// Ore Blocks
-	public static final Block LEAD_BLOCK = register("lead_block", new MineriaBlock(Material.METAL, 6.5F, 20F, SoundType.METAL, 2));
-	public static final Block TITANE_BLOCK = register("titane_block", new MineriaBlock(Material.METAL, 10F, 15F, SoundType.METAL, 3));
-	public static final Block COPPER_BLOCK = register("copper_block", new MineriaBlock(Material.METAL, 5F, 10F, SoundType.METAL, 1));
-	public static final Block LONSDALEITE_BLOCK = register("lonsdaleite_block", new Block(AbstractBlock.Properties.of(Material.METAL).strength(10F, 17.5F).sound(SoundType.METAL).noOcclusion().harvestTool(ToolType.PICKAXE).harvestLevel(3)));
-	public static final Block SILVER_BLOCK = register("silver_block", new MineriaBlock(Material.METAL, 5F, 10F, SoundType.METAL, 2));
-	public static final Block COMPRESSED_LEAD_BLOCK = register("compressed_lead_block", new MineriaBlock(Material.METAL, 2.5F, 2F, SoundType.METAL, 3));
+	public static final Block LEAD_BLOCK = register("lead_block", new Block(properties(Material.METAL, 6.5F, 20F, SoundType.METAL)));
+	public static final Block TITANE_BLOCK = register("titane_block", new Block(properties(Material.METAL, 10F, 15F, SoundType.METAL)));
+	public static final Block COPPER_BLOCK = register("copper_block", new Block(properties(Material.METAL, 5F, 10F, SoundType.METAL)));
+	public static final Block LONSDALEITE_BLOCK = register("lonsdaleite_block", new Block(Properties.of(Material.METAL).strength(10F, 17.5F).sound(SoundType.METAL).noOcclusion()));
+	public static final Block SILVER_BLOCK = register("silver_block", new Block(properties(Material.METAL, 5F, 10F, SoundType.METAL)));
+	public static final Block COMPRESSED_LEAD_BLOCK = register("compressed_lead_block", new Block(properties(Material.METAL, 2.5F, 2F, SoundType.METAL)));
 	
 	// Machines
 	public static final Block XP_BLOCK = register("xp_block", new XpBlock());
@@ -80,8 +81,8 @@ public class MineriaBlocks
 	public static final Block BELLADONNA = registerCompostable("belladonna", new PlantBlock(MaterialColor.PLANT, false), Mineria.APOTHECARY_GROUP, 0.65F);
 	public static final Block MANDRAKE = registerCompostable("mandrake", new PlantBlock(MaterialColor.PLANT, false), Mineria.APOTHECARY_GROUP, 0.6F);
 	public static final Block LYCIUM_CHINENSE = registerCompostable("lycium_chinense", new LyciumChinenseBlock(), Mineria.APOTHECARY_GROUP, 0.7F);
-	public static final Block SAUSSUREA_COSTUS = registerCompostable("saussurea_costus", new SaussureaCostusPlantBlock(), block -> new TallBlockItem(block, new Item.Properties().tab(Mineria.APOTHECARY_GROUP)), 0.6F);
-	public static final Block SCHISANDRA_CHINENSIS = registerCompostable("schisandra_chinensis", new VineBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE)), Mineria.APOTHECARY_GROUP, 0.7F);
+	public static final Block SAUSSUREA_COSTUS = registerCompostable("saussurea_costus", new SaussureaCostusPlantBlock(), block -> new DoubleHighBlockItem(block, new Item.Properties().tab(Mineria.APOTHECARY_GROUP)), 0.6F);
+	public static final Block SCHISANDRA_CHINENSIS = registerCompostable("schisandra_chinensis", new VineBlock(Properties.of(Material.REPLACEABLE_PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE)), Mineria.APOTHECARY_GROUP, 0.7F);
 	public static final Block PULSATILLA_CHINENSIS = registerCompostable("pulsatilla_chinensis", new PlantBlock(MaterialColor.PLANT, false), Mineria.APOTHECARY_GROUP, 0.65F);
 
 	// Mushrooms
@@ -91,32 +92,32 @@ public class MineriaBlocks
 	public static final Block FLY_AGARIC = Blocks.RED_MUSHROOM;
 
 	// Trees, Leaves...
-	public static final Block SPRUCE_YEW_LEAVES = registerCompostable("spruce_yew_leaves", new LeavesBlock(AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)), 0.4F);
-	public static final Block SPRUCE_YEW_SAPLING = registerCompostable("spruce_yew_sapling", new SaplingBlock(new SpruceYewTree(), AbstractBlock.Properties.copy(Blocks.SPRUCE_SAPLING)), 0.4F);
-	public static final Block SAKURA_LEAVES = registerCompostable("sakura_leaves", new LeavesBlock(AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)), 0.4F);
-	public static final Block SAKURA_SAPLING = registerCompostable("sakura_sapling", new SaplingBlock(new SakuraTree(), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)), 0.4F);
+	public static final Block SPRUCE_YEW_LEAVES = registerCompostable("spruce_yew_leaves", new LeavesBlock(Properties.copy(Blocks.OAK_LEAVES)), 0.4F);
+	public static final Block SPRUCE_YEW_SAPLING = registerCompostable("spruce_yew_sapling", new SaplingBlock(new SpruceYewTree(), Properties.copy(Blocks.SPRUCE_SAPLING)), 0.4F);
+	public static final Block SAKURA_LEAVES = registerCompostable("sakura_leaves", new LeavesBlock(Properties.copy(Blocks.OAK_LEAVES)), 0.4F);
+	public static final Block SAKURA_SAPLING = registerCompostable("sakura_sapling", new SaplingBlock(new SakuraTree(), Properties.copy(Blocks.OAK_SAPLING)), 0.4F);
 
 	// Pots
-	public static final Block POTTED_PLANTAIN = registerFlowerPot("potted_plantain", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.PLANTAIN, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_MINT = registerFlowerPot("potted_mint", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.MINT, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_THYME = registerFlowerPot("potted_thyme", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.THYME, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_NETTLE = registerFlowerPot("potted_nettle", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.NETTLE, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_PULMONARY = registerFlowerPot("potted_pulmonary", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.PULMONARY, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_RHUBARB = registerFlowerPot("potted_rhubarb", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.RHUBARB, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_SENNA = registerFlowerPot("potted_senna", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.SENNA, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_BELLADONNA = registerFlowerPot("potted_belladonna", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.BELLADONNA, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_MANDRAKE = registerFlowerPot("potted_mandrake", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.MANDRAKE, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_PULSATILLA_CHINENSIS = registerFlowerPot("potted_pulsatilla_chinensis", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.PULSATILLA_CHINENSIS, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_SPRUCE_YEW_SAPLING = registerFlowerPot("potted_spruce_yew_sapling", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.SPRUCE_YEW_SAPLING, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
-	public static final Block POTTED_SAKURA_SAPLING = registerFlowerPot("potted_sakura_sapling", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.SAKURA_SAPLING, AbstractBlock.Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_PLANTAIN = registerFlowerPot("potted_plantain", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.PLANTAIN, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_MINT = registerFlowerPot("potted_mint", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.MINT, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_THYME = registerFlowerPot("potted_thyme", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.THYME, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_NETTLE = registerFlowerPot("potted_nettle", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.NETTLE, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_PULMONARY = registerFlowerPot("potted_pulmonary", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.PULMONARY, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_RHUBARB = registerFlowerPot("potted_rhubarb", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.RHUBARB, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_SENNA = registerFlowerPot("potted_senna", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.SENNA, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_BELLADONNA = registerFlowerPot("potted_belladonna", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.BELLADONNA, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_MANDRAKE = registerFlowerPot("potted_mandrake", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.MANDRAKE, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_PULSATILLA_CHINENSIS = registerFlowerPot("potted_pulsatilla_chinensis", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.PULSATILLA_CHINENSIS, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_SPRUCE_YEW_SAPLING = registerFlowerPot("potted_spruce_yew_sapling", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.SPRUCE_YEW_SAPLING, Properties.copy(Blocks.FLOWER_POT)));
+	public static final Block POTTED_SAKURA_SAPLING = registerFlowerPot("potted_sakura_sapling", new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> MineriaBlocks.SAKURA_SAPLING, Properties.copy(Blocks.FLOWER_POT)));
 
 	// Other
-	public static final Block BLUE_GLOWSTONE = register("blue_glowstone", new Block(AbstractBlock.Properties.of(Material.GLASS).strength(0.3F).sound(SoundType.GLASS).lightLevel(value -> 15)));
-	public static final Block MINERAL_SAND = register("mineral_sand", new FallingBlock(AbstractBlock.Properties.of(Material.SAND).strength(0.5F).sound(SoundType.SAND).harvestTool(ToolType.SHOVEL).harvestLevel(2)));
+	public static final Block BLUE_GLOWSTONE = register("blue_glowstone", new Block(Properties.of(Material.GLASS).strength(0.3F).sound(SoundType.GLASS).lightLevel(value -> 15)));
+	public static final Block MINERAL_SAND = register("mineral_sand", new FallingBlock(Properties.of(Material.SAND).strength(0.5F).sound(SoundType.SAND)));
 	public static final Block LEAD_SPIKE = register("lead_spike", new SpikeBlock(2.5F, 2.0F, 2.0F));
 	public static final Block COMPRESSED_LEAD_SPIKE = register("compressed_lead_spike", new SpikeBlock(7.0F, 25.0F, 4.0F));
 	public static final Block GOLDEN_SILVERFISH_NETHERRACK = register("golden_silverfish_netherrack", new GoldenSilverfishBlock(Blocks.NETHERRACK));
-	public static final Block XP_WALL = register("xp_wall", new MineriaBlock(Material.METAL, 2.5F, 5F, SoundType.METAL, 1));
+	public static final Block XP_WALL = register("xp_wall", new Block(properties(Material.METAL, 2.5F, 5F, SoundType.METAL)));
 	public static final Block WATER_BARREL = registerBlock("water_barrel", new WaterBarrelBlock(8), block -> new WaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().tab(Mineria.MINERIA_GROUP).stacksTo(1)));
 	public static final Block INFINITE_WATER_BARREL = registerBlock("infinite_water_barrel", new WaterBarrelBlock(-1), block -> new WaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().stacksTo(1).tab(Mineria.MINERIA_GROUP).rarity(Rarity.EPIC)));
 	public static final Block COPPER_WATER_BARREL = registerBlock("copper_water_barrel", new CopperWaterBarrelBlock(), block -> new AbstractWaterBarrelBlock.WaterBarrelBlockItem<>(block, new Item.Properties().tab(Mineria.MINERIA_GROUP).stacksTo(1)));
@@ -136,7 +137,7 @@ public class MineriaBlocks
 		return registerBlock(name, instance, block -> new BlockItem(block, new Item.Properties().tab(Mineria.MINERIA_GROUP)));
 	}
 
-	private static Block register(String name, Block instance, ItemGroup group)
+	private static Block register(String name, Block instance, CreativeModeTab group)
 	{
 		return registerBlock(name, instance, block -> new BlockItem(block, new Item.Properties().tab(group)));
 	}
@@ -159,7 +160,7 @@ public class MineriaBlocks
 		return registerCompostable(name, instance, block -> new BlockItem(block, new Item.Properties().tab(Mineria.MINERIA_GROUP)), compostValue);
 	}
 
-	private static <T extends Block> T registerCompostable(String name, T instance, ItemGroup group, float compostValue)
+	private static <T extends Block> T registerCompostable(String name, T instance, CreativeModeTab group, float compostValue)
 	{
 		return registerCompostable(name, instance, block -> new BlockItem(block, new Item.Properties().tab(group)), compostValue);
 	}
@@ -171,6 +172,16 @@ public class MineriaBlocks
 		BLOCK_ITEMS.register(name, () -> blockItem);
 		ComposterBlock.COMPOSTABLES.put(blockItem, compostValue);
 		return instance;
+	}
+
+	private static Properties ore(float hardness, float resistance, SoundType sound)
+	{
+		return Properties.of(Material.STONE).strength(hardness, resistance).sound(sound).requiresCorrectToolForDrops();
+	}
+
+	private static Properties properties(Material material, float hardness, float resistance, SoundType sound)
+	{
+		return Properties.of(material).strength(hardness, resistance).sound(sound).requiresCorrectToolForDrops();
 	}
 
 	public static BlockItem getItemFromBlock(Block block)
@@ -185,7 +196,7 @@ public class MineriaBlocks
 
 	public static final class Tags
 	{
-		public static final ITag.INamedTag<Block> PLANTS = BlockTags.bind("mineria:plants");
-		public static final ITag.INamedTag<Block> ALLOWED_BLOCKS_RITUAL_TABLE = BlockTags.bind("mineria:allowed_blocks_ritual_table");
+		public static final Tag.Named<Block> PLANTS = BlockTags.bind("mineria:plants");
+		public static final Tag.Named<Block> ALLOWED_BLOCKS_RITUAL_TABLE = BlockTags.bind("mineria:allowed_blocks_ritual_table");
 	}
 }

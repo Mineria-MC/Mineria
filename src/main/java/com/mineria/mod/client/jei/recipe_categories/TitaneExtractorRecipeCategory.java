@@ -3,7 +3,7 @@ package com.mineria.mod.client.jei.recipe_categories;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.recipe.TitaneExtractorRecipe;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,9 +13,11 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 public class TitaneExtractorRecipeCategory implements IRecipeCategory<TitaneExtractorRecipe>
 {
@@ -24,13 +26,11 @@ public class TitaneExtractorRecipeCategory implements IRecipeCategory<TitaneExtr
 
 	private final IDrawable icon;
 	private final IDrawable background;
-	private final String name;
 
 	private final IDrawableAnimated animation;
 
 	public TitaneExtractorRecipeCategory(IGuiHelper helper)
 	{
-		this.name = I18n.get("recipe_category.mineria.titane_extractor");
 		this.background = helper.createDrawable(TEXTURES, 8, 4, 160, 90);
 		this.icon = helper.createDrawableIngredient(new ItemStack(MineriaBlocks.TITANE_EXTRACTOR));
 		IDrawableStatic staticAnimation = helper.createDrawable(TEXTURES, 177, 0, 36, 53);
@@ -68,15 +68,15 @@ public class TitaneExtractorRecipeCategory implements IRecipeCategory<TitaneExtr
     }
 
     @Override
-    public void draw(TitaneExtractorRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(TitaneExtractorRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY)
     {
         animation.draw(matrixStack, 15 - 8, 24 - 4);
     }
 
     @Override
-	public String getTitle()
+	public Component getTitle()
 	{
-		return name;
+		return new TranslatableComponent("recipe_category.mineria.titane_extractor");
 	}
 	
 	@Override

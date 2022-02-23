@@ -1,41 +1,41 @@
 package com.mineria.mod.common.entity;
 
 import com.mineria.mod.common.effects.PoisonSource;
-import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaEntities;
+import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.items.JarItem;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
-public class JarEntity extends ProjectileItemEntity implements IRendersAsItem
+@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
+public class JarEntity extends ThrowableItemProjectile implements ItemSupplier
 {
-    public JarEntity(EntityType<? extends JarEntity> type, World world)
+    public JarEntity(EntityType<? extends JarEntity> type, Level world)
     {
         super(type, world);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public JarEntity(double x, double y, double z, World world)
+    public JarEntity(double x, double y, double z, Level world)
     {
         super(MineriaEntities.JAR.get(), x, y, z, world);
     }
 
-    public JarEntity(LivingEntity living, World world)
+    public JarEntity(LivingEntity living, Level world)
     {
         super(MineriaEntities.JAR.get(), living, world);
     }
@@ -53,7 +53,7 @@ public class JarEntity extends ProjectileItemEntity implements IRendersAsItem
     }
 
     @Override
-    protected void onHit(RayTraceResult rayTraceResult)
+    protected void onHit(HitResult rayTraceResult)
     {
         super.onHit(rayTraceResult);
 
@@ -67,17 +67,17 @@ public class JarEntity extends ProjectileItemEntity implements IRendersAsItem
 //                this.makeAreaOfEffectCloud(stack, potion);
             } else
             {
-                this.applySplash(poisonSource, rayTraceResult.getType() == RayTraceResult.Type.ENTITY ? ((EntityRayTraceResult) rayTraceResult).getEntity() : null);
+                this.applySplash(poisonSource, rayTraceResult.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) rayTraceResult).getEntity() : null);
             }
 
             this.level.levelEvent(2002, this.blockPosition(), poisonSource.getColor());
-            this.remove();
+            this.discard();
         }
     }
 
     private void applySplash(PoisonSource poisonSource, @Nullable Entity target)
     {
-        AxisAlignedBB boundingBox = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
+        AABB boundingBox = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, boundingBox);
 
         if (!entities.isEmpty())

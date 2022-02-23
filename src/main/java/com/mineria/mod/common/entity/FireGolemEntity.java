@@ -2,36 +2,37 @@ package com.mineria.mod.common.entity;
 
 import com.mineria.mod.common.entity.goal.AlertTeamHurtByTargetGoal;
 import com.mineria.mod.common.init.MineriaSounds;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
 
 public class FireGolemEntity extends ElementaryGolemEntity
 {
-    public FireGolemEntity(EntityType<? extends FireGolemEntity> type, World world)
+    public FireGolemEntity(EntityType<? extends FireGolemEntity> type, Level world)
     {
         super(type, world);
-        this.setPathfindingMalus(PathNodeType.DAMAGE_FIRE, 0.0F);
-        this.setPathfindingMalus(PathNodeType.DANGER_FIRE, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
     }
 
     @Override
@@ -40,11 +41,11 @@ public class FireGolemEntity extends ElementaryGolemEntity
         super.registerGoals();
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9D, 32.0F));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.6D, 240, true));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.6D, 240, true));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new AlertTeamHurtByTargetGoal(this, AbstractDruidEntity.class, ElementaryGolemEntity.class).setAlertEntities(ElementaryGolemEntity.class));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
     }
 
     @Override
@@ -62,24 +63,24 @@ public class FireGolemEntity extends ElementaryGolemEntity
             {
                 if(this.level.getBlockState(blockPos).is(Blocks.WATER))
                 {
-                    this.level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                    this.level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
                     clearedWater = true;
                 }
             }
 
             if(clearedWater)
-                this.level.playSound(null, pos, SoundEvents.LAVA_EXTINGUISH, SoundCategory.HOSTILE, 1.0F, 1.0F);
+                this.level.playSound(null, pos, SoundEvents.LAVA_EXTINGUISH, SoundSource.HOSTILE, 1.0F, 1.0F);
         }
     }
 
     @Override
-    public void move(MoverType type, Vector3d vec)
+    public void move(MoverType type, Vec3 vec)
     {
         if(type.equals(MoverType.SELF))
         {
             BlockPos pos = this.blockPosition();
             if(!this.level.isEmptyBlock(pos.below()) && this.level.isEmptyBlock(pos) || this.level.getBlockState(pos).getMaterial().equals(Material.REPLACEABLE_PLANT))
-                this.level.setBlock(pos, Blocks.FIRE.defaultBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+                this.level.setBlock(pos, Blocks.FIRE.defaultBlockState(), Block.UPDATE_CLIENTS);
         }
         super.move(type, vec);
     }
@@ -139,8 +140,8 @@ public class FireGolemEntity extends ElementaryGolemEntity
         return 21 + random.nextInt(11);
     }
 
-    public static AttributeModifierMap.MutableAttribute createAttributes()
+    public static AttributeSupplier.Builder createAttributes()
     {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 120.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 26.0D);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 120.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 26.0D);
     }
 }

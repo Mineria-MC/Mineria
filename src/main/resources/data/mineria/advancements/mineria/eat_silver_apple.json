@@ -20,7 +20,7 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "mineria:silver_apple"
+          "items": ["mineria:silver_apple"]
         }
       }
     }

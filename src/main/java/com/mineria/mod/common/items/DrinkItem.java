@@ -3,18 +3,18 @@ package com.mineria.mod.common.items;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaItems;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import java.lang.reflect.InvocationTargetException;
@@ -37,18 +37,18 @@ public class DrinkItem extends Item
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack)
+    public UseAnim getUseAnimation(ItemStack stack)
     {
-        return UseAction.DRINK;
+        return UseAnim.DRINK;
     }
 
     private static Method ADD_EAT_EFFECT;
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving)
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving)
     {
-        if (entityLiving instanceof ServerPlayerEntity)
+        if (entityLiving instanceof ServerPlayer)
         {
-            ServerPlayerEntity serverplayerentity = (ServerPlayerEntity)entityLiving;
+            ServerPlayer serverplayerentity = (ServerPlayer)entityLiving;
             CriteriaTriggers.CONSUME_ITEM.trigger(serverplayerentity, stack);
             serverplayerentity.awardStat(Stats.ITEM_USED.get(this));
         }
@@ -60,7 +60,7 @@ public class DrinkItem extends Item
         try
         {
             if(ADD_EAT_EFFECT == null)
-                ADD_EAT_EFFECT = ObfuscationReflectionHelper.findMethod(LivingEntity.class, "func_213349_a", ItemStack.class, World.class, LivingEntity.class);
+                ADD_EAT_EFFECT = ObfuscationReflectionHelper.findMethod(LivingEntity.class, "m_21063_", ItemStack.class, Level.class, LivingEntity.class);
             ADD_EAT_EFFECT.invoke(entityLiving, stack, worldIn, entityLiving);
         }
         catch (IllegalAccessException | InvocationTargetException e)
@@ -69,7 +69,7 @@ public class DrinkItem extends Item
             e.printStackTrace();
         }
 
-        boolean survivalPlayer = entityLiving instanceof PlayerEntity && !((PlayerEntity)entityLiving).abilities.instabuild;
+        boolean survivalPlayer = entityLiving instanceof Player && !((Player)entityLiving).getAbilities().instabuild;
 
         if (survivalPlayer)
         {
@@ -84,8 +84,8 @@ public class DrinkItem extends Item
         {
             if(survivalPlayer)
             {
-                PlayerEntity player = (PlayerEntity) entityLiving;
-                if(!player.inventory.add(containerStack))
+                Player player = (Player) entityLiving;
+                if(!player.getInventory().add(containerStack))
                     player.drop(containerStack, false);
             }
             return stack;
@@ -93,9 +93,9 @@ public class DrinkItem extends Item
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn)
     {
-        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
+        return ItemUtils.startUsingInstantly(worldIn, playerIn, handIn);
     }
 
     @Override
@@ -106,18 +106,18 @@ public class DrinkItem extends Item
 
     public static void lockLaxativeDrinks(LivingEntity living)
     {
-        if(living instanceof PlayerEntity)
+        if(living instanceof Player)
         {
-            PlayerEntity player = (PlayerEntity) living;
+            Player player = (Player) living;
             MineriaItems.Tags.LAXATIVE_DRINKS.getValues().forEach(item -> player.getCooldowns().addCooldown(item, 20 * 60 * 10));
         }
     }
 
     public static void unlockLaxativeDrinks(LivingEntity living)
     {
-        if(living instanceof PlayerEntity)
+        if(living instanceof Player)
         {
-            PlayerEntity player = (PlayerEntity) living;
+            Player player = (Player) living;
             MineriaItems.Tags.LAXATIVE_DRINKS.getValues().forEach(player.getCooldowns()::removeCooldown);
         }
     }
@@ -125,7 +125,7 @@ public class DrinkItem extends Item
     public static class Properties
     {
         private Item container = MineriaItems.CUP;
-        private TriConsumer<ItemStack, World, LivingEntity> onFoodEaten = (stack, world, living) -> {};
+        private TriConsumer<ItemStack, Level, LivingEntity> onFoodEaten = (stack, world, living) -> {};
         private boolean immediateCureEffects = true;
 //        private long maxDigestionTime = -1;
 
@@ -135,7 +135,7 @@ public class DrinkItem extends Item
             return this;
         }
 
-        public Properties onFoodEaten(TriConsumer<ItemStack, World, LivingEntity> onFoodEaten)
+        public Properties onFoodEaten(TriConsumer<ItemStack, Level, LivingEntity> onFoodEaten)
         {
             this.onFoodEaten = onFoodEaten;
             return this;

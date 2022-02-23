@@ -1,18 +1,18 @@
 package com.mineria.mod.common.items;
 
 import com.mineria.mod.Mineria;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,13 +25,13 @@ public class ApothecariumItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flag)
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltips, TooltipFlag flag)
     {
-        tooltips.add(new TranslationTextComponent("tooltip.mineria.apothecarium.wip").withStyle(style -> style.withColor(Color.fromRgb(0x5EFF8C)).withItalic(true)));
+        tooltips.add(new TranslatableComponent("tooltip.mineria.apothecarium.wip").withStyle(style -> style.withColor(TextColor.fromRgb(0x5EFF8C)).withItalic(true)));
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
         Mineria.proxy.openApothecariumScreen(player);
         player.awardStat(Stats.ITEM_USED.get(this));

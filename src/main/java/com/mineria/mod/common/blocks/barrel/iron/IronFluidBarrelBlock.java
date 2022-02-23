@@ -3,25 +3,25 @@ package com.mineria.mod.common.blocks.barrel.iron;
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelBlock;
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelTileEntity;
 import com.mineria.mod.common.init.MineriaCriteriaTriggers;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
@@ -34,11 +34,11 @@ public class IronFluidBarrelBlock extends AbstractWaterBarrelBlock
 {
     public IronFluidBarrelBlock()
     {
-        super(4, 10, 1, 24);
+        super(4, 10, 24);
     }
 
     @Override
-    protected void interact(World world, BlockPos pos, BlockState state, AbstractWaterBarrelTileEntity tile, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
+    protected void interact(Level world, BlockPos pos, BlockState state, AbstractWaterBarrelTileEntity tile, Player player, InteractionHand hand, BlockHitResult hit)
     {
         ItemStack heldStack = player.getItemInHand(hand);
 
@@ -56,36 +56,36 @@ public class IronFluidBarrelBlock extends AbstractWaterBarrelBlock
             }
             else
             {
-                ITextComponent message = new StringTextComponent(tile.getBuckets() == 0 ? "There is no Fluid stored." : (tile.getBuckets() > 1 ? "There are " + tile.getBuckets() + " Fluid Buckets." : "There is 1 Fluid Bucket stored.")).withStyle(TextFormatting.GREEN);
+                Component message = new TextComponent(tile.getBuckets() == 0 ? "There is no Fluid stored." : (tile.getBuckets() > 1 ? "There are " + tile.getBuckets() + " Fluid Buckets." : "There is 1 Fluid Bucket stored.")).withStyle(ChatFormatting.GREEN);
                 player.displayClientMessage(message, true);
             }
         }
     }
 
-    private static void addFluidBucket(IronFluidBarrelBlock block, World world, BlockPos pos, PlayerEntity player, IronFluidBarrelTileEntity tile, Hand hand, Fluid fluid)
+    private static void addFluidBucket(IronFluidBarrelBlock block, Level world, BlockPos pos, Player player, IronFluidBarrelTileEntity tile, InteractionHand hand, Fluid fluid)
     {
         if(tile.storeFluid(fluid))
         {
-            world.playSound(null, pos, fluid.getAttributes().getEmptySound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, pos, fluid.getAttributes().getEmptySound(), SoundSource.BLOCKS, 1.0F, 1.0F);
             if(!player.isCreative())
             {
                 player.getItemInHand(hand).shrink(1);
                 player.setItemInHand(hand, new ItemStack(Items.BUCKET));
             }
 
-            if(player instanceof ServerPlayerEntity)
+            if(player instanceof ServerPlayer)
             {
-                MineriaCriteriaTriggers.FLUID_BARREL_FILLED.trigger((ServerPlayerEntity) player, block, tile.getCapacity(), tile.getBuckets());
+                MineriaCriteriaTriggers.FLUID_BARREL_FILLED.trigger((ServerPlayer) player, block, tile.getCapacity(), tile.getBuckets());
             }
         }
     }
 
-    private static void removeFluidBucket(IronFluidBarrelBlock block, World world, BlockPos pos, PlayerEntity player, IronFluidBarrelTileEntity tile, Hand hand)
+    private static void removeFluidBucket(IronFluidBarrelBlock block, Level world, BlockPos pos, Player player, IronFluidBarrelTileEntity tile, InteractionHand hand)
     {
         Fluid fluid = tile.getFluid();
         if(fluid != null)
         {
-            world.playSound(null, pos, fluid.getAttributes().getFillSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, pos, fluid.getAttributes().getFillSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
 
             if(!player.isCreative())
             {
@@ -99,15 +99,15 @@ public class IronFluidBarrelBlock extends AbstractWaterBarrelBlock
 
 
     @Override
-    protected void addInformationOnShift(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    protected void addInformationOnShift(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        tooltip.add(new TranslationTextComponent("tooltip.mineria.water_barrel.ability").withStyle(TextFormatting.GOLD, TextFormatting.ITALIC).append(" : ").append(new TranslationTextComponent("tooltip.mineria.water_barrel.store_lava")));
+        tooltip.add(new TranslatableComponent("tooltip.mineria.water_barrel.ability").withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC).append(" : ").append(new TranslatableComponent("tooltip.mineria.water_barrel.store_lava")));
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState)
     {
-        return new IronFluidBarrelTileEntity();
+        return new IronFluidBarrelTileEntity(pPos, pState);
     }
 }

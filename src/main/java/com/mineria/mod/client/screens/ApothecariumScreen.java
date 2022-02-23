@@ -4,21 +4,22 @@ import com.google.common.collect.ImmutableList;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaSounds;
 import com.mineria.mod.util.MineriaUtils;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.chat.NarratorChatListener;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.*;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -41,8 +42,8 @@ public class ApothecariumScreen extends Screen
     private static final ImmutableList<Page> PAGES = ImmutableList.of(
 //            () -> new TranslationTextComponent("mineria.apothecarium.introduction"),
             new SummaryPage(),
-            new EntitledPage(new TranslationTextComponent("mineria.apothecarium.druid_rites.title"), new TranslationTextComponent("mineria.apothecarium.druid_rites.part_one.title"), new TranslationTextComponent("mineria.apothecarium.druid_rites.part_one.text")),
-            new SubtitledPage(new TranslationTextComponent("mineria.apothecarium.druid_rites.part_two.title"), new TranslationTextComponent("mineria.apothecarium.druid_rites.part_two.text"))
+            new EntitledPage(new TranslatableComponent("mineria.apothecarium.druid_rites.title"), new TranslatableComponent("mineria.apothecarium.druid_rites.part_one.title"), new TranslatableComponent("mineria.apothecarium.druid_rites.part_one.text")),
+            new SubtitledPage(new TranslatableComponent("mineria.apothecarium.druid_rites.part_two.title"), new TranslatableComponent("mineria.apothecarium.druid_rites.part_two.text"))
     );
     /*private static final ImmutableMap<Integer, ITextComponent> TEXT_MAP = ImmutableMap.<Integer, ITextComponent>builder()
             .put(1, new TranslationTextComponent("apothecarium.page_0.introduction"))
@@ -52,12 +53,12 @@ public class ApothecariumScreen extends Screen
     private static final int PAGES_COUNT = Math.round(TEXT_MAP.size() / 2.0F);*/
     private int leftPos;
     private int topPos;
-    private final List<List<IReorderingProcessor>> pages = new ArrayList<>();
+    private final List<List<FormattedCharSequence>> pages = new ArrayList<>();
     private final int imageWidth = 292;
     private final int imageHeight = 180;
     private int currentPage;
-    private List<IReorderingProcessor> leftProcessors = Collections.emptyList();
-    private List<IReorderingProcessor> rightProcessors = Collections.emptyList();
+    private List<FormattedCharSequence> leftProcessors = Collections.emptyList();
+    private List<FormattedCharSequence> rightProcessors = Collections.emptyList();
     private final List<Bookmark> bookmarks = new ArrayList<>();
     private int cachedPage = -1;
     private TurnPageButton forwardButton;
@@ -71,7 +72,7 @@ public class ApothecariumScreen extends Screen
 
     public boolean setPage(int toPage)
     {
-        int page = MathHelper.clamp(toPage, -1, getPagesCount() - 1);
+        int page = Mth.clamp(toPage, -1, getPagesCount() - 1);
         if (page != this.currentPage)
         {
             this.currentPage = page;
@@ -97,24 +98,24 @@ public class ApothecariumScreen extends Screen
     {
         this.bookmarks.clear();
         this.pages.clear();
-        this.pages.add(Collections.singletonList(StringTextComponent.EMPTY.getVisualOrderText()));
+        this.pages.add(Collections.singletonList(TextComponent.EMPTY.getVisualOrderText()));
 
         for(Page page : PAGES)
             addPages(page, this.font.split(page.getNonNullText(), 114), 0);
     }
 
-    private void addPages(Page page, List<IReorderingProcessor> processors, int pageIndex)
+    private void addPages(Page page, List<FormattedCharSequence> processors, int pageIndex)
     {
         if(processors.size() <= 16)
         {
-            List<IReorderingProcessor> processed = page.process(processors, pageIndex);
+            List<FormattedCharSequence> processed = page.process(processors, pageIndex);
             this.pages.add(processed);
             if(page.hasBookmark() && pageIndex == 0)
                 this.bookmarks.add(new Bookmark(this.pages.indexOf(processed), page.getTitle()));
         }
         else
         {
-            List<IReorderingProcessor> processed = page.process(processors.subList(0, 16), pageIndex);
+            List<FormattedCharSequence> processed = page.process(processors.subList(0, 16), pageIndex);
             this.pages.add(processed);
             if(page.hasBookmark() && pageIndex == 0)
                 this.bookmarks.add(new Bookmark(this.pages.indexOf(processed), page.getTitle()));
@@ -124,33 +125,33 @@ public class ApothecariumScreen extends Screen
 
     protected void createMenuControls()
     {
-        this.addButton(new Button(this.leftPos, this.topPos + 196, 200, 20, DialogTexts.GUI_DONE, (btn) -> this.minecraft.setScreen(null)));
+        this.addRenderableWidget(new Button(this.leftPos, this.topPos + 196, 200, 20, CommonComponents.GUI_DONE, (btn) -> this.minecraft.setScreen(null)));
     }
 
     protected void createPageControlButtons()
     {
-        this.forwardButton = this.addButton(new TurnPageButton(this.leftPos + this.imageWidth - 36, this.topPos + 158, true, (btn) -> this.pageForward()));
-        this.backButton = this.addButton(new TurnPageButton(this.leftPos + 12, this.topPos + 158, false, (btn) -> this.pageBack()));
+        this.forwardButton = this.addRenderableWidget(new TurnPageButton(this.leftPos + this.imageWidth - 36, this.topPos + 158, true, (btn) -> this.pageForward()));
+        this.backButton = this.addRenderableWidget(new TurnPageButton(this.leftPos + 12, this.topPos + 158, false, (btn) -> this.pageBack()));
         this.updateButtonVisibility();
     }
 
     protected void createBookmarks()
     {
-        this.buttons.removeIf(BookmarkButton.class::isInstance);
-        this.children.removeIf(BookmarkButton.class::isInstance);
+        this.renderables.removeIf(BookmarkButton.class::isInstance);
+        this.children().removeIf(BookmarkButton.class::isInstance);
 
         for(int index = 0; index < this.bookmarks.size(); index++)
         {
             int bookmarkPage = this.bookmarks.get(index).page / 2;
-            ITextComponent name = this.bookmarks.get(index).name;
+            Component name = this.bookmarks.get(index).name;
 
             /*if(currentPage == bookmarkPage)
                 this.addButton(new BookmarkButton(this.leftPos + (this.imageWidth / 2) - 16, this.topPos + 8, 128, 221, 140, 31, StringTextComponent.EMPTY, btn -> createBookmarks()));
             else */
             if(currentPage < bookmarkPage)
-                this.addButton(new BookmarkButton(this.leftPos + this.imageWidth - 12, this.topPos + 8 + 23 * index, 179, 221, 24, 19, false, name, btn -> setPage(bookmarkPage)));
+                this.addRenderableWidget(new BookmarkButton(this.leftPos + this.imageWidth - 12, this.topPos + 8 + 23 * index, 179, 221, 24, 19, false, name, btn -> setPage(bookmarkPage)));
             else
-                this.addButton(new BookmarkButton(this.leftPos - 16, this.topPos + 8 + 23 * index, 204, 221, 24, 19, true, name, btn -> setPage(bookmarkPage)));
+                this.addRenderableWidget(new BookmarkButton(this.leftPos - 16, this.topPos + 8 + 23 * index, 204, 221, 24, 19, true, name, btn -> setPage(bookmarkPage)));
         }
     }
 
@@ -230,11 +231,12 @@ public class ApothecariumScreen extends Screen
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks)
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks)
     {
         this.renderBackground(stack);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(BOOK_TEXTURE);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
         this.blit(stack, this.leftPos, this.topPos, 79, 5, 291, 180);
 
         if(currentPage == -1)
@@ -259,7 +261,7 @@ public class ApothecariumScreen extends Screen
 
             for(int index = 0; index < this.leftProcessors.size(); ++index)
             {
-                IReorderingProcessor processor = this.leftProcessors.get(index);
+                FormattedCharSequence processor = this.leftProcessors.get(index);
                 this.font.draw(stack, processor, this.leftPos + 14, this.topPos + 16 + index * 9, 0);
             }
 
@@ -267,7 +269,7 @@ public class ApothecariumScreen extends Screen
 
             for(int index = 0; index < this.rightProcessors.size(); ++index)
             {
-                IReorderingProcessor processor = this.rightProcessors.get(index);
+                FormattedCharSequence processor = this.rightProcessors.get(index);
                 this.font.draw(stack, processor, this.leftPos + (this.imageWidth / 2.0F) + 14, this.topPos + 16 + index * 9, 0);
             }
         }
@@ -275,7 +277,7 @@ public class ApothecariumScreen extends Screen
         super.render(stack, mouseX, mouseY, partialTicks);
     }
 
-    private List<IReorderingProcessor> getPageContent(int index)
+    private List<FormattedCharSequence> getPageContent(int index)
     {
         if(index >= this.pages.size())
             return new ArrayList<>();
@@ -284,7 +286,7 @@ public class ApothecariumScreen extends Screen
     }
 
     @Override
-    public void blit(MatrixStack stack, int x, int y, int u, int v, int width, int height)
+    public void blit(PoseStack stack, int x, int y, int u, int v, int width, int height)
     {
         blit(stack, x, y, this.getBlitOffset(), u, v, width, height, 512, 512);
     }
@@ -293,17 +295,18 @@ public class ApothecariumScreen extends Screen
     {
         private final boolean isForward;
 
-        public TurnPageButton(int x, int y, boolean isForward, IPressable onPressed)
+        public TurnPageButton(int x, int y, boolean isForward, OnPress onPressed)
         {
-            super(x, y, 23, 13, StringTextComponent.EMPTY, onPressed);
+            super(x, y, 23, 13, TextComponent.EMPTY, onPressed);
             this.isForward = isForward;
         }
 
         @Override
-        public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks)
+        public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTicks)
         {
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            Minecraft.getInstance().getTextureManager().bind(BOOK_TEXTURE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
             int textureX = 128;
             int textureY = 192;
             if (this.isHovered())
@@ -316,13 +319,13 @@ public class ApothecariumScreen extends Screen
         }
 
         @Override
-        public void playDownSound(SoundHandler handler)
+        public void playDownSound(SoundManager handler)
         {
-            handler.play(SimpleSound.forUI(MineriaUtils.currentDateMatches(6, 26) ? MineriaSounds.APOTHECARIUM_CUSTOM_PAGE_TURN.get() : SoundEvents.BOOK_PAGE_TURN, 1.0F));
+            handler.play(SimpleSoundInstance.forUI(MineriaUtils.currentDateMatches(6, 26) ? MineriaSounds.APOTHECARIUM_CUSTOM_PAGE_TURN.get() : SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }
 
         @Override
-        public void blit(MatrixStack stack, int x, int y, int u, int v, int width, int height)
+        public void blit(PoseStack stack, int x, int y, int u, int v, int width, int height)
         {
             blit(stack, x, y, this.getBlitOffset(), u, v, width, height, 512, 512);
         }
@@ -332,14 +335,14 @@ public class ApothecariumScreen extends Screen
     interface Page
     {
         @Nullable
-        ITextComponent getText();
+        Component getText();
 
-        default ITextComponent getNonNullText()
+        default Component getNonNullText()
         {
-            return getText() == null ? StringTextComponent.EMPTY : getText();
+            return getText() == null ? TextComponent.EMPTY : getText();
         }
 
-        default List<IReorderingProcessor> process(List<IReorderingProcessor> processors, int pageIndex)
+        default List<FormattedCharSequence> process(List<FormattedCharSequence> processors, int pageIndex)
         {
             return processors;
         }
@@ -349,9 +352,9 @@ public class ApothecariumScreen extends Screen
             return false;
         }
 
-        default ITextComponent getTitle()
+        default Component getTitle()
         {
-            return StringTextComponent.EMPTY;
+            return TextComponent.EMPTY;
         }
     }
 
@@ -359,21 +362,21 @@ public class ApothecariumScreen extends Screen
     {
         @Nullable
         @Override
-        public ITextComponent getText()
+        public Component getText()
         {
-            return new TranslationTextComponent("mineria.apothecarium.summary");
+            return new TranslatableComponent("mineria.apothecarium.summary");
         }
 
         @Override
-        public List<IReorderingProcessor> process(List<IReorderingProcessor> processors, int pageIndex)
+        public List<FormattedCharSequence> process(List<FormattedCharSequence> processors, int pageIndex)
         {
             if(pageIndex == 0)
             {
-                List<IReorderingProcessor> processed = new ArrayList<>();
+                List<FormattedCharSequence> processed = new ArrayList<>();
 
                 processors.forEach(p -> {
                     processed.add(p);
-                    processed.add(StringTextComponent.EMPTY.getVisualOrderText());
+                    processed.add(TextComponent.EMPTY.getVisualOrderText());
                 });
 
                 return processed;
@@ -388,9 +391,9 @@ public class ApothecariumScreen extends Screen
         }
 
         @Override
-        public ITextComponent getTitle()
+        public Component getTitle()
         {
-            return new TranslationTextComponent("mineria.apothecarium.summary.title");
+            return new TranslatableComponent("mineria.apothecarium.summary.title");
         }
     }
 
@@ -440,9 +443,9 @@ public class ApothecariumScreen extends Screen
     private static class Bookmark
     {
         private final int page;
-        private final ITextComponent name;
+        private final Component name;
 
-        private Bookmark(int page, ITextComponent name)
+        private Bookmark(int page, Component name)
         {
             this.page = page;
             this.name = name;
@@ -455,7 +458,7 @@ public class ApothecariumScreen extends Screen
         private int hoverTickCount;
         private final boolean reversed;
 
-        public BookmarkButton(int xPos, int yPos, int u, int v, int width, int height, boolean reversed, ITextComponent displayString, IPressable action)
+        public BookmarkButton(int xPos, int yPos, int u, int v, int width, int height, boolean reversed, Component displayString, OnPress action)
         {
             super(xPos, yPos, width, height, displayString, action);
             this.u = u;
@@ -464,21 +467,22 @@ public class ApothecariumScreen extends Screen
         }
 
         @Override
-        public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks)
+        public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTicks)
         {
             if(isHovered)
             {
-                hoverTickCount = MathHelper.clamp(hoverTickCount + 2, 0, 80);
+                hoverTickCount = Mth.clamp(hoverTickCount + 2, 0, 80);
             } else
             {
-                hoverTickCount = MathHelper.clamp(hoverTickCount - 2, 0, 80);
+                hoverTickCount = Mth.clamp(hoverTickCount - 2, 0, 80);
             }
 
             Minecraft mc = Minecraft.getInstance();
-            FontRenderer font = mc.font;
+            Font font = mc.font;
 
-            mc.getTextureManager().bind(BOOK_TEXTURE);
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
@@ -491,14 +495,14 @@ public class ApothecariumScreen extends Screen
             if(hoverTickCount > 0)
             {
                 float alpha = hoverTickCount / 80F;
-                ITextComponent name = this.getMessage();
+                Component name = this.getMessage();
                 int x = reversed ? this.x - scaledPixels + 8 : this.x + this.width + scaledPixels - 8 - font.width(name);
-                drawString(stack, font, name, x, this.y + (this.height - 8) / 2, getFGColor() | MathHelper.ceil(alpha * 255.0F) << 24);
+                drawString(stack, font, name, x, this.y + (this.height - 8) / 2, getFGColor() | Mth.ceil(alpha * 255.0F) << 24);
             }
         }
 
         @Override
-        public void blit(MatrixStack stack, int x, int y, int u, int v, int width, int height)
+        public void blit(PoseStack stack, int x, int y, int u, int v, int width, int height)
         {
             blit(stack, x, y, this.getBlitOffset(), u, v, width, height, 512, 512);
         }
@@ -506,24 +510,24 @@ public class ApothecariumScreen extends Screen
 
     private static class EntitledPage implements Page
     {
-        private final ITextComponent title;
-        private final IFormattableTextComponent text;
+        private final Component title;
+        private final MutableComponent text;
 
-        public EntitledPage(IFormattableTextComponent title, IFormattableTextComponent subTitle, ITextComponent text)
+        public EntitledPage(MutableComponent title, MutableComponent subTitle, Component text)
         {
             this.title = title.copy();
-            this.text = new StringTextComponent("").append(title.withStyle(style -> style.withColor(TextFormatting.RED).withBold(true))).append("\n\n").append(subTitle.withStyle(TextFormatting.UNDERLINE)).append("\n\n").append(text);
+            this.text = new TextComponent("").append(title.withStyle(style -> style.withColor(ChatFormatting.RED).withBold(true))).append("\n\n").append(subTitle.withStyle(ChatFormatting.UNDERLINE)).append("\n\n").append(text);
         }
 
         @Nullable
         @Override
-        public ITextComponent getText()
+        public Component getText()
         {
             return text;
         }
 
         @Override
-        public ITextComponent getTitle()
+        public Component getTitle()
         {
             return title;
         }
@@ -537,16 +541,16 @@ public class ApothecariumScreen extends Screen
 
     private static class SubtitledPage implements Page
     {
-        private final IFormattableTextComponent text;
+        private final MutableComponent text;
 
-        public SubtitledPage(IFormattableTextComponent subTitle, ITextComponent text)
+        public SubtitledPage(MutableComponent subTitle, Component text)
         {
-            this.text = new StringTextComponent("").append(subTitle.withStyle(TextFormatting.UNDERLINE)).append("\n\n").append(text);
+            this.text = new TextComponent("").append(subTitle.withStyle(ChatFormatting.UNDERLINE)).append("\n\n").append(text);
         }
 
         @Nullable
         @Override
-        public ITextComponent getText()
+        public Component getText()
         {
             return text;
         }

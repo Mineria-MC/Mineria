@@ -5,23 +5,25 @@ import com.mineria.mod.common.init.MineriaItems;
 import com.mineria.mod.common.init.MineriaTileEntities;
 import com.mineria.mod.util.CustomItemStackHandler;
 import com.mineria.mod.util.MineriaLockableTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class XpBlockTileEntity extends MineriaLockableTileEntity implements ITickableTileEntity
+public class XpBlockTileEntity extends MineriaLockableTileEntity
 {
-    private PlayerEntity player;
+    private Player player;
     private boolean active;
     private int orbItemDelay = 20;
     private int orbItemTickCount;
 
-    public final IIntArray dataSlots = new IIntArray()
+    public final ContainerData dataSlots = new ContainerData()
     {
         @Override
         public int get(int index)
@@ -55,15 +57,15 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity implements ITic
         }
     };
 
-    public XpBlockTileEntity()
+    public XpBlockTileEntity(BlockPos pos, BlockState state)
     {
-        super(MineriaTileEntities.XP_BLOCK.get(), new CustomItemStackHandler(18));
+        super(MineriaTileEntities.XP_BLOCK.get(), pos, state, new CustomItemStackHandler(18));
     }
 
     @Override
-    protected ITextComponent getDefaultName()
+    protected Component getDefaultName()
     {
-        return new TranslationTextComponent("tile_entity.mineria.xp_block");
+        return new TranslatableComponent("tile_entity.mineria.xp_block");
     }
 
     /*@Nullable
@@ -74,33 +76,32 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity implements ITic
     }*/
 
     @Override
-    protected Container createMenu(int windowId, PlayerInventory playerInv)
+    protected AbstractContainerMenu createMenu(int windowId, Inventory playerInv)
     {
         return new XpBlockContainer(windowId, playerInv, this, dataSlots);
     }
 
-    @Override
-    public void tick()
+    public static void serverTick(Level level, BlockPos pos, BlockState state, XpBlockTileEntity tile)
     {
         if(level != null && !level.isClientSide)
         {
-            if(player == null)
+            if(tile.player == null)
                 return;
 
-            if(!(player.containerMenu instanceof XpBlockContainer))
+            if(!(tile.player.containerMenu instanceof XpBlockContainer))
             {
-                onClose();
+                tile.onClose();
                 return;
             }
 
-            if(active && !isFull() && (player.totalExperience > 0 || player.abilities.instabuild))
+            if(tile.active && !tile.isFull() && (tile.player.totalExperience > 0 || tile.player.getAbilities().instabuild))
             {
-                orbItemTickCount++;
-                if(orbItemTickCount % orbItemDelay == 0)
+                tile.orbItemTickCount++;
+                if(tile.orbItemTickCount % tile.orbItemDelay == 0)
                 {
-                    if(addItem() && !player.abilities.instabuild)
+                    if(tile.addItem() && !tile.player.getAbilities().instabuild)
                     {
-                        player.giveExperiencePoints(-1);
+                        tile.player.giveExperiencePoints(-1);
                     }
                 }
             }
@@ -152,7 +153,7 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity implements ITic
         this.orbItemTickCount = 0;
     }
 
-    public void onOpen(PlayerEntity player)
+    public void onOpen(Player player)
     {
         this.player = player;
         this.active = false;
@@ -160,14 +161,14 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity implements ITic
         this.orbItemTickCount = 0;
     }
 
-    public void init(PlayerEntity player)
+    public void init(Player player)
     {
         this.player = player;
         this.active = !this.active;
         this.orbItemTickCount = 0;
     }
 
-    public void setPlayer(PlayerEntity player)
+    public void setPlayer(Player player)
     {
         this.player = player;
     }

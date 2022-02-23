@@ -4,8 +4,6 @@ import com.mineria.mod.Mineria;
 import com.mineria.mod.common.blocks.ritual_table.RitualTableTileEntity;
 import com.mineria.mod.common.capabilities.CapabilityRegistry;
 import com.mineria.mod.common.capabilities.IPoisonExposure;
-import com.mineria.mod.common.capabilities.provider.AttachedEntityProvider;
-import com.mineria.mod.common.capabilities.provider.PoisonExposureProvider;
 import com.mineria.mod.common.effects.CustomEffectInstance;
 import com.mineria.mod.common.effects.PoisonSource;
 import com.mineria.mod.common.effects.instances.PoisonEffectInstance;
@@ -13,39 +11,39 @@ import com.mineria.mod.common.entity.WizardEntity;
 import com.mineria.mod.common.init.*;
 import com.mineria.mod.common.world.gen.WorldGenerationHandler;
 import com.mojang.serialization.Codec;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.monster.WitchEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SCooldownPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.CooldownTracker;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.FlatChunkGenerator;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.spawner.WorldEntitySpawner;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -63,7 +61,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -80,36 +78,8 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingUpdateEvent event)
     {
-        event.getEntityLiving().getCapability(CapabilityRegistry.POISON_EXPOSURE).ifPresent(IPoisonExposure::increaseTicksSinceExposure);
+//        event.getEntityLiving().getCapability(CapabilityRegistry.POISON_EXPOSURE).ifPresent(IPoisonExposure::increaseTicksSinceExposure);
     }
-
-    // Cool way to disable client input
-
-    /*@SubscribeEvent
-    public static void modifyMovementInputs(InputUpdateEvent event)
-    {
-        LivingEntity living = event.getEntityLiving();
-
-        boolean lockInputs = false;
-
-        if(!PoisonEffect.isImmune(living))
-        {
-            if(living.hasEffect(Effects.POISON) && living.getEffect(Effects.POISON) instanceof PoisonEffectInstance)
-            {
-                PoisonEffectInstance poison = (PoisonEffectInstance) living.getEffect(Effects.POISON);
-                if(poison.doConvulsions())
-                {
-                    lockInputs = true;
-                }
-            }
-        }
-
-        if(lockInputs)
-        {
-            event.getMovementInput().forwardImpulse = 0;
-            event.getMovementInput().leftImpulse = 0;
-        }
-    }*/
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void loadBiomes(BiomeLoadingEvent event)
@@ -123,24 +93,22 @@ public final class ForgeEventHandler
     {
         if(event.getObject() instanceof LivingEntity)
         {
-            event.addCapability(new ResourceLocation(Mineria.MODID, "attached_entity"), new AttachedEntityProvider(CapabilityRegistry.ATTACHED_ENTITY.getDefaultInstance()));
-            event.addCapability(new ResourceLocation(Mineria.MODID, "poison_exposure"), new PoisonExposureProvider(CapabilityRegistry.POISON_EXPOSURE.getDefaultInstance()));
+//            event.addCapability(new ResourceLocation(Mineria.MODID, "attached_entity"), new AttachedEntityProvider(CapabilityRegistry.ATTACHED_ENTITY.getDefaultInstance()));
+//            event.addCapability(new ResourceLocation(Mineria.MODID, "poison_exposure"), new PoisonExposureProvider(CapabilityRegistry.POISON_EXPOSURE.getDefaultInstance()));
         }
     }
 
     private static Method GETCODEC_METHOD;
 
-    @SubscribeEvent
+//    @SubscribeEvent TODO
     public static void addDimensionalSpacing(WorldEvent.Load event)
     {
-        if(event.getWorld() instanceof ServerWorld)
+        if(event.getWorld() instanceof ServerLevel serverWorld)
         {
-            ServerWorld serverWorld = (ServerWorld) event.getWorld();
-
             try
             {
                 if(GETCODEC_METHOD == null)
-                    GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
+                    GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "m_6909_");
                 @SuppressWarnings("unchecked")
                 ResourceLocation rl = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(serverWorld.getChunkSource().generator));
                 if(rl != null && rl.getNamespace().equals("terraforged"))
@@ -150,14 +118,14 @@ public final class ForgeEventHandler
                 Mineria.LOGGER.error("Was unable to check if " + serverWorld.dimension().location() + " is using Terraforged's ChunkGenerator.");
             }
 
-            if(serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator && serverWorld.dimension().equals(World.OVERWORLD))
+            if(serverWorld.getChunkSource().getGenerator() instanceof FlatLevelSource && serverWorld.dimension().equals(Level.OVERWORLD))
                 return;
 
-            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-            tempMap.putIfAbsent(MineriaStructures.WIZARD_LABORATORY.get(), DimensionStructuresSettings.DEFAULTS.get(MineriaStructures.WIZARD_LABORATORY.get()));
-            tempMap.putIfAbsent(MineriaStructures.WIZARD_TOWER.get(), DimensionStructuresSettings.DEFAULTS.get(MineriaStructures.WIZARD_TOWER.get()));
-            tempMap.putIfAbsent(MineriaStructures.PAGODA.get(), DimensionStructuresSettings.DEFAULTS.get(MineriaStructures.PAGODA.get()));
-            tempMap.putIfAbsent(MineriaStructures.RITUAL_STRUCTURE.get(), DimensionStructuresSettings.DEFAULTS.get(MineriaStructures.RITUAL_STRUCTURE.get()));
+            Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+            tempMap.putIfAbsent(MineriaStructures.WIZARD_LABORATORY.get(), StructureSettings.DEFAULTS.get(MineriaStructures.WIZARD_LABORATORY.get()));
+            tempMap.putIfAbsent(MineriaStructures.WIZARD_TOWER.get(), StructureSettings.DEFAULTS.get(MineriaStructures.WIZARD_TOWER.get()));
+            tempMap.putIfAbsent(MineriaStructures.PAGODA.get(), StructureSettings.DEFAULTS.get(MineriaStructures.PAGODA.get()));
+            tempMap.putIfAbsent(MineriaStructures.RITUAL_STRUCTURE.get(), StructureSettings.DEFAULTS.get(MineriaStructures.RITUAL_STRUCTURE.get()));
             serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
         }
     }
@@ -165,7 +133,7 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onPlayerAttackTarget(AttackEntityEvent event)
     {
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         Entity target = event.getTarget();
 
         if(player.hasEffect(MineriaEffects.VAMPIRE.get()))
@@ -183,20 +151,20 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event)
     {
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
 
-        if(player instanceof ServerPlayerEntity)
+        if(player instanceof ServerPlayer)
         {
-            CooldownTracker cooldownTracker = player.getCooldowns();
+            ItemCooldowns cooldownTracker = player.getCooldowns();
             try
             {
-                Map<Item, ?> cooldowns = CooldownTrackerUtil.getCooldowns(cooldownTracker);
+                Map<Item, ?> cooldowns = ItemCooldownsUtil.getCooldowns(cooldownTracker);
 
                 for(Map.Entry<Item, ?> entry : cooldowns.entrySet())
                 {
-                    int startTime = (int) CooldownTrackerUtil.getStartTimeField().get(entry.getValue());
-                    int endTime = (int) CooldownTrackerUtil.getEndTimeField().get(entry.getValue());
-                    ((ServerPlayerEntity) player).connection.send(new SCooldownPacket(entry.getKey(), Math.max(0, endTime - startTime)));
+                    int startTime = (int) ItemCooldownsUtil.getStartTimeField().get(entry.getValue());
+                    int endTime = (int) ItemCooldownsUtil.getEndTimeField().get(entry.getValue());
+                    ((ServerPlayer) player).connection.send(new ClientboundCooldownPacket(entry.getKey(), Math.max(0, endTime - startTime)));
                 }
             }
             catch (IllegalAccessException | NoSuchFieldException e)
@@ -209,7 +177,7 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void potionColorCalculation(PotionColorCalculationEvent event)
     {
-        Collection<EffectInstance> effects = event.getEffects();
+        Collection<MobEffectInstance> effects = event.getEffects();
 
         if (!effects.isEmpty() && effects.stream().anyMatch(CustomEffectInstance.class::isInstance))
         {
@@ -218,7 +186,7 @@ public final class ForgeEventHandler
             float b = 0.0F;
             int density = 0;
 
-            for (EffectInstance effect : effects)
+            for (MobEffectInstance effect : effects)
             {
                 if (effect.isVisible())
                 {
@@ -247,21 +215,19 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
-        if(event.getEntityLiving() instanceof WitchEntity)
+        if(event.getEntityLiving() instanceof Witch witch)
         {
-            WitchEntity witch = (WitchEntity) event.getEntityLiving();
             DamageSource source = event.getSource();
 
-            if(witch.level instanceof ServerWorld)
+            if(witch.level instanceof ServerLevel world)
             {
-                ServerWorld world = (ServerWorld) witch.level;
                 LivingEntity living = witch.getTarget();
                 if (living == null && source.getEntity() instanceof LivingEntity)
                     living = (LivingEntity) source.getEntity();
 
-                int x = MathHelper.floor(witch.getX());
-                int y = MathHelper.floor(witch.getY());
-                int z = MathHelper.floor(witch.getZ());
+                int x = Mth.floor(witch.getX());
+                int y = Mth.floor(witch.getY());
+                int z = Mth.floor(witch.getZ());
                 Random random = world.getRandom();
 
                 if(living != null && random.nextFloat() < 0.05F && world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING))
@@ -270,19 +236,19 @@ public final class ForgeEventHandler
 
                     for(int count = 0; count < 50; ++count)
                     {
-                        int x1 = x + MathHelper.nextInt(random, 1, 7) * MathHelper.nextInt(random, -1, 1);
-                        int y1 = y + MathHelper.nextInt(random, 1, 7) * MathHelper.nextInt(random, -1, 1);
-                        int z1 = z + MathHelper.nextInt(random, 1, 7) * MathHelper.nextInt(random, -1, 1);
+                        int x1 = x + Mth.nextInt(random, 1, 7) * Mth.nextInt(random, -1, 1);
+                        int y1 = y + Mth.nextInt(random, 1, 7) * Mth.nextInt(random, -1, 1);
+                        int z1 = z + Mth.nextInt(random, 1, 7) * Mth.nextInt(random, -1, 1);
                         BlockPos pos = new BlockPos(x1, y1, z1);
-                        EntitySpawnPlacementRegistry.PlacementType placementType = EntitySpawnPlacementRegistry.getPlacementType(MineriaEntities.WIZARD.get());
-                        if (WorldEntitySpawner.isSpawnPositionOk(placementType, world, pos, MineriaEntities.WIZARD.get())/* && EntitySpawnPlacementRegistry.checkSpawnRules(MineriaEntities.WIZARD.get(), world, SpawnReason.REINFORCEMENT, pos, random)*/)
+                        SpawnPlacements.Type placementType = SpawnPlacements.getPlacementType(MineriaEntities.WIZARD.get());
+                        if (NaturalSpawner.isSpawnPositionOk(placementType, world, pos, MineriaEntities.WIZARD.get())/* && EntitySpawnPlacementRegistry.checkSpawnRules(MineriaEntities.WIZARD.get(), world, SpawnReason.REINFORCEMENT, pos, random)*/)
                         {
                             wizard.setPos(x1, y1, z1);
                             if (!world.hasNearbyAlivePlayer(x1, y1, z1, 7.0D) && world.isUnobstructed(wizard) && world.noCollision(wizard) && !world.containsAnyLiquid(wizard.getBoundingBox()))
                             {
-                                if(!(living instanceof PlayerEntity && ((PlayerEntity) living).abilities.instabuild))
+                                if(!(living instanceof Player && ((Player) living).getAbilities().instabuild))
                                     wizard.setTarget(living);
-                                wizard.finalizeSpawn(world, world.getCurrentDifficultyAt(wizard.blockPosition()), SpawnReason.REINFORCEMENT, null, null);
+                                wizard.finalizeSpawn(world, world.getCurrentDifficultyAt(wizard.blockPosition()), MobSpawnType.REINFORCEMENT, null, null);
                                 world.addFreshEntityWithPassengers(wizard);
                                 break;
                             }
@@ -296,9 +262,9 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onEffectCheck(PotionEvent.PotionApplicableEvent event)
     {
-        EffectInstance effect = event.getPotionEffect();
+        MobEffectInstance effect = event.getPotionEffect();
 
-        if(!(effect instanceof CustomEffectInstance) && effect.getEffect().equals(Effects.POISON))
+        if(!(effect instanceof CustomEffectInstance) && effect.getEffect().equals(MobEffects.POISON))
         {
             event.setResult(Event.Result.DENY);
             PoisonEffectInstance.applyPoisonEffect(event.getEntityLiving(), Math.min(effect.getAmplifier(), 2), effect.getDuration(), 0, PoisonSource.UNKNOWN);
@@ -308,30 +274,30 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent event)
     {
-        IInventory craftingMatrix = event.getInventory();
-        PlayerEntity player = event.getPlayer();
+        Container craftingMatrix = event.getInventory();
+        Player player = event.getPlayer();
 
-        if(craftingMatrix instanceof CraftingInventory && player instanceof ServerPlayerEntity)
+        if(craftingMatrix instanceof CraftingContainer && player instanceof ServerPlayer)
         {
-            MineriaCriteriaTriggers.SHAPED_RECIPE_USED.trigger((ServerPlayerEntity) player, (CraftingInventory) craftingMatrix);
+            MineriaCriteriaTriggers.SHAPED_RECIPE_USED.trigger((ServerPlayer) player, (CraftingContainer) craftingMatrix);
         }
     }
 
     @SubscribeEvent
     public static void onItemForged(AnvilRepairEvent event)
     {
-        if(event.getPlayer() instanceof ServerPlayerEntity)
+        if(event.getPlayer() instanceof ServerPlayer)
         {
-            MineriaCriteriaTriggers.USED_ANVIL.trigger((ServerPlayerEntity) event.getPlayer(), event.getItemInput(), event.getIngredientInput(), event.getItemResult());
+            MineriaCriteriaTriggers.USED_ANVIL.trigger((ServerPlayer) event.getPlayer(), event.getItemInput(), event.getIngredientInput(), event.getItemResult());
         }
     }
 
     @SubscribeEvent
     public static void onItemBrewed(PlayerBrewedPotionEvent event)
     {
-        if(event.getPlayer() instanceof ServerPlayerEntity)
+        if(event.getPlayer() instanceof ServerPlayer)
         {
-            MineriaCriteriaTriggers.BREWED_ITEM.trigger((ServerPlayerEntity) event.getPlayer(), event.getStack());
+            MineriaCriteriaTriggers.BREWED_ITEM.trigger((ServerPlayer) event.getPlayer(), event.getStack());
         }
     }
 
@@ -340,18 +306,18 @@ public final class ForgeEventHandler
     {
         if(!event.isCanceled())
         {
-            IWorld world = event.getWorld();
+            LevelAccessor world = event.getWorld();
             BlockPos pos = event.getPos();
-            PlayerEntity player = event.getPlayer();
+            Player player = event.getPlayer();
 
-            if(!player.abilities.instabuild && !event.getState().is(MineriaBlocks.Tags.ALLOWED_BLOCKS_RITUAL_TABLE))
+            if(!player.getAbilities().instabuild && !event.getState().is(MineriaBlocks.Tags.ALLOWED_BLOCKS_RITUAL_TABLE))
             {
                 for(BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-4, -3, -4), pos.offset(4, 3, 4)))
                 {
-                    TileEntity te = world.getBlockEntity(blockPos);
+                    BlockEntity te = world.getBlockEntity(blockPos);
                     if(te instanceof RitualTableTileEntity && ((RitualTableTileEntity) te).isAreaProtected())
                     {
-                        player.displayClientMessage(new TranslationTextComponent("msg.mineria.ritual_table.protected_area"), true);
+                        player.displayClientMessage(new TranslatableComponent("msg.mineria.ritual_table.protected_area"), true);
                         event.setCanceled(true);
                     }
                 }
@@ -362,19 +328,19 @@ public final class ForgeEventHandler
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
-        World world = event.getWorld();
+        Level world = event.getWorld();
         BlockPos pos = event.getPos();
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         ItemStack stack = event.getItemStack();
 
-        if(!player.abilities.instabuild && !stack.getItem().is(MineriaItems.Tags.ALLOWED_BLOCKS_RITUAL_TABLE))
+        if(!player.getAbilities().instabuild && !stack.is(MineriaItems.Tags.ALLOWED_BLOCKS_RITUAL_TABLE))
         {
             for(BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-4, -3, -4), pos.offset(4, 3, 4)))
             {
-                TileEntity te = world.getBlockEntity(blockPos);
+                BlockEntity te = world.getBlockEntity(blockPos);
                 if(te instanceof RitualTableTileEntity && ((RitualTableTileEntity) te).isAreaProtected() && !(event.getHitVec().getBlockPos().equals(blockPos) && ((RitualTableTileEntity) te).getPlacedItem().isEmpty() || stack.isEmpty()))
                 {
-                    player.displayClientMessage(new TranslationTextComponent("msg.mineria.ritual_table.protected_area"), true);
+                    player.displayClientMessage(new TranslatableComponent("msg.mineria.ritual_table.protected_area"), true);
                     event.setCanceled(true);
                 }
             }

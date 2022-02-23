@@ -1,11 +1,13 @@
 package com.mineria.mod.common.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CustomFlowerPotBlock extends FlowerPotBlock
 {

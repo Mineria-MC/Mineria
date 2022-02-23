@@ -7,30 +7,30 @@ import com.mineria.mod.util.MineriaUtils;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.monster.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.item.SuspiciousStewItem;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.BasicTrade;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -39,12 +39,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class AsiaticHerbalistEntity extends AbstractVillagerEntity
+public class AsiaticHerbalistEntity extends AbstractVillager
 {
-    public static final Supplier<Int2ObjectMap<List<VillagerTrades.ITrade>>> TRADES = () -> Util.make(new Int2ObjectOpenHashMap<>(), map -> {
+    public static final Supplier<Int2ObjectMap<List<VillagerTrades.ItemListing>>> TRADES = () -> Util.make(new Int2ObjectOpenHashMap<>(), map -> {
         map.put(1, ImmutableList.of(
                 new IngredientTrade(Pair.of(Ingredient.of(Tags.Items.MUSHROOMS), 16), new ItemStack(Items.EMERALD), 16, 1, 0.05F),
-                new BasicTrade(2, Util.make(new ItemStack(Items.SUSPICIOUS_STEW), stack -> SuspiciousStewItem.saveMobEffect(stack, MineriaUtils.getRandomElement(ForgeRegistries.POTIONS.getValues()), 20 * 5)), 12, 2, 0.2F),
+                new BasicTrade(2, Util.make(new ItemStack(Items.SUSPICIOUS_STEW), stack -> SuspiciousStewItem.saveMobEffect(stack, MineriaUtils.getRandomElement(ForgeRegistries.MOB_EFFECTS.getValues()), 20 * 5)), 12, 2, 0.2F),
                 new BasicTrade(new ItemStack(MineriaItems.ELDERBERRY, 3), new ItemStack(MineriaItems.BLACK_ELDERBERRY), 16, 1, 0.05F),
                 new BasicTrade(4, new ItemStack(MineriaItems.ANTI_POISON), 12, 2, 0.2F)
         ));
@@ -70,7 +70,7 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
     private int tradeXp;
     private int tradeLevel = 1;
 
-    public AsiaticHerbalistEntity(EntityType<? extends AsiaticHerbalistEntity> type, World world)
+    public AsiaticHerbalistEntity(EntityType<? extends AsiaticHerbalistEntity> type, Level world)
     {
         super(type, world);
 
@@ -80,24 +80,24 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, ZombieEntity.class, 8.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, EvokerEntity.class, 12.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, VindicatorEntity.class, 8.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, VexEntity.class, 8.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, PillagerEntity.class, 15.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, IllusionerEntity.class, 12.0F, 0.5D, 0.5D));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, ZoglinEntity.class, 10.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Zombie.class, 8.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Evoker.class, 12.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Vindicator.class, 8.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Vex.class, 8.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Pillager.class, 15.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Illusioner.class, 12.0F, 0.5D, 0.5D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Zoglin.class, 10.0F, 0.5D, 0.5D));
         this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
-        this.goalSelector.addGoal(1, new LookAtCustomerGoal(this));
+        this.goalSelector.addGoal(1, new LookAtTradingPlayerGoal(this));
         this.goalSelector.addGoal(4, new MoveTowardsRestrictionGoal(this, 0.35D));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 0.35D));
-        this.goalSelector.addGoal(9, new LookAtWithoutMovingGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.35D));
+        this.goalSelector.addGoal(9, new InteractGoal(this, Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("TradeXp", this.tradeXp);
@@ -105,7 +105,7 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
         if(nbt.contains("TradeXp", 3))
@@ -126,7 +126,7 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
                     this.increaseProfessionLevelOnUpdate = false;
                 }
 
-                this.addEffect(new EffectInstance(Effects.REGENERATION, 200, 0));
+                this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0));
             }
         }
 
@@ -147,17 +147,17 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
 
         if (offer.shouldRewardExp())
         {
-            this.level.addFreshEntity(new ExperienceOrbEntity(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), xp));
+            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), xp));
         }
     }
 
     @Override
     protected void updateTrades()
     {
-        List<VillagerTrades.ITrade> trades = TRADES.get().get(this.tradeLevel);
+        List<VillagerTrades.ItemListing> trades = TRADES.get().get(this.tradeLevel);
         if(trades != null)
         {
-            this.addOffersFromItemListings(this.getOffers(), trades.toArray(new VillagerTrades.ITrade[0]), 4);
+            this.addOffersFromItemListings(this.getOffers(), trades.toArray(new VillagerTrades.ItemListing[0]), 4);
         }
     }
 
@@ -173,12 +173,12 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand)
+    protected InteractionResult mobInteract(Player player, InteractionHand hand)
     {
         ItemStack heldItem = player.getItemInHand(hand);
         if (heldItem.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.isTrading() && !this.isBaby())
         {
-            if (hand == Hand.MAIN_HAND)
+            if (hand == InteractionHand.MAIN_HAND)
                 player.awardStat(Stats.TALKED_TO_VILLAGER);
 
             if (!this.getOffers().isEmpty())
@@ -190,7 +190,7 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
                 }
             }
 
-            return ActionResultType.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
         } else
             return super.mobInteract(player, hand);
     }
@@ -215,7 +215,7 @@ public class AsiaticHerbalistEntity extends AbstractVillagerEntity
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity)
+    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob)
     {
         return null;
     }

@@ -4,13 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.SerializationTags;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -19,12 +20,12 @@ public class BlockStatePredicate
 {
     public static final BlockStatePredicate ANY = new BlockStatePredicate(null, null, StatePropertiesPredicate.ANY);
     @Nullable
-    private final ITag<Block> tag;
+    private final Tag<Block> tag;
     @Nullable
     private final Block block;
     private final StatePropertiesPredicate properties;
 
-    public BlockStatePredicate(@Nullable ITag<Block> tag, @Nullable Block block, StatePropertiesPredicate state)
+    public BlockStatePredicate(@Nullable Tag<Block> tag, @Nullable Block block, StatePropertiesPredicate state)
     {
         this.tag = tag;
         this.block = block;
@@ -52,18 +53,16 @@ public class BlockStatePredicate
     {
         if (jsonElement != null && !jsonElement.isJsonNull())
         {
-            JsonObject json = JSONUtils.convertToJsonObject(jsonElement, "block");
+            JsonObject json = GsonHelper.convertToJsonObject(jsonElement, "block");
             Block block = null;
             if (json.has("block"))
-                block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getAsString(json, "block")));
+                block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "block")));
 
-            ITag<Block> tag = null;
+            Tag<Block> tag = null;
             if (json.has("tag"))
             {
-                ResourceLocation tagId = new ResourceLocation(JSONUtils.getAsString(json, "tag"));
-                tag = TagCollectionManager.getInstance().getBlocks().getTag(tagId);
-                if (tag == null)
-                    throw new JsonSyntaxException("Unknown block tag '" + tagId + "'");
+                ResourceLocation tagId = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
+                tag = SerializationTags.getInstance().getTagOrThrow(Registry.BLOCK_REGISTRY, tagId, (id) -> new JsonSyntaxException("Unknown block tag '" + id + "'"));
             }
 
             StatePropertiesPredicate state = StatePropertiesPredicate.fromJson(json.get("state"));
@@ -86,7 +85,7 @@ public class BlockStatePredicate
                 json.addProperty("block", ForgeRegistries.BLOCKS.getKey(this.block).toString());
 
             if (this.tag != null)
-                json.addProperty("tag", TagCollectionManager.getInstance().getBlocks().getIdOrThrow(this.tag).toString());
+                json.addProperty("tag", SerializationTags.getInstance().getIdOrThrow(Registry.BLOCK_REGISTRY, this.tag, () -> new IllegalStateException("Unknown block tag")).toString());
 
             json.add("state", this.properties.serializeToJson());
             return json;

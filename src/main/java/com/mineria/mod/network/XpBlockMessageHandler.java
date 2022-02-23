@@ -1,13 +1,13 @@
 package com.mineria.mod.network;
 
 import com.mineria.mod.common.blocks.xp_block.XpBlockTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -17,16 +17,16 @@ public class XpBlockMessageHandler implements IMessageHandler<XpBlockMessageHand
     public void onMessage(XpBlockMessage msg, Supplier<NetworkEvent.Context> ctx)
     {
         ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity player = ctx.get().getSender();
+            ServerPlayer player = ctx.get().getSender();
             if(player != null)
             {
-                World world = player.level;
+                Level world = player.level;
                 BlockPos tilePos = msg.pos;
 
                 if (!world.hasChunkAt(tilePos))
                     return;
 
-                TileEntity tile = world.getBlockEntity(tilePos);
+                BlockEntity tile = world.getBlockEntity(tilePos);
                 if(tile instanceof XpBlockTileEntity)
                 {
                     XpBlockTileEntity xpBlock = (XpBlockTileEntity) tile;
@@ -46,13 +46,13 @@ public class XpBlockMessageHandler implements IMessageHandler<XpBlockMessageHand
     }
 
     @Override
-    public void encode(XpBlockMessage msg, PacketBuffer buf)
+    public void encode(XpBlockMessage msg, FriendlyByteBuf buf)
     {
         buf.writeBlockPos(msg.pos).writeInt(msg.activeState).writeInt(msg.delay);
     }
 
     @Override
-    public XpBlockMessage decode(PacketBuffer buf)
+    public XpBlockMessage decode(FriendlyByteBuf buf)
     {
         return new XpBlockMessage(buf.readBlockPos(), buf.readInt(), buf.readInt());
     }
@@ -74,7 +74,7 @@ public class XpBlockMessageHandler implements IMessageHandler<XpBlockMessageHand
         }
 
         /**
-         * The basic message, used to set the player in {@link XpBlockTileEntity#setPlayer(PlayerEntity)}
+         * The basic message, used to set the player in {@link XpBlockTileEntity#setPlayer(Player)}
          */
         public XpBlockMessage(BlockPos pos)
         {

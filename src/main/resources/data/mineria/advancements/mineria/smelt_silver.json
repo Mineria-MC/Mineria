@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:silver_ingot"
+            "items": ["mineria:silver_ingot"]
           }
         ]
       }

@@ -3,39 +3,40 @@ package com.mineria.mod.common.blocks.extractor;
 import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelTileEntity;
 import com.mineria.mod.common.containers.ExtractorContainer;
 import com.mineria.mod.common.init.MineriaTileEntities;
+import com.mineria.mod.common.recipe.ExtractorRecipe;
 import com.mineria.mod.util.CustomItemStackHandler;
 import com.mineria.mod.util.MineriaLockableTileEntity;
-import com.mineria.mod.common.recipe.ExtractorRecipe;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
-public class ExtractorTileEntity extends MineriaLockableTileEntity implements ITickableTileEntity
+public class ExtractorTileEntity extends MineriaLockableTileEntity
 {
     public int extractTime;
     public int totalExtractTime = 400;
 
-    public ExtractorTileEntity()
+    public ExtractorTileEntity(BlockPos pos, BlockState state)
     {
-        super(MineriaTileEntities.EXTRACTOR.get(), new CustomItemStackHandler(10));
+        super(MineriaTileEntities.EXTRACTOR.get(), pos, state, new CustomItemStackHandler(10));
     }
 
     @Override
-    protected ITextComponent getDefaultName()
+    protected Component getDefaultName()
     {
-        return new TranslationTextComponent("tile_entity.mineria.extractor");
+        return new TranslatableComponent("tile_entity.mineria.extractor");
     }
 
     @Override
-    protected Container createMenu(int id, PlayerInventory player)
+    protected AbstractContainerMenu createMenu(int id, Inventory player)
     {
         return new ExtractorContainer(id, player, this);
     }
@@ -45,41 +46,40 @@ public class ExtractorTileEntity extends MineriaLockableTileEntity implements IT
         return this.extractTime > 0;
     }
 
-    @Override
-    public void tick()
+    public static void serverTick(Level level, BlockPos pos, BlockState state, ExtractorTileEntity tile)
     {
-        boolean alreadyExtracting = this.isExtracting();
+        boolean alreadyExtracting = tile.isExtracting();
         boolean dirty = false;
 
-        if (!this.level.isClientSide)
+        if (!level.isClientSide)
         {
-            if (this.canExtract())
+            if (tile.canExtract())
             {
-                ++this.extractTime;
+                ++tile.extractTime;
 
-                if (this.extractTime == this.totalExtractTime)
+                if (tile.extractTime == tile.totalExtractTime)
                 {
-                    this.extractTime = 0;
-                    this.extractItem();
+                    tile.extractTime = 0;
+                    tile.extractItem();
                     dirty = true;
                 }
             }
 
-            if (!this.canExtract() && this.extractTime > 0)
+            if (!tile.canExtract() && tile.extractTime > 0)
             {
-                this.extractTime = MathHelper.clamp(this.extractTime - 2, 0, this.totalExtractTime);
+                tile.extractTime = Mth.clamp(tile.extractTime - 2, 0, tile.totalExtractTime);
             }
 
-            if (alreadyExtracting != this.isExtracting() && alreadyExtracting != this.canExtract())
+            if (alreadyExtracting != tile.isExtracting() && alreadyExtracting != tile.canExtract())
             {
                 dirty = true;
-                level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(ExtractorBlock.LIT, this.isExtracting()));
+                level.setBlockAndUpdate(pos, state.setValue(ExtractorBlock.LIT, tile.isExtracting()));
             }
         }
 
         if (dirty)
         {
-            this.setChanged();
+            tile.setChanged();
         }
     }
 
@@ -188,7 +188,7 @@ public class ExtractorTileEntity extends MineriaLockableTileEntity implements IT
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.putInt("ExtractTime", this.extractTime);
@@ -197,9 +197,9 @@ public class ExtractorTileEntity extends MineriaLockableTileEntity implements IT
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.load(state, nbt);
+        super.load(nbt);
         this.extractTime = nbt.getInt("ExtractTime");
         this.totalExtractTime = nbt.getInt("TotalExtractTime");
     }

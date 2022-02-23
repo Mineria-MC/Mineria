@@ -1,12 +1,12 @@
 package com.mineria.mod.common.items;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 
 public class XPOrbItem extends Item
 {
@@ -19,21 +19,20 @@ public class XPOrbItem extends Item
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
 	{
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (player.abilities.instabuild)
+		if (player.getAbilities().instabuild)
 		{
 			player.giveExperiencePoints(xpValue);
-			return new ActionResult<>(ActionResultType.CONSUME, stack);
 		}
 		else
 		{
 			player.giveExperiencePoints(xpValue);
 			stack.shrink(1);
-			return new ActionResult<>(ActionResultType.CONSUME, stack);
 		}
+		return InteractionResultHolder.consume(stack);
 	}
 
 	@Override

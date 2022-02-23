@@ -4,20 +4,20 @@ import com.mineria.mod.Mineria;
 import com.mineria.mod.common.effects.instances.PoisonEffectInstance;
 import com.mineria.mod.common.init.MineriaEffects;
 import com.mineria.mod.util.MineriaConfig;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.IngameGui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.shader.ShaderGroup;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
@@ -25,24 +25,24 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Class handling {@link RenderGameOverlayEvent} fired when {@link IngameGui} is rendering.
+ * Class handling {@link RenderGameOverlayEvent} fired when {@link Gui} is rendering.
  */
-@SuppressWarnings({"deprecation", "unused"})
-@Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+// TODO
+//@Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class OverlayRenderingEvent
 {
-    private static boolean usingHallucinationShader = false;
+    /*private static boolean usingHallucinationShader = false;
 
     @SubscribeEvent
     public static void onOverlayRender(RenderGameOverlayEvent event)
     {
         Minecraft mc = Minecraft.getInstance();
-        ClientPlayerEntity player = mc.player;
-        IngameGui inGameGui = mc.gui;
+        LocalPlayer player = mc.player;
+        Gui inGameGui = mc.gui;
 
         if(inGameGui instanceof ForgeIngameGui && player != null)
         {
-            EffectInstance poison = player.getEffect(Effects.POISON);
+            MobEffectInstance poison = player.getEffect(MobEffects.POISON);
             if(poison instanceof PoisonEffectInstance)
             {
                 if(event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR)
@@ -59,7 +59,7 @@ public class OverlayRenderingEvent
             {
                 if(MineriaConfig.CLIENT.useHallucinationsShader.get())
                 {
-                    ShaderGroup currentGroup = mc.gameRenderer.currentEffect();
+                    PostChain currentGroup = mc.gameRenderer.currentEffect();
                     usingHallucinationShader = currentGroup != null && currentGroup.getName().equals("minecraft:shaders/post/wobble.json");
 
                     if(!usingHallucinationShader)
@@ -80,12 +80,12 @@ public class OverlayRenderingEvent
             if(player.hasEffect(MineriaEffects.FAST_FREEZING.get()) && event.getType() == RenderGameOverlayEvent.ElementType.VIGNETTE)
             {
                 renderFastFreezing(mc, (ForgeIngameGui) inGameGui, event.getWindow(), event.getMatrixStack(), player.getEffect(MineriaEffects.FAST_FREEZING.get()));
-                if(!player.hasEffect(Effects.POISON)) renderFastFreezingVignette(mc, (ForgeIngameGui) inGameGui, event.getWindow(), event.getMatrixStack(), player.getEffect(MineriaEffects.FAST_FREEZING.get()));
+                if(!player.hasEffect(MobEffects.POISON)) renderFastFreezingVignette(mc, (ForgeIngameGui) inGameGui, event.getWindow(), event.getMatrixStack(), player.getEffect(MineriaEffects.FAST_FREEZING.get()));
             }
         }
     }
 
-    private static void renderPoisonText(Minecraft mc, ForgeIngameGui gui, MatrixStack stack, PoisonEffectInstance instance)
+    private static void renderPoisonText(Minecraft mc, ForgeIngameGui gui, PoseStack stack, PoisonEffectInstance instance)
     {
         mc.getProfiler().push("poisonEffectText");
 
@@ -101,7 +101,7 @@ public class OverlayRenderingEvent
 
     private static final ResourceLocation VIGNETTE_TEXTURE = new ResourceLocation("textures/misc/vignette.png");
 
-    private static void renderPoisonVignette(Minecraft mc, ForgeIngameGui gui, MainWindow window, MatrixStack stack, PoisonEffectInstance instance)
+    private static void renderPoisonVignette(Minecraft mc, ForgeIngameGui gui, Window window, PoseStack stack, PoisonEffectInstance instance)
     {
         mc.getProfiler().push("poisonEffectVignette");
 
@@ -111,9 +111,9 @@ public class OverlayRenderingEvent
         RenderSystem.color4f(1.0F, 0F, 0F, 1.0F);
 
         mc.getTextureManager().bind(VIGNETTE_TEXTURE);
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
         int scaledHeight = window.getGuiScaledHeight();
         int scaledWidth = window.getGuiScaledWidth();
         bufferbuilder.vertex(0.0D, scaledHeight, -90.0D).uv(0.0F, 1.0F).endVertex();
@@ -131,7 +131,7 @@ public class OverlayRenderingEvent
 
     private static final ResourceLocation HALLUCINATIONS_TEXTURE = new ResourceLocation(Mineria.MODID, "textures/misc/pink_sheep.png");
 
-    private static void renderHallucinations(Minecraft mc, ForgeIngameGui gui, MainWindow window, MatrixStack stack, EffectInstance instance)
+    private static void renderHallucinations(Minecraft mc, ForgeIngameGui gui, Window window, PoseStack stack, MobEffectInstance instance)
     {
         mc.getProfiler().push("hallucinationsOverlay");
 
@@ -143,9 +143,9 @@ public class OverlayRenderingEvent
         RenderSystem.disableAlphaTest();
 
         mc.getTextureManager().bind(HALLUCINATIONS_TEXTURE);
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
         int scaledHeight = window.getGuiScaledHeight();
         int scaledWidth = window.getGuiScaledWidth();
         bufferbuilder.vertex(0.0D, scaledHeight, -90.0D).uv(0.0F, 1.0F).endVertex();
@@ -164,7 +164,7 @@ public class OverlayRenderingEvent
     // TODOLTR Replace with texture from Minecraft 1.17
     private static final ResourceLocation FAST_FREEZING_TEXTURE = new ResourceLocation(Mineria.MODID, "textures/misc/fast_freezing.png");
 
-    private static void renderFastFreezing(Minecraft mc, ForgeIngameGui gui, MainWindow window, MatrixStack stack, EffectInstance instance)
+    private static void renderFastFreezing(Minecraft mc, ForgeIngameGui gui, Window window, PoseStack stack, MobEffectInstance instance)
     {
         mc.getProfiler().push("fastFreezingOverlay");
 
@@ -175,9 +175,9 @@ public class OverlayRenderingEvent
         RenderSystem.disableAlphaTest();
 
         mc.getTextureManager().bind(FAST_FREEZING_TEXTURE);
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
         int scaledHeight = window.getGuiScaledHeight();
         int scaledWidth = window.getGuiScaledWidth();
         bufferbuilder.vertex(0.0D, scaledHeight, -90.0D).uv(0.0F, 1.0F).endVertex();
@@ -193,7 +193,7 @@ public class OverlayRenderingEvent
         mc.getProfiler().pop();
     }
 
-    private static void renderFastFreezingVignette(Minecraft mc, ForgeIngameGui gui, MainWindow window, MatrixStack stack, EffectInstance instance)
+    private static void renderFastFreezingVignette(Minecraft mc, ForgeIngameGui gui, Window window, PoseStack stack, MobEffectInstance instance)
     {
         mc.getProfiler().push("fastFreezingVignette");
 
@@ -203,9 +203,9 @@ public class OverlayRenderingEvent
         RenderSystem.color4f(87 / 255F, 8 / 255F, 0, 1);
 
         mc.getTextureManager().bind(VIGNETTE_TEXTURE);
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
         int scaledHeight = window.getGuiScaledHeight();
         int scaledWidth = window.getGuiScaledWidth();
         bufferbuilder.vertex(0.0D, scaledHeight, -90.0D).uv(0.0F, 1.0F).endVertex();
@@ -219,5 +219,5 @@ public class OverlayRenderingEvent
         RenderSystem.defaultBlendFunc();
 
         mc.getProfiler().pop();
-    }
+    }*/
 }

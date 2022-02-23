@@ -2,20 +2,20 @@ package com.mineria.mod.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import com.mineria.mod.Mineria;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
-public class DamageFromSpikeTrigger extends AbstractCriterionTrigger<DamageFromSpikeTrigger.Instance>
+public class DamageFromSpikeTrigger extends SimpleCriterionTrigger<DamageFromSpikeTrigger.Instance>
 {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "damage_from_spike");
 
@@ -26,25 +26,25 @@ public class DamageFromSpikeTrigger extends AbstractCriterionTrigger<DamageFromS
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate predicate, ConditionArrayParser parser)
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite predicate, DeserializationContext parser)
     {
-        Block block = json.has("block") ? ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getAsString(json, "block"))) : null;
-        float damage = json.has("damage") ? JSONUtils.getAsFloat(json, "damage") : -1;
+        Block block = json.has("block") ? ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "block"))) : null;
+        float damage = json.has("damage") ? GsonHelper.getAsFloat(json, "damage") : -1;
         return new Instance(predicate, block, damage);
     }
 
-    public void trigger(ServerPlayerEntity player, Block block, float damage)
+    public void trigger(ServerPlayer player, Block block, float damage)
     {
         this.trigger(player, instance -> instance.matches(block, damage));
     }
 
-    public static class Instance extends CriterionInstance
+    public static class Instance extends AbstractCriterionTriggerInstance
     {
         @Nullable
         private final Block block;
         private float damage = -1;
 
-        public Instance(EntityPredicate.AndPredicate predicate, @Nullable Block block, float damage)
+        public Instance(EntityPredicate.Composite predicate, @Nullable Block block, float damage)
         {
             super(ID, predicate);
             this.block = block;
@@ -57,7 +57,7 @@ public class DamageFromSpikeTrigger extends AbstractCriterionTrigger<DamageFromS
         }
 
         @Override
-        public JsonObject serializeToJson(ConditionArraySerializer serializer)
+        public JsonObject serializeToJson(SerializationContext serializer)
         {
             JsonObject json = super.serializeToJson(serializer);
             if(block != null) json.addProperty("block", ForgeRegistries.BLOCKS.getKey(block).toString());

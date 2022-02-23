@@ -6,23 +6,23 @@
   "refmap": "mineria.refmap.json",
   "mixins": [
     "BlockMixin",
-    "EffectInstanceMixin",
+    "MobEffectInstanceMixin",
     "EntityMixin",
-    "FoodStatsMixin",
+    "FoodDataMixin",
     "HoneyBottleItemMixin",
     "LivingEntityMixin",
     "MilkBucketItemMixin",
-    "PlayerEntityMixin",
+    "PlayerMixin",
     "PotionItemMixin",
-    "RepairContainerMixin",
-    "ServerPlayNetHandlerMixin",
-    "SPlayEntityEffectPacketMixin",
-    "UnbreakingEnchantmentMixin",
-    "VillagerEntityMixin"
+    "AnvilMenuMixin",
+    "ServerGamePacketListenerImplMixin",
+    "ClientboundUpdateMobEffectPacketMixin",
+    "DigDurabilityEnchantmentMixin",
+    "VillagerMixin"
   ],
   "client": [
-    "ClientPlayerEntityMixin",
-    "ClientPlayNetHandlerMixin",
+    "LocalPlayerMixin",
+    "ClientPacketListenerMixin",
     "SoundEngineMixin"
   ],
   "injectors": {

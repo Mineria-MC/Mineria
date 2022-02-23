@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:catholicon"
+            "items": ["mineria:catholicon"]
           }
         ]
       }
@@ -31,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:charcoal_anti_poison"
+            "items": ["mineria:charcoal_anti_poison"]
           }
         ]
       }
@@ -41,7 +41,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:milk_anti_poison"
+            "items": ["mineria:milk_anti_poison"]
           }
         ]
       }
@@ -51,7 +51,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:nauseous_anti_poison"
+            "items": ["mineria:nauseous_anti_poison"]
           }
         ]
       }
@@ -61,7 +61,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:anti_poison"
+            "items": ["mineria:anti_poison"]
           }
         ]
       }
@@ -71,7 +71,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:miracle_anti_poison"
+            "items": ["mineria:miracle_anti_poison"]
           }
         ]
       }

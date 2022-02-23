@@ -4,24 +4,29 @@ import com.google.common.collect.ImmutableList;
 import com.mineria.mod.common.init.MineriaItems;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.pattern.BlockPattern;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.Util;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraftforge.common.BasicTrade;
 
 import javax.annotation.Nullable;
@@ -30,7 +35,7 @@ import java.util.function.Supplier;
 
 public class BardEntity extends AbstractDruidEntity
 {
-    private static final Supplier<Int2ObjectMap<List<VillagerTrades.ITrade>>> BARD_TRADES = () -> Util.make(new Int2ObjectOpenHashMap<>(), map ->
+    private static final Supplier<Int2ObjectMap<List<VillagerTrades.ItemListing>>> BARD_TRADES = () -> Util.make(new Int2ObjectOpenHashMap<>(), map ->
     {
         map.put(1, ImmutableList.of(
                 new BasicTrade(1, new ItemStack(Blocks.JUKEBOX), 16, 1, 0.2F),
@@ -64,7 +69,7 @@ public class BardEntity extends AbstractDruidEntity
 
     private PerformRitualGoal performRitualGoal;
 
-    public BardEntity(EntityType<? extends MonsterEntity> type, World world)
+    public BardEntity(EntityType<? extends Monster> type, Level world)
     {
         super(type, world);
     }
@@ -73,16 +78,16 @@ public class BardEntity extends AbstractDruidEntity
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new AbstractDruidEntity.CastingASpellGoal());
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, player -> player.equals(this.getTarget()), 8.0F, 0.6D, 1.0D, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test));
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, player -> player.equals(this.getTarget()), 8.0F, 0.6D, 1.0D, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test));
         this.goalSelector.addGoal(3, new BardEntity.WeakenSpellGoal());
         this.goalSelector.addGoal(4, performRitualGoal = new PerformRitualGoal());
-        this.goalSelector.addGoal(5, new RandomWalkingGoal(this, 0.6D));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.6D));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractDruidEntity.class)).setAlertOthers(AbstractDruidEntity.class));
-        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::isAngryAt)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt)).setUnseenMemoryTicks(300));
     }
 
     @Override
@@ -92,13 +97,13 @@ public class BardEntity extends AbstractDruidEntity
     }
 
     @Override
-    protected Int2ObjectMap<List<VillagerTrades.ITrade>> getTrades()
+    protected Int2ObjectMap<List<VillagerTrades.ItemListing>> getTrades()
     {
         return BARD_TRADES.get();
     }
 
     @Override
-    public void callForRitual(BlockPattern.PatternHelper patternHelper, int index)
+    public void callForRitual(BlockPattern.BlockPatternMatch patternHelper, int index)
     {
         super.callForRitual(patternHelper, index);
         if(performRitualGoal != null)
@@ -111,13 +116,13 @@ public class BardEntity extends AbstractDruidEntity
         protected void performSpellCasting()
         {
             LivingEntity target = BardEntity.this.getTarget();
-            World world = BardEntity.this.getLevel();
+            Level world = BardEntity.this.getLevel();
 
             if (!world.isClientSide())
             {
-                target.addEffect(new EffectInstance(Effects.WEAKNESS, 3 * 60 * 20));
-                target.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 3 * 60 * 20));
-                target.addEffect(new EffectInstance(Effects.DIG_SLOWDOWN, 3 * 60 * 20));
+                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3 * 60 * 20));
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 3 * 60 * 20));
+                target.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 3 * 60 * 20));
             }
         }
 

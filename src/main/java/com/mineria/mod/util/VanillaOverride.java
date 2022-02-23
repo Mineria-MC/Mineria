@@ -1,7 +1,7 @@
 package com.mineria.mod.util;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
@@ -18,6 +18,8 @@ public interface VanillaOverride
         if(this instanceof ForgeRegistryEntry)
         {
             ObfuscationReflectionHelper.setPrivateValue(ForgeRegistryEntry.class, (ForgeRegistryEntry<?>) this, new ResourceLocation("minecraft", name), "registryName");
+            return;
         }
+        throw new AssertionError("A vanilla override should be an instance of a ForgeRegistryEntry!");
     }
 }

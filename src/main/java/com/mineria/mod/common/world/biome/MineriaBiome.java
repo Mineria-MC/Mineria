@@ -1,12 +1,12 @@
 package com.mineria.mod.common.world.biome;
 
 import com.mineria.mod.common.init.MineriaBiomes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeGenerationSettings;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilders;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.data.worldgen.SurfaceBuilders;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
@@ -16,8 +16,6 @@ import java.util.List;
 
 public abstract class MineriaBiome
 {
-    protected static MobSpawnInfo.Builder spawnInfoBuilder = new MobSpawnInfo.Builder();
-    protected static BiomeGenerationSettings.Builder settingsBuilder = new BiomeGenerationSettings.Builder().surfaceBuilder(ConfiguredSurfaceBuilders.GRASS);
     private final int weight;
     private final BiomeManager.BiomeType type;
     private final Biome biome;
@@ -54,7 +52,7 @@ public abstract class MineriaBiome
     protected static int getSkyColorWithTemperatureModifier(float temperature)
     {
         float temperatureModifier = temperature / 3.0F;
-        temperatureModifier = MathHelper.clamp(temperatureModifier, -1.0F, 1.0F);
-        return MathHelper.hsvToRgb(0.62222224F - temperatureModifier * 0.05F, 0.5F + temperatureModifier * 0.1F, 1.0F);
+        temperatureModifier = Mth.clamp(temperatureModifier, -1.0F, 1.0F);
+        return Mth.hsvToRgb(0.62222224F - temperatureModifier * 0.05F, 0.5F + temperatureModifier * 0.1F, 1.0F);
     }
 }

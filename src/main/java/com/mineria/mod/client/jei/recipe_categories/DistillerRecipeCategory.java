@@ -3,7 +3,7 @@ package com.mineria.mod.client.jei.recipe_categories;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.init.MineriaBlocks;
 import com.mineria.mod.common.recipe.DistillerRecipe;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,16 +13,17 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 public class DistillerRecipeCategory implements IRecipeCategory<DistillerRecipe>
 {
     public static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "distiller");
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/gui/distiller.png");
 
-    private final String name;
     private final IDrawable background;
     private final IDrawable icon;
 
@@ -31,7 +32,6 @@ public class DistillerRecipeCategory implements IRecipeCategory<DistillerRecipe>
 
     public DistillerRecipeCategory(IGuiHelper helper)
     {
-        this.name = I18n.get("recipe_category.mineria.distiller");
         this.background = helper.createDrawable(TEXTURE, 5, 6, 150, 64);
         this.icon = helper.createDrawableIngredient(new ItemStack(MineriaBlocks.DISTILLER));
 
@@ -55,9 +55,9 @@ public class DistillerRecipeCategory implements IRecipeCategory<DistillerRecipe>
     }
 
     @Override
-    public String getTitle()
+    public Component getTitle()
     {
-        return name;
+        return new TranslatableComponent("recipe_category.mineria.distiller");
     }
 
     @Override
@@ -93,7 +93,7 @@ public class DistillerRecipeCategory implements IRecipeCategory<DistillerRecipe>
     }
 
     @Override
-    public void draw(DistillerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(DistillerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY)
     {
         this.animatedFlame.draw(matrixStack, 87 - 5, 42 - 6);
         this.animatedBubbles.draw(matrixStack, 105 - 5, 11 - 6);

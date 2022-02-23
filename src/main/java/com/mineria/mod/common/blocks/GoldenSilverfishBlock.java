@@ -3,18 +3,18 @@ package com.mineria.mod.common.blocks;
 import com.google.common.collect.Maps;
 import com.mineria.mod.common.entity.GoldenSilverfishEntity;
 import com.mineria.mod.common.init.MineriaEntities;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class GoldenSilverfishBlock extends Block
 
     public GoldenSilverfishBlock(Block blockIn)
     {
-        super(AbstractBlock.Properties.of(Material.CLAY).strength(0.0F, 0.75F));
+        super(BlockBehaviour.Properties.of(Material.CLAY).strength(0.0F, 0.75F));
         this.mimickedBlock = blockIn;
         normalToInfectedMap.put(blockIn, this);
     }
@@ -40,7 +40,7 @@ public class GoldenSilverfishBlock extends Block
         return normalToInfectedMap.containsKey(state.getBlock());
     }
 
-    private void spawnGoldenSilverfish(ServerWorld world, BlockPos pos)
+    private void spawnGoldenSilverfish(ServerLevel world, BlockPos pos)
     {
         GoldenSilverfishEntity goldenSilverfish = MineriaEntities.GOLDEN_SILVERFISH.get().create(world);
         goldenSilverfish.moveTo((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
@@ -48,7 +48,7 @@ public class GoldenSilverfishBlock extends Block
         goldenSilverfish.spawnAnim();
     }
 
-    public void spawnAfterBreak(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack)
+    public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack)
     {
         super.spawnAfterBreak(state, worldIn, pos, stack);
         if (worldIn.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0)
@@ -58,13 +58,12 @@ public class GoldenSilverfishBlock extends Block
 
     }
 
-    public void wasExploded(World worldIn, BlockPos pos, Explosion explosionIn)
+    public void wasExploded(Level worldIn, BlockPos pos, Explosion explosionIn)
     {
-        if (worldIn instanceof ServerWorld)
+        if (worldIn instanceof ServerLevel)
         {
-            this.spawnGoldenSilverfish((ServerWorld)worldIn, pos);
+            this.spawnGoldenSilverfish((ServerLevel)worldIn, pos);
         }
-
     }
 
     public static BlockState infest(Block blockIn)

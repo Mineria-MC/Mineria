@@ -5,26 +5,29 @@ import com.mineria.mod.client.models.ExtractorGearModel;
 import com.mineria.mod.common.blocks.extractor.ExtractorBlock;
 import com.mineria.mod.common.blocks.extractor.ExtractorTileEntity;
 import com.mineria.mod.util.MineriaConfig;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 
-public class ExtractorTileEntityRenderer extends TileEntityRenderer<ExtractorTileEntity>
+public class ExtractorTileEntityRenderer implements BlockEntityRenderer<ExtractorTileEntity>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/block/extractor_gear.png");
-    private final ExtractorGearModel gearModel = new ExtractorGearModel();
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation(Mineria.MODID, "extractor_gear"), "main");
+    private final ExtractorGearModel gearModel;
 
-    public ExtractorTileEntityRenderer(TileEntityRendererDispatcher dispatcher)
+    public ExtractorTileEntityRenderer(BlockEntityRendererProvider.Context ctx)
     {
-        super(dispatcher);
+        this.gearModel = new ExtractorGearModel(ctx.bakeLayer(LAYER));
     }
 
     @Override
-    public void render(ExtractorTileEntity tileEntity, float p_225616_2_, MatrixStack stack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void render(ExtractorTileEntity tileEntity, float p_225616_2_, PoseStack stack, MultiBufferSource buffer, int packedLight, int packedOverlay)
     {
         stack.pushPose();
         try {
@@ -32,29 +35,27 @@ public class ExtractorTileEntityRenderer extends TileEntityRenderer<ExtractorTil
         } catch (NullPointerException ignored) {}
         if(tileEntity.isExtracting() && MineriaConfig.CLIENT.enableTERAnimations.get())
             this.gearModel.animate();
-        this.gearModel.renderToBuffer(stack, buffer.getBuffer(this.gearModel.renderType(TEXTURE)), p_225616_5_, p_225616_6_, 1, 1, 1, 1);
+        this.gearModel.renderToBuffer(stack, buffer.getBuffer(this.gearModel.renderType(TEXTURE)), packedLight, packedOverlay, 1, 1, 1, 1);
         stack.popPose();
     }
 
-    private static void moveFromDirection(Direction direction, MatrixStack stack)
+    private static void moveFromDirection(Direction direction, PoseStack stack)
     {
         switch (direction)
         {
-            case NORTH:
+            case NORTH -> {
                 stack.mulPose(Vector3f.YP.rotationDegrees(180));
                 stack.translate(-0.5, -0.5, -0.5);
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 stack.mulPose(Vector3f.YP.rotationDegrees(90));
                 stack.translate(-0.5, -0.5, 0.5);
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 stack.mulPose(Vector3f.YP.rotationDegrees(-90));
                 stack.translate(0.5, -0.5, -0.5);
-                break;
-            case SOUTH:
-                stack.translate(0.5, -0.5, 0.5);
-                break;
+            }
+            case SOUTH -> stack.translate(0.5, -0.5, 0.5);
         }
     }
 }

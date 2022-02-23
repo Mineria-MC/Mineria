@@ -6,22 +6,22 @@ import com.mineria.mod.common.enchantments.FourElementsEnchantment;
 import com.mineria.mod.common.init.MineriaEffects;
 import com.mineria.mod.common.init.MineriaEntities;
 import com.mineria.mod.util.DamageSourceUtil;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -32,19 +32,19 @@ public class ElementalOrbEntity extends Entity
     private UUID ownerUUID;
     private int ownerNetworkId;
     private FourElementsEnchantment.ElementType elementType = FourElementsEnchantment.ElementType.NONE;
-    private static final DataParameter<Integer> ELEMENT_TYPE_ID = EntityDataManager.defineId(ElementalOrbEntity.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ELEMENT_TYPE_ID = SynchedEntityData.defineId(ElementalOrbEntity.class, EntityDataSerializers.INT);
     private final Map<LivingEntity, Integer> hitCount = new HashMap<>();
     private int delay;
     private int currentPosIndex;
-    private static final DataParameter<Integer> CURRENT_POS_INDEX = EntityDataManager.defineId(ElementalOrbEntity.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> CURRENT_POS_INDEX = SynchedEntityData.defineId(ElementalOrbEntity.class, EntityDataSerializers.INT);
 
-    public ElementalOrbEntity(EntityType<?> type, World world)
+    public ElementalOrbEntity(EntityType<?> type, Level world)
     {
         super(type, world);
         this.noPhysics = true;
     }
 
-    public ElementalOrbEntity(World world, Entity owner, FourElementsEnchantment.ElementType elementType, int startPosIndex)
+    public ElementalOrbEntity(Level world, Entity owner, FourElementsEnchantment.ElementType elementType, int startPosIndex)
     {
         this(MineriaEntities.ELEMENTAL_ORB.get(), world);
         setOwner(owner);
@@ -52,7 +52,7 @@ public class ElementalOrbEntity extends Entity
         setCurrentPosIndex(startPosIndex);
     }
 
-    public ElementalOrbEntity(World world, double x, double y, double z)
+    public ElementalOrbEntity(Level world, double x, double y, double z)
     {
         this(MineriaEntities.ELEMENTAL_ORB.get(), world);
         this.setPos(x, y, z);
@@ -66,7 +66,7 @@ public class ElementalOrbEntity extends Entity
         Entity owner = this.getOwner();
         if(owner != null && isOwnerValid())
         {
-            Vector3d nextPos = getNextPos(owner.position());
+            Vec3 nextPos = getNextPos(owner.position());
             setPos(nextPos.x, owner.getY() + 0.45, nextPos.z);
 
             if(delay > 0)
@@ -91,19 +91,19 @@ public class ElementalOrbEntity extends Entity
                 }
             }
         } else
-            this.remove();
+            this.discard();
     }
 
     private boolean isOwnerValid()
     {
         Entity owner = this.getOwner();
-        return owner != null && owner.isAlive() && (!(owner instanceof ServerPlayerEntity) || !owner.isSpectator());
+        return owner != null && owner.isAlive() && (!(owner instanceof ServerPlayer) || !owner.isSpectator());
     }
 
-    private Vector3d getNextPos(Vector3d ownerPos)
+    private Vec3 getNextPos(Vec3 ownerPos)
     {
         int currentPosIndex = getCurrentPosIndex();
-        Vector3d vec3 = POSITIONS.get(currentPosIndex);
+        Vec3 vec3 = POSITIONS.get(currentPosIndex);
 
         if(currentPosIndex + 1 >= POSITIONS.size())
             setCurrentPosIndex(0);
@@ -132,7 +132,7 @@ public class ElementalOrbEntity extends Entity
                 {
                     hitCount.replace(living, 0);
                     living.setAirSupply(-650);
-                    living.addEffect(new EffectInstance(MineriaEffects.DROWNING.get(), 32770));
+                    living.addEffect(new MobEffectInstance(MineriaEffects.DROWNING.get(), 32770));
                 } else
                 {
                     living.setAirSupply(living.getAirSupply() - 60);
@@ -184,9 +184,9 @@ public class ElementalOrbEntity extends Entity
     @Nullable
     public Entity getOwner()
     {
-        if (this.ownerUUID != null && this.level instanceof ServerWorld)
+        if (this.ownerUUID != null && this.level instanceof ServerLevel)
         {
-            return ((ServerWorld) this.level).getEntity(this.ownerUUID);
+            return ((ServerLevel) this.level).getEntity(this.ownerUUID);
         } else
         {
             return this.ownerNetworkId != 0 ? this.level.getEntity(this.ownerNetworkId) : null;
@@ -223,7 +223,7 @@ public class ElementalOrbEntity extends Entity
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
         if (nbt.hasUUID("Owner"))
         {
@@ -233,7 +233,7 @@ public class ElementalOrbEntity extends Entity
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT nbt)
+    protected void addAdditionalSaveData(CompoundTag nbt)
     {
         if (this.ownerUUID != null)
         {
@@ -243,9 +243,9 @@ public class ElementalOrbEntity extends Entity
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket()
+    public Packet<?> getAddEntityPacket()
     {
-        return new SSpawnObjectPacket(this, this.ownerNetworkId);
+        return new ClientboundAddEntityPacket(this, this.ownerNetworkId);
     }
 
     @Override
@@ -254,17 +254,17 @@ public class ElementalOrbEntity extends Entity
         return PushReaction.IGNORE;
     }
 
-    private static final List<Vector3d> POSITIONS = calculatePositions(1.25);
+    private static final List<Vec3> POSITIONS = calculatePositions(1.25);
 
-    private static List<Vector3d> calculatePositions(double distance)
+    private static List<Vec3> calculatePositions(double distance)
     {
-        List<Vector3d> result = new ArrayList<>();
+        List<Vec3> result = new ArrayList<>();
 
         for(int ang = 0; ang < 23; ang++)
         {
             double dx = distance * Math.cos(ang * 6);
             double dz = distance * Math.sin(ang * 6);
-            result.add(new Vector3d(dx, 0, dz));
+            result.add(new Vec3(dx, 0, dz));
         }
 
         return result;

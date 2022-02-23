@@ -3,17 +3,15 @@ package com.mineria.mod.common.data.triggers;
 import com.google.gson.JsonObject;
 import com.mineria.mod.Mineria;
 import com.mineria.mod.common.data.predicates.BlockStatePredicate;
-import net.minecraft.advancements.criterion.*;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class MinedBlockTrigger extends AbstractCriterionTrigger<MinedBlockTrigger.Instance>
+public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.Instance>
 {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "mined_block");
 
@@ -24,7 +22,7 @@ public class MinedBlockTrigger extends AbstractCriterionTrigger<MinedBlockTrigge
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate andPredicate, ConditionArrayParser parser)
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser)
     {
         BlockStatePredicate block = BlockStatePredicate.fromJson(json.get("block"));
         LocationPredicate location = LocationPredicate.fromJson(json.get("location"));
@@ -32,18 +30,18 @@ public class MinedBlockTrigger extends AbstractCriterionTrigger<MinedBlockTrigge
         return new Instance(andPredicate, block, location, item);
     }
 
-    public void trigger(ServerPlayerEntity player, BlockState state, BlockPos pos, ItemStack stack)
+    public void trigger(ServerPlayer player, BlockState state, BlockPos pos, ItemStack stack)
     {
         this.trigger(player, instance -> instance.matches(state, player.getLevel(), pos, stack));
     }
 
-    public static class Instance extends CriterionInstance
+    public static class Instance extends AbstractCriterionTriggerInstance
     {
         private final BlockStatePredicate block;
         private final LocationPredicate location;
         private final ItemPredicate item;
 
-        public Instance(EntityPredicate.AndPredicate andPredicate, BlockStatePredicate block, LocationPredicate location, ItemPredicate item)
+        public Instance(EntityPredicate.Composite andPredicate, BlockStatePredicate block, LocationPredicate location, ItemPredicate item)
         {
             super(ID, andPredicate);
             this.block = block;
@@ -51,7 +49,7 @@ public class MinedBlockTrigger extends AbstractCriterionTrigger<MinedBlockTrigge
             this.item = item;
         }
 
-        private boolean matches(BlockState state, ServerWorld world, BlockPos pos, ItemStack stack)
+        private boolean matches(BlockState state, ServerLevel world, BlockPos pos, ItemStack stack)
         {
             if(!this.block.matches(state))
                 return false;
@@ -62,7 +60,7 @@ public class MinedBlockTrigger extends AbstractCriterionTrigger<MinedBlockTrigge
         }
 
         @Override
-        public JsonObject serializeToJson(ConditionArraySerializer serializer)
+        public JsonObject serializeToJson(SerializationContext serializer)
         {
             JsonObject json = super.serializeToJson(serializer);
             json.add("block", this.block.serializeToJson());

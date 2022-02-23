@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:vanadium_helmet"
+            "items": ["mineria:vanadium_helmet"]
           }
         ]
       }

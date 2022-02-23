@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "mineria:compressed_lead_sword"
+            "items": ["mineria:compressed_lead_sword"]
           }
         ]
       }

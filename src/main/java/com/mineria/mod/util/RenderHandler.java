@@ -1,6 +1,8 @@
 package com.mineria.mod.util;
 
 import com.mineria.mod.Mineria;
+import com.mineria.mod.client.models.ExtractorGearModel;
+import com.mineria.mod.client.models.entity.*;
 import com.mineria.mod.client.renderers.ExtractorTileEntityRenderer;
 import com.mineria.mod.client.renderers.RitualTableTileEntityRenderer;
 import com.mineria.mod.client.renderers.entity.*;
@@ -10,26 +12,27 @@ import com.mineria.mod.common.effects.potions.MineriaPotion;
 import com.mineria.mod.common.init.*;
 import com.mineria.mod.common.items.JarItem;
 import com.mineria.mod.common.items.MineriaBow;
-import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.LightningBoltRenderer;
-import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.item.IDyeableArmorItem;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.level.block.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
 /**
@@ -41,46 +44,73 @@ public class RenderHandler
 {
 	public static void registerScreenFactories()
 	{
-		ScreenManager.register(MineriaContainerTypes.TITANE_EXTRACTOR.get(), TitaneExtractorScreen::new);
-		ScreenManager.register(MineriaContainerTypes.INFUSER.get(), InfuserScreen::new);
-		ScreenManager.register(MineriaContainerTypes.XP_BLOCK.get(), XpBlockScreen::new);
-		ScreenManager.register(MineriaContainerTypes.COPPER_WATER_BARREL.get(), CopperWaterBarrelScreen::new);
-		ScreenManager.register(MineriaContainerTypes.GOLDEN_WATER_BARREL.get(), GoldenWaterBarrelScreen::new);
-		ScreenManager.register(MineriaContainerTypes.EXTRACTOR.get(), ExtractorScreen::new);
-		ScreenManager.register(MineriaContainerTypes.DISTILLER.get(), DistillerScreen::new);
-		ScreenManager.register(MineriaContainerTypes.APOTHECARY_TABLE.get(), ApothecaryTableScreen::new);
+		MenuScreens.register(MineriaContainerTypes.TITANE_EXTRACTOR.get(), TitaneExtractorScreen::new);
+		MenuScreens.register(MineriaContainerTypes.INFUSER.get(), InfuserScreen::new);
+		MenuScreens.register(MineriaContainerTypes.XP_BLOCK.get(), XpBlockScreen::new);
+		MenuScreens.register(MineriaContainerTypes.COPPER_WATER_BARREL.get(), CopperWaterBarrelScreen::new);
+		MenuScreens.register(MineriaContainerTypes.GOLDEN_WATER_BARREL.get(), GoldenWaterBarrelScreen::new);
+		MenuScreens.register(MineriaContainerTypes.EXTRACTOR.get(), ExtractorScreen::new);
+		MenuScreens.register(MineriaContainerTypes.DISTILLER.get(), DistillerScreen::new);
+		MenuScreens.register(MineriaContainerTypes.APOTHECARY_TABLE.get(), ApothecaryTableScreen::new);
 	}
 
-	public static void registerEntityRenders()
+	@SubscribeEvent
+	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event)
 	{
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.GOLDEN_SILVERFISH.get(), GoldenSilverfishRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.WIZARD.get(), WizardRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.KUNAI.get(), KunaiRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.MINERIA_POTION.get(), manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer()));
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.MINERIA_AREA_EFFECT_CLOUD.get(), MineriaAreaEffectCloudRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.DRUID.get(), DruidRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.OVATE.get(), DruidRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.BARD.get(), DruidRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.ELEMENTAL_ORB.get(), ElementalOrbRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.FIRE_GOLEM.get(), FireGolemRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.DIRT_GOLEM.get(), DirtGolemRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.AIR_SPIRIT.get(), AirSpiritRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.WATER_SPIRIT.get(), WaterSpiritRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.DART.get(), BlowgunRefillRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.JAR.get(), manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer()));
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.DRUIDIC_WOLF.get(), DruidicWolfRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.BROWN_BEAR.get(), BrownBearRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.GREAT_DRUID_OF_GAULS.get(), GreatDruidOfGaulsRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.MINERIA_LIGHTNING_BOLT.get(), LightningBoltRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.BUDDHIST.get(), BuddhistRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.ASIATIC_HERBALIST.get(), AsiaticHerbalistRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(MineriaEntities.TEMPORARY_ITEM_FRAME.get(), manager -> new ItemFrameRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+		registerEntityRenders(event);
+		registerTileEntityRenderers(event);
 	}
 
-	public static void registerTileEntityRenderers()
+	private static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event)
 	{
-		ClientRegistry.bindTileEntityRenderer(MineriaTileEntities.EXTRACTOR.get(), ExtractorTileEntityRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(MineriaTileEntities.RITUAL_TABLE.get(), RitualTableTileEntityRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.GOLDEN_SILVERFISH.get(), GoldenSilverfishRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.WIZARD.get(), WizardRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.KUNAI.get(), KunaiRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.MINERIA_POTION.get(), ThrownItemRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.MINERIA_AREA_EFFECT_CLOUD.get(), MineriaAreaEffectCloudRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.DRUID.get(), DruidRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.OVATE.get(), DruidRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.BARD.get(), DruidRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.ELEMENTAL_ORB.get(), ElementalOrbRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.FIRE_GOLEM.get(), FireGolemRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.DIRT_GOLEM.get(), DirtGolemRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.AIR_SPIRIT.get(), AirSpiritRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.WATER_SPIRIT.get(), WaterSpiritRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.DART.get(), BlowgunRefillRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.JAR.get(), ThrownItemRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.DRUIDIC_WOLF.get(), DruidicWolfRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.BROWN_BEAR.get(), BrownBearRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.GREAT_DRUID_OF_GAULS.get(), GreatDruidOfGaulsRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.MINERIA_LIGHTNING_BOLT.get(), LightningBoltRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.BUDDHIST.get(), BuddhistRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.ASIATIC_HERBALIST.get(), AsiaticHerbalistRenderer::new);
+		event.registerEntityRenderer(MineriaEntities.TEMPORARY_ITEM_FRAME.get(), ItemFrameRenderer::new);
+	}
+
+	private static void registerTileEntityRenderers(EntityRenderersEvent.RegisterRenderers event)
+	{
+		event.registerBlockEntityRenderer(MineriaTileEntities.EXTRACTOR.get(), ExtractorTileEntityRenderer::new);
+		event.registerBlockEntityRenderer(MineriaTileEntities.RITUAL_TABLE.get(), RitualTableTileEntityRenderer::new);
+	}
+
+	@SubscribeEvent
+	public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
+	{
+		event.registerLayerDefinition(AsiaticHerbalistRenderer.LAYER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
+		event.registerLayerDefinition(WizardRenderer.LAYER, WitchModel::createBodyLayer);
+		event.registerLayerDefinition(KunaiRenderer.LAYER, KunaiModel::createLayerDefinition);
+		event.registerLayerDefinition(AirSpiritRenderer.LAYER, AirSpiritModel::createBody);
+		event.registerLayerDefinition(BlowgunRefillRenderer.LAYER, BlowgunRefillModel::createLayerDefinition);
+		event.registerLayerDefinition(BrownBearRenderer.LAYER, PolarBearModel::createBodyLayer);
+		event.registerLayerDefinition(WaterSpiritRenderer.LAYER, WaterSpiritModel::createBodyLayer);
+		event.registerLayerDefinition(DirtGolemRenderer.LAYER, DirtGolemModel::createBodyLayer);
+		event.registerLayerDefinition(FireGolemRenderer.LAYER, IronGolemModel::createBodyLayer);
+		event.registerLayerDefinition(DruidicWolfRenderer.LAYER, WolfModel::createBodyLayer);
+		event.registerLayerDefinition(DruidRenderer.LAYER, IllagerModel::createBodyLayer);
+		event.registerLayerDefinition(GreatDruidOfGaulsRenderer.LAYER, IllagerModel::createBodyLayer);
+		event.registerLayerDefinition(BuddhistRenderer.LAYER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
+
+		event.registerLayerDefinition(ExtractorTileEntityRenderer.LAYER, ExtractorGearModel::createLayerDefinition);
 	}
 
 	/**
@@ -90,30 +120,30 @@ public class RenderHandler
 	@SubscribeEvent
 	public static void registerParticles(ParticleFactoryRegisterEvent event)
 	{
-		ParticleManager manager = Minecraft.getInstance().particleEngine;
+		ParticleEngine manager = Minecraft.getInstance().particleEngine;
 	}
 
 	public static void registerItemModelsProperties()
 	{
 		// Bow items
 		DeferredRegisterUtil.filterEntriesFromRegister(MineriaItems.ITEMS, MineriaBow.class).forEach(item -> {
-			ItemModelsProperties.register(item, new ResourceLocation("pull"), (stack, world, living) -> {
+			ItemProperties.register(item, new ResourceLocation("pull"), (stack, world, living, entityId) -> {
 				if (living == null)
 					return 0.0F;
 				else
 					return living.getUseItem() != stack ? 0.0F : (float)(stack.getUseDuration() - living.getUseItemRemainingTicks()) / 20.0F;
 			});
-			ItemModelsProperties.register(item, new ResourceLocation("pulling"),
-					(stack, world, living) -> living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F);
+			ItemProperties.register(item, new ResourceLocation("pulling"),
+					(stack, world, living, entityId) -> living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F);
 		});
 
 		// Golden Water Barrel
-		ItemModelsProperties.register(MineriaBlocks.getItemFromBlock(MineriaBlocks.GOLDEN_WATER_BARREL), new ResourceLocation("potions"), (stack, world, living) -> {
+		ItemProperties.register(MineriaBlocks.getItemFromBlock(MineriaBlocks.GOLDEN_WATER_BARREL), new ResourceLocation("potions"), (stack, world, living, entityId) -> {
 			if(stack.getTag() != null)
 			{
 				if(stack.getTag().contains("BlockEntityTag"))
 				{
-					CompoundNBT blockEntityTag = stack.getTag().getCompound("BlockEntityTag");
+					CompoundTag blockEntityTag = stack.getTag().getCompound("BlockEntityTag");
 					if(blockEntityTag.contains("Potions"))
 						return blockEntityTag.getInt("Potions");
 				}
@@ -122,7 +152,7 @@ public class RenderHandler
 		});
 
 		// Blowgun Refill
-		ItemModelsProperties.register(MineriaItems.BLOWGUN_REFILL, new ResourceLocation(Mineria.MODID, "has_poison"), (stack, world, living) -> JarItem.containsPoisonSource(stack) ? 1 : 0);
+		ItemProperties.register(MineriaItems.BLOWGUN_REFILL, new ResourceLocation(Mineria.MODID, "has_poison"), (stack, world, living, entityId) -> JarItem.containsPoisonSource(stack) ? 1 : 0);
 	}
 
 	public static void registerBlockRenders()
@@ -154,7 +184,7 @@ public class RenderHandler
 
 	private static void registerRenderType(Block block, RenderType type)
 	{
-		RenderTypeLookup.setRenderLayer(block, type);
+		ItemBlockRenderTypes.setRenderLayer(block, type);
 	}
 
 	@SubscribeEvent
@@ -166,6 +196,6 @@ public class RenderHandler
 	public static void registerItemColors(ColorHandlerEvent.Item event)
 	{
 		event.getItemColors().register((stack, tintIndex) -> tintIndex > 0 ? -1 : MineriaPotion.getColor(stack), MineriaItems.MINERIA_POTION, MineriaItems.MINERIA_SPLASH_POTION, MineriaItems.MINERIA_LINGERING_POTION);
-		event.getItemColors().register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((IDyeableArmorItem) stack.getItem()).getColor(stack), MineriaItems.JAR);
+		event.getItemColors().register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack), MineriaItems.JAR);
 	}
 }

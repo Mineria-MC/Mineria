@@ -2,16 +2,16 @@ package com.mineria.mod.mixin;
 
 import com.mineria.mod.common.effects.instances.PoisonEffectInstance;
 import com.mineria.mod.common.items.IMineriaItem;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,27 +26,26 @@ import java.util.Map;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity
 {
-    @Shadow public abstract boolean hasEffect(Effect p_70644_1_);
+    @Shadow public abstract boolean hasEffect(MobEffect p_70644_1_);
 
-    @Shadow @Nullable public abstract EffectInstance getEffect(Effect p_70660_1_);
+    @Shadow @Nullable public abstract MobEffectInstance getEffect(MobEffect p_70660_1_);
 
-    @Shadow public abstract Map<Effect, EffectInstance> getActiveEffectsMap();
+    @Shadow public abstract Map<MobEffect, MobEffectInstance> getActiveEffectsMap();
 
-    public LivingEntityMixin(EntityType<?> entityTypeIn, World worldIn)
+    public LivingEntityMixin(EntityType<?> entityTypeIn, Level worldIn)
     {
         super(entityTypeIn, worldIn);
     }
 
-    @Inject(method = "hurt", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/LivingEntity;invulnerableTime:I", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    @Inject(method = "hurt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;invulnerableTime:I", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     public void hurt(DamageSource source, float dmg, CallbackInfoReturnable<Boolean> cir)
     {
         Entity directEntity = source.getDirectEntity();
-        if(directEntity instanceof LivingEntity)
+        if(directEntity instanceof LivingEntity living)
         {
-            LivingEntity living = (LivingEntity) directEntity;
-            if(living.getItemInHand(Hand.MAIN_HAND).getItem() instanceof IMineriaItem)
+            if(living.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof IMineriaItem)
             {
-                this.invulnerableTime = ((IMineriaItem) living.getItemInHand(Hand.MAIN_HAND).getItem()).getInvulnerableTime(this);
+                this.invulnerableTime = ((IMineriaItem) living.getItemInHand(InteractionHand.MAIN_HAND).getItem()).getInvulnerableTime(this);
             }
         }
     }
@@ -56,21 +55,21 @@ public abstract class LivingEntityMixin extends Entity
     {
         if(!this.level.isClientSide)
         {
-            if (this.hasEffect(Effects.POISON) && this.getEffect(Effects.POISON) instanceof PoisonEffectInstance)
+            if (this.hasEffect(MobEffects.POISON) && this.getEffect(MobEffects.POISON) instanceof PoisonEffectInstance)
             {
-                if(this.getEffect(Effects.POISON).isCurativeItem(curativeItem))
+                if(this.getEffect(MobEffects.POISON).isCurativeItem(curativeItem))
                 {
-                    if(this.hasEffect(Effects.CONFUSION))
+                    if(this.hasEffect(MobEffects.CONFUSION))
                     {
-                        EffectInstance nausea = this.getEffect(Effects.CONFUSION);
-                        nausea.setCurativeItems(this.getEffect(Effects.POISON).getCurativeItems());
-                        this.getActiveEffectsMap().put(Effects.CONFUSION, nausea);
+                        MobEffectInstance nausea = this.getEffect(MobEffects.CONFUSION);
+                        nausea.setCurativeItems(this.getEffect(MobEffects.POISON).getCurativeItems());
+                        this.getActiveEffectsMap().put(MobEffects.CONFUSION, nausea);
                     }
-                    if(this.hasEffect(Effects.MOVEMENT_SLOWDOWN))
+                    if(this.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
                     {
-                        EffectInstance slowness = this.getEffect(Effects.MOVEMENT_SLOWDOWN);
-                        slowness.setCurativeItems(this.getEffect(Effects.POISON).getCurativeItems());
-                        this.getActiveEffectsMap().put(Effects.MOVEMENT_SLOWDOWN, slowness);
+                        MobEffectInstance slowness = this.getEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                        slowness.setCurativeItems(this.getEffect(MobEffects.POISON).getCurativeItems());
+                        this.getActiveEffectsMap().put(MobEffects.MOVEMENT_SLOWDOWN, slowness);
                     }
                 }
             }
@@ -78,15 +77,15 @@ public abstract class LivingEntityMixin extends Entity
     }
 
     @Inject(method = "onEffectRemoved", at = @At("HEAD"))
-    public void onEffectRemoved(EffectInstance effect, CallbackInfo ci)
+    public void onEffectRemoved(MobEffectInstance effect, CallbackInfo ci)
     {
         if (effect instanceof PoisonEffectInstance)
         {
             ((PoisonEffectInstance) effect).onPotionCured((LivingEntity) (Object) this);
-            if(this.hasEffect(Effects.CONFUSION))
-                this.getEffect(Effects.CONFUSION).setCurativeItems(effect.getCurativeItems());
-            if(this.hasEffect(Effects.MOVEMENT_SLOWDOWN))
-                this.getEffect(Effects.MOVEMENT_SLOWDOWN).setCurativeItems(effect.getCurativeItems());
+            if(this.hasEffect(MobEffects.CONFUSION))
+                this.getEffect(MobEffects.CONFUSION).setCurativeItems(effect.getCurativeItems());
+            if(this.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
+                this.getEffect(MobEffects.MOVEMENT_SLOWDOWN).setCurativeItems(effect.getCurativeItems());
         }
     }
 }

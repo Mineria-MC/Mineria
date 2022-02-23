@@ -1,41 +1,43 @@
 package com.mineria.mod.client.models.entity;
 
 import com.mineria.mod.common.entity.WaterSpiritEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
 
 public class WaterSpiritModel extends EntityModel<WaterSpiritEntity>
 {
-    private final ModelRenderer head;
-    private final ModelRenderer body;
-    private final ModelRenderer left_arm;
-    private final ModelRenderer right_arm;
+    private final ModelPart head;
+    private final ModelPart body;
+    private final ModelPart leftArm;
+    private final ModelPart rightArm;
 
-    public WaterSpiritModel()
+    public WaterSpiritModel(ModelPart root)
     {
-        super(RenderType::entityTranslucent);
-        texWidth = 64;
-        texHeight = 64;
+        this.head = root.getChild("head");
+        this.body = root.getChild("body");
+        this.leftArm = root.getChild("leftArm");
+        this.rightArm = root.getChild("rightArm");
+    }
 
-        head = new ModelRenderer(this);
-        head.setPos(0.0F, 0.0F, 0.0F);
-        head.texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.0F, false);
-        head.texOffs(24, 0).addBox(-1.0F, -3.0F, -5.0F, 2.0F, 4.0F, 1.0F, 0.0F, false);
+    public static LayerDefinition createBodyLayer()
+    {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
 
-        body = new ModelRenderer(this);
-        body.setPos(0.0F, 0.0F, 0.0F);
-        body.texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 20.0F, 4.0F, 0.0F, false);
+        PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F))
+                .texOffs(24, 0).addBox(-1.0F, -3.0F, -5.0F, 2.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        left_arm = new ModelRenderer(this);
-        left_arm.setPos(-5.0F, 2.0F, 0.0F);
-        left_arm.texOffs(40, 16).addBox(9.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
+        PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 20.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        right_arm = new ModelRenderer(this);
-        right_arm.setPos(5.0F, 2.0F, 0.0F);
-        right_arm.texOffs(40, 16).addBox(-13.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        PartDefinition left_arm = root.addOrReplaceChild("leftArm", CubeListBuilder.create().texOffs(40, 16).mirror().addBox(9.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-5.0F, 2.0F, 0.0F));
+
+        PartDefinition right_arm = root.addOrReplaceChild("rightArm", CubeListBuilder.create().texOffs(40, 16).addBox(-13.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 2.0F, 0.0F));
+
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     @Override
@@ -44,11 +46,11 @@ public class WaterSpiritModel extends EntityModel<WaterSpiritEntity>
     }
 
     @Override
-    public void renderToBuffer(MatrixStack stack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
     {
-        head.render(stack, buffer, packedLight, packedOverlay);
-        body.render(stack, buffer, packedLight, packedOverlay);
-        left_arm.render(stack, buffer, packedLight, packedOverlay);
-        right_arm.render(stack, buffer, packedLight, packedOverlay);
+        head.render(poseStack, buffer, packedLight, packedOverlay);
+        body.render(poseStack, buffer, packedLight, packedOverlay);
+        leftArm.render(poseStack, buffer, packedLight, packedOverlay);
+        rightArm.render(poseStack, buffer, packedLight, packedOverlay);
     }
 }

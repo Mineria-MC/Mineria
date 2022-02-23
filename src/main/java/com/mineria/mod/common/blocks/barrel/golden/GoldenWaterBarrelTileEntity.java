@@ -4,19 +4,20 @@ import com.mineria.mod.common.blocks.barrel.AbstractWaterBarrelTileEntity;
 import com.mineria.mod.common.containers.GoldenWaterBarrelContainer;
 import com.mineria.mod.common.init.MineriaTileEntities;
 import com.mineria.mod.util.CustomItemStackHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.PotionItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -24,13 +25,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class GoldenWaterBarrelTileEntity extends AbstractWaterBarrelTileEntity implements INamedContainerProvider
+public class GoldenWaterBarrelTileEntity extends AbstractWaterBarrelTileEntity implements MenuProvider
 {
     private final CustomItemStackHandler inventory;
 
-    public GoldenWaterBarrelTileEntity()
+    public GoldenWaterBarrelTileEntity(BlockPos pos, BlockState state)
     {
-        super(MineriaTileEntities.GOLDEN_WATER_BARREL.get(), 32);
+        super(MineriaTileEntities.GOLDEN_WATER_BARREL.get(), pos, state, 32);
         this.inventory = new CustomItemStackHandler(20) {
             @Override
             protected void onContentsChanged(int slot)
@@ -42,14 +43,14 @@ public class GoldenWaterBarrelTileEntity extends AbstractWaterBarrelTileEntity i
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("tile_entity.mineria.golden_water_barrel");
+        return new TranslatableComponent("tile_entity.mineria.golden_water_barrel");
     }
 
     @Nullable
     @Override
-    public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player)
     {
         return new GoldenWaterBarrelContainer(id, playerInv, this);
     }
@@ -99,7 +100,7 @@ public class GoldenWaterBarrelTileEntity extends AbstractWaterBarrelTileEntity i
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.put("Inventory", this.inventory.serializeNBT());
@@ -108,39 +109,39 @@ public class GoldenWaterBarrelTileEntity extends AbstractWaterBarrelTileEntity i
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.load(state, nbt);
+        super.load(nbt);
         this.inventory.deserializeNBT(nbt.getCompound("Inventory"));
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         this.save(nbt);
         return nbt;
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
     {
-        this.load(this.getBlockState(), pkt.getTag());
+        this.load(pkt.getTag());
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag)
+    public void handleUpdateTag(CompoundTag tag)
     {
-        this.load(state, tag);
+        this.load(tag);
     }
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
+    public ClientboundBlockEntityDataPacket getUpdatePacket()
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         this.save(nbt);
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, nbt);
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbt);
     }
 
     public CustomItemStackHandler getInventory()

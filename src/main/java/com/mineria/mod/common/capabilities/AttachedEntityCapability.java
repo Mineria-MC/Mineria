@@ -1,9 +1,9 @@
 package com.mineria.mod.common.capabilities;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class AttachedEntityCapability implements IAttachedEntity
     }
 
     @Override
-    public void updateAttachedEntities(World world)
+    public void updateAttachedEntities(Level world)
     {
         if(!entityIds.isEmpty())
         {
@@ -67,16 +67,16 @@ public class AttachedEntityCapability implements IAttachedEntity
     }
 
     @Override
-    public ListNBT serializeNBT()
+    public ListTag serializeNBT()
     {
-        ListNBT list = new ListNBT();
-        attachedEntities.forEach(entity -> list.add(IntNBT.valueOf(entity.getId())));
+        ListTag list = new ListTag();
+        attachedEntities.forEach(entity -> list.add(IntTag.valueOf(entity.getId())));
         return list;
     }
 
     @Override
-    public void deserializeNBT(ListNBT nbt)
+    public void deserializeNBT(ListTag nbt)
     {
-        entityIds.addAll(nbt.stream().filter(IntNBT.class::isInstance).map(IntNBT.class::cast).map(IntNBT::getAsInt).collect(Collectors.toList()));
+        entityIds.addAll(nbt.stream().filter(IntTag.class::isInstance).map(IntTag.class::cast).map(IntTag::getAsInt).collect(Collectors.toList()));
     }
 }

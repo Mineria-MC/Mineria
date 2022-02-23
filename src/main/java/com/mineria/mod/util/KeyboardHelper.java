@@ -1,7 +1,7 @@
 package com.mineria.mod.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.InputMappings;
+import com.mojang.blaze3d.platform.InputConstants;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyboardHelper
@@ -10,6 +10,6 @@ public class KeyboardHelper
 
     public static boolean isShiftKeyDown()
     {
-        return InputMappings.isKeyDown(WINDOW, GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(WINDOW, GLFW.GLFW_KEY_RIGHT_SHIFT);
+        return InputConstants.isKeyDown(WINDOW, GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(WINDOW, GLFW.GLFW_KEY_RIGHT_SHIFT);
     }
 }

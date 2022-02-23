@@ -1,63 +1,63 @@
 package com.mineria.mod.common.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Function;
 
 @SuppressWarnings("deprecation")
-public class TNTBarrelBlock extends MineriaBlock
+public class TNTBarrelBlock extends Block
 {
     public static final IntegerProperty GUNPOWDER = IntegerProperty.create("gunpowder", 0, 7);
     private static final VoxelShape INSIDE = box(1, 1, 1, 15, 16, 15);
-    private static final Function<Integer, VoxelShape> SHAPE = (gunpowder) -> VoxelShapes.join(VoxelShapes.block(), box(1, 1 + gunpowder * 2, 1, 15, 16, 15), IBooleanFunction.ONLY_FIRST);
+    private static final Function<Integer, VoxelShape> SHAPE = (gunpowder) -> Shapes.join(Shapes.block(), box(1, 1 + gunpowder * 2, 1, 15, 16, 15), BooleanOp.ONLY_FIRST);
 
     public TNTBarrelBlock()
     {
-        super(Material.WOOD, 4.0F, 0.0F, SoundType.WOOD, 0, ToolType.AXE);
+        super(BlockBehaviour.Properties.of(Material.WOOD).strength(4f, 0f).sound(SoundType.WOOD));
         registerDefaultState(this.stateDefinition.any().setValue(GUNPOWDER, 0));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return SHAPE.apply(state.getValue(GUNPOWDER));
     }
 
     @Override
-    public VoxelShape getInteractionShape(BlockState state, IBlockReader worldIn, BlockPos pos)
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos)
     {
         return INSIDE;
     }
 
     @Override
-    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving)
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving)
     {
         if (!oldState.is(state.getBlock()))
         {
@@ -70,7 +70,7 @@ public class TNTBarrelBlock extends MineriaBlock
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         if (worldIn.hasNeighborSignal(pos) && state.getValue(GUNPOWDER) != 0)
         {
@@ -80,7 +80,7 @@ public class TNTBarrelBlock extends MineriaBlock
     }
 
     @Override
-    public void wasExploded(World worldIn, BlockPos pos, Explosion explosionIn)
+    public void wasExploded(Level worldIn, BlockPos pos, Explosion explosionIn)
     {
         if(!worldIn.isEmptyBlock(pos) && !worldIn.isClientSide)
         {
@@ -91,7 +91,7 @@ public class TNTBarrelBlock extends MineriaBlock
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
     {
         ItemStack heldItem = player.getItemInHand(hand);
 
@@ -112,7 +112,7 @@ public class TNTBarrelBlock extends MineriaBlock
                 }
             }
 
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
         else if(heldItem.getItem().equals(Items.GUNPOWDER))
         {
@@ -121,19 +121,19 @@ public class TNTBarrelBlock extends MineriaBlock
                 int count = state.getValue(GUNPOWDER);
                 if(count < 7)
                 {
-                    worldIn.playSound(null, pos, SoundEvents.GRASS_PLACE, SoundCategory.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
+                    worldIn.playSound(null, pos, SoundEvents.GRASS_PLACE, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
                     worldIn.setBlockAndUpdate(pos, state.setValue(GUNPOWDER, count + 1));
                 }
             }
 
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
 
         return super.use(state, worldIn, pos, player, hand, hit);
     }
 
     @Override
-    public void onProjectileHit(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile)
+    public void onProjectileHit(Level worldIn, BlockState state, BlockHitResult hit, Projectile projectile)
     {
         if (!worldIn.isClientSide)
         {
@@ -147,7 +147,7 @@ public class TNTBarrelBlock extends MineriaBlock
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player)
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player)
     {
         if(!worldIn.isClientSide)
         {
@@ -160,7 +160,7 @@ public class TNTBarrelBlock extends MineriaBlock
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
     {
         return player.isShiftKeyDown() ? new ItemStack(Items.GUNPOWDER) : super.getPickBlock(state, target, world, pos, player);
     }
@@ -178,39 +178,21 @@ public class TNTBarrelBlock extends MineriaBlock
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
         builder.add(GUNPOWDER);
     }
 
-    private void explode(World world, double x, double y, double z, BlockState state)
+    private void explode(Level world, double x, double y, double z, BlockState state)
     {
         if(!world.isClientSide)
         {
-            switch(state.getValue(GUNPOWDER))
+            int gunPowder = state.getValue(GUNPOWDER);
+            switch (gunPowder)
             {
-                case 1:
-                    world.explode(null, x, y, z, 0.5F, false, Explosion.Mode.DESTROY);
-                    break;
-                case 2:
-                    world.explode(null, x, y, z, 1.0F, false, Explosion.Mode.DESTROY);
-                    break;
-                case 3:
-                    world.explode(null, x, y, z, 2.0F, false, Explosion.Mode.DESTROY);
-                    break;
-                case 4:
-                    world.explode(null, x, y, z, 3.0F, false, Explosion.Mode.DESTROY);
-                    break;
-                case 5:
-                    world.explode(null, x, y, z, 4.0F, false, Explosion.Mode.DESTROY);
-                    break;
-                case 6:
-                    world.explode(null, x, y, z, 5.0F, true, Explosion.Mode.DESTROY);
-                    break;
-                case 7:
-                    world.explode(null, x, y, z, 6.0F, true, Explosion.Mode.DESTROY);
-                    break;
+                case 1 -> world.explode(null, x, y, z, 0.5F, false, Explosion.BlockInteraction.DESTROY);
+                case 2, 3, 4, 5, 6, 7 -> world.explode(null, x, y, z, gunPowder - 1, gunPowder >= 6, Explosion.BlockInteraction.DESTROY);
             }
         }
     }
