@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HsH",
+    "sds",
+    " s "
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "s": {
+      "item": "mineria:silver_ingot"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "result": {
+    "item": "mineria:barrel_pumping_upgrade",
+    "count": 1
+  }
+}

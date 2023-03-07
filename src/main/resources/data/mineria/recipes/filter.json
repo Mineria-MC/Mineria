@@ -1,13 +1,13 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "###",
-        "#S#",
-        "###"
+        "# #",
+        " S ",
+        "# #"
     ],
     "key": {
         "#": {
-            "tag": "forge:ingots/copper"
+            "item": "mineria:copper_plate"
         },
         "S": {
             "item": "minecraft:string"

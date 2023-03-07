@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_savanna",
+  "features": [
+    "mineria:placed_thyme_mineria_is_plants_savanna",
+    "mineria:placed_senna_mineria_is_plants_savanna",
+    "mineria:placed_senna_bush_mineria_is_plants_savanna"
+  ],
+  "step": "vegetal_decoration"
+}

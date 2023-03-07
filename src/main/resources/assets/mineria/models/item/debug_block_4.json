@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mineria:gui/advancement/trade_druid"
+    "layer0": "mineria:advancement_icon/trade_druid"
   }
 }

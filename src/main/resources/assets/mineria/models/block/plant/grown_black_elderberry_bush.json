@@ -1,5 +1,6 @@
 {
   "parent": "block/cube_bottom_top",
+  "render_type": "cutout",
   "textures": {
     "side": "mineria:block/plant/black_elderberry_bush",
     "top": "mineria:block/plant/black_elderberry_bush",

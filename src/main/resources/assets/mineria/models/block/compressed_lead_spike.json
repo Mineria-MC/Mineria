@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout",
 	"textures": {
 		"peak": "mineria:block/compressed_lead_spike_peak",
 		"base": "mineria:block/compressed_lead_spike_base",

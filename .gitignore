@@ -26,5 +26,6 @@ runServer
 forge*changelog.txt
 
 # Manually Added
-mcmodsrepo
-logs
+/mcmodsrepo
+/logs
+/src/generated/resources/.cache

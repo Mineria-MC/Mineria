@@ -19,9 +19,17 @@
     "find_ritual_structure": {
       "trigger": "minecraft:location",
       "conditions": {
-        "location": {
-          "feature": "mineria:ritual_structure"
-        }
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structure": "mineria:ritual_structure"
+              }
+            }
+          }
+        ]
       }
     }
   },

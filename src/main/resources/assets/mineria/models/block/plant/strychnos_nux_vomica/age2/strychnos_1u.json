@@ -1,5 +1,6 @@
 {
     "ambientocclusion": false,
+    "render_type": "cutout",
     "textures": {
         "particle": "mineria:block/plant/strychnos_nux-vomica",
         "vine": "mineria:block/plant/strychnos_nux-vomica"

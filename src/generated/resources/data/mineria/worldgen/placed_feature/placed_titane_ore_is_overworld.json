@@ -1,0 +1,30 @@
+{
+  "feature": "mineria:configured_titane_ore_is_overworld",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 4
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "mineria:any_triangle",
+        "highestPoint": {
+          "absolute": -16
+        },
+        "maxInclusive": {
+          "absolute": 20
+        },
+        "minInclusive": {
+          "absolute": -32
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

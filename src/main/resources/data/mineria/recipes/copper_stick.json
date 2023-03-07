@@ -6,7 +6,7 @@
     ],
     "key": {
         "#": {
-            "tag": "forge:ingots/copper"
+            "item": "minecraft:copper_ingot"
         }
     },
     "result": {

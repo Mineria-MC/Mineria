@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ddd",
+    "BdB",
+    "ddd"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "mineria:golden_water_barrel"
+    }
+  },
+  "result": {
+    "item": "mineria:diamond_fluid_barrel",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "Buckets": 0,
+        "Capacity": 64
+      }
+    }
+  }
+}

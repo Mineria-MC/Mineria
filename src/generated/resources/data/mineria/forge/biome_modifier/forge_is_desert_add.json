@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#forge:is_desert",
+  "features": "mineria:placed_mineral_sand_forge_is_desert",
+  "step": "underground_ores"
+}

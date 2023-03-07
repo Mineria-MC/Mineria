@@ -1,5 +1,6 @@
 {
   "credit": "Made with Blockbench",
+  "render_type": "cutout",
   "textures": {
     "bottom": "mineria:block/barrel/water_barrel_bottom",
     "side": "mineria:block/barrel/tnt/tnt_barrel_side",

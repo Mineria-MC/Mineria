@@ -1,0 +1,11 @@
+{
+  "parent": "mineria:block/barrel/diamond_fluid_barrel",
+  "overrides": [
+    {
+      "predicate": {
+        "mineria:has_netherite_look": 1
+      },
+      "model": "mineria:block/barrel/netherite_fluid_barrel"
+    }
+  ]
+}

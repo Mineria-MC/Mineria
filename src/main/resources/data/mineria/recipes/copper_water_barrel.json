@@ -10,7 +10,7 @@
       "tag": "minecraft:planks"
     },
     "c": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     },
     "B": {
       "item": "mineria:water_barrel"

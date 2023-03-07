@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout",
 	"textures": {
 		"bottom": "mineria:block/machine/apothecary_table/apothecary_table_bottom",
 		"books": "mineria:block/machine/apothecary_table/apothecary_table_side_books",

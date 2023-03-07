@@ -1,5 +1,6 @@
 {
   "parent": "block/cube_bottom_top",
+  "render_type": "cutout",
   "textures": {
     "side": "mineria:block/plant/lycium_chinense",
     "top": "mineria:block/plant/lycium_chinense_top",

@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout",
 	"textures": {
 		"base": "minecraft:block/brewing_stand_base",
 		"bottles": "minecraft:item/potion",

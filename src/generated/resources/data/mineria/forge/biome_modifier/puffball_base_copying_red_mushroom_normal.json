@@ -1,0 +1,6 @@
+{
+  "type": "mineria:copy_feature",
+  "step": "vegetal_decoration",
+  "to_copy": "minecraft:red_mushroom_normal",
+  "to_place": "mineria:puffball_base"
+}

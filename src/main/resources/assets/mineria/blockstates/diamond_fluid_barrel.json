@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "netherite_look=false": { "model": "mineria:block/barrel/diamond_fluid_barrel" },
+    "netherite_look=true": { "model": "mineria:block/barrel/netherite_fluid_barrel" }
+  }
+}

@@ -1,31 +1,38 @@
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[44,)"
 license="MIT License"
 issueTracker="https://github.com/Mineria-MC/Mineria/issues"
 
 [[mods]]
 modId="mineria"
-version="1.3.0"
+version="${mineria_version}"
 displayName="Mineria"
-#updateJSONURL="http://myurl.me/"
-displayURL="https://mineria-update.fr/"
+displayURL="https://github.com/Mineria-MC/Mineria"
 logoFile="logo.png"
 credits="Coded by LGatodu47"
-authors="Mathys_craft, Mr-lulu-51, LGatodu47"
+authors="Mathys_craft, Mr-lulu-51 and LGatodu47"
 description='''
-The main mod of Mineria, a Modded PVP-Faction server."
+Mineria is a vanilla+ oriented mod. It adds balanced blocks and items and doesn't affect too much the vanilla experience.
 '''
+displayTest="MATCH_VERSION"
+
+[[dependencies.mineria]]
+    modId="terrablender"
+    mandatory=false
+    versionRange="[2.1,)"
+    ordering="NONE"
+    side="BOTH"
 
 [[dependencies.mineria]]
     modId="forge"
     mandatory=true
-    versionRange="[37,)"
+    versionRange="[44,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.mineria]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,1.18)"
+    versionRange="[1.19.3,1.20)"
     ordering="NONE"
     side="BOTH"

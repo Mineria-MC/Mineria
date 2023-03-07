@@ -1,0 +1,10 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "mineria:segoesc.ttf",
+      "size": 11,
+      "oversample": 6
+    }
+  ]
+}

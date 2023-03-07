@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_beach",
+  "features": "mineria:placed_mineral_sand_is_beach",
+  "step": "underground_ores"
+}

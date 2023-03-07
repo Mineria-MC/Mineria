@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_taiga",
+  "features": "mineria:placed_yew_tree_is_taiga",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,19 @@
+{
+  "elements": [
+    {
+      "element": {
+        "data_handler": "mineria:ritual_structure",
+        "element_type": "mineria:single_data_pool_element",
+        "forced_rotation": "none",
+        "ground_level_delta": 1,
+        "location": "mineria:ritual_structure",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

@@ -1,0 +1,15 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_forest",
+  "features": [
+    "mineria:placed_mint_mineria_is_plants_forest",
+    "mineria:placed_nettle_mineria_is_plants_forest",
+    "mineria:placed_pulmonary_mineria_is_plants_forest",
+    "mineria:placed_rhubarb_mineria_is_plants_forest",
+    "mineria:placed_black_elderberry_bush_mineria_is_plants_forest",
+    "mineria:placed_elderberry_bush_mineria_is_plants_forest",
+    "mineria:placed_belladonna_mineria_is_plants_forest",
+    "mineria:placed_mandrake_mineria_is_plants_forest"
+  ],
+  "step": "vegetal_decoration"
+}

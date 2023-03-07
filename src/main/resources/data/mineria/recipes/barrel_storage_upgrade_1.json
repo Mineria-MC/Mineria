@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bsb",
+    "sds",
+    "bsb"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "s": {
+      "item": "mineria:silver_ingot"
+    },
+    "b": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "mineria:barrel_storage_upgrade_1",
+    "count": 1
+  }
+}

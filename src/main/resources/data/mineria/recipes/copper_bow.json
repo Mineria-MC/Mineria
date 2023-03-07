@@ -2,15 +2,18 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         " /S",
-        "/ S",
+        "/BS",
         " /S"
     ],
     "key": {
         "/": {
-            "item": "mineria:copper_ingot"
+            "item": "minecraft:copper_ingot"
         },
         "S": {
             "item": "minecraft:string"
+        },
+        "B": {
+            "item": "minecraft:bow"
         }
     },
     "result": {

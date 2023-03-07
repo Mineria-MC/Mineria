@@ -1,5 +1,5 @@
 {
-  "parent": "mineria:mineria/smelt_copper",
+  "parent": "mineria:mineria/mine_mineria_ore",
   "display": {
     "icon": {
       "item": "mineria:copper_sword"

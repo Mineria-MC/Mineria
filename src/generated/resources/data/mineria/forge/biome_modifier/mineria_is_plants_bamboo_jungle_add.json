@@ -1,0 +1,12 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_bamboo_jungle",
+  "features": [
+    "mineria:placed_rhubarb_mineria_is_plants_bamboo_jungle",
+    "mineria:placed_lycium_chinense_mineria_is_plants_bamboo_jungle",
+    "mineria:placed_saussurea_costus_mineria_is_plants_bamboo_jungle",
+    "mineria:placed_schisandra_chinensis_mineria_is_plants_bamboo_jungle",
+    "mineria:placed_pulsatilla_chinensis_mineria_is_plants_bamboo_jungle"
+  ],
+  "step": "vegetal_decoration"
+}

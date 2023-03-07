@@ -1,0 +1,19 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_plain",
+  "features": [
+    "mineria:placed_plantain_mineria_is_plants_plain",
+    "mineria:placed_mint_mineria_is_plants_plain",
+    "mineria:placed_thyme_mineria_is_plants_plain",
+    "mineria:placed_nettle_mineria_is_plants_plain",
+    "mineria:placed_pulmonary_mineria_is_plants_plain",
+    "mineria:placed_rhubarb_mineria_is_plants_plain",
+    "mineria:placed_senna_mineria_is_plants_plain",
+    "mineria:placed_senna_bush_mineria_is_plants_plain",
+    "mineria:placed_black_elderberry_bush_mineria_is_plants_plain",
+    "mineria:placed_elderberry_bush_mineria_is_plants_plain",
+    "mineria:placed_belladonna_mineria_is_plants_plain",
+    "mineria:placed_mandrake_mineria_is_plants_plain"
+  ],
+  "step": "vegetal_decoration"
+}

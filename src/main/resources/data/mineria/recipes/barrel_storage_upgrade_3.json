@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " s ",
+    "udu",
+    " s "
+  ],
+  "key": {
+    "u": {
+      "item": "mineria:barrel_storage_upgrade_2"
+    },
+    "s": {
+      "item": "mineria:silver_ingot"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "mineria:barrel_storage_upgrade_3",
+    "count": 1
+  }
+}

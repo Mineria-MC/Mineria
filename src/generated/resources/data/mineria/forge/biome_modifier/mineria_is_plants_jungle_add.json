@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_jungle",
+  "features": [
+    "mineria:placed_mint_mineria_is_plants_jungle",
+    "mineria:placed_nettle_mineria_is_plants_jungle",
+    "mineria:placed_strychnos_toxifera_mineria_is_plants_jungle",
+    "mineria:placed_strychnos_nux-vomica_mineria_is_plants_jungle"
+  ],
+  "step": "vegetal_decoration"
+}

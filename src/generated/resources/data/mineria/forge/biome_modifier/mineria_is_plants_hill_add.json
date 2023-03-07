@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_hill",
+  "features": "mineria:placed_thyme_mineria_is_plants_hill",
+  "step": "vegetal_decoration"
+}

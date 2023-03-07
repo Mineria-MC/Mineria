@@ -1,0 +1,19 @@
+{
+  "feature": "mineria:configured_schisandra_chinensis_mineria_is_plants_bamboo_jungle",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 32
+    },
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 57
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

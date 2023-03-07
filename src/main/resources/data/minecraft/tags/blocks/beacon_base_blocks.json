@@ -1,7 +1,5 @@
 {
-  "replace": false,
   "values": [
-    "mineria:copper_block",
     "mineria:lead_block",
     "mineria:titane_block",
     "mineria:lonsdaleite_block",

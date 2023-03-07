@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 35495687,
+    "separation": 8,
+    "spacing": 25
+  },
+  "structures": [
+    {
+      "structure": "mineria:wizard_tower",
+      "weight": 1
+    }
+  ]
+}

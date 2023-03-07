@@ -19,9 +19,17 @@
     "find_pagoda": {
       "trigger": "minecraft:location",
       "conditions": {
-        "location": {
-          "feature": "mineria:pagoda"
-        }
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structure": "mineria:pagoda"
+              }
+            }
+          }
+        ]
       }
     }
   },

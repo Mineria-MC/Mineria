@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "mineria:silver_ore"
+    "tag": "mineria:silver_ores"
   },
   "result": "mineria:silver_ingot",
   "experience": 1,

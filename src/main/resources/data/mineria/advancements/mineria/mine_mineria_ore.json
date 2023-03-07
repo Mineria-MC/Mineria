@@ -2,7 +2,7 @@
   "parent": "mineria:mineria/root",
   "display": {
     "icon": {
-      "item": "mineria:copper_ore"
+      "item": "mineria:lead_ore"
     },
     "title": {
       "translate": "advancements.mineria.mine_mineria_ore.title"
@@ -16,14 +16,6 @@
     "hidden": false
   },
   "criteria": {
-    "mine_copper": {
-      "trigger": "mineria:mined_block",
-      "conditions": {
-        "block": {
-          "block": "mineria:copper_ore"
-        }
-      }
-    },
     "mine_lead": {
       "trigger": "mineria:mined_block",
       "conditions": {
@@ -59,7 +51,6 @@
   },
   "requirements": [
     [
-      "mine_copper",
       "mine_lead",
       "mine_silver",
       "mine_titane",

@@ -1,0 +1,18 @@
+{
+  "elements": [
+    {
+      "element": {
+        "data_handler": "mineria:pagoda",
+        "element_type": "mineria:single_data_pool_element",
+        "ground_level_delta": 0,
+        "location": "mineria:pagoda",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

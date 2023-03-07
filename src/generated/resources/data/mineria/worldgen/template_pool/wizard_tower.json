@@ -1,0 +1,18 @@
+{
+  "elements": [
+    {
+      "element": {
+        "data_handler": "mineria:wizard_tower",
+        "element_type": "mineria:single_data_pool_element",
+        "ground_level_delta": 1,
+        "location": "mineria:wizard_tower",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

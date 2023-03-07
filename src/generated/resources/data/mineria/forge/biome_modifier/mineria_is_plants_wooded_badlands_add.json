@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_wooded_badlands",
+  "features": [
+    "mineria:placed_senna_mineria_is_plants_wooded_badlands",
+    "mineria:placed_senna_bush_mineria_is_plants_wooded_badlands"
+  ],
+  "step": "vegetal_decoration"
+}

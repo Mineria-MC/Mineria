@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mineria:gui/advancement/drink_all_poisonous_teas"
+    "layer0": "mineria:advancement_icon/drink_all_poisonous_teas"
   }
 }

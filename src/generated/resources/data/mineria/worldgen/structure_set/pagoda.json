@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 9843516,
+    "separation": 10,
+    "spacing": 20
+  },
+  "structures": [
+    {
+      "structure": "mineria:pagoda",
+      "weight": 1
+    }
+  ]
+}

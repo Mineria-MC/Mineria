@@ -1,0 +1,33 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        " ": 4,
+        "\u200c": 0
+      }
+    },
+    {
+      "type": "ttf",
+      "file": "mineria:lcallig.ttf",
+      "size": 11,
+      "oversample": 6,
+      "skip": "pfjrvg"
+    },
+    {
+      "type": "ttf",
+      "file": "mineria:lcallig.ttf",
+      "size": 11,
+      "oversample": 6,
+      "shift": [1.25, 0],
+      "skip": "rvg"
+    },
+    {
+      "type": "ttf",
+      "file": "mineria:lcallig.ttf",
+      "size": 11,
+      "oversample": 6,
+      "shift": [0.5, 0]
+    }
+  ]
+}

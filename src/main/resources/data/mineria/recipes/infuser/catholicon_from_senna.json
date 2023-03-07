@@ -1,0 +1,20 @@
+{
+  "type": "mineria:infuser",
+  "input": [
+    {
+      "item": "mineria:senna"
+    },
+    {
+      "item": "mineria:senna_bush"
+    }
+  ],
+  "secondary_input": {
+    "empty": true
+  },
+  "container": {
+    "item": "mineria:rhubarb_tea"
+  },
+  "output": {
+    "item": "mineria:catholicon"
+  }
+}

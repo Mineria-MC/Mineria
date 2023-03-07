@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mineria:is_plants_dark_forest",
+  "features": [
+    "mineria:placed_belladonna_mineria_is_plants_dark_forest",
+    "mineria:placed_mandrake_mineria_is_plants_dark_forest"
+  ],
+  "step": "vegetal_decoration"
+}

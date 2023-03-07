@@ -6,13 +6,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:enchanted_book",
+          "name": "minecraft:book",
           "functions": [
             {
-              "function": "minecraft:enchant_randomly",
-              "enchantments": [
-                "mineria:four_elements"
-              ]
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "mineria:four_elements": 1
+              }
             }
           ]
         }

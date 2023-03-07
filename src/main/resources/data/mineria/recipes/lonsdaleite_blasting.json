@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "mineria:lonsdaleite_ore"
+    "tag": "mineria:lonsdaleite_ores"
   },
   "result": "mineria:lonsdaleite",
   "experience": 10,

@@ -1,0 +1,12 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "mineria:placed_lead_ore_is_overworld",
+    "mineria:placed_silver_ore_is_overworld",
+    "mineria:placed_titane_ore_is_overworld",
+    "mineria:placed_lonsdaleite_ore_is_overworld",
+    "mineria:placed_deep_lonsdaleite_ore_is_overworld"
+  ],
+  "step": "underground_ores"
+}
