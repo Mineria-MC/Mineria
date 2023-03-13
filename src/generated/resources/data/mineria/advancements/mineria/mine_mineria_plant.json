@@ -1,0 +1,33 @@
+{
+  "parent": "mineria:mineria/make_apothecarium",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "block": {
+          "tag": "mineria:plants"
+        }
+      },
+      "trigger": "mineria:mined_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.mine_mineria_plant.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:plantain"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.mine_mineria_plant.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

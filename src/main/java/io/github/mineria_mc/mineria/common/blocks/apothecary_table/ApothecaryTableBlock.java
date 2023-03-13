@@ -37,7 +37,7 @@ public class ApothecaryTableBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.APOTHECARY_TABLE.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ApothecaryTableTileEntity.serverTick(level, pPos, pState, (ApothecaryTableTileEntity) pBlockEntity);
+        return level.isClientSide || blockEntityType != MineriaTileEntities.APOTHECARY_TABLE.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ((ApothecaryTableTileEntity) pBlockEntity).serverTick(level);
     }
 
     @Override

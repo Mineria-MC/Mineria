@@ -1,0 +1,39 @@
+{
+  "parent": "mineria:mineria/trade_asiatic_herbalist",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:kunai"
+            ],
+            "nbt": "{HitCount:40}"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.get_maxed_kunai.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:kunai",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.get_maxed_kunai.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

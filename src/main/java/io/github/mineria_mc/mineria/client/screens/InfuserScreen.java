@@ -23,7 +23,6 @@ public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
     @Override
     protected void init() {
         super.init();
-
         this.titleLabelX = (this.imageWidth - font.width(title)) / 2;
         this.titleLabelY = 5;
         this.inventoryLabelX = 8;

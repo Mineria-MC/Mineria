@@ -8,7 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.Instance> {
@@ -41,6 +43,14 @@ public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.
             this.block = block;
             this.location = location;
             this.item = item;
+        }
+
+        public static Instance minedBlock(Block block) {
+            return new Instance(EntityPredicate.Composite.ANY, new BlockStatePredicate(null, block, StatePropertiesPredicate.ANY), LocationPredicate.ANY, ItemPredicate.ANY);
+        }
+
+        public static Instance minedBlock(TagKey<Block> tag) {
+            return new Instance(EntityPredicate.Composite.ANY, new BlockStatePredicate(tag, null, StatePropertiesPredicate.ANY), LocationPredicate.ANY, ItemPredicate.ANY);
         }
 
         private boolean matches(BlockState state, ServerLevel world, BlockPos pos, ItemStack stack) {

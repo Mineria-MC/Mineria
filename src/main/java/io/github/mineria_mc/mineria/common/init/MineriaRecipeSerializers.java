@@ -15,8 +15,8 @@ public class MineriaRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<CustomSuspiciousStewRecipe>> CUSTOM_SUSPICIOUS_STEW = RECIPE_SERIALIZERS.register("custom_suspicious_stew", () -> new SimpleCraftingRecipeSerializer<>(CustomSuspiciousStewRecipe::new));
     public static final RegistryObject<RecipeSerializer<DistillerRecipe>> DISTILLER = RECIPE_SERIALIZERS.register("distiller", DistillerRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<ApothecaryTableRecipe>> APOTHECARY_TABLE = RECIPE_SERIALIZERS.register("apothecary_table", ApothecaryTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<ApothecaryFillingRecipe>> APOTHECARY_TABLE_FILLING = RECIPE_SERIALIZERS.register("apothecary_table_filling", ApothecaryFillingRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<PoisonousJarRecipe>> POISONOUS_JAR = RECIPE_SERIALIZERS.register("poisonous_jar", () -> new MineriaRecipeSerializer<>(PoisonousJarRecipe::new));
     public static final RegistryObject<RecipeSerializer<FillCupRecipe>> FILL_CUP = RECIPE_SERIALIZERS.register("fill_cup", () -> new MineriaRecipeSerializer<>(FillCupRecipe::new));
     public static final RegistryObject<RecipeSerializer<MineriaSmithingRecipe>> SMITHING = RECIPE_SERIALIZERS.register("smithing", MineriaSmithingRecipe.Serializer::new);
-
 }

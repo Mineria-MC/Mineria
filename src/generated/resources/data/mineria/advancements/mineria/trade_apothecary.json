@@ -1,0 +1,41 @@
+{
+  "parent": "mineria:mineria/make_apothecarium",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "villager": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:villager",
+              "nbt": "{VillagerData:{profession:\"mineria:apothecary\"}}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:villager_trade"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.trade_apothecary.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:debug_block",
+      "nbt": "{CustomModelData:3}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.trade_apothecary.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

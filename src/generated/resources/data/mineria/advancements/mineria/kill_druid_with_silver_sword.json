@@ -1,0 +1,51 @@
+{
+  "parent": "mineria:mineria/kill_druid",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#mineria:druids"
+            }
+          }
+        ],
+        "killing_blow": {
+          "source_entity": {
+            "equipment": {
+              "mainhand": {
+                "items": [
+                  "mineria:silver_sword"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.kill_druid_with_silver_sword.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:silver_sword",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.kill_druid_with_silver_sword.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

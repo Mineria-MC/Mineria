@@ -1,0 +1,37 @@
+{
+  "parent": "mineria:mineria/smelt_titane",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:vanadium_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_vanadium.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:vanadium_ingot"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_vanadium.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

@@ -84,9 +84,20 @@ public class ApothecaryTableMenu extends MineriaMenu<ApothecaryTableTileEntity> 
         return new StackTransferHandler(2);
     }
 
+    @Override
+    protected int getIndexForStack(ItemStack stack) {
+        if(findRecipeForStack(stack, MineriaRecipeTypes.APOTHECARY_TABLE_FILLING.get()) != null) {
+            return 0;
+        }
+        if(findRecipeForStack(stack, MineriaRecipeTypes.APOTHECARY_TABLE.get()) != null) {
+            return 1;
+        }
+        return -1;
+    }
+
     @Nullable
     @Override
     protected RecipeType<?> getRecipeType() {
-        return MineriaRecipeTypes.APOTHECARY_TABLE_TYPE.get();
+        return null;
     }
 }

@@ -1,0 +1,42 @@
+{
+  "parent": "mineria:mineria/get_mistletoe",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "mineria:great_druid_of_gauls"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.kill_gdog.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:druid_heart"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.kill_gdog.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

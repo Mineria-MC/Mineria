@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_extractor",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "item": {
+          "items": [
+            "mineria:lonsdaleite"
+          ]
+        }
+      },
+      "trigger": "mineria:extracted_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.extract_lonsdaleite.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:lonsdaleite"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.extract_lonsdaleite.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

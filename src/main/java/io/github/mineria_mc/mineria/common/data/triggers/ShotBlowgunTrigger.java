@@ -2,10 +2,14 @@ package io.github.mineria_mc.mineria.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
+import io.github.mineria_mc.mineria.common.init.MineriaItems;
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -39,6 +43,10 @@ public class ShotBlowgunTrigger extends SimpleCriterionTrigger<ShotBlowgunTrigge
             super(ID, andPredicate);
             this.blowgun = blowgun;
             this.ammo = ammo;
+        }
+
+        public static Instance poisonousAmmo(PoisonSource source) {
+            return new Instance(EntityPredicate.Composite.ANY, ItemPredicate.ANY, ItemPredicate.Builder.item().of(MineriaItems.BLOWGUN_REFILL.get()).hasNbt(Util.make(new CompoundTag(), nbt -> nbt.putString("PoisonSource", source.getId().toString()))).build());
         }
 
         private boolean matches(ItemStack blowgun, ItemStack ammo) {

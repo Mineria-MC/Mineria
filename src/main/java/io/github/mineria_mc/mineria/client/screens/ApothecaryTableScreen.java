@@ -21,16 +21,15 @@ public class ApothecaryTableScreen extends AbstractContainerScreen<ApothecaryTab
 
     public ApothecaryTableScreen(ApothecaryTableMenu container, Inventory playerInv, Component title) {
         super(container, playerInv, title);
-
-        this.inventoryLabelX = 112;
-        this.inventoryLabelY = 72;
-        this.titleLabelY = 5;
     }
 
     @Override
     protected void init() {
         super.init();
         this.titleLabelX = this.imageWidth / 2 - this.font.width(this.title) / 2;
+        this.inventoryLabelX = 169 - font.width(playerInventoryTitle);
+        this.inventoryLabelY = 72;
+        this.titleLabelY = 5;
     }
 
     @Override

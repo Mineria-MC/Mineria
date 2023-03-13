@@ -175,7 +175,7 @@ public abstract class AbstractWaterBarrelBlock extends Block implements EntityBl
             barrel.setDestroyedByCreativePlayer(player.isCreative());
 
             if (barrel.shouldDrop()) {
-                ItemStack stack = new ItemStack(MineriaBlocks.getItemFromBlock(this));
+                ItemStack stack = new ItemStack(this);
                 barrel.saveToItem(stack);
                 popResource(worldIn, pos, stack);
             }

@@ -90,14 +90,17 @@ repositories {
     }
     maven { url = 'https://dist.creeper.host/Sponge/maven' }
     maven {
+        url = "https://www.cursemaven.com"
+    }
+    maven {
         name = "Saps Maven (for X-Ray)"
         url = "https://maven.saps.dev/releases"
     }
     // Included here my fork of advanced xray as the original one crashes the game when running in data mode.
-    /*flatDir {
+    flatDir {
         name = "XRay Fork"
         dir(projectDir.toPath().resolveSibling("XRay-Mod").resolve("build/libs"))
-    }*/
+    }
 }
 
 dependencies {
@@ -107,7 +110,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-//    runtimeOnly fg.deobf("pro.mikey:advanced-xray-forge:1.19.3-2.14.0-build.9999")
+    runtimeOnly fg.deobf("pro.mikey:advanced-xray-forge:1.19.3-2.14.0-build.9999")
+    runtimeOnly fg.deobf("curse.maven:better-advancements-272515:4364745")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

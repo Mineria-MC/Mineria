@@ -44,6 +44,10 @@ public class ObtainedTradeBonusRewardsTrigger extends SimpleCriterionTrigger<Obt
             this.bonus = bonus;
         }
 
+        public static Instance obtainedRewardsFrom(EntityPredicate predicate) {
+            return new Instance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.wrap(predicate), ItemPredicate.ANY);
+        }
+
         private boolean matches(LootContext ctx, ItemStack stack) {
             return this.entity.matches(ctx) && this.bonus.matches(stack);
         }

@@ -1,0 +1,7 @@
+{
+  "type": "mineria:apothecary_table_filling",
+  "input": {
+    "item": "mineria:strychnos_toxifera_tea"
+  },
+  "output_poison": "mineria:strychnos_toxifera"
+}

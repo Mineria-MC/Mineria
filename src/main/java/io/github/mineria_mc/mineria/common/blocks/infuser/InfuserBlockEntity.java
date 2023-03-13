@@ -168,7 +168,7 @@ public class InfuserBlockEntity extends MineriaLockableTileEntity {
             return null;
         }
 
-        Set<InfuserRecipe> recipes = MineriaUtils.findRecipesByType(MineriaRecipeTypes.INFUSER_TYPE.get(), this.level);
+        Set<InfuserRecipe> recipes = MineriaUtils.findRecipesByType(MineriaRecipeTypes.INFUSER.get(), this.level);
         for (InfuserRecipe recipe : recipes) {
             if (recipe.matches(new RecipeWrapper(this.inventory), this.level)) {
                 return recipe;

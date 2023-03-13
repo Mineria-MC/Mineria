@@ -1,0 +1,29 @@
+{
+  "parent": "mineria:mineria/smelt_lead",
+  "criteria": {
+    "criterion": {
+      "conditions": {},
+      "trigger": "mineria:damage_from_spike"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.damage_from_spike.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:lead_spike"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.damage_from_spike.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

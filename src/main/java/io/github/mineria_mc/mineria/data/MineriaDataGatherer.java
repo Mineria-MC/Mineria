@@ -46,8 +46,10 @@ public final class MineriaDataGatherer implements Consumer<GatherDataEvent> {
             generator.addProvider(true, new MineriaEntityTypeTagsProvider(output, provider, helper));
             generator.addProvider(true, new MineriaBiomeTagsProvider(output, provider, helper));
             generator.addProvider(true, new MineriaStructureTagsProvider(output, provider, helper));
+            generator.addProvider(true, new MineriaPoiTypeTagsProvider(output, provider, helper));
             generator.addProvider(true, new MineriaLootTableProvider(output));
             generator.addProvider(true, new MineriaGLMProvider(output));
+            generator.addProvider(true, new MineriaAdvancementProvider(output, provider, helper));
         }
     }
 }

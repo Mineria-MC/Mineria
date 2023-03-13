@@ -1,0 +1,112 @@
+{
+  "parent": "mineria:mineria/make_julep",
+  "criteria": {
+    "get_anti_poison": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:anti_poison"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_catholicon": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:catholicon"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_charcoal_anti_poison": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:charcoal_anti_poison"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_milk_anti_poison": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:milk_anti_poison"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_miracle_anti_poison": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:miracle_anti_poison"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_nauseous_anti_poison": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:nauseous_anti_poison"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_all_anti_poison.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:miracle_anti_poison"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_all_anti_poison.title"
+    }
+  },
+  "requirements": [
+    [
+      "get_catholicon"
+    ],
+    [
+      "get_charcoal_anti_poison"
+    ],
+    [
+      "get_milk_anti_poison"
+    ],
+    [
+      "get_nauseous_anti_poison"
+    ],
+    [
+      "get_anti_poison"
+    ],
+    [
+      "get_miracle_anti_poison"
+    ]
+  ]
+}

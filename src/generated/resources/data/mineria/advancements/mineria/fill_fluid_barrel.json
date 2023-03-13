@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_titane_extractor",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "capacityPredicate": {
+          "buckets": -1,
+          "capacity": -1,
+          "shouldBeFull": true
+        }
+      },
+      "trigger": "mineria:fluid_barrel_filled"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.fill_fluid_barrel.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:water_barrel"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.fill_fluid_barrel.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "parent": "mineria:mineria/trade_druid",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#mineria:druids"
+            }
+          }
+        ]
+      },
+      "trigger": "mineria:obtained_trade_bonus_rewards"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.obtain_bonus_rewards_druid.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:emerald"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.obtain_bonus_rewards_druid.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

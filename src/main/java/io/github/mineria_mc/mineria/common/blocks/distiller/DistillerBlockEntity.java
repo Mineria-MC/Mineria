@@ -177,7 +177,7 @@ public class DistillerBlockEntity extends MineriaLockableTileEntity {
 
     @Nullable
     private DistillerRecipe findRecipe() {
-        Set<DistillerRecipe> recipes = MineriaUtils.findRecipesByType(MineriaRecipeTypes.DISTILLER_TYPE.get(), this.level);
+        Set<DistillerRecipe> recipes = MineriaUtils.findRecipesByType(MineriaRecipeTypes.DISTILLER.get(), this.level);
         for (DistillerRecipe recipe : recipes) {
             if (recipe.matches(new RecipeWrapper(this.inventory), this.level)) {
                 return recipe;

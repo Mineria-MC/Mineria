@@ -1,0 +1,293 @@
+{
+  "parent": "mineria:mineria/make_infuser",
+  "criteria": {
+    "get_belladonna_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:belladonna_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_black_elderberry_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:black_elderberry_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_elderberry_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:elderberry_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_five_flavor_fruit_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:five_flavor_fruit_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_goji_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:goji_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_mandrake_root_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:mandrake_root_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_mandrake_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:mandrake_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_mint_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:mint_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_nettle_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:nettle_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_plantain_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:plantain_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_pulmonary_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:pulmonary_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_pulsatilla_chinensis_root_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:pulsatilla_chinensis_root_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_rhubarb_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:rhubarb_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_saussurea_costus_root_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:saussurea_costus_root_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_senna_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:senna_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_strychnos_nux_vomica_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:strychnos_nux-vomica_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_strychnos_toxifera_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:strychnos_toxifera_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_thyme_tea": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:thyme_tea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_all_teas.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:debug_block",
+      "nbt": "{CustomModelData:2}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_all_teas.title"
+    }
+  },
+  "requirements": [
+    [
+      "get_plantain_tea"
+    ],
+    [
+      "get_mint_tea"
+    ],
+    [
+      "get_thyme_tea"
+    ],
+    [
+      "get_nettle_tea"
+    ],
+    [
+      "get_pulmonary_tea"
+    ],
+    [
+      "get_rhubarb_tea"
+    ],
+    [
+      "get_senna_tea"
+    ],
+    [
+      "get_black_elderberry_tea"
+    ],
+    [
+      "get_elderberry_tea"
+    ],
+    [
+      "get_strychnos_toxifera_tea"
+    ],
+    [
+      "get_strychnos_nux_vomica_tea"
+    ],
+    [
+      "get_belladonna_tea"
+    ],
+    [
+      "get_mandrake_tea"
+    ],
+    [
+      "get_mandrake_root_tea"
+    ],
+    [
+      "get_goji_tea"
+    ],
+    [
+      "get_saussurea_costus_root_tea"
+    ],
+    [
+      "get_five_flavor_fruit_tea"
+    ],
+    [
+      "get_pulsatilla_chinensis_root_tea"
+    ]
+  ]
+}

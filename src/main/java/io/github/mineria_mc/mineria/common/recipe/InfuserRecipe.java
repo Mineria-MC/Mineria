@@ -82,7 +82,7 @@ public class InfuserRecipe implements Recipe<RecipeWrapper> {
     @Nonnull
     @Override
     public RecipeType<?> getType() {
-        return MineriaRecipeTypes.INFUSER_TYPE.get();
+        return MineriaRecipeTypes.INFUSER.get();
     }
 
     public Ingredient getInput() {

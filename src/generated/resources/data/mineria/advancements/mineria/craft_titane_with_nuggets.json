@@ -1,0 +1,46 @@
+{
+  "parent": "mineria:mineria/extract_titane",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "recipe": {
+          "key": {
+            "n": {
+              "item": "mineria:titane_nugget"
+            }
+          },
+          "pattern": [
+            "nnn",
+            "nnn",
+            "nnn"
+          ],
+          "result": {
+            "Count": 1,
+            "id": "mineria:titane_ingot"
+          }
+        }
+      },
+      "trigger": "mineria:shaped_recipe_used"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.craft_titane_with_nuggets.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:titane_ingot"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.craft_titane_with_nuggets.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

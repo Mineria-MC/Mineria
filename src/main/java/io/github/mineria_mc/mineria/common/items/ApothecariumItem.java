@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-// TODO: change item texture
 public class ApothecariumItem extends Item {
     public ApothecariumItem() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));

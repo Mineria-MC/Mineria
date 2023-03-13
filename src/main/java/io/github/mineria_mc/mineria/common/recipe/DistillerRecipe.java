@@ -75,7 +75,7 @@ public class DistillerRecipe implements Recipe<RecipeWrapper> {
     @Nonnull
     @Override
     public RecipeType<?> getType() {
-        return MineriaRecipeTypes.DISTILLER_TYPE.get();
+        return MineriaRecipeTypes.DISTILLER.get();
     }
 
     @Nonnull

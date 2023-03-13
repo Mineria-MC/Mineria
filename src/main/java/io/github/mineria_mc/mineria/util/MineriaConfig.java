@@ -52,6 +52,7 @@ public class MineriaConfig {
     public static final class Client implements Config {
         public final BooleanValue enableTERAnimations;
         public final BooleanValue useHallucinationsShader;
+        public final BooleanValue renderFourElementsFP;
         public final ForgeConfigSpec.ConfigValue<String> apothecariumFont;
 
         private Client(Builder builder) {
@@ -64,6 +65,10 @@ public class MineriaConfig {
             useHallucinationsShader = builder.comment("If set to true, the hallucinations effect overlay will be disabled and replaced with a minecraft shader named 'wobble'.",
                             "EPILEPSY WARNING")
                     .define("useHallucinationsShader", false);
+
+            renderFourElementsFP = builder.comment("Whether the Four Elements enchantment's orbs should be rendered when playing in First Person.",
+                            "(This option exists because we found a rendering bug with Optifine shaders. If you also encounter this bug turn this off.)")
+                    .define("renderFourElementsFP", true);
 
             // TODO: fix other fonts
             Set<String> availableFonts = Set.of("default", "lcallig", "lhandw", "pristina", "segoesc", "tempsitc", "comic");

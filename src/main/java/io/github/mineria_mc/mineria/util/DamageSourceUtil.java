@@ -15,10 +15,6 @@ public class DamageSourceUtil {
         return new IndirectEntityDamageSource("kunai", kunai, owner).setProjectile();
     }
 
-    public static DamageSource elementalOrb(Entity elementalOrb, @Nullable Entity owner) {
-        return new IndirectEntityDamageSource("elemental_orb", elementalOrb, owner).setProjectile();
-    }
-
     public static DamageSource elementalOrb(Entity owner) {
         return new EntityDamageSource("elemental_orb", owner).setProjectile();
     }

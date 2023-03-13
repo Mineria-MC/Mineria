@@ -15,14 +15,16 @@ public class TitaneExtractorScreen extends AbstractContainerScreen<TitaneExtract
 
     public TitaneExtractorScreen(TitaneExtractorMenu screenContainer, Inventory inv, Component titleIn) {
         super(screenContainer, inv, titleIn);
+    }
 
-        this.leftPos = 0;
-        this.topPos = 0;
-        this.imageWidth = 176;
+    @Override
+    protected void init() {
+        super.init();
+
         this.imageHeight = 183;
         this.titleLabelX = 74;
         this.titleLabelY = 8;
-        this.inventoryLabelX = 97;
+        this.inventoryLabelX = 169 - font.width(playerInventoryTitle);
         this.inventoryLabelY = 90;
     }
 

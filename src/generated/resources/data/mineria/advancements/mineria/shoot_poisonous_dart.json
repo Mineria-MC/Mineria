@@ -1,0 +1,84 @@
+{
+  "parent": "mineria:mineria/make_bamboo_blowgun",
+  "criteria": {
+    "shot_belladonna_dart": {
+      "conditions": {
+        "ammo": {
+          "items": [
+            "mineria:blowgun_refill"
+          ],
+          "nbt": "{PoisonSource:\"mineria:belladonna\"}"
+        }
+      },
+      "trigger": "mineria:shot_blowgun"
+    },
+    "shot_elderberry_dart": {
+      "conditions": {
+        "ammo": {
+          "items": [
+            "mineria:blowgun_refill"
+          ],
+          "nbt": "{PoisonSource:\"mineria:elderberry\"}"
+        }
+      },
+      "trigger": "mineria:shot_blowgun"
+    },
+    "shot_mandrake_dart": {
+      "conditions": {
+        "ammo": {
+          "items": [
+            "mineria:blowgun_refill"
+          ],
+          "nbt": "{PoisonSource:\"mineria:mandrake\"}"
+        }
+      },
+      "trigger": "mineria:shot_blowgun"
+    },
+    "shot_strychnos_nux_vomica_dart": {
+      "conditions": {
+        "ammo": {
+          "items": [
+            "mineria:blowgun_refill"
+          ],
+          "nbt": "{PoisonSource:\"mineria:strychnos_nux_vomica\"}"
+        }
+      },
+      "trigger": "mineria:shot_blowgun"
+    },
+    "shot_strychnos_toxifera_dart": {
+      "conditions": {
+        "ammo": {
+          "items": [
+            "mineria:blowgun_refill"
+          ],
+          "nbt": "{PoisonSource:\"mineria:strychnos_toxifera\"}"
+        }
+      },
+      "trigger": "mineria:shot_blowgun"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.shoot_poisonous_dart.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:blowgun_refill"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.shoot_poisonous_dart.title"
+    }
+  },
+  "requirements": [
+    [
+      "shot_elderberry_dart",
+      "shot_strychnos_toxifera_dart",
+      "shot_strychnos_nux_vomica_dart",
+      "shot_belladonna_dart",
+      "shot_mandrake_dart"
+    ]
+  ]
+}

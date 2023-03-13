@@ -13,11 +13,14 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -259,6 +262,40 @@ public class ShapedRecipePredicate {
             return (int) MAX_WIDTH.get(null);
         } catch (IllegalAccessException e) {
             return -1;
+        }
+    }
+
+    public static Builder builder(String... pattern) {
+        return new Builder(pattern);
+    }
+
+    public static class Builder {
+        private final String[] pattern;
+        private final Map<String, Ingredient> keyToIngredient = new HashMap<>();
+
+        public Builder(String[] pattern) {
+            String[] correctedPattern = Arrays.copyOf(pattern, 3);
+            for (int i = pattern.length; i < 3; i++) {
+                correctedPattern[i] = "";
+            }
+            this.pattern = correctedPattern;
+        }
+
+        public Builder key(String key, Ingredient ingredient) {
+            keyToIngredient.put(key, ingredient);
+            return this;
+        }
+
+        public ShapedRecipePredicate result(RegistryObject<? extends ItemLike> obj) {
+            return obj.map(ItemStack::new).map(this::result).orElse(ANY);
+        }
+
+        public ShapedRecipePredicate result(ItemLike item) {
+            return result(new ItemStack(item));
+        }
+
+        public ShapedRecipePredicate result(ItemStack stack) {
+            return new ShapedRecipePredicate(keyToIngredient, pattern, stack);
         }
     }
 }

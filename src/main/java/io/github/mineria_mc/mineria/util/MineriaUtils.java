@@ -1,8 +1,13 @@
 package io.github.mineria_mc.mineria.util;
 
+import com.google.errorprone.annotations.CompileTimeConstant;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.mineria_mc.mineria.Mineria;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.crafting.Recipe;
@@ -30,7 +35,7 @@ public class MineriaUtils {
      * @return a {@link Set} of all the recipes
      */
     @Nonnull
-    public static <T extends Recipe<?>> Set<T> findRecipesByType(RecipeType<?> typeIn, Level world) {
+    public static <T extends Recipe<?>> Set<T> findRecipesByType(RecipeType<T> typeIn, Level world) {
         return world != null ? (Set<T>) world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : Set.of();
     }
 
@@ -146,5 +151,44 @@ public class MineriaUtils {
             throw new NullPointerException("Registry object is empty!");
         }
         return key;
+    }
+
+    /**
+     * Utility to directly convert constant string values into a compound, therefore
+     * avoiding to have to manually create the compound tags and to fill them.<br>
+     * For example:
+     * <pre>
+     *     public void foo() {
+     *         CompoundTag bar = new CompoundTag()
+     *         CompoundTag data = new CompoundTag()
+     *         data.putInt("MyInt", 45);
+     *         bar.put("Data", data);
+     *         giveMeATag(bar);
+     *     }
+     *
+     *     public void giveMeATag(CompoundTag tag) {...}
+     * </pre>
+     * becomes this:
+     * <pre>
+     *     public void foo() {
+     *         giveMeATag(MineriaUtils.parseTag("{Data:{MyInt:45}}"));
+     *     }
+     *
+     *     public void giveMeATag(CompoundTag tag) {...}
+     * </pre>
+     *
+     * <strong>NOTE:</strong> for non-constant data to parse use TagParser#parse(String).
+     *
+     * @param data A <strong>CONSTANT</strong> string representation of the tag to be parsed.
+     * @param args Additional format arguments for the data string.
+     * @return The parsed tag.
+     */
+    public static CompoundTag parseTag(@CompileTimeConstant String data, Object... args) {
+        try {
+            return TagParser.parseTag(args.length == 0 ? data : String.format(data, args));
+        } catch (CommandSyntaxException e) {
+            Mineria.LOGGER.error("Caught an exception when parsing tag with data '{}'. Unaware developers are faulty!", data);
+            throw new RuntimeException(e);
+        }
     }
 }

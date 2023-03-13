@@ -1,0 +1,7 @@
+{
+  "type": "mineria:apothecary_table_filling",
+  "input": {
+    "item": "mineria:belladonna_tea"
+  },
+  "output_poison": "mineria:belladonna"
+}

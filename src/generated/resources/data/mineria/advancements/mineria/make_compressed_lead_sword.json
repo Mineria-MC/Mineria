@@ -1,0 +1,38 @@
+{
+  "parent": "mineria:mineria/make_compressed_lead",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:compressed_lead_sword"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_compressed_lead_sword.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:compressed_lead_sword",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_compressed_lead_sword.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

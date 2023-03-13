@@ -1,0 +1,37 @@
+{
+  "parent": "mineria:mineria/kill_gdog",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "right": {
+          "stored_enchantments": [
+            {
+              "enchantment": "mineria:four_elements"
+            }
+          ]
+        }
+      },
+      "trigger": "mineria:used_anvil"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.apply_four_elements.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:enchanted_book"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.apply_four_elements.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

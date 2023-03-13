@@ -154,7 +154,7 @@ public class GreatDruidOfGaulsEntity extends Monster {
         summonedEntities.forEach(this::tickEntity);
         super.tick();
         if (isCurrentWaveOver() && getCurrentWave() >= 5) {
-            this.level.getNearbyPlayers(TargetingConditions.DEFAULT, this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
+            this.level.getNearbyPlayers(TargetingConditions.forNonCombat(), this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
                     .forEach(playerEntity -> playerEntity.awardKillScore(this, this.deathScore, DamageSource.MAGIC));
             this.kill();
         }

@@ -53,16 +53,15 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
     protected void createPlayerInventorySlots(Inventory playerInv, int startX, int startY) {
         int slotSizePlus2 = 18;
 
-        int hotbarY = startY + 58;
-
-        for (int column = 0; column < 9; column++) {
-            this.addSlot(new Slot(playerInv, column, startX + (column * slotSizePlus2), hotbarY));
-        }
-
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 9; column++) {
                 this.addSlot(new Slot(playerInv, 9 + (row * 9) + column, startX + (column * slotSizePlus2), startY + (row * slotSizePlus2)));
             }
+        }
+
+        int hotbarY = startY + 58;
+        for (int column = 0; column < 9; column++) {
+            this.addSlot(new Slot(playerInv, column, startX + (column * slotSizePlus2), hotbarY));
         }
     }
 
@@ -90,7 +89,7 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
 
         final int minOutputIndex = handler.minOutputIndex;
         final int maxOutputIndex = handler.maxOutputIndex;
-        final int lastIndex = this.slots.size() - 1;
+        final int lastIndex = this.slots.size();
         final int lastInventoryIndex = lastIndex - 9;
 
         if (slot.hasItem()) {
@@ -107,7 +106,7 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
             } else if (index >= maxOutputIndex) {
                 // Inventory slot clicked
 
-                final int ingredientIndex = getIndexForRecipe(slotStack);
+                final int ingredientIndex = getIndexForStack(slotStack);
                 final int fuelIndex = handler.fuelIndex;
                 final Int2ObjectMap<Predicate<ItemStack>> specialInputs = handler.specialInputs;
 
@@ -119,21 +118,28 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
                     if (!this.moveItemStackTo(slotStack, fuelIndex, fuelIndex + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!specialInputs.isEmpty()) {
-                    for (int i : specialInputs.keySet()) {
-                        if (specialInputs.get(i).test(slotStack)) {
-                            if (!this.moveItemStackTo(slotStack, i, i + 1, false)) {
-                                return ItemStack.EMPTY;
+                } else {
+                    boolean triedMoving = false;
+                    if (!specialInputs.isEmpty()) {
+                        for (int i : specialInputs.keySet()) {
+                            if (specialInputs.get(i).test(slotStack)) {
+                                triedMoving = true;
+                                if (!this.moveItemStackTo(slotStack, i, i + 1, false)) {
+                                    return ItemStack.EMPTY;
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
-                } else if (index < lastInventoryIndex) {
-                    if (!this.moveItemStackTo(slotStack, lastInventoryIndex, lastIndex, false)) {
-                        return ItemStack.EMPTY;
+                    if(!triedMoving) {
+                        if (index < lastInventoryIndex) {
+                            if (!this.moveItemStackTo(slotStack, lastInventoryIndex, lastIndex, false)) {
+                                return ItemStack.EMPTY;
+                            }
+                        } else if (index < lastIndex && !this.moveItemStackTo(slotStack, maxOutputIndex + 1, lastInventoryIndex, false)) {
+                            return ItemStack.EMPTY;
+                        }
                     }
-                } else if (index < lastIndex && !this.moveItemStackTo(slotStack, maxOutputIndex + 1, lastInventoryIndex, false)) {
-                    return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(slotStack, maxOutputIndex + 1, lastIndex, false)) {
                 // Input slot clicked
@@ -151,12 +157,12 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(player, slotStack);
+            slot.onTake(player, stackToTransfer);
         }
         return stackToTransfer;
     }
 
-    protected int getIndexForRecipe(ItemStack stack) {
+    protected int getIndexForStack(ItemStack stack) {
         return getIndexForRecipe(stack, getRecipeType());
     }
 
@@ -171,7 +177,7 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
         R recipe = findRecipeForStack(stack, type);
         if (recipe != null) {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
-            for (int i = 0; i < recipe.getIngredients().size(); i++) {
+            for (int i = 0; i < ingredients.size(); i++) {
                 if (ingredients.get(i).test(stack)) {
                     return i;
                 }

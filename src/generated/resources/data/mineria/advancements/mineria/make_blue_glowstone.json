@@ -1,0 +1,37 @@
+{
+  "parent": "mineria:mineria/make_vanadium",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:blue_glowstone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_blue_glowstone.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:blue_glowstone"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_blue_glowstone.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

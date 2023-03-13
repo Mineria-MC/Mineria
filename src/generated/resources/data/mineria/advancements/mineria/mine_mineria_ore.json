@@ -1,0 +1,60 @@
+{
+  "parent": "mineria:mineria/root",
+  "criteria": {
+    "mine_lead": {
+      "conditions": {
+        "block": {
+          "tag": "mineria:lead_ores"
+        }
+      },
+      "trigger": "mineria:mined_block"
+    },
+    "mine_lonsdaleite": {
+      "conditions": {
+        "block": {
+          "tag": "mineria:lonsdaleite_ores"
+        }
+      },
+      "trigger": "mineria:mined_block"
+    },
+    "mine_silver": {
+      "conditions": {
+        "block": {
+          "tag": "mineria:silver_ores"
+        }
+      },
+      "trigger": "mineria:mined_block"
+    },
+    "mine_titane": {
+      "conditions": {
+        "block": {
+          "tag": "mineria:titane_ores"
+        }
+      },
+      "trigger": "mineria:mined_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.mine_mineria_ore.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:lead_ore"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.mine_mineria_ore.title"
+    }
+  },
+  "requirements": [
+    [
+      "mine_lead",
+      "mine_silver",
+      "mine_titane",
+      "mine_lonsdaleite"
+    ]
+  ]
+}

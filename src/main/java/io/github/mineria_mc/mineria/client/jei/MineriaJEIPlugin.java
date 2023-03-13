@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.client.jei;
 import com.google.common.collect.Lists;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.client.jei.recipe_categories.*;
+import io.github.mineria_mc.mineria.client.jei.recipe_transfer.InfuserRecipeTransferInfo;
 import io.github.mineria_mc.mineria.client.screens.*;
 import io.github.mineria_mc.mineria.common.containers.*;
 import io.github.mineria_mc.mineria.common.init.MineriaMenuTypes;
@@ -52,17 +53,16 @@ public class MineriaJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(TitaneExtractorRecipeCategory.TYPE, Lists.newArrayList(TitaneExtractorRecipe.DEFAULT_RECIPE.get()));
-        registration.addRecipes(InfuserRecipeCategory.TYPE, MineriaUtils.findRecipesByType(MineriaRecipeTypes.INFUSER_TYPE.get()));
+        registration.addRecipes(InfuserRecipeCategory.TYPE, MineriaUtils.findRecipesByType(MineriaRecipeTypes.INFUSER.get()));
         registration.addRecipes(ExtractorRecipeCategory.TYPE, Lists.newArrayList(ExtractorRecipe.DEFAULT_RECIPE.get()));
-        registration.addRecipes(DistillerRecipeCategory.TYPE, MineriaUtils.findRecipesByType(MineriaRecipeTypes.DISTILLER_TYPE.get()));
-        registration.addRecipes(ApothecaryTableRecipeCategory.TYPE, MineriaUtils.findRecipesByType(MineriaRecipeTypes.APOTHECARY_TABLE_TYPE.get(), AbstractApothecaryTableRecipe::renderInJEI));
+        registration.addRecipes(DistillerRecipeCategory.TYPE, MineriaUtils.findRecipesByType(MineriaRecipeTypes.DISTILLER.get()));
+        registration.addRecipes(ApothecaryTableRecipeCategory.TYPE, MineriaUtils.findRecipesByType(MineriaRecipeTypes.APOTHECARY_TABLE.get(), AbstractApothecaryTableRecipe::renderInJEI));
     }
 
-    // TODO: fix recipe transfer handler for infuser
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(TitaneExtractorMenu.class, MineriaMenuTypes.TITANE_EXTRACTOR.get(), TitaneExtractorRecipeCategory.TYPE, 0, 3, 4, 36);
-        registration.addRecipeTransferHandler(InfuserMenu.class, MineriaMenuTypes.INFUSER.get(), InfuserRecipeCategory.TYPE, 0, 3, 4, 36);
+        registration.addRecipeTransferHandler(new InfuserRecipeTransferInfo());
         registration.addRecipeTransferHandler(ExtractorMenu.class, MineriaMenuTypes.EXTRACTOR.get(), ExtractorRecipeCategory.TYPE, 0, 3, 10, 36);
         registration.addRecipeTransferHandler(DistillerMenu.class, MineriaMenuTypes.DISTILLER.get(), DistillerRecipeCategory.TYPE, 0, 3, 4, 36);
         registration.addRecipeTransferHandler(ApothecaryTableMenu.class, MineriaMenuTypes.APOTHECARY_TABLE.get(), ApothecaryTableRecipeCategory.TYPE, 1, 1, 3, 36);

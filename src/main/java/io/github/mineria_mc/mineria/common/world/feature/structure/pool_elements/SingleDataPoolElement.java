@@ -17,10 +17,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,13 +51,19 @@ public class SingleDataPoolElement extends SinglePoolElement {
     }
 
     @Override
-    public void handleDataMarker(LevelAccessor level, StructureTemplate.StructureBlockInfo info, BlockPos pos, Rotation rotation, RandomSource random, BoundingBox box) {
+    public void handleDataMarker(@Nonnull LevelAccessor level, StructureTemplate.StructureBlockInfo info, @Nonnull BlockPos pos, @Nonnull Rotation rotation, @Nonnull RandomSource random, BoundingBox box) {
         // IMPORTANT : The structure is very likely to generate on multiple chunks so multiple threads may call this method.
         // We want to only handle data markers that are in the bounding box (in the part of the structure that is being generated)
         if (!box.isInside(info.pos)) return;
         if (level instanceof WorldGenLevel) {
             this.dataHandler.handleDataMarker((WorldGenLevel) level, info.nbt.getString("metadata"), info.pos, info, pos, box, this, rotation, random);
         }
+    }
+
+    @Nonnull
+    @Override
+    public BoundingBox getBoundingBox(@Nonnull StructureTemplateManager manager, @Nonnull BlockPos pos, @Nonnull Rotation rotation) {
+        return super.getBoundingBox(manager, pos, forcedRotation == null ? rotation : forcedRotation);
     }
 
     @Nonnull

@@ -139,7 +139,7 @@ public class TitaneExtractorMenu extends MineriaMenu<TitaneExtractorBlockEntity>
     }
 
     @Override
-    protected int getIndexForRecipe(ItemStack stack) {
+    protected int getIndexForStack(ItemStack stack) {
         return stack.getItem().equals(MineriaBlocks.getItemFromBlock(MineriaBlocks.MINERAL_SAND.get())) ? 0 : -1;
     }
 

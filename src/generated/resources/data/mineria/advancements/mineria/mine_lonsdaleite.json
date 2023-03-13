@@ -1,0 +1,33 @@
+{
+  "parent": "mineria:mineria/mine_mineria_ore",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "block": {
+          "tag": "mineria:lonsdaleite_ores"
+        }
+      },
+      "trigger": "mineria:mined_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.mine_lonsdaleite.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:lonsdaleite_ore"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.mine_lonsdaleite.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

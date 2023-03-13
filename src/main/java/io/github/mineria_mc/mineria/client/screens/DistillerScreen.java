@@ -15,7 +15,11 @@ public class DistillerScreen extends AbstractContainerScreen<DistillerMenu> {
 
     public DistillerScreen(DistillerMenu distillerContainer, Inventory playerInv, Component title) {
         super(distillerContainer, playerInv, title);
+    }
 
+    @Override
+    protected void init() {
+        super.init();
         this.titleLabelX = 34;
         this.titleLabelY = 5;
         this.inventoryLabelX = 8;

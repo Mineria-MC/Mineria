@@ -1,0 +1,36 @@
+{
+  "parent": "mineria:mineria/make_cup",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "item": {
+          "items": [
+            "mineria:jar"
+          ]
+        }
+      },
+      "trigger": "mineria:used_apothecary_table"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.put_poison_in_jar.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:jar",
+      "nbt": "{PoisonSource:\"mineria:elderberry\"}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.put_poison_in_jar.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

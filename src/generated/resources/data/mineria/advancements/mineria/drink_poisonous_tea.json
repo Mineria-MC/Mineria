@@ -1,0 +1,33 @@
+{
+  "parent": "mineria:mineria/make_poisonous_tea",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "item": {
+          "tag": "mineria:poisonous_teas"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.drink_poisonous_tea.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:strychnos_nux-vomica_tea"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.drink_poisonous_tea.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

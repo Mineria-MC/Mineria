@@ -63,7 +63,7 @@ public class ExtractorMenu extends MineriaMenu<ExtractorTileEntity> {
     }
 
     @Override
-    protected int getIndexForRecipe(ItemStack stack) {
+    protected int getIndexForStack(ItemStack stack) {
         return stack.is(MineriaBlocks.getItemFromBlock(MineriaBlocks.MINERAL_SAND.get())) ? 0 : -1;
     }
 

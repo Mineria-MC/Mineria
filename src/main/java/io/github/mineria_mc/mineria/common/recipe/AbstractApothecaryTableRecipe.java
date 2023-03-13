@@ -46,7 +46,7 @@ public abstract class AbstractApothecaryTableRecipe implements Recipe<Apothecary
     @Nonnull
     @Override
     public RecipeType<?> getType() {
-        return MineriaRecipeTypes.APOTHECARY_TABLE_TYPE.get();
+        return MineriaRecipeTypes.APOTHECARY_TABLE.get();
     }
 
     public boolean renderInJEI() {

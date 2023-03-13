@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_infuser",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "mineria:poisonous_teas"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_poisonous_tea.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:elderberry_tea"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_poisonous_tea.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

@@ -70,6 +70,6 @@ public class InfuserMenu extends MineriaMenu<InfuserBlockEntity> {
 
     @Override
     protected RecipeType<?> getRecipeType() {
-        return MineriaRecipeTypes.INFUSER_TYPE.get();
+        return MineriaRecipeTypes.INFUSER.get();
     }
 }

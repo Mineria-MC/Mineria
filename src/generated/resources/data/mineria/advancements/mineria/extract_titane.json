@@ -1,0 +1,35 @@
+{
+  "parent": "mineria:mineria/make_titane_extractor",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "item": {
+          "items": [
+            "mineria:titane_nugget"
+          ]
+        }
+      },
+      "trigger": "mineria:extracted_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.extract_titane.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:titane_nugget"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.extract_titane.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

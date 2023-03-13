@@ -34,6 +34,8 @@ public class UsedScalpelTrigger extends SimpleCriterionTrigger<UsedScalpelTrigge
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
+        public static final Instance ANY = new Instance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY, EntityPredicate.Composite.ANY);
+
         private final EntityPredicate.Composite user;
         private final EntityPredicate.Composite target;
 

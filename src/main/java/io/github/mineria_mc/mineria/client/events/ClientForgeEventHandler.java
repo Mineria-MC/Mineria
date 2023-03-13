@@ -2,6 +2,7 @@ package io.github.mineria_mc.mineria.client.events;
 
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.enchantments.FourElementsEnchantment;
+import io.github.mineria_mc.mineria.util.MineriaConfig;
 import io.github.mineria_mc.mineria.util.MineriaCreativeModeTabs;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -102,6 +103,9 @@ public final class ClientForgeEventHandler {
 
     @SubscribeEvent
     public static void afterParticlesRender(RenderLevelStageEvent event) {
+        if(!MineriaConfig.CLIENT.renderFourElementsFP.get()) {
+            return;
+        }
         if(event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             return;
         }

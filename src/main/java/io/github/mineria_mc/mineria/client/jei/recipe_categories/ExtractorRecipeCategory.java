@@ -64,13 +64,11 @@ public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ExtractorRecipe recipe, @Nonnull IFocusGroup focuses) {
-        IRecipeSlotTooltipCallback tooltipCallback = (recipeSlotView, tooltip) -> {
-            recipeSlotView.getDisplayedItemStack().ifPresent(stack -> {
-                float chance = recipe.chance(stack);
-                String chanceStr = chance == Math.ceil(chance) ? Integer.toString((int) chance) : Float.toString(chance);
-                tooltip.add(Component.translatable("recipe_category.mineria.extractor.chance", chanceStr).withStyle(ChatFormatting.GOLD));
-            });
-        };
+        IRecipeSlotTooltipCallback tooltipCallback = (recipeSlotView, tooltip) -> recipeSlotView.getDisplayedItemStack().ifPresent(stack -> {
+            float chance = recipe.chance(stack);
+            String chanceStr = chance == Math.ceil(chance) ? Integer.toString((int) chance) : Float.toString(chance);
+            tooltip.add(Component.translatable("recipe_category.mineria.extractor.chance", chanceStr).withStyle(ChatFormatting.GOLD));
+        });
         builder.addSlot(RecipeIngredientRole.INPUT, 8 - 4, 20 - 5).addItemStack(recipe.inputs().input1());
         builder.addSlot(RecipeIngredientRole.INPUT, 43 - 4, 20 - 5).addItemStack(recipe.inputs().input2());
         builder.addSlot(RecipeIngredientRole.INPUT, 25 - 4, 92 - 5).addItemStack(recipe.inputs().filter());

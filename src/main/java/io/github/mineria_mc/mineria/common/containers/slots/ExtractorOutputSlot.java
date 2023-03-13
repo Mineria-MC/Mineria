@@ -1,8 +1,8 @@
 package io.github.mineria_mc.mineria.common.containers.slots;
 
 import io.github.mineria_mc.mineria.common.init.MineriaCriteriaTriggers;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 

@@ -153,6 +153,6 @@ public class DistillerMenu extends MineriaMenu<DistillerBlockEntity> {
     @Nullable
     @Override
     protected RecipeType<?> getRecipeType() {
-        return MineriaRecipeTypes.DISTILLER_TYPE.get();
+        return MineriaRecipeTypes.DISTILLER.get();
     }
 }

@@ -1,0 +1,40 @@
+{
+  "parent": "mineria:mineria/find_ritual_structure",
+  "criteria": {
+    "criterion": {
+      "conditions": {
+        "villager": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#mineria:druids"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:villager_trade"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.trade_druid.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:debug_block",
+      "nbt": "{CustomModelData:4}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.trade_druid.title"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}

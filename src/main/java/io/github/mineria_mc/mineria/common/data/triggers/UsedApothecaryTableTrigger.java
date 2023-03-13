@@ -7,6 +7,7 @@ import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.SerializationContext;
@@ -36,6 +37,10 @@ public class UsedApothecaryTableTrigger extends SimpleCriterionTrigger<UsedApoth
         public Instance(EntityPredicate.Composite andPredicate, ItemPredicate item) {
             super(ID, andPredicate);
             this.item = item;
+        }
+
+        public static Instance filledItem(Item item) {
+            return new Instance(EntityPredicate.Composite.ANY, ItemPredicate.Builder.item().of(item).build());
         }
 
         private boolean matches(ItemStack stack) {

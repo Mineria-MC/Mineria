@@ -2,14 +2,13 @@ package io.github.mineria_mc.mineria.common.blocks.apothecary_table;
 
 import io.github.mineria_mc.mineria.common.containers.ApothecaryTableMenu;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
-import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
 import io.github.mineria_mc.mineria.common.recipe.AbstractApothecaryTableRecipe;
+import io.github.mineria_mc.mineria.common.recipe.ApothecaryFillingRecipe;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
 import io.github.mineria_mc.mineria.util.MineriaLockableTileEntity;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -18,27 +17,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class ApothecaryTableTileEntity extends MineriaLockableTileEntity {
-    public static final Lazy<Map<Item, PoisonSource>> ITEM_TO_POISON_SOURCE_MAP = Lazy.of(() -> Util.make(new HashMap<>(), map -> {
-        map.put(MineriaItems.ELDERBERRY_TEA.get(), PoisonSource.ELDERBERRY);
-        map.put(MineriaItems.STRYCHNOS_TOXIFERA_TEA.get(), PoisonSource.STRYCHNOS_TOXIFERA);
-        map.put(MineriaItems.STRYCHNOS_NUX_VOMICA_TEA.get(), PoisonSource.STRYCHNOS_NUX_VOMICA);
-        map.put(MineriaItems.BELLADONNA_TEA.get(), PoisonSource.BELLADONNA);
-        map.put(MineriaItems.MANDRAKE_TEA.get(), PoisonSource.MANDRAKE);
-    }));
-
     private final ContainerData dataAccess = new ContainerData() {
         public int get(int index) {
             return switch (index) {
@@ -89,55 +76,51 @@ public class ApothecaryTableTileEntity extends MineriaLockableTileEntity {
         return applicationTime > 0;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, ApothecaryTableTileEntity tile) {
-        boolean alreadyExtracting = tile.isApplying();
+    public void serverTick(Level level) {
+        boolean alreadyExtracting = isApplying();
         boolean changed = false;
 
         if (!level.isClientSide) {
-            if (tile.canStorePoison()) {
-                tile.storePoison();
+            ApothecaryFillingRecipe fillingRecipe = findFillingRecipe();
+            if (fillingRecipe != null && this.liquidAmount < 5) {
+                storePoison(fillingRecipe);
+                changed = true;
             }
 
-            AbstractApothecaryTableRecipe recipe = tile.findRecipe();
+            AbstractApothecaryTableRecipe recipe = findRecipe();
 
-            if (tile.canApply(recipe)) {
-                ++tile.applicationTime;
+            if (canApply(recipe)) {
+                ++this.applicationTime;
 
-                if (tile.applicationTime == tile.totalApplicationTime) {
-                    tile.applicationTime = 0;
-                    tile.applyPoison(recipe);
+                if (this.applicationTime == this.totalApplicationTime) {
+                    this.applicationTime = 0;
+                    applyPoison(recipe);
                     changed = true;
                 }
             }
 
-            if (!tile.canApply(recipe) && tile.applicationTime > 0) {
-                tile.applicationTime = Mth.clamp(tile.applicationTime - 2, 0, tile.totalApplicationTime);
+            if (!canApply(recipe) && this.applicationTime > 0) {
+                this.applicationTime = Mth.clamp(this.applicationTime - 2, 0, this.totalApplicationTime);
             }
 
-            if (alreadyExtracting != tile.isApplying()) {
+            if (alreadyExtracting != isApplying()) {
                 changed = true;
             }
         }
 
         if (changed) {
-            tile.setChanged();
+            setChanged();
         }
     }
 
-    private boolean canStorePoison() {
-        Item drink = this.inventory.getStackInSlot(0).getItem();
-        return ITEM_TO_POISON_SOURCE_MAP.get().containsKey(drink) && (ITEM_TO_POISON_SOURCE_MAP.get().get(drink).equals(this.poisonSource) || this.poisonSource == null) && this.liquidAmount < 5;
-    }
-
-    private void storePoison() {
-        if (canStorePoison()) {
-            ItemStack stack = this.inventory.getStackInSlot(0);
-            PoisonSource poisonSource = ITEM_TO_POISON_SOURCE_MAP.get().get(stack.getItem());
-            this.inventory.setStackInSlot(0, stack.getCraftingRemainingItem());
-            if (this.poisonSource == null)
-                this.poisonSource = poisonSource;
-            this.liquidAmount = Math.min(liquidAmount + 1, 5);
+    private void storePoison(ApothecaryFillingRecipe recipe) {
+        ItemStack stack = this.inventory.getStackInSlot(0);
+        PoisonSource outputPoison = recipe.getOutputPoison();
+        this.inventory.setStackInSlot(0, stack.getCraftingRemainingItem());
+        if (this.poisonSource == null) {
+            this.poisonSource = outputPoison;
         }
+        this.liquidAmount = Math.min(liquidAmount + 1, 5);
     }
 
     private boolean canRemovePoison() {
@@ -225,9 +208,23 @@ public class ApothecaryTableTileEntity extends MineriaLockableTileEntity {
             return null;
         }
 
-        Set<AbstractApothecaryTableRecipe> recipes = MineriaUtils.findRecipesByType(MineriaRecipeTypes.APOTHECARY_TABLE_TYPE.get(), this.level);
+        Set<AbstractApothecaryTableRecipe> recipes = MineriaUtils.findRecipesByType(MineriaRecipeTypes.APOTHECARY_TABLE.get(), this.level);
         for (AbstractApothecaryTableRecipe recipe : recipes) {
             if (recipe.matches(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource), this.level)) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+    
+    @Nullable
+    private ApothecaryFillingRecipe findFillingRecipe() {
+        if(level == null) {
+            return null;
+        }
+
+        for (ApothecaryFillingRecipe recipe : MineriaUtils.findRecipesByType(MineriaRecipeTypes.APOTHECARY_TABLE_FILLING.get(), this.level)) {
+            if(recipe.matches(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource), this.level)) {
                 return recipe;
             }
         }

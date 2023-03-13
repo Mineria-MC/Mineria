@@ -10,7 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -23,6 +25,19 @@ public class MineriaItem extends Item {
     @Override
     public boolean isFoil(@Nonnull ItemStack stack) {
         return this == MineriaItems.LONSDALEITE.get();
+    }
+
+    public static ItemStack withCustomModelData(RegistryObject<? extends ItemLike> obj, int data) {
+        return obj.map(ItemStack::new).map(stack -> withCustomModelData(stack, data)).orElse(ItemStack.EMPTY);
+    }
+
+    public static ItemStack withCustomModelData(ItemLike item, int data) {
+        return withCustomModelData(new ItemStack(item), data);
+    }
+
+    public static ItemStack withCustomModelData(ItemStack stack, int data) {
+        stack.getOrCreateTag().putInt("CustomModelData", data);
+        return stack;
     }
 
     public enum ItemTier implements Tier {

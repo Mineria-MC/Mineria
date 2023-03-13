@@ -1,0 +1,98 @@
+{
+  "parent": "mineria:mineria/smelt_titane",
+  "criteria": {
+    "get_titane_sword": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:titane_sword"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_titane_sword_with_copper_handle": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:titane_sword_with_copper_handle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_titane_sword_with_gold_handle": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:titane_sword_with_gold_handle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_titane_sword_with_iron_handle": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:titane_sword_with_iron_handle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "get_titane_sword_with_silver_handle": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mineria:titane_sword_with_silver_handle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.make_all_titane_swords.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:titane_sword",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.make_all_titane_swords.title"
+    }
+  },
+  "requirements": [
+    [
+      "get_titane_sword"
+    ],
+    [
+      "get_titane_sword_with_copper_handle"
+    ],
+    [
+      "get_titane_sword_with_iron_handle"
+    ],
+    [
+      "get_titane_sword_with_gold_handle"
+    ],
+    [
+      "get_titane_sword_with_silver_handle"
+    ]
+  ]
+}

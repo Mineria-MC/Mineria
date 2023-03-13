@@ -35,9 +35,11 @@ public class DamageFromSpikeTrigger extends SimpleCriterionTrigger<DamageFromSpi
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
+        public static final Instance ANY = new Instance(EntityPredicate.Composite.ANY, null, -1);
+
         @Nullable
         private final Block block;
-        private float damage = -1;
+        private final float damage;
 
         public Instance(EntityPredicate.Composite predicate, @Nullable Block block, float damage) {
             super(ID, predicate);

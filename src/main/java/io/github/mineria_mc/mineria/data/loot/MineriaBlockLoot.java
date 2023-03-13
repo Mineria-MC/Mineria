@@ -16,7 +16,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
@@ -26,6 +28,9 @@ import java.util.function.UnaryOperator;
 import static io.github.mineria_mc.mineria.common.init.MineriaBlocks.*;
 
 public class MineriaBlockLoot extends BlockLootSubProvider {
+    private static final LootItemCondition.Builder HAS_SHEARS_OR_SILK_TOUCH = HAS_SHEARS.or(HAS_SILK_TOUCH);
+    private static final LootItemCondition.Builder HAS_NO_SHEARS_OR_SILK_TOUCH = HAS_SHEARS_OR_SILK_TOUCH.invert();
+
     public MineriaBlockLoot() {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags());
     }
@@ -100,7 +105,14 @@ public class MineriaBlockLoot extends BlockLootSubProvider {
         dropWithRoots(MANDRAKE, MineriaItems.MANDRAKE_ROOT, false);
         dropWithRoots(SAUSSUREA_COSTUS, MineriaItems.SAUSSUREA_COSTUS_ROOT, true);
         dropWithRoots(PULSATILLA_CHINENSIS, MineriaItems.PULSATILLA_CHINENSIS_ROOT, false);
-        add(SPRUCE_YEW_LEAVES.get(), createLeavesDrops(SPRUCE_YEW_LEAVES.get(), SPRUCE_YEW_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES));
+        add(SPRUCE_YEW_LEAVES.get(),
+                createLeavesDrops(SPRUCE_YEW_LEAVES.get(), SPRUCE_YEW_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES)
+                        .withPool(LootPool.lootPool().when(HAS_NO_SHEARS_OR_SILK_TOUCH).add(
+                                applyExplosionDecay(SPRUCE_YEW_LEAVES.get(), LootItem.lootTableItem(MineriaItems.YEW_BERRIES.get())
+                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))
+                                        .when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 0.01F, 0.01111112F, 0.0125F, 0.016666666F, 0.05F)))
+                        ))
+        );
         add(SAKURA_LEAVES.get(), createLeavesDrops(SAKURA_LEAVES.get(), SAKURA_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES));
         dropPottedContents(
                 POTTED_PLANTAIN,

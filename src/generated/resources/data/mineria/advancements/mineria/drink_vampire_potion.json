@@ -1,0 +1,61 @@
+{
+  "parent": "mineria:mineria/kill_gdog",
+  "criteria": {
+    "drink_long_vampire": {
+      "conditions": {
+        "item": {
+          "potion": "mineria:long_vampire"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "drink_strong_vampire": {
+      "conditions": {
+        "item": {
+          "potion": "mineria:strong_vampire"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "drink_vampire": {
+      "conditions": {
+        "item": {
+          "potion": "mineria:vampire"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "drink_very_strong_vampire": {
+      "conditions": {
+        "item": {
+          "potion": "mineria:very_strong_vampire"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mineria.drink_vampire_potion.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "mineria:mineria_potion",
+      "nbt": "{Potion:\"mineria:vampire\"}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mineria.drink_vampire_potion.title"
+    }
+  },
+  "requirements": [
+    [
+      "drink_vampire",
+      "drink_long_vampire",
+      "drink_strong_vampire",
+      "drink_very_strong_vampire"
+    ]
+  ]
+}
