@@ -15,4 +15,6 @@ public interface IPoisonEffect {
     boolean isDurationEffectTick(int duration, int amplifier, int potionClass);
 
     List<ItemStack> getCurativeItems(int potionClass, int amplifier, int maxDuration, int duration, PoisonSource source);
+
+    void removeMovementSpeedModifier(LivingEntity living);
 }

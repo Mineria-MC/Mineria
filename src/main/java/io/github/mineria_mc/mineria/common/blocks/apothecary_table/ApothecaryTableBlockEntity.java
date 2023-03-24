@@ -3,11 +3,11 @@ package io.github.mineria_mc.mineria.common.blocks.apothecary_table;
 import io.github.mineria_mc.mineria.common.containers.ApothecaryTableMenu;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.common.recipe.AbstractApothecaryTableRecipe;
 import io.github.mineria_mc.mineria.common.recipe.ApothecaryFillingRecipe;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
-import io.github.mineria_mc.mineria.util.MineriaLockableTileEntity;
+import io.github.mineria_mc.mineria.util.MineriaLockableBlockEntity;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class ApothecaryTableTileEntity extends MineriaLockableTileEntity {
+public class ApothecaryTableBlockEntity extends MineriaLockableBlockEntity {
     private final ContainerData dataAccess = new ContainerData() {
         public int get(int index) {
             return switch (index) {
@@ -56,8 +56,8 @@ public class ApothecaryTableTileEntity extends MineriaLockableTileEntity {
     public int applicationTime;
     public final int totalApplicationTime = 80;
 
-    public ApothecaryTableTileEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.APOTHECARY_TABLE.get(), pos, state, new MineriaItemStackHandler(3));
+    public ApothecaryTableBlockEntity(BlockPos pos, BlockState state) {
+        super(MineriaBlockEntities.APOTHECARY_TABLE.get(), pos, state, new MineriaItemStackHandler(3));
     }
 
     @Nonnull

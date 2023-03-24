@@ -1,120 +1,103 @@
 package io.github.mineria_mc.mineria.common.effects.util;
 
+import com.google.common.collect.ImmutableList;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
+import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.init.MineriaEffects;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
+import java.util.*;
 
 public class PoisonSource {
     private static final Map<ResourceLocation, PoisonSource> BY_NAME = new HashMap<>();
     private static final Int2ObjectMap<PoisonSource> ORDINAL = new Int2ObjectOpenHashMap<>();
 
-    public static final long DEFAULT_EXPOSURE_TIME = 12000; // 20 * 60 * 10
+    public static final int DEFAULT_POISON_COLOR = 5149489;
+    public static final long DEFAULT_EXPOSURE_TIME = 12000; // 10 minutes
 
-    public static final PoisonSource ELDERBERRY = create(new ResourceLocation(Mineria.MODID, "elderberry"), "poison_source.mineria.elderberry").color(4598843).exposureTime(20 * 45).poisonApplied((living, source) -> {
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> {
-            if (cap.getTickCount(source) < source.getMaxExposureTime()) {
-                switch (cap.exposureCount(source)) {
-                    case 0 -> living.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 600, 0));
-                    case 1 -> living.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 1200, 0));
-                    case 2 -> {
-                        living.removeEffect(MobEffects.CONFUSION);
-                        PoisonMobEffectInstance.applyPoisonEffect(living, 1, 24000, 0, source);
-                    }
-                }
-            }
-            cap.applyPoison(source);
-        });
-    }).build();
-    public static final PoisonSource STRYCHNOS_TOXIFERA = create(new ResourceLocation(Mineria.MODID, "strychnos_toxifera"), "poison_source.mineria.strychnos_toxifera").color(7308866).poisonApplied((living, source) -> {
-        PoisonMobEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> cap.applyPoison(source));
-    }).build();
-    public static final PoisonSource STRYCHNOS_NUX_VOMICA = create(new ResourceLocation(Mineria.MODID, "strychnos_nux_vomica"), "poison_source.mineria.strychnos_nux_vomica").color(16749430).exposureTime(20 * 60 * 5).poisonApplied((living, source) -> {
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> {
-            if (cap.getTickCount(source) < source.getMaxExposureTime()) {
-                switch (cap.exposureCount(source)) {
-                    case 0 -> PoisonMobEffectInstance.applyPoisonEffect(living, 1, 24000, 0, source);
-                    case 1 -> PoisonMobEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                    case 2 -> PoisonMobEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                }
-            }
-            cap.applyPoison(source);
-        });
-    }).build();
-    public static final PoisonSource BELLADONNA = create(new ResourceLocation(Mineria.MODID, "belladonna"), "poison_source.mineria.belladonna").color(11963578).poisonApplied((living, source) -> {
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> {
-            if (cap.getTickCount(source) < source.getMaxExposureTime()) {
-                switch (cap.exposureCount(source)) {
-                    case 0 -> PoisonMobEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                    case 2 -> PoisonMobEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                }
-            }
-            cap.applyPoison(source);
-        });
-    }).build();
-    public static final PoisonSource MANDRAKE = create(new ResourceLocation(Mineria.MODID, "mandrake"), "poison_source.mineria.mandrake").color(12224486).poisonApplied((living, source) -> {
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> {
-            if (cap.getTickCount(source) < source.getMaxExposureTime()) {
-                switch (cap.exposureCount(source)) {
-                    case 0 -> PoisonMobEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                    case 1 -> PoisonMobEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                }
-            }
-            cap.applyPoison(source);
-        });
-    }).build();
-    public static final PoisonSource YEW = create(new ResourceLocation(Mineria.MODID, "yew"), "poison_source.mineria.yew").color(7476511).exposureTime(20 * 60 * 3).poisonApplied((living, source) -> {
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> {
-            if (cap.getTickCount(source) < source.getMaxExposureTime()) {
-                switch (cap.exposureCount(source)) {
-                    case 0 -> {
-                        living.addEffect(new MobEffectInstance(MineriaEffects.NO_NATURAL_REGENERATION.get(), 20 * 60));
-                        living.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 60));
-                        living.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 60));
-                    }
-                    case 1 -> {
-                        PoisonMobEffectInstance.applyPoisonEffect(living, 2, 24000, 0, source);
-                        living.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 45));
-                    }
-                    case 2 -> {
-                        living.removeEffect(MobEffects.CONFUSION); // reset nausea effect
-                        PoisonMobEffectInstance.applyPoisonEffect(living, 3, 24000, 0, source);
-                    }
-                }
-            }
-            cap.applyPoison(source);
-        });
-    }).build();
+    public static final PoisonSource ELDERBERRY = create(new ResourceLocation(Mineria.MODID, "elderberry"), "poison_source.mineria.elderberry")
+            .color(4598843)
+            .exposureTime(20 * 45)
+            .poisonApplied((living, source, exposureCount) -> switch (exposureCount) {
+                case 0 -> new MobEffectInstance[] {new PoisoningHiddenEffectInstance(MobEffects.CONFUSION, 600, 0, source)};
+                case 1 -> new MobEffectInstance[] {new PoisoningHiddenEffectInstance(MobEffects.CONFUSION, 1200, 0, source)};
+                case 2 -> PoisonMobEffectInstance.getPoisonEffects(1, 24000, 0, source);
+                default -> new MobEffectInstance[0];
+            })
+            .build();
+    public static final PoisonSource STRYCHNOS_TOXIFERA = create(new ResourceLocation(Mineria.MODID, "strychnos_toxifera"), "poison_source.mineria.strychnos_toxifera")
+            .color(7308866)
+            .poisonApplied((living, source, exposureCount) -> PoisonMobEffectInstance.getPoisonEffects(3, 24000, 0, source))
+            .build();
+    public static final PoisonSource STRYCHNOS_NUX_VOMICA = create(new ResourceLocation(Mineria.MODID, "strychnos_nux_vomica"), "poison_source.mineria.strychnos_nux_vomica")
+            .color(16749430)
+            .exposureTime(20 * 60 * 5)
+            .poisonApplied((living, source, exposureCount) -> switch (exposureCount) {
+                case 0 -> PoisonMobEffectInstance.getPoisonEffects(1, 24000, 0, source);
+                case 1 -> PoisonMobEffectInstance.getPoisonEffects(2, 24000, 0, source);
+                case 2 -> PoisonMobEffectInstance.getPoisonEffects(3, 24000, 0, source);
+                default -> new MobEffectInstance[0];
+            })
+            .build();
+    public static final PoisonSource BELLADONNA = create(new ResourceLocation(Mineria.MODID, "belladonna"), "poison_source.mineria.belladonna")
+            .color(11963578)
+            .poisonApplied((living, source, exposureCount) -> switch (exposureCount) {
+                case 0 -> PoisonMobEffectInstance.getPoisonEffects(2, 24000, 0, source);
+                case 2 -> PoisonMobEffectInstance.getPoisonEffects(3, 24000, 0, source);
+                default -> new MobEffectInstance[0];
+            })
+            .build();
+    public static final PoisonSource MANDRAKE = create(new ResourceLocation(Mineria.MODID, "mandrake"), "poison_source.mineria.mandrake")
+            .color(12224486)
+            .poisonApplied((living, source, exposureCount) -> switch (exposureCount) {
+                case 0 -> PoisonMobEffectInstance.getPoisonEffects(2, 24000, 0, source);
+                case 1 -> PoisonMobEffectInstance.getPoisonEffects(3, 24000, 0, source);
+                default -> new MobEffectInstance[0];
+            })
+            .build();
+    public static final PoisonSource YEW = create(new ResourceLocation(Mineria.MODID, "yew"), "poison_source.mineria.yew")
+            .color(7476511)
+            .exposureTime(20 * 60 * 3)
+            .poisonApplied((living, source, exposureCount) -> switch (exposureCount) {
+                case 0 -> new MobEffectInstance[] {
+                        new PoisoningHiddenEffectInstance(MineriaEffects.NO_NATURAL_REGENERATION.get(), 20 * 60, 0, source),
+                        new PoisoningHiddenEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 60, 0, source),
+                        new PoisoningHiddenEffectInstance(MobEffects.CONFUSION, 20 * 60, 0, source)
+                };
+                case 1 -> PoisonMobEffectInstance.getPoisonEffects(2, 24000, 0, source,
+                        new PoisoningHiddenEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 20 * 45, 0, source).withPoison()
+                );
+                case 2 -> PoisonMobEffectInstance.getPoisonEffects(3, 24000, 0, source);
+                default -> new MobEffectInstance[0];
+            })
+            .build();
     public static final PoisonSource UNKNOWN = create(new ResourceLocation(Mineria.MODID, "unknown"), "poison_source.mineria.unknown").build();
 
-    private static int ordinal = 0;
+    private static int ordinalCounter = 0;
 
     private final ResourceLocation id;
     private final String translationKey;
     private final String descriptionTranslationKey;
     private final int color;
     private final long exposureTime;
-    private final BiConsumer<LivingEntity, PoisonSource> poisonApplier;
+    private final PoisonApplier poisonApplier;
+    private final int ordinal;
 
-    private PoisonSource(ResourceLocation id, String translationKey, String descriptionTranslationKey, int color, long exposureTime, BiConsumer<LivingEntity, PoisonSource> poisonApplier) {
-        if (BY_NAME.containsKey(id))
+    private PoisonSource(ResourceLocation id, String translationKey, String descriptionTranslationKey, int color, long exposureTime, PoisonApplier poisonApplier) {
+        if (BY_NAME.containsKey(id)) {
             throw new IllegalArgumentException("PoisonSource with id '" + id + "' already exists!");
+        }
 
         this.id = id;
         this.translationKey = translationKey;
@@ -122,8 +105,9 @@ public class PoisonSource {
         this.color = color;
         this.exposureTime = exposureTime;
         this.poisonApplier = poisonApplier;
+        this.ordinal = ordinalCounter++;
         BY_NAME.put(id, this);
-        ORDINAL.put(ordinal++, this);
+        ORDINAL.put(ordinal(), this);
     }
 
     public ResourceLocation getId() {
@@ -146,17 +130,22 @@ public class PoisonSource {
         return this.exposureTime;
     }
 
-    public void poison(LivingEntity living) {
-        this.poisonApplier.accept(living, this);
+    public boolean applyPoisoning(LivingEntity living) {
+        return living.getCapability(MineriaCapabilities.POISON_EXPOSURE).map(cap -> {
+            boolean appliedPoison = false;
+            if(cap.getTickCount(this) < this.exposureTime) {
+                for (MobEffectInstance effect : this.poisonApplier.getEffects(living, this, cap.exposureCount(this))) {
+                    living.addEffect(effect);
+                    appliedPoison = true;
+                }
+            }
+            cap.applyPoison(this);
+            return appliedPoison;
+        }).orElse(false);
     }
 
     public int ordinal() {
-        for (Int2ObjectMap.Entry<PoisonSource> entry : ORDINAL.int2ObjectEntrySet()) {
-            if (entry.getValue().equals(this))
-                return entry.getIntKey();
-        }
-
-        return -1;
+        return ordinal;
     }
 
     @Override
@@ -193,10 +182,9 @@ public class PoisonSource {
         private final ResourceLocation id;
         private final String translationKey;
         private String descriptionTranslationKey;
-        private int color = 5149489;
+        private int color = DEFAULT_POISON_COLOR;
         private long exposureTime = DEFAULT_EXPOSURE_TIME;
-        private BiConsumer<LivingEntity, PoisonSource> poisonApplier = (living, poisonSource) -> {
-        };
+        private PoisonApplier poisonApplier = (living, poisonSource, exposureCount) -> new MobEffectInstance[0];
 
         private Builder(ResourceLocation id, String translationKey) {
             this.id = id;
@@ -219,7 +207,7 @@ public class PoisonSource {
             return this;
         }
 
-        public Builder poisonApplied(BiConsumer<LivingEntity, PoisonSource> poisonApplier) {
+        public Builder poisonApplied(PoisonApplier poisonApplier) {
             this.poisonApplier = poisonApplier;
             return this;
         }
@@ -227,5 +215,10 @@ public class PoisonSource {
         public PoisonSource build() {
             return new PoisonSource(id, translationKey, descriptionTranslationKey, color, exposureTime, poisonApplier);
         }
+    }
+
+    @FunctionalInterface
+    public interface PoisonApplier {
+        MobEffectInstance[] getEffects(@Nullable LivingEntity entity, PoisonSource source, int exposureCount);
     }
 }

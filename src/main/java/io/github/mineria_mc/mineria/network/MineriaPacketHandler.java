@@ -9,12 +9,13 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import java.util.Optional;
 
 public class MineriaPacketHandler {
-    private static final String PROTOCOL_VERSION = "1.2";
+    private static final String PROTOCOL_VERSION = "1.3";
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(Mineria.MODID, "main_channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void registerNetworkMessages() {
         addNetworkMessage(PlayEntityEffectMessageHandler.PlayEntityEffectMessage.class, new PlayEntityEffectMessageHandler(), NetworkDirection.PLAY_TO_CLIENT);
         addNetworkMessage(XpBlockMessageHandler.XpBlockMessage.class, new XpBlockMessageHandler(), NetworkDirection.PLAY_TO_SERVER);
+        addNetworkMessage(SavePlayerBookmarkMessageHandler.SavePlayerBookmarkMessage.class, new SavePlayerBookmarkMessageHandler(), NetworkDirection.PLAY_TO_SERVER);
     }
 
     // an easy way to assign a unique id to a message

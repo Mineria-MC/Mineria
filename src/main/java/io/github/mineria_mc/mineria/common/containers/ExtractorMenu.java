@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.common.containers;
 
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
-import io.github.mineria_mc.mineria.common.blocks.extractor.ExtractorTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.extractor.ExtractorBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.slots.ExtractorOutputSlot;
 import io.github.mineria_mc.mineria.common.containers.slots.FilterSlot;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
@@ -20,10 +20,10 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
 
-public class ExtractorMenu extends MineriaMenu<ExtractorTileEntity> {
+public class ExtractorMenu extends MineriaMenu<ExtractorBlockEntity> {
     private final FunctionalIntReferenceHolder currentExtractTime;
 
-    public ExtractorMenu(int id, Inventory playerInv, ExtractorTileEntity tileEntity) {
+    public ExtractorMenu(int id, Inventory playerInv, ExtractorBlockEntity tileEntity) {
         super(MineriaMenuTypes.EXTRACTOR.get(), id, tileEntity);
 
         this.createPlayerInventorySlots(playerInv, 8, 118);
@@ -32,11 +32,11 @@ public class ExtractorMenu extends MineriaMenu<ExtractorTileEntity> {
     }
 
     public static ExtractorMenu create(int id, Inventory playerInv, FriendlyByteBuf buffer) {
-        return new ExtractorMenu(id, playerInv, getTileEntity(ExtractorTileEntity.class, playerInv, buffer));
+        return new ExtractorMenu(id, playerInv, getTileEntity(ExtractorBlockEntity.class, playerInv, buffer));
     }
 
     @Override
-    protected void createInventorySlots(ExtractorTileEntity tile) {
+    protected void createInventorySlots(ExtractorBlockEntity tile) {
         IItemHandler handler = tile.getInventory();
         this.addSlot(new SlotItemHandler(handler, 0, 8, 20));
         this.addSlot(new SlotItemHandler(handler, 1, 43, 20));

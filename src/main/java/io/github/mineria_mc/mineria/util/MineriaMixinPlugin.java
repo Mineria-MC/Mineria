@@ -2,6 +2,9 @@ package io.github.mineria_mc.mineria.util;
 
 import io.github.mineria_mc.mineria.Mineria;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.LoadingModList;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -24,12 +27,12 @@ public class MineriaMixinPlugin implements IMixinConfigPlugin {
         if(!mixinClassName.equals("io.github.mineria_mc.mineria.mixin.OverworldBiomeBuilderMixin")) {
             return true;
         }
-        ModList modList = ModList.get();
-        if(modList == null || modList.isLoaded("terrablender")) {
+        LoadingModList modList = LoadingModList.get();
+        if(modList == null || modList.getModFileById("terrablender") != null) {
             return false;
         }
         try {
-            return MineriaConfig.COMMON.enableChaoticBiomeGeneration.get();
+            return MineriaConfig.getValueFromFile(ModConfig.Type.COMMON, MineriaConfig.COMMON.enableChaoticBiomeGeneration, false);
         } catch (Throwable ignored) {
         }
         return false;
@@ -41,13 +44,16 @@ public class MineriaMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
+        if(!FMLLoader.isProduction()) {
+            return List.of("DefaultPlayerSkinMixin");
+        }
         return null;
     }
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
         if(mixinClassName.equals("io.github.mineria_mc.mineria.mixin.OverworldBiomeBuilderMixin")) {
-            Mineria.LOGGER.warn("Applying mixin mineria$pickMiddleBiome on OverworldBiomeBuilderMixin...");
+            Mineria.LOGGER.warn("Applying mixin mineria$pickMiddleBiome in OverworldBiomeBuilderMixin...");
         }
     }
 

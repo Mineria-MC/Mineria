@@ -1,16 +1,18 @@
 package io.github.mineria_mc.mineria;
 
+import com.mojang.logging.LogUtils;
 import io.github.mineria_mc.mineria.common.MineriaProxy;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
 import io.github.mineria_mc.mineria.common.init.*;
+import io.github.mineria_mc.mineria.common.items.MineriaItem;
 import io.github.mineria_mc.mineria.common.world.terrablender.MineriaTerraBlenderApi;
 import io.github.mineria_mc.mineria.data.MineriaDataGatherer;
 import io.github.mineria_mc.mineria.network.MineriaPacketHandler;
 import io.github.mineria_mc.mineria.server.commands.PoisonCommand;
 import io.github.mineria_mc.mineria.util.MineriaConfig;
-import io.github.mineria_mc.mineria.util.MineriaProxyProvider;
 import io.github.mineria_mc.mineria.util.MineriaCreativeModeTabs;
-import com.mojang.logging.LogUtils;
+import io.github.mineria_mc.mineria.util.MineriaProxyProvider;
+import io.github.mineria_mc.mineria.util.MineriaMissingMappings;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -53,6 +55,7 @@ public class Mineria {
         MineriaRegistries.init();
         MineriaRecipeTypes.RECIPE_TYPES.register(bus);
         MineriaRecipeSerializers.RECIPE_SERIALIZERS.register(bus);
+        MineriaLootItemFunctionTypes.FUNCTION_TYPES.register(bus);
         MineriaLootModifierSerializers.SERIALIZERS.register(bus);
         MineriaBiomeModifierSerializers.BIOME_MODIFIER_SERIALIZERS.register(bus);
         MineriaParticleTypes.PARTICLE_TYPES.register(bus);
@@ -64,7 +67,7 @@ public class Mineria {
         MineriaBlocks.BLOCKS.register(bus);
         MineriaBlocks.BLOCK_ITEMS.register(bus);
         MineriaItems.ITEMS.register(bus);
-        MineriaTileEntities.TILE_ENTITY_TYPES.register(bus);
+        MineriaBlockEntities.TYPES.register(bus);
         MineriaMenuTypes.MENU_TYPES.register(bus);
         MineriaEntities.ENTITY_TYPES.register(bus);
         MineriaPOITypes.POI_TYPES.register(bus);
@@ -84,6 +87,7 @@ public class Mineria {
         bus.addListener(MineriaCapabilities::registerCapabilities);
         bus.addListener(MineriaCreativeModeTabs::registerCreativeTabs);
         bus.addListener(MineriaCreativeModeTabs::buildTabsContent);
+        MineriaMissingMappings.initialize();
 
         instance = this;
         MinecraftForge.EVENT_BUS.register(this);
@@ -98,6 +102,7 @@ public class Mineria {
             }
 
             MineriaItems.postInit();
+            MineriaItem.ItemTier.registerTiers();
             MineriaBrewingRecipes.register();
             MineriaPacketHandler.registerNetworkMessages();
         });
@@ -115,7 +120,7 @@ public class Mineria {
 
     public static Mineria getInstance() {
         if(instance == null) {
-            throw new IllegalStateException("Mineria is not initialized!");
+            throw new IllegalStateException("Mineria is not loaded yet!");
         }
         return instance;
     }

@@ -2,19 +2,19 @@ package io.github.mineria_mc.mineria.common.items;
 
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class MineriaItem extends Item {
@@ -44,9 +44,9 @@ public class MineriaItem extends Item {
         COPPER(187, 3.5F, 1.5F, 2, 4, () -> Ingredient.of(Items.COPPER_INGOT)),
         LEAD(294, 6.25F, 2.2F, 2, 12, () -> Ingredient.of(MineriaItems.LEAD_INGOT.get())),
         COMPRESSED_LEAD(576, 6.25F, 3.0F, 2, 12, () -> Ingredient.of(MineriaItems.COMPRESSED_LEAD_INGOT.get())),
-        LONSDALEITE(3460, 20.0F, 7.0F, 3, 8, () -> Ingredient.of(MineriaItems.LONSDALEITE.get())),
         SILVER(621, 7.0F, 2.6F, 2, 16, () -> Ingredient.of(MineriaItems.SILVER_INGOT.get())),
-        TITANE(2048, 12.0F, 4.0F, 3, 12, () -> Ingredient.of(MineriaItems.TITANE_INGOT.get()));
+        TITANE(2048, 12.0F, 4.0F, 3, 12, () -> Ingredient.of(MineriaItems.TITANE_INGOT.get())),
+        LONSDALEITE(3460, 20.0F, 7.0F, 3, 8, () -> Ingredient.of(MineriaItems.LONSDALEITE.get()));
 
         private final int maxUses;
         private final float efficiency;
@@ -79,6 +79,7 @@ public class MineriaItem extends Item {
             return attackDamage;
         }
 
+        @Deprecated
         @Override
         public int getLevel() {
             return harvestLevel;
@@ -93,6 +94,15 @@ public class MineriaItem extends Item {
         @Override
         public Ingredient getRepairIngredient() {
             return repairItem.get();
+        }
+
+        public static void registerTiers() {
+            TierSortingRegistry.registerTier(COPPER, new ResourceLocation(Mineria.MODID, "copper"), List.of(Tiers.STONE), List.of(Tiers.IRON));
+            TierSortingRegistry.registerTier(LEAD, new ResourceLocation(Mineria.MODID, "lead"), List.of(Tiers.IRON), List.of());
+            TierSortingRegistry.registerTier(COMPRESSED_LEAD, new ResourceLocation(Mineria.MODID, "compressed_lead"), List.of(LEAD), List.of(Tiers.DIAMOND));
+            TierSortingRegistry.registerTier(SILVER, new ResourceLocation(Mineria.MODID, "silver"), List.of(LEAD), List.of());
+            TierSortingRegistry.registerTier(TITANE, new ResourceLocation(Mineria.MODID, "titane"), List.of(Tiers.DIAMOND), List.of());
+            TierSortingRegistry.registerTier(LONSDALEITE, new ResourceLocation(Mineria.MODID, "lonsdaleite"), List.of(TITANE), List.of());
         }
     }
 

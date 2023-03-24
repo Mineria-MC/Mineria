@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.blocks.distiller;
 
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -46,7 +46,7 @@ public class DistillerBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.DISTILLER.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> DistillerBlockEntity.serverTick(pLevel, pPos, pState, (DistillerBlockEntity) pBlockEntity);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.DISTILLER.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> DistillerBlockEntity.serverTick(pLevel, pPos, pState, (DistillerBlockEntity) pBlockEntity);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class MineriaJEIPlugin implements IModPlugin {
         registration.addRecipeTransferHandler(TitaneExtractorMenu.class, MineriaMenuTypes.TITANE_EXTRACTOR.get(), TitaneExtractorRecipeCategory.TYPE, 0, 3, 4, 36);
         registration.addRecipeTransferHandler(new InfuserRecipeTransferInfo());
         registration.addRecipeTransferHandler(ExtractorMenu.class, MineriaMenuTypes.EXTRACTOR.get(), ExtractorRecipeCategory.TYPE, 0, 3, 10, 36);
-        registration.addRecipeTransferHandler(DistillerMenu.class, MineriaMenuTypes.DISTILLER.get(), DistillerRecipeCategory.TYPE, 0, 3, 4, 36);
+        registration.addRecipeTransferHandler(DistillerMenu.class, MineriaMenuTypes.DISTILLER.get(), DistillerRecipeCategory.TYPE, 0, 4, 6, 36);
         registration.addRecipeTransferHandler(ApothecaryTableMenu.class, MineriaMenuTypes.APOTHECARY_TABLE.get(), ApothecaryTableRecipeCategory.TYPE, 1, 1, 3, 36);
     }
 

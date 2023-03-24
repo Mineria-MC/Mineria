@@ -33,9 +33,8 @@ public class MineriaBow extends BowItem {
 
     @Override
     public void releaseUsing(ItemStack bowStack, Level world, LivingEntity living, int timeLeft) {
-        if (living instanceof Player) {
-            Player player = (Player) living;
-            boolean infiniteArrows = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bowStack) > 0;
+        if (living instanceof Player player) {
+            boolean infiniteArrows = player.getAbilities().instabuild || bowStack.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
             ItemStack ammo = player.getProjectile(bowStack);
 
             int currentUseDuration = this.getUseDuration(bowStack) - timeLeft;
@@ -54,7 +53,6 @@ public class MineriaBow extends BowItem {
                     if (!world.isClientSide) {
                         ArrowItem arrow = (ArrowItem) (ammo.getItem() instanceof ArrowItem ? ammo.getItem() : Items.ARROW);
                         AbstractArrow arrowEntity = arrow.createArrow(world, ammo, player);
-                        // arrowEntity = customArrow(arrowEntity);	Useless
 
                         arrowEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocity * 3.0F, 1.0F);
 
@@ -62,17 +60,17 @@ public class MineriaBow extends BowItem {
                             arrowEntity.setCritArrow(true);
                         }
 
-                        int powerLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, bowStack);
+                        int powerLevel = bowStack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
                         if (powerLevel > 0) {
                             arrowEntity.setBaseDamage(arrowEntity.getBaseDamage() + (double) powerLevel * 0.5D + this.damage);
                         }
 
-                        int punchLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, bowStack);
+                        int punchLevel = bowStack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
                         if (punchLevel > 0) {
                             arrowEntity.setKnockback(punchLevel + knockBack);
                         }
 
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, bowStack) > 0) {
+                        if (bowStack.getEnchantmentLevel(Enchantments.FLAMING_ARROWS) > 0) {
                             arrowEntity.setSecondsOnFire(100);
                         }
 

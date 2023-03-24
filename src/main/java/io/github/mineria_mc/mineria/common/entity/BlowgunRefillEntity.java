@@ -218,7 +218,7 @@ public class BlowgunRefillEntity extends Projectile {
     }
 
     protected void doPostHurtEffects(LivingEntity living) {
-        this.getPoisonSource().poison(living);
+        this.getPoisonSource().applyPoisoning(living);
     }
 
     @Override

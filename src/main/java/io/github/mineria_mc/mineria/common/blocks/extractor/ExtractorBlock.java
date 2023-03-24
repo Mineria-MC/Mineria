@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.blocks.extractor;
 
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -44,13 +44,13 @@ public class ExtractorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new ExtractorTileEntity(pPos, pState);
+        return new ExtractorBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.EXTRACTOR.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ExtractorTileEntity.serverTick(pLevel, pPos, pState, (ExtractorTileEntity) pBlockEntity);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.EXTRACTOR.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ExtractorBlockEntity.serverTick(pLevel, pPos, pState, (ExtractorBlockEntity) pBlockEntity);
     }
 
     @Override
@@ -116,8 +116,8 @@ public class ExtractorBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             BlockEntity tile = worldIn.getBlockEntity(pos);
-            if (tile instanceof ExtractorTileEntity) {
-                NetworkHooks.openScreen((ServerPlayer) player, (ExtractorTileEntity) tile, pos);
+            if (tile instanceof ExtractorBlockEntity) {
+                NetworkHooks.openScreen((ServerPlayer) player, (ExtractorBlockEntity) tile, pos);
             }
         }
         return InteractionResult.SUCCESS;
@@ -126,8 +126,8 @@ public class ExtractorBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         BlockEntity tile = worldIn.getBlockEntity(pos);
-        if (tile instanceof ExtractorTileEntity && state.getBlock() != newState.getBlock())
-            Containers.dropContents(worldIn, pos, ((ExtractorTileEntity) tile).getInventory().toNonNullList());
+        if (tile instanceof ExtractorBlockEntity && state.getBlock() != newState.getBlock())
+            Containers.dropContents(worldIn, pos, ((ExtractorBlockEntity) tile).getInventory().toNonNullList());
 
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }

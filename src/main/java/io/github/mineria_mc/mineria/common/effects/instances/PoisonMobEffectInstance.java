@@ -1,5 +1,6 @@
 package io.github.mineria_mc.mineria.common.effects.instances;
 
+import com.google.common.collect.ImmutableList;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
 import io.github.mineria_mc.mineria.common.effects.PoisonEffect;
 import io.github.mineria_mc.mineria.common.effects.util.EffectUpdater;
@@ -132,8 +133,9 @@ public class PoisonMobEffectInstance extends ModdedMobEffectInstance {
         return this.poisonSource.getColor();
     }
 
-    public void onPotionCured(LivingEntity living) {
-        ((PoisonEffect) this.potion).removeMovementSpeedModifier(living);
+    @Override
+    public void onEffectRemoved(LivingEntity living) {
+        this.potion.removeMovementSpeedModifier(living);
         living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> cap.removePoison(this.poisonSource));
     }
 
@@ -143,33 +145,20 @@ public class PoisonMobEffectInstance extends ModdedMobEffectInstance {
     }
 
     public static void applyPoisonEffect(LivingEntity living, int potionClass, int duration, int amplifier, PoisonSource source) {
-        getEffects(potionClass, duration, amplifier, source).forEach(living::addEffect);
+        for (MobEffectInstance effect : getPoisonEffects(potionClass, duration, amplifier, source)) {
+            living.addEffect(effect);
+        }
     }
 
-    public static Set<MobEffectInstance> getEffects(int potionClass, int duration, int amplifier, PoisonSource source) {
-        Set<MobEffectInstance> result = new HashSet<>();
-        result.add(new PoisonMobEffectInstance(potionClass, duration, amplifier, source));
-        result.add(new CustomMobEffectInstance.Builder(MobEffects.CONFUSION)
-                .duration(duration)
-                .maxDuration(duration)
-                .amplifier(Math.min(potionClass, 2))
-                .hideParticles()
-                .hideIcon()
-                .noInGuiRendering()
-                .parentEffect(MobEffects.POISON)
-                .build());
-        if (potionClass > 0) {
-            result.add(new CustomMobEffectInstance.Builder(MobEffects.MOVEMENT_SLOWDOWN)
-                    .duration(duration)
-                    .maxDuration(duration)
-                    .amplifier(Math.min(potionClass - 1, 1))
-                    .hideParticles()
-                    .hideIcon()
-                    .noInGuiRendering()
-                    .parentEffect(MobEffects.POISON)
-                    .build());
+    public static MobEffectInstance[] getPoisonEffects(int potionClass, int duration, int amplifier, PoisonSource source, MobEffectInstance... additionalEffects) {
+        ImmutableList.Builder<MobEffectInstance> effects = ImmutableList.builder();
+        effects.add(new PoisonMobEffectInstance(potionClass, duration, amplifier, source));
+        effects.add(new PoisoningHiddenEffectInstance(MobEffects.CONFUSION, duration, Math.min(potionClass, 2), source).withPoison());
+        if(potionClass > 0) {
+            effects.add(new PoisoningHiddenEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, duration, Math.min(potionClass - 1, 1), source).withPoison());
         }
-        return result;
+        effects.add(additionalEffects);
+        return effects.build().toArray(MobEffectInstance[]::new);
     }
 
     public static boolean isEntityAffected(LivingEntity living) {

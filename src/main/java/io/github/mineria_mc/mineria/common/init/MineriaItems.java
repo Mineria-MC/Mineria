@@ -3,7 +3,7 @@ package io.github.mineria_mc.mineria.common.init;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.effects.instances.BowelSoundMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.ModdedMobEffectInstance;
-import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
+import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.items.*;
 import net.minecraft.tags.TagKey;
@@ -52,9 +52,9 @@ public class MineriaItems {
 
     // Fruits
     public static final RegistryObject<Item> BLACK_ELDERBERRY = registerCompostable("black_elderberry", () -> new Item(new Properties().food(new FoodProperties.Builder().nutrition(4).build())), 0.65F);
-    public static final RegistryObject<Item> ELDERBERRY = registerCompostable("elderberry", () -> new SpecialFoodItem(new Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build()), (stack, world, living) -> PoisonSource.ELDERBERRY.poison(living)), 0.65F);
+    public static final RegistryObject<Item> ELDERBERRY = registerCompostable("elderberry", () -> new CallbackFoodItem(new Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build()), (stack, world, living) -> PoisonSource.ELDERBERRY.applyPoisoning(living)), 0.65F);
     public static final RegistryObject<Item> GOJI = registerCompostable("goji", () -> new Item(new Properties().food(new FoodProperties.Builder().nutrition(2).effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 400, 0), 1).build())), 0.8F);
-    public static final RegistryObject<Item> FIVE_FLAVOR_FRUIT = registerCompostable("five_flavor_fruit", () -> new SpecialFoodItem(new Properties().food(new FoodProperties.Builder().nutrition(1).build()), (stack, world, living) -> {
+    public static final RegistryObject<Item> FIVE_FLAVOR_FRUIT = registerCompostable("five_flavor_fruit", () -> new CallbackFoodItem(new Properties().food(new FoodProperties.Builder().nutrition(1).build()), (stack, world, living) -> {
         if (living.hasEffect(MineriaEffects.BOWEL_SOUNDS.get())) {
             BowelSoundMobEffectInstance instance = ModdedMobEffectInstance.getEffectSafe(living, MineriaEffects.BOWEL_SOUNDS.get());
 
@@ -70,7 +70,7 @@ public class MineriaItems {
             living.removeEffect(MobEffects.CONFUSION);
         }
     }), 0.7F);
-    public static final RegistryObject<Item> YEW_BERRIES = registerCompostable("yew_berries", () -> new SpecialFoodItem(new Properties().food(new FoodProperties.Builder().fast().build()), (stack, world, living) -> PoisonSource.YEW.poison(living)), 0.65F);
+    public static final RegistryObject<Item> YEW_BERRIES = registerCompostable("yew_berries", () -> new CallbackFoodItem(new Properties().food(new FoodProperties.Builder().fast().build()), (stack, world, living) -> PoisonSource.YEW.applyPoisoning(living)), 0.65F);
 
     // Weapons & Tools
     public static final RegistryObject<Item> TITANE_SWORD_WITH_COPPER_HANDLE = ITEMS.register("titane_sword_with_copper_handle", () -> new CustomWeaponItem(MineriaItem.ItemTier.TITANE, 6F, -2.2F, new Properties().durability(4096)));
@@ -203,11 +203,11 @@ public class MineriaItems {
     public static final RegistryObject<Item> BLACK_ELDERBERRY_TEA = ITEMS.register("black_elderberry_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().effect(
             () -> new MobEffectInstance(MobEffects.REGENERATION, 200, 1, false, true), 1
     ).build())));
-    public static final RegistryObject<Item> ELDERBERRY_TEA = ITEMS.register("elderberry_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.ELDERBERRY.poison(living))));
-    public static final RegistryObject<Item> STRYCHNOS_TOXIFERA_TEA = ITEMS.register("strychnos_toxifera_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.STRYCHNOS_TOXIFERA.poison(living))));
-    public static final RegistryObject<Item> STRYCHNOS_NUX_VOMICA_TEA = ITEMS.register("strychnos_nux-vomica_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.STRYCHNOS_NUX_VOMICA.poison(living))));
-    public static final RegistryObject<Item> BELLADONNA_TEA = ITEMS.register("belladonna_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, livingEntity) -> PoisonSource.BELLADONNA.poison(livingEntity))));
-    public static final RegistryObject<Item> MANDRAKE_TEA = ITEMS.register("mandrake_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.MANDRAKE.poison(living))));
+    public static final RegistryObject<Item> ELDERBERRY_TEA = ITEMS.register("elderberry_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.ELDERBERRY.applyPoisoning(living))));
+    public static final RegistryObject<Item> STRYCHNOS_TOXIFERA_TEA = ITEMS.register("strychnos_toxifera_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.STRYCHNOS_TOXIFERA.applyPoisoning(living))));
+    public static final RegistryObject<Item> STRYCHNOS_NUX_VOMICA_TEA = ITEMS.register("strychnos_nux-vomica_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.STRYCHNOS_NUX_VOMICA.applyPoisoning(living))));
+    public static final RegistryObject<Item> BELLADONNA_TEA = ITEMS.register("belladonna_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, livingEntity) -> PoisonSource.BELLADONNA.applyPoisoning(livingEntity))));
+    public static final RegistryObject<Item> MANDRAKE_TEA = ITEMS.register("mandrake_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build()), new DrinkItem.Properties().onFoodEaten((stack, world, living) -> PoisonSource.MANDRAKE.applyPoisoning(living))));
     public static final RegistryObject<Item> MANDRAKE_ROOT_TEA = ITEMS.register("mandrake_root_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().build())));
     public static final RegistryObject<Item> GOJI_TEA = ITEMS.register("goji_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().effect(
             () -> new MobEffectInstance(MobEffects.REGENERATION, 400, 1, false, true), 1
@@ -235,7 +235,7 @@ public class MineriaItems {
         if (living.hasEffect(MobEffects.CONFUSION)) {
             MobEffectInstance confusionEffect = living.getEffect(MobEffects.CONFUSION);
 
-            if (confusionEffect instanceof ModdedMobEffectInstance instance && instance.getActiveParentEffect(living).filter(PoisonMobEffectInstance.class::isInstance).isPresent()) {
+            if (confusionEffect instanceof PoisoningHiddenEffectInstance instance) {
                 if (instance.getAmplifier() == 0)
                     instance.setDuration(instance.getDuration() / 4);
                 else if (instance.getAmplifier() == 1) {

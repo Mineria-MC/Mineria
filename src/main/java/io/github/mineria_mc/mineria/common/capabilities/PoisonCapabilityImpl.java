@@ -41,8 +41,9 @@ class PoisonCapabilityImpl implements IPoisonCapability {
         this.exposureMap.replaceAll((source, pair) -> Pair.of(pair.getFirst() + 1, pair.getSecond()));
         Set<PoisonSource> entriesToRemove = new HashSet<>();
         this.exposureMap.forEach((source, pair) -> {
-            if (pair.getFirst() > source.getMaxExposureTime())
+            if (pair.getFirst() >= source.getMaxExposureTime()) {
                 entriesToRemove.add(source);
+            }
         });
         entriesToRemove.forEach(this::removePoison);
     }

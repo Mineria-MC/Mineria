@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.common.entity;
 
 import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableBlockEntity;
 import io.github.mineria_mc.mineria.common.init.MineriaCriteriaTriggers;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaSounds;
@@ -173,7 +173,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
 
         if (getRitualTablePosition().isPresent()) {
             BlockEntity tile = this.level.getBlockEntity(this.getRitualTablePosition().get());
-            if (!(tile instanceof RitualTableTileEntity)) {
+            if (!(tile instanceof RitualTableBlockEntity)) {
                 setRitualTablePosition(null);
                 setRitualPosition(null);
             }

@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.util;
 
 import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableBlockEntity;
 import io.github.mineria_mc.mineria.common.capabilities.IElementCapability;
 import io.github.mineria_mc.mineria.common.capabilities.IPoisonCapability;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
@@ -215,7 +215,7 @@ public final class ForgeEventHandler {
             if (!player.getAbilities().instabuild && !event.getState().is(MineriaBlocks.Tags.ALLOWED_BLOCKS_RITUAL_TABLE)) {
                 for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-4, -3, -4), pos.offset(4, 3, 4))) {
                     BlockEntity te = world.getBlockEntity(blockPos);
-                    if (te instanceof RitualTableTileEntity && ((RitualTableTileEntity) te).isAreaProtected()) {
+                    if (te instanceof RitualTableBlockEntity && ((RitualTableBlockEntity) te).isAreaProtected()) {
                         player.displayClientMessage(Component.translatable("msg.mineria.ritual_table.protected_area"), true);
                         event.setCanceled(true);
                     }
@@ -234,7 +234,7 @@ public final class ForgeEventHandler {
         if (!player.getAbilities().instabuild && !stack.is(MineriaItems.Tags.ALLOWED_BLOCKS_RITUAL_TABLE)) {
             for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-4, -3, -4), pos.offset(4, 3, 4))) {
                 BlockEntity te = world.getBlockEntity(blockPos);
-                if (te instanceof RitualTableTileEntity && ((RitualTableTileEntity) te).isAreaProtected() && !(event.getHitVec().getBlockPos().equals(blockPos) && ((RitualTableTileEntity) te).getPlacedItem().isEmpty() || stack.isEmpty())) {
+                if (te instanceof RitualTableBlockEntity && ((RitualTableBlockEntity) te).isAreaProtected() && !(event.getHitVec().getBlockPos().equals(blockPos) && ((RitualTableBlockEntity) te).getPlacedItem().isEmpty() || stack.isEmpty())) {
                     player.displayClientMessage(Component.translatable("msg.mineria.ritual_table.protected_area"), true);
                     event.setCanceled(true);
                 }

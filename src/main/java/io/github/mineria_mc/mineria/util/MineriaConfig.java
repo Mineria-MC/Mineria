@@ -6,6 +6,8 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import io.github.mineria_mc.mineria.Mineria;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig.Type;
@@ -53,7 +55,7 @@ public class MineriaConfig {
         public final BooleanValue enableTERAnimations;
         public final BooleanValue useHallucinationsShader;
         public final BooleanValue renderFourElementsFP;
-        public final ForgeConfigSpec.ConfigValue<String> apothecariumFont;
+        public final ConfigValue<String> apothecariumFont;
 
         private Client(Builder builder) {
             builder.comment("Client side config for Mineria.")
@@ -107,13 +109,13 @@ public class MineriaConfig {
 
     private static FileConfig fileConfig;
 
-    public static <T> T getValueFromFile(Type type, ForgeConfigSpec.ConfigValue<T> value) {
+    public static <T> T getValueFromFile(Type type, ForgeConfigSpec.ConfigValue<T> value, T fallback) {
         if (fileConfig == null) {
             fileConfig = FileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(getConfig(type).getConfigFileName()), TomlFormat.instance()).onFileNotFound(FileNotFoundAction.READ_NOTHING).build();
             fileConfig.load();
         }
 
-        return fileConfig.getOrElse(value.getPath(), value.get());
+        return fileConfig.getOrElse(value.getPath(), fallback);
     }
 
     private static Map<Type, Pair<Config, ForgeConfigSpec>> generateConfigurations(ConfigFactory... factories) {

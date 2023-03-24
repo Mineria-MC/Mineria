@@ -4,9 +4,9 @@ import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBloc
 import io.github.mineria_mc.mineria.common.containers.TitaneExtractorMenu;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
-import io.github.mineria_mc.mineria.util.MineriaLockableTileEntity;
+import io.github.mineria_mc.mineria.util.MineriaLockableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,12 +20,12 @@ import net.minecraft.world.level.material.Fluids;
 
 import javax.annotation.Nonnull;
 
-public class TitaneExtractorBlockEntity extends MineriaLockableTileEntity {
+public class TitaneExtractorBlockEntity extends MineriaLockableBlockEntity {
     public int extractTime;
     public int totalExtractTime = 200;
 
     public TitaneExtractorBlockEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.TITANE_EXTRACTOR.get(), pos, state, new MineriaItemStackHandler(4));
+        super(MineriaBlockEntities.TITANE_EXTRACTOR.get(), pos, state, new MineriaItemStackHandler(4));
     }
 
     @Nonnull

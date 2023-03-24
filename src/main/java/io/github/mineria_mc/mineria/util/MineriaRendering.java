@@ -10,8 +10,8 @@ import io.github.mineria_mc.mineria.client.models.entity.WaterSpiritModel;
 import io.github.mineria_mc.mineria.client.overlay.FastFreezingOverlay;
 import io.github.mineria_mc.mineria.client.overlay.HallucinationsOverlay;
 import io.github.mineria_mc.mineria.client.overlay.PoisonOverlay;
-import io.github.mineria_mc.mineria.client.renderers.ExtractorTileEntityRenderer;
-import io.github.mineria_mc.mineria.client.renderers.RitualTableTileEntityRenderer;
+import io.github.mineria_mc.mineria.client.renderers.ExtractorBlockEntityRenderer;
+import io.github.mineria_mc.mineria.client.renderers.RitualTableBlockEntityRenderer;
 import io.github.mineria_mc.mineria.client.renderers.entity.*;
 import io.github.mineria_mc.mineria.client.screens.*;
 import io.github.mineria_mc.mineria.common.effects.potions.MineriaPotion;
@@ -67,7 +67,7 @@ public class MineriaRendering {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         registerEntityRenders(event);
-        registerTileEntityRenderers(event);
+        registerBlockEntityRenderers(event);
     }
 
     private static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
@@ -94,9 +94,9 @@ public class MineriaRendering {
         event.registerEntityRenderer(MineriaEntities.TEMPORARY_ITEM_FRAME.get(), ItemFrameRenderer::new);
     }
 
-    private static void registerTileEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(MineriaTileEntities.EXTRACTOR.get(), ExtractorTileEntityRenderer::new);
-        event.registerBlockEntityRenderer(MineriaTileEntities.RITUAL_TABLE.get(), RitualTableTileEntityRenderer::new);
+    private static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(MineriaBlockEntities.EXTRACTOR.get(), ExtractorBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(MineriaBlockEntities.RITUAL_TABLE.get(), RitualTableBlockEntityRenderer::new);
     }
 
     @SubscribeEvent
@@ -113,7 +113,7 @@ public class MineriaRendering {
         event.registerLayerDefinition(GreatDruidOfGaulsRenderer.LAYER, IllagerModel::createBodyLayer);
         event.registerLayerDefinition(BuddhistRenderer.LAYER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
 
-        event.registerLayerDefinition(ExtractorTileEntityRenderer.LAYER, ExtractorGearModel::createLayerDefinition);
+        event.registerLayerDefinition(ExtractorBlockEntityRenderer.LAYER, ExtractorGearModel::createLayerDefinition);
         event.registerLayerDefinition(BlowgunModel.LAYER, BlowgunModel::createLayerDefinition);
     }
 
@@ -195,5 +195,6 @@ public class MineriaRendering {
     public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
         event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : MineriaPotion.getColor(stack), MineriaItems.MINERIA_POTION.get(), MineriaItems.MINERIA_SPLASH_POTION.get(), MineriaItems.MINERIA_LINGERING_POTION.get());
         event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack), MineriaItems.JAR.get());
+        event.register((stack, tintIndex) -> tintIndex > 0 || !JarItem.containsPoisonSource(stack) ? -1 : JarItem.getPoisonSourceFromStack(stack).getColor(), MineriaItems.BLOWGUN_REFILL.get());
     }
 }

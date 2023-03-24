@@ -2,7 +2,7 @@ package io.github.mineria_mc.mineria.common.blocks.barrel.diamond;
 
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlock;
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.common.items.IMineriaItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -88,7 +88,7 @@ public class DiamondFluidBarrelBlock extends AbstractWaterBarrelBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.DIAMOND_FLUID_BARREL.get() ? null : (level1, pos, state1, blockEntity) -> ((DiamondFluidBarrelBlockEntity) blockEntity).serverTick(level1, pos, state1);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.DIAMOND_FLUID_BARREL.get() ? null : (level1, pos, state1, blockEntity) -> ((DiamondFluidBarrelBlockEntity) blockEntity).serverTick(level1, pos, state1);
     }
 
     public static class BarrelBlockItem extends AbstractWaterBarrelBlock.WaterBarrelBlockItem<DiamondFluidBarrelBlock> implements IMineriaItem {

@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.blocks.apothecary_table;
 
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
@@ -31,21 +31,21 @@ public class ApothecaryTableBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ApothecaryTableTileEntity(pos, state);
+        return new ApothecaryTableBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.APOTHECARY_TABLE.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ((ApothecaryTableTileEntity) pBlockEntity).serverTick(level);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.APOTHECARY_TABLE.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> ((ApothecaryTableBlockEntity) pBlockEntity).serverTick(level);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
         if (!world.isClientSide) {
             BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof ApothecaryTableTileEntity)
-                NetworkHooks.openScreen((ServerPlayer) player, (ApothecaryTableTileEntity) tile, pos);
+            if (tile instanceof ApothecaryTableBlockEntity)
+                NetworkHooks.openScreen((ServerPlayer) player, (ApothecaryTableBlockEntity) tile, pos);
         }
 
         return InteractionResult.SUCCESS;
@@ -54,8 +54,8 @@ public class ApothecaryTableBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean hasFlags) {
         BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof ApothecaryTableTileEntity)
-            Containers.dropContents(world, pos, ((ApothecaryTableTileEntity) tile).getInventory().toNonNullList());
+        if (tile instanceof ApothecaryTableBlockEntity)
+            Containers.dropContents(world, pos, ((ApothecaryTableBlockEntity) tile).getInventory().toNonNullList());
 
         super.onRemove(state, world, pos, newState, hasFlags);
     }

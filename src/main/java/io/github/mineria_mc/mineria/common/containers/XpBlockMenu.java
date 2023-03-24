@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.common.containers;
 
 import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.blocks.xp_block.XpBlockTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.xp_block.XpBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.slots.XpBlockSlot;
 import io.github.mineria_mc.mineria.common.init.MineriaMenuTypes;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +17,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class XpBlockMenu extends MineriaMenu<XpBlockTileEntity> {
+public class XpBlockMenu extends MineriaMenu<XpBlockEntity> {
     private final ContainerData data;
 
-    public XpBlockMenu(int id, Inventory playerInv, XpBlockTileEntity tileEntity, ContainerData dataSlots) {
+    public XpBlockMenu(int id, Inventory playerInv, XpBlockEntity tileEntity, ContainerData dataSlots) {
         super(MineriaMenuTypes.XP_BLOCK.get(), id, tileEntity);
         this.data = dataSlots;
         Mineria.getProxy().onXpBlockContainerOpen(playerInv.player, tileEntity);
@@ -34,12 +34,12 @@ public class XpBlockMenu extends MineriaMenu<XpBlockTileEntity> {
     }
 
     public static XpBlockMenu create(int id, Inventory playerInv, FriendlyByteBuf buffer) {
-        XpBlockTileEntity tile = getTileEntity(XpBlockTileEntity.class, playerInv, buffer);
+        XpBlockEntity tile = getTileEntity(XpBlockEntity.class, playerInv, buffer);
         return new XpBlockMenu(id, playerInv, tile, tile.dataSlots);
     }
 
     @Override
-    protected void createInventorySlots(XpBlockTileEntity tile) {
+    protected void createInventorySlots(XpBlockEntity tile) {
 //        this.addSlot(new XpBlockSlot(tile.getInventory(), 0, 113, 21));
         for (int row = 0; row < 2; row++) {
             for (int column = 0; column < 9; column++) {

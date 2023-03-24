@@ -4,7 +4,7 @@ import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.DiamondFluidBarrelMenu;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -70,7 +70,7 @@ public class DiamondFluidBarrelBlockEntity extends AbstractWaterBarrelBlockEntit
     };
 
     public DiamondFluidBarrelBlockEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.DIAMOND_FLUID_BARREL.get(), pos, state, 64);
+        super(MineriaBlockEntities.DIAMOND_FLUID_BARREL.get(), pos, state, 64);
         this.upgrades = new UpgradeInventory(3);
         this.topInv = new OptionalInventory(0);
         this.middleInv = new OptionalInventory(0);

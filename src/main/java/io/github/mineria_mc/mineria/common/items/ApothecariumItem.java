@@ -1,6 +1,8 @@
 package io.github.mineria_mc.mineria.common.items;
 
+import com.mojang.datafixers.util.Pair;
 import io.github.mineria_mc.mineria.Mineria;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.stats.Stats;
@@ -30,8 +32,23 @@ public class ApothecariumItem extends Item {
     @Nonnull
     @Override
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
-        Mineria.getProxy().openApothecariumScreen(player);
+        Pair<Integer, Integer> playerBookmarkData = readPlayerBookmarkData(player.getItemInHand(hand));
+        Mineria.getProxy().openApothecariumScreen(player, playerBookmarkData.getFirst(), playerBookmarkData.getSecond());
         player.awardStat(Stats.ITEM_USED.get(this));
         return super.use(world, player, hand);
+    }
+
+    protected Pair<Integer, Integer> readPlayerBookmarkData(ItemStack stack) {
+        CompoundTag nbt = stack.getTag();
+        if(nbt == null || !nbt.contains("BookmarkedPage") || !nbt.contains("PagesAmount")) {
+            return Pair.of(-1, -1);
+        }
+        return Pair.of(nbt.getInt("BookmarkedPage"), nbt.getInt("PagesAmount"));
+    }
+
+    public static void savePlayerBookmarkData(ItemStack stack, int bookmarkedPage, int pagesAmount) {
+        CompoundTag nbt = stack.getOrCreateTag();
+        nbt.putInt("BookmarkedPage", bookmarkedPage);
+        nbt.putInt("PagesAmount", pagesAmount);
     }
 }

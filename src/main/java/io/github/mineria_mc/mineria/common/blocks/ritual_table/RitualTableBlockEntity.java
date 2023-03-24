@@ -6,7 +6,7 @@ import io.github.mineria_mc.mineria.common.entity.MineriaLightningBoltEntity;
 import io.github.mineria_mc.mineria.common.init.MineriaEntities;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaPotions;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -53,19 +53,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class RitualTableTileEntity extends BlockEntity {
+public class RitualTableBlockEntity extends BlockEntity {
     private final List<UUID> druidUUIDs = new ArrayList<>();
     private final List<AbstractDruidEntity> druids = new ArrayList<>();
 
-    private RitualStage currentStage = RitualStage.NOT_STARTED;
+    private RitualStage currentStage = RitualStage.IDLE;
     private ItemStack placedItem = ItemStack.EMPTY;
     private boolean areaProtection;
     private boolean requiresCleaningArea;
 
     private int nextStageDelay;
 
-    public RitualTableTileEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.RITUAL_TABLE.get(), pos, state);
+    public RitualTableBlockEntity(BlockPos pos, BlockState state) {
+        super(MineriaBlockEntities.RITUAL_TABLE.get(), pos, state);
     }
 
     // TODO: fix druids not positioned correctly
@@ -119,7 +119,7 @@ public class RitualTableTileEntity extends BlockEntity {
         boolean bossSummoning = canPerformBossSummoning(level, pos);
         boolean druidSummoning = canPerformDruidSummoning();
 
-        if(currentStage == RitualStage.NOT_STARTED) {
+        if(currentStage == RitualStage.IDLE) {
             // Ritual Initiation
             if(bossSummoning) {
                 eventHandler.setStage(RitualStage.STARTED);
@@ -130,7 +130,7 @@ public class RitualTableTileEntity extends BlockEntity {
             }
         } else if(!druidSummoning && !bossSummoning) {
             // Ritual interruption
-            eventHandler.setStage(RitualStage.NOT_STARTED);
+            eventHandler.setStage(RitualStage.IDLE);
             if (areDruidsPositioned() || druids.size() != 5) {
                 druids.forEach(druid -> {
                     druid.setRitualTablePosition(null);
@@ -191,7 +191,7 @@ public class RitualTableTileEntity extends BlockEntity {
                         .map(tags -> tags.getTag(MineriaEntities.Tags.DRUIDS))
                         .flatMap(tag -> tag.getRandomElement(level.random))
                         .ifPresent(type -> type.spawn((ServerLevel) level, pos.above(2), MobSpawnType.EVENT));
-                eventHandler.setStage(RitualStage.NOT_STARTED);
+                eventHandler.setStage(RitualStage.IDLE);
             }
         }
     }
@@ -328,6 +328,10 @@ public class RitualTableTileEntity extends BlockEntity {
      * @param player The player using the ritual table.
      */
     public void tryStartBossRitual(Level level, BlockPos pos, Player player) {
+        if(currentStage != RitualStage.IDLE) {
+            return;
+        }
+
         BlockPattern.BlockPatternMatch patternMatch = RitualTableBlock.getOrCreateShape().find(level, this.getBlockPos().offset(-3, 0, -3));
         if(patternMatch == null) {
             if(level.isClientSide) {
@@ -464,7 +468,7 @@ public class RitualTableTileEntity extends BlockEntity {
     }
 
     private enum RitualStage {
-        NOT_STARTED,
+        IDLE,
         SPAWN_DRUID,
         STARTED(30),
         MISTLETOE_CONSUMED(30),
@@ -493,7 +497,7 @@ public class RitualTableTileEntity extends BlockEntity {
 
         public static RitualStage byOrdinal(int index) {
             if(index < 0 || index >= RitualStage.values().length) {
-                return NOT_STARTED;
+                return IDLE;
             }
             return RitualStage.values()[index];
         }

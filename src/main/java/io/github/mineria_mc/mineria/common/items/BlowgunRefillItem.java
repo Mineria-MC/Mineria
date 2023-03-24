@@ -23,6 +23,6 @@ public class BlowgunRefillItem extends Item {
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, List<Component> tooltip, @Nonnull TooltipFlag flag) {
         boolean hasPoison = JarItem.containsPoisonSource(stack);
         PoisonSource source = JarItem.getPoisonSourceFromStack(stack);
-        tooltip.add(Component.translatable("item.mineria.blowgun_refill.poison_source", hasPoison ? I18n.get(source.getTranslationKey()) : "no").withStyle(style -> hasPoison ? style.withColor(TextColor.fromRgb(source.getColor())) : style.withColor(ChatFormatting.GRAY)));
+        tooltip.add(Component.translatable("item.mineria.blowgun_refill.poison_source", hasPoison ? Component.translatable(source.getTranslationKey()) : "no").withStyle(style -> hasPoison ? style.withColor(TextColor.fromRgb(source.getColor())) : style.withColor(ChatFormatting.GRAY)));
     }
 }

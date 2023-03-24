@@ -1,0 +1,12 @@
+{
+  "minecraft:block": {
+    "mineria:copper_ore": "minecraft:copper_ore",
+    "mineria:copper_block": "minecraft:copper_block"
+  },
+  "minecraft:item": {
+    "mineria:mineria_xp_orb": "mineria:xp_orb",
+    "mineria:copper_ingot": "minecraft:copper_ingot",
+    "mineria:copper_ore": "minecraft:copper_ore",
+    "mineria:copper_block": "minecraft:copper_block"
+  }
+}

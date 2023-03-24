@@ -1,6 +1,8 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.AntiPoisonDescriptionPageSet;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.BossSummoningRitualPages;
@@ -11,10 +13,11 @@ import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaEntities;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaSounds;
+import io.github.mineria_mc.mineria.common.items.ApothecariumItem;
+import io.github.mineria_mc.mineria.network.MineriaPacketHandler;
+import io.github.mineria_mc.mineria.network.SavePlayerBookmarkMessageHandler;
 import io.github.mineria_mc.mineria.util.MineriaConfig;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.GameNarrator;
@@ -28,14 +31,18 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +63,7 @@ public class ApothecariumScreen extends Screen {
 //            FontTestingPage.create(new ResourceLocation(Mineria.MODID, "pristina")),
 //            FontTestingPage.create(new ResourceLocation(Mineria.MODID, "segoesc")),
 //            FontTestingPage.create(new ResourceLocation(Mineria.MODID, "tempsitc")),
+            PageSet.singleton(SummaryPage::new, PageSet.PageStart.ODD),
             PartTitlePage.create(Component.translatable("mineria.apothecarium.plants.part_name"), () -> new ItemStack(MineriaBlocks.PLANTAIN.get())),
             new PlantDescriptionPageSet(MineriaBlocks.PLANTAIN),
             new PlantDescriptionPageSet(MineriaBlocks.MINT),
@@ -88,6 +96,7 @@ public class ApothecariumScreen extends Screen {
             new AntiPoisonDescriptionPageSet(MineriaItems.MANDRAKE_ROOT_TEA),
             new AntiPoisonDescriptionPageSet(MineriaItems.SAUSSUREA_COSTUS_ROOT_TEA),
             new AntiPoisonDescriptionPageSet(MineriaItems.PULSATILLA_CHINENSIS_ROOT_TEA),
+            new AntiPoisonDescriptionPageSet(MineriaItems.SCALPEL),
             PartTitlePage.create(Component.translatable("mineria.apothecarium.druid_rites.part_name"), () -> new ItemStack(MineriaBlocks.RITUAL_TABLE.get())),
             new BossSummoningRitualPages(),
             PageSet.singleton(DruidSummoningRitualPage::new),
@@ -107,12 +116,26 @@ public class ApothecariumScreen extends Screen {
     private int bookWidth;
     private int bookHeight;
     private int currentPage;
+    @Nullable
+    private Integer playerBookmark;
     private TurnPageButton forwardButton;
     private TurnPageButton backButton;
+    private PlayerBookmarkButton playerBookmarkButton;
+
+    public ApothecariumScreen(int startPage, int pagesAmount) {
+        super(GameNarrator.NO_TITLE);
+        if(pagesAmount != PAGES.size()) {
+            this.currentPage = -1;
+        } else {
+            this.currentPage = startPage;
+            if(startPage > -1) {
+                this.playerBookmark = startPage;
+            }
+        }
+    }
 
     public ApothecariumScreen() {
-        super(GameNarrator.NO_TITLE);
-        this.currentPage = -1;
+        this(-1, -1);
     }
 
     private static final float WIDTH_RATIO = 854 / 2f;
@@ -192,8 +215,23 @@ public class ApothecariumScreen extends Screen {
     }
 
     protected void createPageControlButtons() {
-        this.forwardButton = this.addRenderableWidget(new TurnPageButton(this.leftPos + this.bookWidth, this.topPos + scaledHeight(172), true, (btn) -> this.pageForward()));
-        this.backButton = this.addRenderableWidget(new TurnPageButton(this.leftPos - scaledWidth(24), this.topPos + scaledHeight(172), false, (btn) -> this.pageBack()));
+        this.forwardButton = this.addRenderableWidget(new TurnPageButton(this.leftPos + this.bookWidth, this.topPos + scaledHeight(172), true, btn -> this.pageForward()));
+        this.backButton = this.addRenderableWidget(new TurnPageButton(this.leftPos - scaledWidth(24), this.topPos + scaledHeight(172), false, btn -> this.pageBack()));
+        this.playerBookmarkButton = this.addRenderableWidget(new PlayerBookmarkButton(this.leftPos + scaledWidth(136), this.topPos + scaledHeight(170), btn -> {
+            if(playerBookmark == null) {
+                playerBookmark = currentPage;
+                return;
+            }
+            if(currentPage == playerBookmark) {
+                playerBookmark = null;
+                return;
+            }
+            if(Screen.hasShiftDown()) {
+                playerBookmark = currentPage;
+                return;
+            }
+            setPage(playerBookmark);
+        }));
         this.updateButtonVisibility();
     }
 
@@ -245,11 +283,16 @@ public class ApothecariumScreen extends Screen {
     private void updateButtonVisibility() {
         this.forwardButton.visible = this.currentPage < getPagesCount();
         this.backButton.visible = this.currentPage > -1;
+        this.playerBookmarkButton.visible = this.currentPage > -1 && this.currentPage < getPagesCount();
         createBookmarks();
     }
 
     protected int getPagesCount() {
         return Math.round(this.pages.size() / 2.0F);
+    }
+
+    public Int2ObjectMap<ApothecariumBookmarkInfo> getBookmarks() {
+        return bookmarks;
     }
 
     @Override
@@ -298,7 +341,10 @@ public class ApothecariumScreen extends Screen {
         } else if(currentPage >= getPagesCount()) {
             blit(stack, leftPos, topPos, 147, 0, 146, 180);
         } else {
-            blit(stack, leftPos, topPos, 0, 181, bookWidth, bookHeight);
+            blit(stack, leftPos, topPos, 0, 181, 279, 180);
+            if(Integer.valueOf(currentPage).equals(playerBookmark)) {
+                blit(stack, leftPos + scaledWidth(136), topPos + scaledHeight(8), 280, 181, 7, 162);
+            }
             pages.get(this.currentPage * 2).render(stack, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(14));
             pages.get(this.currentPage * 2 + 1).render(stack, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(143));
         }
@@ -313,6 +359,27 @@ public class ApothecariumScreen extends Screen {
 
     public static void fillGradient(@Nonnull PoseStack stack, int x1, int y1, int x2, int y2, int colorFrom, int colorTo, int blitOffset) {
         GuiComponent.fillGradient(stack, x1, y1, x2, y2, colorFrom, colorTo, blitOffset);
+    }
+
+    @Override
+    public void removed() {
+        super.removed();
+
+        int bookmarkedPage = playerBookmark == null ? -1 : playerBookmark;
+        int pagesAmount = PAGES.size();
+
+        if(minecraft != null && minecraft.player != null) {
+            Player player = minecraft.player;
+            for (InteractionHand hand : InteractionHand.values()) {
+                ItemStack heldItem = player.getItemInHand(hand);
+                if(!heldItem.is(MineriaItems.APOTHECARIUM.get())) {
+                    continue;
+                }
+                ApothecariumItem.savePlayerBookmarkData(heldItem, bookmarkedPage, pagesAmount);
+                break;
+            }
+        }
+        MineriaPacketHandler.PACKET_HANDLER.sendToServer(new SavePlayerBookmarkMessageHandler.SavePlayerBookmarkMessage(bookmarkedPage, pagesAmount));
     }
 
     private static final ResourceLocation COMIC_SANS_MS = new ResourceLocation(Mineria.MODID, "comic");
@@ -361,7 +428,7 @@ public class ApothecariumScreen extends Screen {
         }
     }
 
-    private class BookmarkButton extends Button {
+    public class BookmarkButton extends Button {
         private final boolean reversed;
         private final ApothecariumBookmarkInfo bookmarkInfo;
 
@@ -403,7 +470,45 @@ public class ApothecariumScreen extends Screen {
             }
 
             if(isHovered) {
-                renderTooltip(stack, bookmarkInfo.displayName(), mouseX, mouseY);
+                renderTooltip(stack, bookmarkInfo.displayName().copy().withStyle(style -> style.withFont(Style.DEFAULT_FONT)), mouseX, mouseY);
+            }
+        }
+    }
+
+    public class PlayerBookmarkButton extends Button {
+        public PlayerBookmarkButton(int x, int y, OnPress onPressed) {
+            super(Button.builder(Component.empty(), onPressed).bounds(x, y, scaledWidth(7), scaledHeight(16)));
+        }
+
+        @Override
+        public void renderButton(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTick) {
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.enableDepthTest();
+            int textureY = 344;
+            int height = 16;
+            if(isHovered) {
+                textureY = 342;
+                height = 18;
+            }
+
+            ApothecariumScreen.this.blit(stack, getX(), getY(), 280, textureY, 7, height);
+
+            if(isHovered) {
+                Component tooltip;
+                if(ApothecariumScreen.this.playerBookmark == null) {
+                    tooltip = Component.translatable("mineria.apothecarium.player_bookmark.mark");
+                } else if(ApothecariumScreen.this.playerBookmark == ApothecariumScreen.this.currentPage) {
+                    tooltip = Component.translatable("mineria.apothecarium.player_bookmark.unmark");
+                } else if(Screen.hasShiftDown()) {
+                    tooltip = Component.translatable("mineria.apothecarium.player_bookmark.mark");
+                } else {
+                    tooltip = Component.translatable("mineria.apothecarium.player_bookmark.go_to_page");
+                }
+                renderTooltip(stack, tooltip, mouseX, mouseY);
             }
         }
     }

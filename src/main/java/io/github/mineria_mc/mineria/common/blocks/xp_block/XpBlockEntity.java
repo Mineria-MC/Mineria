@@ -2,9 +2,9 @@ package io.github.mineria_mc.mineria.common.blocks.xp_block;
 
 import io.github.mineria_mc.mineria.common.containers.XpBlockMenu;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
-import io.github.mineria_mc.mineria.util.MineriaLockableTileEntity;
+import io.github.mineria_mc.mineria.util.MineriaLockableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
-public class XpBlockTileEntity extends MineriaLockableTileEntity {
+public class XpBlockEntity extends MineriaLockableBlockEntity {
     private Player player;
     private boolean active;
     private int orbItemDelay = 20;
@@ -47,8 +47,8 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity {
         }
     };
 
-    public XpBlockTileEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.XP_BLOCK.get(), pos, state, new MineriaItemStackHandler(18));
+    public XpBlockEntity(BlockPos pos, BlockState state) {
+        super(MineriaBlockEntities.XP_BLOCK.get(), pos, state, new MineriaItemStackHandler(18));
     }
 
     @Nonnull
@@ -63,7 +63,7 @@ public class XpBlockTileEntity extends MineriaLockableTileEntity {
         return new XpBlockMenu(windowId, playerInv, this, dataSlots);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, XpBlockTileEntity tile) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, XpBlockEntity tile) {
         if (level != null && !level.isClientSide) {
             if (tile.player == null)
                 return;

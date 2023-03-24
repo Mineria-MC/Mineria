@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.network;
 
-import io.github.mineria_mc.mineria.common.blocks.xp_block.XpBlockTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.xp_block.XpBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +26,7 @@ public class XpBlockMessageHandler implements MessageHandler<XpBlockMessageHandl
                 }
 
                 BlockEntity tile = world.getBlockEntity(tilePos);
-                if (tile instanceof XpBlockTileEntity xpBlock) {
+                if (tile instanceof XpBlockEntity xpBlock) {
                     int activeState = msg.activeState;
                     int delay = msg.delay;
 
@@ -70,21 +70,21 @@ public class XpBlockMessageHandler implements MessageHandler<XpBlockMessageHandl
         }
 
         /**
-         * The basic message, used to set the player in {@link XpBlockTileEntity#setPlayer(Player)}
+         * The basic message, used to set the player in {@link XpBlockEntity#setPlayer(Player)}
          */
         public XpBlockMessage(BlockPos pos) {
             this(pos, -1, -1);
         }
 
         /**
-         * Used to set the state of the xp block in {@link XpBlockTileEntity#setActive(boolean)}
+         * Used to set the state of the xp block in {@link XpBlockEntity#setActive(boolean)}
          */
         public static XpBlockMessage state(BlockPos pos, boolean active) {
             return new XpBlockMessage(pos, active ? 1 : 0, -1);
         }
 
         /**
-         * Used to set the delay of the xp block in {@link XpBlockTileEntity#setOrbItemDelay(int)}
+         * Used to set the delay of the xp block in {@link XpBlockEntity#setOrbItemDelay(int)}
          */
         public static XpBlockMessage delay(BlockPos pos, int delay) {
             return new XpBlockMessage(pos, -1, delay);

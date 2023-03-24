@@ -1,6 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mineria:item/poisonous_blowgun_refill"
+    "layer0": "mineria:item/blowgun_refill_poison_mark",
+    "layer1": "mineria:item/blowgun_refill"
   }
 }

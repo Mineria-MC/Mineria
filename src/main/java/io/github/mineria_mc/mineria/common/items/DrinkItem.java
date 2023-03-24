@@ -19,7 +19,6 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.tags.ITagManager;
-import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -57,7 +56,7 @@ public class DrinkItem extends Item {
             entityLiving.curePotionEffects(stack);
         }
         if (!worldIn.isClientSide) {
-            this.drinkProperties.onFoodEaten.accept(stack, worldIn, entityLiving);
+            this.drinkProperties.foodEatenCallback.onFoodEaten(stack, worldIn, entityLiving);
         }
 
         try {
@@ -122,8 +121,7 @@ public class DrinkItem extends Item {
 
     public static class Properties {
         private Either<RegistryObject<Item>, Item> container = Either.left(MineriaItems.CUP);
-        private TriConsumer<ItemStack, Level, LivingEntity> onFoodEaten = (stack, world, living) -> {
-        };
+        private CallbackFoodItem.FoodEatenCallback foodEatenCallback = (stack, world, living) -> {};
         private boolean immediateCureEffects = true;
 
         public Properties container(RegistryObject<Item> item) {
@@ -136,8 +134,8 @@ public class DrinkItem extends Item {
             return this;
         }
 
-        public Properties onFoodEaten(TriConsumer<ItemStack, Level, LivingEntity> onFoodEaten) {
-            this.onFoodEaten = onFoodEaten;
+        public Properties onFoodEaten(CallbackFoodItem.FoodEatenCallback onFoodEaten) {
+            this.foodEatenCallback = onFoodEaten;
             return this;
         }
 

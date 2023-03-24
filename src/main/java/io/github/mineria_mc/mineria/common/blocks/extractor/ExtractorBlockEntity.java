@@ -2,10 +2,10 @@ package io.github.mineria_mc.mineria.common.blocks.extractor;
 
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.ExtractorMenu;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.common.recipe.ExtractorRecipe;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
-import io.github.mineria_mc.mineria.util.MineriaLockableTileEntity;
+import io.github.mineria_mc.mineria.util.MineriaLockableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,12 +20,12 @@ import net.minecraft.world.level.material.Fluids;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class ExtractorTileEntity extends MineriaLockableTileEntity {
+public class ExtractorBlockEntity extends MineriaLockableBlockEntity {
     public int extractTime;
     public int totalExtractTime = 400;
 
-    public ExtractorTileEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.EXTRACTOR.get(), pos, state, new MineriaItemStackHandler(10));
+    public ExtractorBlockEntity(BlockPos pos, BlockState state) {
+        super(MineriaBlockEntities.EXTRACTOR.get(), pos, state, new MineriaItemStackHandler(10));
     }
 
     @Nonnull
@@ -44,7 +44,7 @@ public class ExtractorTileEntity extends MineriaLockableTileEntity {
         return this.extractTime > 0;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, ExtractorTileEntity tile) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, ExtractorBlockEntity tile) {
         boolean alreadyExtracting = tile.isExtracting();
         boolean dirty = false;
 

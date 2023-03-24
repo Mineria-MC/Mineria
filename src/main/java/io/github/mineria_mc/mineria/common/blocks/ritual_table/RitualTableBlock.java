@@ -2,7 +2,7 @@ package io.github.mineria_mc.mineria.common.blocks.ritual_table;
 
 import io.github.mineria_mc.mineria.common.blocks.ElementaryStoneBlock;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -41,17 +41,17 @@ public class RitualTableBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new RitualTableTileEntity(pPos, pState);
+        return new RitualTableBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return blockEntityType != MineriaTileEntities.RITUAL_TABLE.get() ? null : (level1, pos, state1, blockEntity) -> {
+        return blockEntityType != MineriaBlockEntities.RITUAL_TABLE.get() ? null : (level1, pos, state1, blockEntity) -> {
             if(level1.isClientSide()) {
-                ((RitualTableTileEntity) blockEntity).clientTick(level1, pos);
+                ((RitualTableBlockEntity) blockEntity).clientTick(level1, pos);
             } else {
-                ((RitualTableTileEntity) blockEntity).serverTick(level1, pos);
+                ((RitualTableBlockEntity) blockEntity).serverTick(level1, pos);
             }
         };
     }
@@ -71,7 +71,7 @@ public class RitualTableBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof RitualTableTileEntity ritualTable) {
+        if (tile instanceof RitualTableBlockEntity ritualTable) {
             boolean emptyPlacedItem = ritualTable.getPlacedItem().isEmpty();
             boolean emptyHeldItem = player.getItemInHand(hand).isEmpty();
 

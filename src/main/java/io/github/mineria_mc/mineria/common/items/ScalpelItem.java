@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.common.items;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaCriteriaTriggers;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,16 +21,37 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ScalpelItem extends Item {
+    private final List<MobEffect> class1Effects = Arrays.stream(PoisonMobEffectInstance.getPoisonEffects(1, 0, 0, PoisonSource.UNKNOWN)).map(MobEffectInstance::getEffect).toList();
+    private final List<MobEffect> class2Effects = Arrays.stream(PoisonMobEffectInstance.getPoisonEffects(2, 0, 0, PoisonSource.UNKNOWN)).map(MobEffectInstance::getEffect).toList();
+    private final List<MobEffect> class3Effects = Arrays.stream(PoisonMobEffectInstance.getPoisonEffects(3, 0, 0, PoisonSource.UNKNOWN)).map(MobEffectInstance::getEffect).toList();
+
     public ScalpelItem() {
         super(new Properties().stacksTo(1).durability(26));
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        ItemStack scalpel = player.getItemInHand(hand);
-        player.startUsingItem(hand);
-        return InteractionResultHolder.consume(scalpel);
+        if(player.isCrouching()) {
+            ItemStack scalpel = player.getItemInHand(hand);
+            player.startUsingItem(hand);
+            return InteractionResultHolder.consume(scalpel);
+        }
+        if(player.isUsingItem()) {
+            player.stopUsingItem();
+        }
+        return super.use(world, player, hand);
+    }
+
+    @Override
+    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+        super.onUsingTick(stack, player, count);
+        if(player.isUsingItem() && !player.isCrouching()) {
+            player.stopUsingItem();
+        }
     }
 
     @Override
@@ -45,18 +67,19 @@ public class ScalpelItem extends Item {
                 int chance = world.getRandom().nextInt(1000);
 
                 if (chance < 75) {
-                    PoisonMobEffectInstance.getEffects(3, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(player::removeEffect);
+                    class3Effects.forEach(player::removeEffect);
                 } else if (chance < 150) {
-                    PoisonMobEffectInstance.getEffects(2, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(player::removeEffect);
+                    class2Effects.forEach(player::removeEffect);
                 } else if (chance < 300) {
-                    PoisonMobEffectInstance.getEffects(1, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(player::removeEffect);
+                    class1Effects.forEach(player::removeEffect);
                 }
 
                 int chance2 = world.getRandom().nextInt(100);
 
                 if (chance2 < 20) {
                     player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 90));
-                } if (chance2 < 40) {
+                }
+                if (chance2 < 40) {
                     player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 60));
                 }
             }
@@ -81,11 +104,11 @@ public class ScalpelItem extends Item {
                 int chance = world.getRandom().nextInt(1000);
 
                 if (chance < 75)
-                    PoisonMobEffectInstance.getEffects(3, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(targetPlayer::removeEffect);
+                    class3Effects.forEach(targetPlayer::removeEffect);
                 else if (chance < 150)
-                    PoisonMobEffectInstance.getEffects(2, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(targetPlayer::removeEffect);
+                    class2Effects.forEach(targetPlayer::removeEffect);
                 else if (chance < 300)
-                    PoisonMobEffectInstance.getEffects(1, 0, 0, PoisonSource.UNKNOWN).stream().map(MobEffectInstance::getEffect).forEach(targetPlayer::removeEffect);
+                    class1Effects.forEach(targetPlayer::removeEffect);
 
                 int chance2 = world.getRandom().nextInt(100);
 

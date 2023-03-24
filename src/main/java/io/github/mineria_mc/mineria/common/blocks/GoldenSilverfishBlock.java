@@ -18,14 +18,15 @@ import net.minecraft.server.level.ServerLevel;
 
 import java.util.Map;
 
+@SuppressWarnings("deprecation")
 public class GoldenSilverfishBlock extends Block {
     private final Block mimickedBlock;
     private static final Map<Block, Block> normalToInfectedMap = Maps.newIdentityHashMap();
 
-    public GoldenSilverfishBlock(Block blockIn) {
+    public GoldenSilverfishBlock(Block block) {
         super(BlockBehaviour.Properties.of(Material.CLAY).strength(0.0F, 0.75F));
-        this.mimickedBlock = blockIn;
-        normalToInfectedMap.put(blockIn, this);
+        this.mimickedBlock = block;
+        normalToInfectedMap.put(block, this);
     }
 
     public Block getMimickedBlock() {
@@ -43,14 +44,16 @@ public class GoldenSilverfishBlock extends Block {
         goldenSilverfish.spawnAnim();
     }
 
-    public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack) {
-        super.spawnAfterBreak(state, worldIn, pos, stack, false);
+    @Override
+    public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack, boolean dropExperience) {
+        super.spawnAfterBreak(state, worldIn, pos, stack, dropExperience);
         if (worldIn.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
             this.spawnGoldenSilverfish(worldIn, pos);
         }
 
     }
 
+    @Override
     public void wasExploded(Level worldIn, BlockPos pos, Explosion explosionIn) {
         if (worldIn instanceof ServerLevel) {
             this.spawnGoldenSilverfish((ServerLevel) worldIn, pos);

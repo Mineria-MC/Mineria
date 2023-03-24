@@ -3,10 +3,13 @@ package io.github.mineria_mc.mineria.client.jei.recipe_categories;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
+import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import io.github.mineria_mc.mineria.common.recipe.AbstractApothecaryTableRecipe;
+import io.github.mineria_mc.mineria.common.recipe.ApothecaryFillingRecipe;
 import io.github.mineria_mc.mineria.common.recipe.ApothecaryTableRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.mineria_mc.mineria.util.MineriaUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -24,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.minecraft.util.FastColor.ARGB32.*;
@@ -70,7 +74,15 @@ public class ApothecaryTableRecipeCategory implements IRecipeCategory<AbstractAp
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AbstractApothecaryTableRecipe recipe, @Nonnull IFocusGroup focuses) {
+    public void setRecipe(@Nonnull IRecipeLayoutBuilder builder, @Nonnull AbstractApothecaryTableRecipe recipe, @Nonnull IFocusGroup focuses) {
+        if(recipe instanceof ApothecaryTableRecipe r) {
+            List<ItemStack> validStacks = MineriaUtils.findRecipesByType(MineriaRecipeTypes.APOTHECARY_TABLE_FILLING.get(), fillingRecipe -> fillingRecipe.getOutputPoison().equals(r.getPoisonSource()))
+                    .stream()
+                    .map(ApothecaryFillingRecipe::getInput)
+                    .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
+                    .toList();
+            builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 36, 29).addItemStacks(validStacks);
+        }
         builder.addSlot(RecipeIngredientRole.INPUT, 78, 29).addIngredients(recipe.getIngredients().get(0));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 135, 29).addItemStack(recipe.getResultItem());
     }

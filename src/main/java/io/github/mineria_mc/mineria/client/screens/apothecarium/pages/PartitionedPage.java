@@ -47,23 +47,23 @@ public abstract class PartitionedPage extends ApothecariumPage {
         this.renderParts.forEach(renderPart -> renderPart.render(stack, mouseX, mouseY, partialTicks, x));
     }
 
-    protected PartialRenderedPart scaledText(Component text, float y, float scale) {
+    protected PartialRenderPart scaledText(Component text, float y, float scale) {
         return scaledText(text.getVisualOrderText(), y, scale);
     }
 
-    protected PartialRenderedPart scaledText(FormattedCharSequence seq, float y, float scale) {
+    protected PartialRenderPart scaledText(FormattedCharSequence seq, float y, float scale) {
         return scaledText(seq, FloatUnaryOperator.identity(), y, scale, 0);
     }
 
-    protected PartialRenderedPart scaledText(FormattedCharSequence seq, FloatUnaryOperator xTransformer, float y, float scale) {
+    protected PartialRenderPart scaledText(FormattedCharSequence seq, FloatUnaryOperator xTransformer, float y, float scale) {
         return scaledText(seq, xTransformer, y, scale, 0);
     }
 
-    protected PartialRenderedPart scaledText(FormattedCharSequence seq, float y, float scale, int color) {
+    protected PartialRenderPart scaledText(FormattedCharSequence seq, float y, float scale, int color) {
         return scaledText(seq, FloatUnaryOperator.identity(), y, scale, color);
     }
 
-    protected PartialRenderedPart scaledText(FormattedCharSequence seq, FloatUnaryOperator xTransformer, float y, float scale, int color) {
+    protected PartialRenderPart scaledText(FormattedCharSequence seq, FloatUnaryOperator xTransformer, float y, float scale, int color) {
         return (stack, x) -> {
             stack.pushPose();
             stack.translate(xTransformer.apply(x), y, 0);
@@ -73,7 +73,7 @@ public abstract class PartitionedPage extends ApothecariumPage {
         };
     }
 
-    protected static RenderPart partial(PartialRenderedPart part) {
+    protected static RenderPart partial(PartialRenderPart part) {
         return part;
     }
 
@@ -172,7 +172,7 @@ public abstract class PartitionedPage extends ApothecariumPage {
     }
 
     @FunctionalInterface
-    protected interface PartialRenderedPart extends RenderPart {
+    protected interface PartialRenderPart extends RenderPart {
         void render(PoseStack stack, int x);
 
         @Override

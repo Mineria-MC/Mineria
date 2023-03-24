@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.effects.potions;
 
-import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableBlockEntity;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import com.mojang.datafixers.util.Pair;
@@ -34,10 +34,10 @@ public class YewPoisoningPotion extends MineriaPotion {
         }
     }
 
-    private static Optional<Pair<BlockPos, RitualTableTileEntity>> findRitualTable(Level world, BlockPos playerPos) {
+    private static Optional<Pair<BlockPos, RitualTableBlockEntity>> findRitualTable(Level world, BlockPos playerPos) {
         for (BlockPos pos : BlockPos.betweenClosed(playerPos.offset(-30, -10, -30), playerPos.offset(30, 10, 30))) {
             BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof RitualTableTileEntity table) {
+            if (te instanceof RitualTableBlockEntity table) {
                 return Optional.of(Pair.of(pos, table));
             }
         }

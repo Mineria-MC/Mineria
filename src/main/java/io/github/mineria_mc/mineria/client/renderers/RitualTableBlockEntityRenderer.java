@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.client.renderers;
 
-import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -11,15 +11,15 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
 
-public class RitualTableTileEntityRenderer implements BlockEntityRenderer<RitualTableTileEntity> {
+public class RitualTableBlockEntityRenderer implements BlockEntityRenderer<RitualTableBlockEntity> {
     private final ItemRenderer itemRenderer;
 
-    public RitualTableTileEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+    public RitualTableBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public void render(RitualTableTileEntity tile, float p_225616_2_, PoseStack stack, MultiBufferSource buffer, int packedLight, int overlay) {
+    public void render(RitualTableBlockEntity tile, float p_225616_2_, PoseStack stack, MultiBufferSource buffer, int packedLight, int overlay) {
         stack.pushPose();
         ItemStack placedItem = tile.getPlacedItem();
         if (!placedItem.isEmpty()) {

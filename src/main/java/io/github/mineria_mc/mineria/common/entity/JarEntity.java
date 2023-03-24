@@ -81,7 +81,7 @@ public class JarEntity extends ThrowableItemProjectile implements ItemSupplier {
                             distance = 1.0D;
                         }
 
-                        poisonSource.poison(living);
+                        poisonSource.applyPoisoning(living);
                     }
                 }
             }

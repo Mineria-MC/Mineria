@@ -4,7 +4,7 @@ import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.client.models.MineriaArmPoses;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumScreen;
 import io.github.mineria_mc.mineria.common.MineriaProxy;
-import io.github.mineria_mc.mineria.common.blocks.xp_block.XpBlockTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.xp_block.XpBlockEntity;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.network.MineriaPacketHandler;
 import io.github.mineria_mc.mineria.network.XpBlockMessageHandler;
@@ -39,15 +39,15 @@ public final class ClientProxy implements MineriaProxy {
     }
 
     @Override
-    public void openApothecariumScreen(Player player) {
+    public void openApothecariumScreen(Player player, int startPage, int pagesAmount) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen == null) {
-            mc.setScreen(new ApothecariumScreen());
+            mc.setScreen(new ApothecariumScreen(startPage, pagesAmount));
         }
     }
 
     @Override
-    public void onXpBlockContainerOpen(Player player, XpBlockTileEntity tile) {
+    public void onXpBlockContainerOpen(Player player, XpBlockEntity tile) {
         MineriaPacketHandler.PACKET_HANDLER.sendToServer(new XpBlockMessageHandler.XpBlockMessage(tile.getBlockPos()));
     }
 }

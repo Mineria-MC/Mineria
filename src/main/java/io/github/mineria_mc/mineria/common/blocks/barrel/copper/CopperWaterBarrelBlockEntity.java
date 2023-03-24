@@ -2,7 +2,7 @@ package io.github.mineria_mc.mineria.common.blocks.barrel.copper;
 
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.CopperWaterBarrelMenu;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,7 @@ public class CopperWaterBarrelBlockEntity extends AbstractWaterBarrelBlockEntity
     private LazyOptional<IItemHandler> invCap;
 
     public CopperWaterBarrelBlockEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.COPPER_WATER_BARREL.get(), pos, state, 16);
+        super(MineriaBlockEntities.COPPER_WATER_BARREL.get(), pos, state, 16);
         this.inventory = new MineriaItemStackHandler(8);
         this.invCap = LazyOptional.of(() -> inventory);
     }

@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.blocks.infuser;
 
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -45,7 +45,7 @@ public class InfuserBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.INFUSER.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> InfuserBlockEntity.serverTick(pLevel, pPos, pState, (InfuserBlockEntity) pBlockEntity);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.INFUSER.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> InfuserBlockEntity.serverTick(pLevel, pPos, pState, (InfuserBlockEntity) pBlockEntity);
     }
 
     public InfuserBlock() {

@@ -3,7 +3,7 @@ package io.github.mineria_mc.mineria.common.blocks.barrel.iron;
 import com.google.common.base.Preconditions;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +26,7 @@ public class IronFluidBarrelBlockEntity extends AbstractWaterBarrelBlockEntity {
     private Fluid storedFluid;
 
     public IronFluidBarrelBlockEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.IRON_FLUID_BARREL.get(), pos, state, 24);
+        super(MineriaBlockEntities.IRON_FLUID_BARREL.get(), pos, state, 24);
     }
 
     @Nonnull

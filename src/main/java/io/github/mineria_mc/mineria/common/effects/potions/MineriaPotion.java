@@ -71,7 +71,7 @@ public class MineriaPotion extends Potion {
                     living.addEffect(ModdedMobEffectInstance.copyEffect(effect));
                 }
             }
-        }).ifRight(poisonSource -> poisonSource.poison(living));
+        }).ifRight(poisonSource -> poisonSource.applyPoisoning(living));
     }
 
     public boolean showInItemGroup(CreativeModeTab group, Item potionItem) {

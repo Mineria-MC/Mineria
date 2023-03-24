@@ -2,10 +2,10 @@ package io.github.mineria_mc.mineria.common.blocks.distiller;
 
 import io.github.mineria_mc.mineria.common.containers.DistillerMenu;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.common.recipe.DistillerRecipe;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
-import io.github.mineria_mc.mineria.util.MineriaLockableTileEntity;
+import io.github.mineria_mc.mineria.util.MineriaLockableBlockEntity;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -26,14 +26,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class DistillerBlockEntity extends MineriaLockableTileEntity {
+public class DistillerBlockEntity extends MineriaLockableBlockEntity {
     public int burnTime;
     public int currentBurnTime;
     public int distillationTime;
     public final int totalDistillationTime = 200;
 
     public DistillerBlockEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.DISTILLER.get(), pos, state, new MineriaItemStackHandler(6));
+        super(MineriaBlockEntities.DISTILLER.get(), pos, state, new MineriaItemStackHandler(6));
     }
 
     @Nonnull

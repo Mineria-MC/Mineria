@@ -18,10 +18,10 @@ import javax.annotation.Nullable;
 /**
  * Abstract class for Mineria tile entities.
  */
-public abstract class MineriaLockableTileEntity extends BaseContainerBlockEntity implements HopperHandler {
+public abstract class MineriaLockableBlockEntity extends BaseContainerBlockEntity implements HopperHandler {
     protected final MineriaItemStackHandler inventory;
 
-    protected MineriaLockableTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state, MineriaItemStackHandler inventory) {
+    protected MineriaLockableBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state, MineriaItemStackHandler inventory) {
         super(typeIn, pos, state);
         this.inventory = inventory;
     }

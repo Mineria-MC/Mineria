@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.blocks.xp_block;
 
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
@@ -30,18 +30,18 @@ public class XpBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new XpBlockTileEntity(pPos, pState);
+        return new XpBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.XP_BLOCK.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> XpBlockTileEntity.serverTick(pLevel, pPos, pState, (XpBlockTileEntity) pBlockEntity);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.XP_BLOCK.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> XpBlockEntity.serverTick(pLevel, pPos, pState, (XpBlockEntity) pBlockEntity);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        XpBlockTileEntity xpTile = (XpBlockTileEntity) worldIn.getBlockEntity(pos);
+        XpBlockEntity xpTile = (XpBlockEntity) worldIn.getBlockEntity(pos);
         if (!worldIn.isClientSide) {
             NetworkHooks.openScreen((ServerPlayer) player, xpTile, pos);
             return InteractionResult.SUCCESS;
@@ -52,8 +52,8 @@ public class XpBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         BlockEntity tile = worldIn.getBlockEntity(pos);
-        if (tile instanceof XpBlockTileEntity && state.getBlock() != newState.getBlock())
-            Containers.dropContents(worldIn, pos, ((XpBlockTileEntity) tile).getInventory().toNonNullList());
+        if (tile instanceof XpBlockEntity && state.getBlock() != newState.getBlock())
+            Containers.dropContents(worldIn, pos, ((XpBlockEntity) tile).getInventory().toNonNullList());
 
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }

@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.blocks.titane_extractor;
 
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,7 +50,7 @@ public class TitaneExtractorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide || blockEntityType != MineriaTileEntities.TITANE_EXTRACTOR.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> TitaneExtractorBlockEntity.serverTick(pLevel, pPos, pState, (TitaneExtractorBlockEntity) pBlockEntity);
+        return level.isClientSide || blockEntityType != MineriaBlockEntities.TITANE_EXTRACTOR.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> TitaneExtractorBlockEntity.serverTick(pLevel, pPos, pState, (TitaneExtractorBlockEntity) pBlockEntity);
     }
 
     @Override

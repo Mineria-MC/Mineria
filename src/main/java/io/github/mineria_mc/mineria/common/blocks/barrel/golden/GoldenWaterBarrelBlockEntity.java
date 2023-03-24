@@ -2,7 +2,7 @@ package io.github.mineria_mc.mineria.common.blocks.barrel.golden;
 
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.GoldenWaterBarrelMenu;
-import io.github.mineria_mc.mineria.common.init.MineriaTileEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +30,7 @@ public class GoldenWaterBarrelBlockEntity extends AbstractWaterBarrelBlockEntity
     protected LazyOptional<IItemHandler> invCap;
 
     public GoldenWaterBarrelBlockEntity(BlockPos pos, BlockState state) {
-        super(MineriaTileEntities.GOLDEN_WATER_BARREL.get(), pos, state, 32);
+        super(MineriaBlockEntities.GOLDEN_WATER_BARREL.get(), pos, state, 32);
         this.inventory = new MineriaItemStackHandler(20) {
             @Override
             protected void onContentsChanged(int slot) {

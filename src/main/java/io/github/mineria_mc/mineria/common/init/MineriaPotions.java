@@ -14,8 +14,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class MineriaPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, Mineria.MODID);
 
-    public static final RegistryObject<MineriaPotion> CLASS_2_POISON = POTIONS.register("class_two_poison", () -> new MineriaPotion("class_two_poison", PoisonMobEffectInstance.getEffects(2, 60 * 20, 0, PoisonSource.UNKNOWN).toArray(new MobEffectInstance[0])));
-    public static final RegistryObject<MineriaPotion> CLASS_3_POISON = POTIONS.register("class_three_poison", () -> new MineriaPotion("class_three_poison", PoisonMobEffectInstance.getEffects(3, 25 * 20, 0, PoisonSource.UNKNOWN).toArray(new MobEffectInstance[0])));
+    public static final RegistryObject<MineriaPotion> CLASS_2_POISON = POTIONS.register("class_two_poison", () -> new MineriaPotion("class_two_poison", PoisonMobEffectInstance.getPoisonEffects(2, 60 * 20, 0, PoisonSource.UNKNOWN)));
+    public static final RegistryObject<MineriaPotion> CLASS_3_POISON = POTIONS.register("class_three_poison", () -> new MineriaPotion("class_three_poison", PoisonMobEffectInstance.getPoisonEffects(3, 25 * 20, 0, PoisonSource.UNKNOWN)));
     public static final RegistryObject<MineriaPotion> VAMPIRE = POTIONS.register("vampire", () -> new MineriaPotion("vampire", new MobEffectInstance(MineriaEffects.VAMPIRE.get(), 90 * 20, 0)));
     public static final RegistryObject<MineriaPotion> LONG_VAMPIRE = POTIONS.register("long_vampire", () -> new MineriaPotion("vampire", new MobEffectInstance(MineriaEffects.VAMPIRE.get(), 180 * 20, 0)));
     public static final RegistryObject<MineriaPotion> STRONG_VAMPIRE = POTIONS.register("strong_vampire", () -> new MineriaPotion("vampire", new MobEffectInstance(MineriaEffects.VAMPIRE.get(), 60 * 20, 1)));

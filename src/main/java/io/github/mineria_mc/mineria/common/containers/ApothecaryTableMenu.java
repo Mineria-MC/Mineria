@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.containers;
 
-import io.github.mineria_mc.mineria.common.blocks.apothecary_table.ApothecaryTableTileEntity;
+import io.github.mineria_mc.mineria.common.blocks.apothecary_table.ApothecaryTableBlockEntity;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaMenuTypes;
 import io.github.mineria_mc.mineria.common.init.MineriaCriteriaTriggers;
@@ -20,11 +20,11 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ApothecaryTableMenu extends MineriaMenu<ApothecaryTableTileEntity> {
-    private final ApothecaryTableTileEntity apothecaryTable;
+public class ApothecaryTableMenu extends MineriaMenu<ApothecaryTableBlockEntity> {
+    private final ApothecaryTableBlockEntity apothecaryTable;
     private final ContainerData data;
 
-    public ApothecaryTableMenu(int id, Inventory playerInv, ApothecaryTableTileEntity tileEntity, ContainerData dataAccess) {
+    public ApothecaryTableMenu(int id, Inventory playerInv, ApothecaryTableBlockEntity tileEntity, ContainerData dataAccess) {
         super(MineriaMenuTypes.APOTHECARY_TABLE.get(), id, tileEntity);
 
         this.apothecaryTable = tileEntity;
@@ -35,11 +35,11 @@ public class ApothecaryTableMenu extends MineriaMenu<ApothecaryTableTileEntity> 
     }
 
     public static ApothecaryTableMenu create(int id, Inventory playerInv, FriendlyByteBuf buffer) {
-        return new ApothecaryTableMenu(id, playerInv, getTileEntity(ApothecaryTableTileEntity.class, playerInv, buffer), new SimpleContainerData(3));
+        return new ApothecaryTableMenu(id, playerInv, getTileEntity(ApothecaryTableBlockEntity.class, playerInv, buffer), new SimpleContainerData(3));
     }
 
     @Override
-    protected void createInventorySlots(ApothecaryTableTileEntity tile) {
+    protected void createInventorySlots(ApothecaryTableBlockEntity tile) {
         this.addSlot(new SlotItemHandler(tile.getInventory(), 0, 42, 35));
         this.addSlot(new SlotItemHandler(tile.getInventory(), 1, 84, 35));
         this.addSlot(new SlotItemHandler(tile.getInventory(), 2, 141, 35) {
@@ -75,7 +75,7 @@ public class ApothecaryTableMenu extends MineriaMenu<ApothecaryTableTileEntity> 
         return data.get(1);
     }
 
-    public ApothecaryTableTileEntity getTileEntity() {
+    public ApothecaryTableBlockEntity getTileEntity() {
         return this.apothecaryTable;
     }
 

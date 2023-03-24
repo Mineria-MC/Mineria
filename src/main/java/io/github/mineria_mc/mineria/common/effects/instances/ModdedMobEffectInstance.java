@@ -29,7 +29,7 @@ public abstract class ModdedMobEffectInstance extends MobEffectInstance {
     protected List<ItemStack> curativeItems;
     protected boolean shouldRender;
     @Nullable
-    protected final MobEffect parentEffect;
+    protected MobEffect parentEffect;
 
     public ModdedMobEffectInstance(MobEffect potion, int duration, int maxDuration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, boolean shouldRender, @Nullable MobEffect parentEffect) {
         super(potion, duration, amplifier, ambient, showParticles, showIcon);
@@ -73,7 +73,7 @@ public abstract class ModdedMobEffectInstance extends MobEffectInstance {
 
     // Let's allow mutability to avoid creating new instances when we want to modify existing one.
     public void setDuration(int duration) {
-        this.duration = duration;
+        this.duration = Math.min(maxDuration, duration);
     }
 
     public int getMaxDuration() {
@@ -148,6 +148,9 @@ public abstract class ModdedMobEffectInstance extends MobEffectInstance {
         if (duration > 0) {
             this.potion.applyEffectTick(living, this.amplifier);
         }
+    }
+
+    public void onEffectRemoved(LivingEntity living) {
     }
 
     @Nonnull
