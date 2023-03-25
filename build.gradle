@@ -172,9 +172,10 @@ tasks.withType(JavaCompile).configureEach {
 publishing {
     publications {
         mineria(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version "${mineria_version}-mc${mc_version}"
             from components.java
-            artifactId = "mineria"
-            version = "${mineria_version}-mc${mc_version}"
         }
     }
     repositories {
