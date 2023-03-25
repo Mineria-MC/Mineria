@@ -109,9 +109,11 @@ dependencies {
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-${terrablender_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-    runtimeOnly fg.deobf("pro.mikey:advanced-xray-forge:1.19.3-2.14.0-build.9999")
-    runtimeOnly fg.deobf("curse.maven:better-advancements-272515:4364745")
+    if(!findProperty("excludeMineriaRuntimeDeps")) {
+        runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+        runtimeOnly fg.deobf("pro.mikey:advanced-xray-forge:1.19.3-2.14.0-build.9999")
+        runtimeOnly fg.deobf("curse.maven:better-advancements-272515:4364745")
+    }
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
