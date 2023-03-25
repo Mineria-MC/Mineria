@@ -129,7 +129,7 @@ processResources {
 
 java {
     libsDirName = libsDirName.concat("/${project.mc_version}")
-//    withSourcesJar()
+    withSourcesJar()
 }
 
 jar {
@@ -153,6 +153,12 @@ jar {
     }
 }
 
+sourcesJar {
+    archiveVersion.set(archiveVersion.get().concat("-mc${mc_version}"))
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+}
+
 mixin {
     add sourceSets.main, "mineria.refmap.json"
 }
@@ -161,4 +167,28 @@ jar.finalizedBy('reobfJar')
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+publishing {
+    publications {
+        mineria(MavenPublication) {
+            from components.java
+            artifactId = "mineria"
+            version = "${mineria_version}-mc${mc_version}"
+        }
+    }
+    repositories {
+        maven {
+            name = "Local"
+            url layout.buildDirectory.dir("repo")
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/mineria_mc/mineria")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
 }
