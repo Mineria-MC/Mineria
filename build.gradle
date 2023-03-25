@@ -187,7 +187,7 @@ publishing {
         }
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/mineria_mc/mineria")
+            url = uri("https://maven.pkg.github.com/Mineria-MC/Mineria")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
