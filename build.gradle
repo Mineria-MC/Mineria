@@ -1,3 +1,4 @@
+//file:noinspection GroovyAssignabilityCheck
 plugins {
     id 'eclipse'
     id 'maven-publish'
@@ -57,9 +58,6 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'terminal.ansi', 'true'
 
-//            environment 'assetIndex', '{asset_index}'
-//            environment 'assetDirectory', '{assets_root}'
-
             args '--mod', 'mineria', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
@@ -67,8 +65,6 @@ minecraft {
                     source sourceSets.main
                 }
             }
-
-
         }
     }
 }
@@ -109,6 +105,7 @@ dependencies {
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${mc_version}-${terrablender_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    // Prevents resolving those when running the gradle-publish workflow for github packages
     if(!findProperty("excludeMineriaRuntimeDeps")) {
         runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
         runtimeOnly fg.deobf("pro.mikey:advanced-xray-forge:1.19.3-2.14.0-build.9999")
@@ -178,6 +175,14 @@ publishing {
             artifactId project.archivesBaseName
             version "${mineria_version}-mc${mc_version}"
             from components.java
+
+            // As Mineria declares remapped dependencies, we need to make sure to not expose those to consumers, otherwise importing through maven will fail.
+            pom.withXml {
+                asNode(null).dependencies.dependency.each { dep ->
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
         }
     }
     repositories {
@@ -195,3 +200,6 @@ publishing {
         }
     }
 }
+
+// Again because of remapped dependencies we disable gradle metadata generation
+generateMetadataFileForMineriaPublication.enabled = false
