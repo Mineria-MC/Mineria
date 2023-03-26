@@ -32,7 +32,7 @@ repositories {
 dependencies {
     [...]
     
-    implementation 'io.github.mineria_mc:mineria:<version>-mc<mc_version>'
+    implementation fg.deobf('io.github.mineria_mc:mineria:<version>-mc<mc_version>')
 }
 ```
 
