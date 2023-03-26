@@ -178,7 +178,7 @@ publishing {
 
             // As Mineria declares remapped dependencies, we need to make sure to not expose those to consumers, otherwise importing through maven will fail.
             pom.withXml {
-                asNode(null).dependencies.dependency.each { dep ->
+                asNode().dependencies.dependency.each { dep ->
                     println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
                     assert dep.parent().remove(dep)
                 }
