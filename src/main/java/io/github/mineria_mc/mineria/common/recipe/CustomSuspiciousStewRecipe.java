@@ -1,6 +1,7 @@
 package io.github.mineria_mc.mineria.common.recipe;
 
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -53,7 +54,7 @@ public class CustomSuspiciousStewRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, @Nonnull RegistryAccess access) {
         ItemStack flower = ItemStack.EMPTY;
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {

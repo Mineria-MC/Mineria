@@ -155,7 +155,7 @@ public class GreatDruidOfGaulsEntity extends Monster {
         super.tick();
         if (isCurrentWaveOver() && getCurrentWave() >= 5) {
             this.level.getNearbyPlayers(TargetingConditions.forNonCombat(), this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
-                    .forEach(playerEntity -> playerEntity.awardKillScore(this, this.deathScore, DamageSource.MAGIC));
+                    .forEach(playerEntity -> playerEntity.awardKillScore(this, this.deathScore, damageSources().magic()));
             this.kill();
         }
         if (triggerCooldown > 0) --triggerCooldown;
@@ -163,7 +163,7 @@ public class GreatDruidOfGaulsEntity extends Monster {
             LivingEntity target = getTarget();
             if (!level.isClientSide()) {
                 ServerLevel world = (ServerLevel) level;
-                MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
+                MineriaLightningBoltEntity.create(world, BlockPos.containing(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
             }
             target.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 600));
             target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200));

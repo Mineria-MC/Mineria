@@ -1,6 +1,7 @@
 package io.github.mineria_mc.mineria.data;
 
 import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.common.init.MineriaDamageTypes;
 import io.github.mineria_mc.mineria.common.init.datagen.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -30,6 +31,7 @@ public final class MineriaDataGatherer implements Consumer<GatherDataEvent> {
         if (event.includeServer()) {
             MineriaBiomeModifications.addAll();
             RegistrySetBuilder regSetBuilder = new RegistrySetBuilder()
+                    .add(Registries.DAMAGE_TYPE, MineriaDamageTypes::bootstrap)
                     .add(Registries.CONFIGURED_FEATURE, MineriaConfiguredFeatures::bootstrap)
                     .add(Registries.PLACED_FEATURE, MineriaPlacements::bootstrap)
                     .add(Registries.TEMPLATE_POOL, MineriaStructurePools::bootstrap)
@@ -44,6 +46,7 @@ public final class MineriaDataGatherer implements Consumer<GatherDataEvent> {
             generator.addProvider(true, blockTagsProvider);
             generator.addProvider(true, new MineriaItemTagsProvider(output, provider, blockTagsProvider, helper));
             generator.addProvider(true, new MineriaEntityTypeTagsProvider(output, provider, helper));
+            generator.addProvider(true, new MineriaDamageTypeTagsProvider(output, provider, helper));
             generator.addProvider(true, new MineriaBiomeTagsProvider(output, provider, helper));
             generator.addProvider(true, new MineriaStructureTagsProvider(output, provider, helper));
             generator.addProvider(true, new MineriaPoiTypeTagsProvider(output, provider, helper));

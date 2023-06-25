@@ -138,7 +138,7 @@ public class ApothecaryTableBlockEntity extends MineriaLockableBlockEntity {
 
         if (canRemovePoison() && recipe.matches(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource), this.level)) {
             ItemStack output = this.inventory.getStackInSlot(2);
-            ItemStack result = recipe.assemble(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource));
+            ItemStack result = recipe.assemble(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource), level.registryAccess());
 
             if (result.isEmpty())
                 return false;
@@ -158,7 +158,7 @@ public class ApothecaryTableBlockEntity extends MineriaLockableBlockEntity {
         if (canApply(recipe)) {
             ItemStack input = this.inventory.getStackInSlot(1);
             ItemStack output = this.inventory.getStackInSlot(2);
-            ItemStack result = recipe.assemble(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource));
+            ItemStack result = recipe.assemble(new ApothecaryTableInventoryWrapper(this.inventory, this.poisonSource), level.registryAccess());
 
             if (output.isEmpty())
                 this.inventory.setStackInSlot(2, result);

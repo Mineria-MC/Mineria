@@ -4,6 +4,7 @@ import io.github.mineria_mc.mineria.Mineria;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +29,7 @@ public class MineriaEntityTypeTagsProvider extends EntityTypeTagsProvider {
     protected void addTags(@Nonnull HolderLookup.Provider provider) {
         bind(IMPACT_PROJECTILES, DART);
         bind(DRUIDS, DRUID, OVATE, BARD);
+        bind(EntityTypeTags.FALL_DAMAGE_IMMUNE, FIRE_GOLEM, DIRT_GOLEM, AIR_SPIRIT, WATER_SPIRIT);
     }
 
     @Nonnull

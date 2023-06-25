@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -69,7 +70,7 @@ public class DruidicWolfEntity extends PathfinderMob {
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return source == DamageSource.LIGHTNING_BOLT || super.isInvulnerableTo(source);
+        return source.is(DamageTypeTags.IS_LIGHTNING) || super.isInvulnerableTo(source);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -96,7 +97,7 @@ public class DruidicWolfEntity extends PathfinderMob {
                 LivingEntity target = DruidicWolfEntity.this.getTarget();
                 if (!level.isClientSide() && target != null) {
                     ServerLevel world = (ServerLevel) level;
-                    MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
+                    MineriaLightningBoltEntity.create(world, BlockPos.containing(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
                 }
 
                 this.nextAttackTickCount = tickCount + 150 + random.nextInt(150);

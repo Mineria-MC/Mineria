@@ -20,7 +20,7 @@ public class EasternPlainsBiomeInfo extends MineriaBiomeInfo {
     @Override
     protected Biome.BiomeBuilder create() {
         return new Biome.BiomeBuilder()
-                .precipitation(Biome.Precipitation.RAIN)
+                .hasPrecipitation(true)
                 .temperature(0.9F)
                 .downfall(0.4F);
     }

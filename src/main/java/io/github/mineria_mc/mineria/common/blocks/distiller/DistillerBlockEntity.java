@@ -113,7 +113,7 @@ public class DistillerBlockEntity extends MineriaLockableBlockEntity {
     private boolean canDistill(@Nullable DistillerRecipe recipe) {
         if (recipe != null && recipe.matches(new RecipeWrapper(this.inventory), this.level)) {
             ItemStack output = this.inventory.getStackInSlot(5);
-            ItemStack result = recipe.getResultItem();
+            ItemStack result = recipe.getResultItem(level.registryAccess());
 
             if (result.isEmpty()) {
                 return false;
@@ -132,7 +132,7 @@ public class DistillerBlockEntity extends MineriaLockableBlockEntity {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
             ItemStack input = this.inventory.getStackInSlot(0);
             ItemStack output = this.inventory.getStackInSlot(5);
-            ItemStack result = recipe.getResultItem();
+            ItemStack result = recipe.getResultItem(level.registryAccess());
 
             if (output.isEmpty()) {
                 this.inventory.setStackInSlot(5, result.copy());

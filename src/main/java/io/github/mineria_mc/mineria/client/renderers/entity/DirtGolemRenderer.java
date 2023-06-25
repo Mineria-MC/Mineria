@@ -21,8 +21,8 @@ public class DirtGolemRenderer extends MobRenderer<DirtGolemEntity, DirtGolemMod
     @Override
     protected void setupRotations(DirtGolemEntity golem, PoseStack stack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
         super.setupRotations(golem, stack, p_225621_3_, p_225621_4_, p_225621_5_);
-        if (!((double) golem.animationSpeed < 0.01D)) {
-            float f1 = golem.animationPosition - golem.animationSpeed * (1.0F - p_225621_5_) + 6.0F;
+        if (!((double) golem.walkAnimation.speed() < 0.01D)) {
+            float f1 = golem.walkAnimation.position() - golem.walkAnimation.speed() * (1.0F - p_225621_5_) + 6.0F;
             float f2 = (Math.abs(f1 % 13.0F - 6.5F) - 3.25F) / 3.25F;
             stack.mulPose(Axis.ZP.rotationDegrees(6.5F * f2));
         }

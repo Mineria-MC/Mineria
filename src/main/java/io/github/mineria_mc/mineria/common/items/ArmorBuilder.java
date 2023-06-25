@@ -1,6 +1,5 @@
 package io.github.mineria_mc.mineria.common.items;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -13,14 +12,14 @@ import javax.annotation.Nonnull;
 
 public class ArmorBuilder {
     private final ArmorMaterial material;
-    private final EquipmentSlot slot;
+    private final ArmorItem.Type type;
     private boolean hasEffect = false;
     private TriConsumer<ItemStack, Level, Player> function = (world, player, stack) -> {
     };
 
-    public ArmorBuilder(ArmorMaterial material, EquipmentSlot slot) {
+    public ArmorBuilder(ArmorMaterial material, ArmorItem.Type type) {
         this.material = material;
-        this.slot = slot;
+        this.type = type;
     }
 
     public ArmorBuilder addEffect() {
@@ -41,7 +40,7 @@ public class ArmorBuilder {
         private final ArmorBuilder builder;
 
         public BuiltArmor(ArmorBuilder builder) {
-            super(builder.material, builder.slot, new Item.Properties());
+            super(builder.material, builder.type, new Item.Properties());
             this.builder = builder;
         }
 

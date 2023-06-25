@@ -16,7 +16,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -168,13 +167,11 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
                 return damage * 2;
             }
         }
-        if (source instanceof IndirectEntityDamageSource indirect) {
-            Entity directEntity = indirect.getDirectEntity();
-            if(directEntity != null && directEntity.isOnFire()) {
-                melt();
-                level.playSound(null, this, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1f, 1.0f);
-                return damage * 2;
-            }
+        Entity directEntity = source.getDirectEntity();
+        if(directEntity != null && directEntity.isOnFire()) {
+            melt();
+            level.playSound(null, this, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1f, 1.0f);
+            return damage * 2;
         }
         return damage;
     }
@@ -210,7 +207,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@Nonnull DamageSource source) {
-        return MineriaSounds.WATER_SPIRIT_HURT.get();
+        return (isFrozen() ? MineriaSounds.WATER_SPIRIT_HURT_FROZEN : MineriaSounds.WATER_SPIRIT_HURT).get();
     }
 
     @Nullable

@@ -3,9 +3,9 @@ package io.github.mineria_mc.mineria.common.entity;
 import io.github.mineria_mc.mineria.common.blocks.GoldenSilverfishBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -52,7 +52,7 @@ public class GoldenSilverfishEntity extends Silverfish {
         if (this.isInvulnerableTo(source)) {
             return false;
         } else {
-            if ((source instanceof EntityDamageSource || source == DamageSource.MAGIC) && this.summonGoldenSilverfish != null) {
+            if ((source.getEntity() != null || source.is(DamageTypeTags.ALWAYS_TRIGGERS_SILVERFISH)) && this.summonGoldenSilverfish != null) {
                 this.summonGoldenSilverfish.notifyHurt();
             }
 
@@ -79,7 +79,7 @@ public class GoldenSilverfishEntity extends Silverfish {
 
                 if (ForgeEventFactory.getMobGriefingEvent(this.mob.level, this.mob) && random.nextInt(10) == 0) {
                     this.facing = Direction.getRandom(random);
-                    BlockPos pos = (new BlockPos(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
+                    BlockPos pos = (BlockPos.containing(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
                     BlockState state = this.mob.level.getBlockState(pos);
 
                     if (GoldenSilverfishBlock.canContainGoldenSilverfish(state)) {
@@ -102,7 +102,7 @@ public class GoldenSilverfishEntity extends Silverfish {
                 super.start();
             } else {
                 LevelAccessor world = this.mob.level;
-                BlockPos pos = (new BlockPos(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
+                BlockPos pos = (BlockPos.containing(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
                 BlockState state = world.getBlockState(pos);
 
                 if (GoldenSilverfishBlock.canContainGoldenSilverfish(state)) {

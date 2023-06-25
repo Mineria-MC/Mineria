@@ -3,7 +3,7 @@ package io.github.mineria_mc.mineria.common.entity;
 import io.github.mineria_mc.mineria.common.init.MineriaEntities;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.items.KunaiItem;
-import io.github.mineria_mc.mineria.util.DamageSourceUtil;
+import io.github.mineria_mc.mineria.util.MineriaDamageSourceBuilder;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -129,7 +129,7 @@ public class KunaiEntity extends AbstractArrow {
         }
 
         Entity owner = this.getOwner();
-        DamageSource source = DamageSourceUtil.kunai(this, (owner == null ? this : owner));
+        DamageSource source = MineriaDamageSourceBuilder.get(level).kunai(this, (owner == null ? this : owner));
         this.dealtDamage = true;
         if (target.hurt(source, dmg)) {
             if (target.getType() == EntityType.ENDERMAN) {

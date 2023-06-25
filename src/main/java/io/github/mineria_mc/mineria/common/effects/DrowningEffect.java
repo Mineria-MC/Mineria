@@ -29,7 +29,7 @@ public class DrowningEffect extends MobEffect {
                 living.level.addParticle(ParticleTypes.BUBBLE, living.getX() + dx, living.getY() + dy, living.getZ() + dz, delta.x, delta.y, delta.z);
             }
 
-            living.hurt(DamageSource.DROWN, 2);
+            living.hurt(living.damageSources().drown(), 2);
         } else {
             living.removeEffect(this);
         }

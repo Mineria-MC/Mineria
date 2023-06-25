@@ -9,7 +9,6 @@ import io.github.mineria_mc.mineria.common.items.*;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.Item.Properties;
@@ -89,7 +88,7 @@ public class MineriaItems {
     public static final RegistryObject<Item> SUPER_COMPRESSED_XP_ORB = ITEMS.register("super_compressed_xp_orb", () -> new XPOrbItem(16, new Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> SUPER_DUPER_COMPRESSED_XP_ORB = ITEMS.register("super_duper_compressed_xp_orb", () -> new XPOrbItem(64, new Properties().rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> VANADIUM_INGOT = ITEMS.register("vanadium_ingot", MineriaItem::new);
-    public static final RegistryObject<Item> VANADIUM_HELMET = ITEMS.register("vanadium_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, EquipmentSlot.HEAD).onArmorTick((stack, world, player) -> player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
+    public static final RegistryObject<Item> VANADIUM_HELMET = ITEMS.register("vanadium_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, ArmorItem.Type.HELMET).onArmorTick((stack, world, player) -> player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
     public static final RegistryObject<Item> MINERIA_POTION = ITEMS.register("mineria_potion", () -> new MineriaPotionItem(new Properties().stacksTo(1)));
     public static final RegistryObject<Item> MINERIA_SPLASH_POTION = ITEMS.register("mineria_splash_potion", () -> new MineriaThrowablePotionItem(new Properties().stacksTo(1), false));
     public static final RegistryObject<Item> MINERIA_LINGERING_POTION = ITEMS.register("mineria_lingering_potion", () -> new MineriaThrowablePotionItem(new Properties().stacksTo(1), true));
@@ -130,10 +129,10 @@ public class MineriaItems {
     public static final RegistryObject<Item> LONSDALEITE_SHOVEL = ITEMS.register("lonsdaleite_shovel", () -> new ShovelItem(MineriaItem.ItemTier.LONSDALEITE, 1.5F, -3.0F, new Properties()));
     public static final RegistryObject<Item> LONSDALEITE_SWORD = ITEMS.register("lonsdaleite_sword", LonsdaleiteSwordItem::new);
     public static final RegistryObject<Item> LONSDALEITE_HOE = ITEMS.register("lonsdaleite_hoe", () -> new HoeItem(MineriaItem.ItemTier.LONSDALEITE, -7, 0F, new Properties()));
-    public static final RegistryObject<Item> LONSDALEITE_BOOTS = ITEMS.register("lonsdaleite_boots", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlot.FEET).build());
-    public static final RegistryObject<Item> LONSDALEITE_LEGGINGS = ITEMS.register("lonsdaleite_leggings", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlot.LEGS).build());
-    public static final RegistryObject<Item> LONSDALEITE_CHESTPLATE = ITEMS.register("lonsdaleite_chestplate", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlot.CHEST).build());
-    public static final RegistryObject<Item> LONSDALEITE_HELMET = ITEMS.register("lonsdaleite_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, EquipmentSlot.HEAD).build());
+    public static final RegistryObject<Item> LONSDALEITE_BOOTS = ITEMS.register("lonsdaleite_boots", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, ArmorItem.Type.BOOTS).build());
+    public static final RegistryObject<Item> LONSDALEITE_LEGGINGS = ITEMS.register("lonsdaleite_leggings", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, ArmorItem.Type.LEGGINGS).build());
+    public static final RegistryObject<Item> LONSDALEITE_CHESTPLATE = ITEMS.register("lonsdaleite_chestplate", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, ArmorItem.Type.CHESTPLATE).build());
+    public static final RegistryObject<Item> LONSDALEITE_HELMET = ITEMS.register("lonsdaleite_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.LONSDALEITE, ArmorItem.Type.HELMET).build());
 
     // Silver
     public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", MineriaItem::new);
@@ -151,10 +150,10 @@ public class MineriaItems {
     public static final RegistryObject<Item> SILVER_SHOVEL = ITEMS.register("silver_shovel", () -> new ShovelItem(MineriaItem.ItemTier.SILVER, 1.5F, -3.0F, new Properties()));
     public static final RegistryObject<Item> SILVER_SWORD = ITEMS.register("silver_sword", () -> new SwordItem(MineriaItem.ItemTier.SILVER, 3, -2.4F, new Properties()));
     public static final RegistryObject<Item> SILVER_HOE = ITEMS.register("silver_hoe", () -> new HoeItem(MineriaItem.ItemTier.SILVER, (int) -2.6F, 0F, new Properties()));
-    public static final RegistryObject<Item> SILVER_BOOTS = ITEMS.register("silver_boots", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlot.FEET).build());
-    public static final RegistryObject<Item> SILVER_LEGGINGS = ITEMS.register("silver_leggings", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlot.LEGS).build());
-    public static final RegistryObject<Item> SILVER_CHESTPLATE = ITEMS.register("silver_chestplate", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlot.CHEST).build());
-    public static final RegistryObject<Item> SILVER_HELMET = ITEMS.register("silver_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, EquipmentSlot.HEAD).build());
+    public static final RegistryObject<Item> SILVER_BOOTS = ITEMS.register("silver_boots", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, ArmorItem.Type.BOOTS).build());
+    public static final RegistryObject<Item> SILVER_LEGGINGS = ITEMS.register("silver_leggings", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, ArmorItem.Type.LEGGINGS).build());
+    public static final RegistryObject<Item> SILVER_CHESTPLATE = ITEMS.register("silver_chestplate", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, ArmorItem.Type.CHESTPLATE).build());
+    public static final RegistryObject<Item> SILVER_HELMET = ITEMS.register("silver_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.SILVER, ArmorItem.Type.HELMET).build());
 
     // Titane
     public static final RegistryObject<Item> TITANE_INGOT = ITEMS.register("titane_ingot", MineriaItem::new);
@@ -166,10 +165,10 @@ public class MineriaItems {
     public static final RegistryObject<Item> TITANE_PICKAXE = ITEMS.register("titane_pickaxe", () -> new PickaxeItem(MineriaItem.ItemTier.TITANE, 1, -2.8F, new Properties()));
     public static final RegistryObject<Item> TITANE_SHOVEL = ITEMS.register("titane_shovel", () -> new ShovelItem(MineriaItem.ItemTier.TITANE, 1.5F, -3.0F, new Properties()));
     public static final RegistryObject<Item> TITANE_SWORD = ITEMS.register("titane_sword", () -> new SwordItem(MineriaItem.ItemTier.TITANE, 3, -2.4F, new Properties()));
-    public static final RegistryObject<Item> TITANE_BOOTS = ITEMS.register("titane_boots", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlot.FEET).build());
-    public static final RegistryObject<Item> TITANE_LEGGINGS = ITEMS.register("titane_leggings", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlot.LEGS).build());
-    public static final RegistryObject<Item> TITANE_CHESTPLATE = ITEMS.register("titane_chestplate", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlot.CHEST).build());
-    public static final RegistryObject<Item> TITANE_HELMET = ITEMS.register("titane_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, EquipmentSlot.HEAD).build());
+    public static final RegistryObject<Item> TITANE_BOOTS = ITEMS.register("titane_boots", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, ArmorItem.Type.BOOTS).build());
+    public static final RegistryObject<Item> TITANE_LEGGINGS = ITEMS.register("titane_leggings", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, ArmorItem.Type.LEGGINGS).build());
+    public static final RegistryObject<Item> TITANE_CHESTPLATE = ITEMS.register("titane_chestplate", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, ArmorItem.Type.CHESTPLATE).build());
+    public static final RegistryObject<Item> TITANE_HELMET = ITEMS.register("titane_helmet", () -> new ArmorBuilder(MineriaItem.ArmorMaterial.TITANE, ArmorItem.Type.HELMET).build());
 
     // Drinks
     public static final RegistryObject<Item> PLANTAIN_TEA = ITEMS.register("plantain_tea", () -> new DrinkItem(new Properties().stacksTo(1).food(new FoodProperties.Builder().saturationMod(0).nutrition(0).alwaysEat().effect(

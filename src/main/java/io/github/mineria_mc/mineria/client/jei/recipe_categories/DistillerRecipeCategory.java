@@ -72,7 +72,7 @@ public class DistillerRecipeCategory implements IRecipeCategory<DistillerRecipe>
         builder.addSlot(RecipeIngredientRole.INPUT, 54 - 4, 21 - 5).addIngredients(recipe.getIngredients().get(2));
         builder.addSlot(RecipeIngredientRole.INPUT, 86 - 4, 9 - 5).addIngredients(recipe.getIngredients().get(3));
         builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 86 - 4, 43 - 5);
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 132 - 4, 9 - 5).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 132 - 4, 9 - 5).addItemStack(recipe.getOutputStack());
     }
 
     @Override

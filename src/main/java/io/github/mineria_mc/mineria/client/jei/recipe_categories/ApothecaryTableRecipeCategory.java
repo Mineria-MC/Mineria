@@ -84,7 +84,7 @@ public class ApothecaryTableRecipeCategory implements IRecipeCategory<AbstractAp
             builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 36, 29).addItemStacks(validStacks);
         }
         builder.addSlot(RecipeIngredientRole.INPUT, 78, 29).addIngredients(recipe.getIngredients().get(0));
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 135, 29).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 135, 29).addItemStack(recipe.getOutputStack());
     }
 
     @Override

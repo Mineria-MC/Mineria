@@ -1,17 +1,17 @@
 package io.github.mineria_mc.mineria.client.renderers.entity;
 
-import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.entity.KunaiEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.common.entity.KunaiEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
@@ -37,7 +37,7 @@ public class KunaiRenderer extends EntityRenderer<KunaiEntity> {
             // So the item renderer actually renders the enchantment glint
             kunai.enchant(Enchantments.AQUA_AFFINITY, 0);
         }
-        this.itemRenderer.renderStatic(kunai, ItemTransforms.TransformType.NONE, packedLight, OverlayTexture.NO_OVERLAY, stack, buffer, 0);
+        this.itemRenderer.renderStatic(kunai, ItemDisplayContext.NONE, packedLight, OverlayTexture.NO_OVERLAY, stack, buffer, null, 0);
         stack.popPose();
         super.render(entity, yRot, partialTicks, stack, buffer, packedLight);
     }

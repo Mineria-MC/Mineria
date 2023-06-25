@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
@@ -70,7 +71,7 @@ public class WizardEntity extends Monster implements RangedAttackMob {
             damage = 0.0F;
         }
 
-        if (source.isMagic()) {
+        if (source.is(DamageTypes.MAGIC)) {
             damage = (float) ((double) damage * 0.15D);
         }
 

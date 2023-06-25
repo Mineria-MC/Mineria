@@ -73,7 +73,7 @@ public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe> {
         builder.addSlot(RecipeIngredientRole.INPUT, 39, 31).addIngredients(recipe.getSecondaryInputExamples());
         builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 122, 31);
         builder.addSlot(RecipeIngredientRole.INPUT, 83, 31).addIngredients(recipe.getContainer());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 83, 11).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 83, 11).addItemStack(recipe.getOutputStack());
     }
 
     @Override

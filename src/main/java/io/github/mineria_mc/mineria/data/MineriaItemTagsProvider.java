@@ -23,7 +23,7 @@ import static net.minecraftforge.common.Tags.Items.*;
 
 public class MineriaItemTagsProvider extends ItemTagsProvider {
     public MineriaItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, MineriaBlockTagsProvider blockTagsProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, blockTagsProvider, Mineria.MODID, existingFileHelper);
+        super(output, lookupProvider, blockTagsProvider.contentsGetter(), Mineria.MODID, existingFileHelper);
     }
 
     @Override

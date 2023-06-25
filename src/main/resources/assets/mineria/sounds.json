@@ -187,10 +187,10 @@
   "entity.fire_golem.hurt": {
     "subtitle": "subtitles.mineria.entity.fire_golem.hurt",
     "sounds": [
-      "minecraft:mob/irongolem/hit1",
-      "minecraft:mob/irongolem/hit2",
-      "minecraft:mob/irongolem/hit3",
-      "minecraft:mob/irongolem/hit4"
+      "mineria:entity/fire_golem/hurt1",
+      "mineria:entity/fire_golem/hurt2",
+      "mineria:entity/fire_golem/hurt3",
+      "mineria:entity/fire_golem/hurt4"
     ]
   },
   "entity.fire_golem.death": {
@@ -242,13 +242,22 @@
   "entity.water_spirit.hurt": {
     "subtitle": "subtitles.mineria.entity.water_spirit.hurt",
     "sounds": [
+      "mineria:entity/water_spirit/hurt1",
+      "mineria:entity/water_spirit/hurt2",
+      "mineria:entity/water_spirit/hurt3",
+      "mineria:entity/water_spirit/hurt4"
+    ]
+  },
+  "entity.water_spirit.hurt_frozen": {
+    "subtitle": "subtitles.mineria.entity.water_spirit.hurt_frozen",
+    "sounds": [
       "mineria:empty"
     ]
   },
   "entity.water_spirit.death": {
     "subtitle": "subtitles.mineria.entity.water_spirit.death",
     "sounds": [
-      "mineria:empty"
+      "mineria:entity/water_spirit/death"
     ]
   },
   "entity.druidic_wolf.hurt": {

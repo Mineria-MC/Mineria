@@ -32,7 +32,7 @@ public class PuffballBlock extends MineriaMushroomBlock {
         Vec3 motion = entity.getDeltaMovement();
         if (motion.y < -0.5) {
             if (!entity.isSuppressingBounce()) {
-                entity.causeFallDamage(0, 0, DamageSource.FALL);
+                entity.causeFallDamage(0, 0, world.damageSources().fall());
                 bounceUp(entity);
                 MineriaUtils.addParticles(world, ParticleTypes.POOF, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.2, 0.1, 0.2, 0.2, 15, false);
                 world.setBlock(pos, MineriaBlocks.PUFFBALL_POWDER.get().defaultBlockState(), Block.UPDATE_ALL);

@@ -5,6 +5,7 @@ import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
 import io.github.mineria_mc.mineria.common.items.JarItem;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -25,7 +26,7 @@ public class PoisonousJarRecipe extends AbstractApothecaryTableRecipe {
 
     @Nonnull
     @Override
-    public ItemStack assemble(ApothecaryTableInventoryWrapper wrapper) {
+    public ItemStack assemble(ApothecaryTableInventoryWrapper wrapper, @Nonnull RegistryAccess access) {
         PoisonSource poisonSource = wrapper.getPoisonSource();
         ItemStack result = wrapper.getItem(1).copy();
         return poisonSource == null ? result : JarItem.addPoisonSourceToStack(result, poisonSource);
@@ -33,7 +34,7 @@ public class PoisonousJarRecipe extends AbstractApothecaryTableRecipe {
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getOutputStack() {
         return new ItemStack(MineriaItems.JAR.get());
     }
 

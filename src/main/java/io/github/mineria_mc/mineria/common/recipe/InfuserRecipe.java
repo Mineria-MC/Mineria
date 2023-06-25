@@ -1,14 +1,15 @@
 package io.github.mineria_mc.mineria.common.recipe;
 
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Either;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
-import com.mojang.datafixers.util.Either;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -20,6 +21,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -47,12 +50,12 @@ public class InfuserRecipe implements Recipe<RecipeWrapper> {
 
     @Override
     public boolean matches(RecipeWrapper inv, @Nonnull Level worldIn) {
-        return input.test(inv.getItem(0)) && secondaryInputTest().test(inv.getItem(1)) && container.test(inv.getItem(3));
+        return input.test(inv.getItem(0)) && secondaryInputPredicate().test(inv.getItem(1)) && container.test(inv.getItem(3));
     }
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull RecipeWrapper inv) {
+    public ItemStack assemble(@Nonnull RecipeWrapper inv, @Nonnull RegistryAccess access) {
         return this.output.copy();
     }
 
@@ -63,8 +66,14 @@ public class InfuserRecipe implements Recipe<RecipeWrapper> {
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(@Nonnull RegistryAccess access) {
         return this.output;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Nonnull
+    public ItemStack getOutputStack() {
+        return output;
     }
 
     @Nonnull
@@ -97,7 +106,7 @@ public class InfuserRecipe implements Recipe<RecipeWrapper> {
         return secondaryInput.map(Function.identity(), fluid -> Ingredient.of(fluid == Fluids.WATER ? MineriaBlocks.WATER_BARREL.get() : MineriaBlocks.IRON_FLUID_BARREL.get(), fluid.getBucket()));
     }
 
-    public Predicate<ItemStack> secondaryInputTest() {
+    public Predicate<ItemStack> secondaryInputPredicate() {
         return stack -> secondaryInput.map(ingredient -> ingredient.test(stack), fluid -> AbstractWaterBarrelBlockEntity.checkFluidFromStack(stack, fluid));
     }
 
@@ -165,7 +174,7 @@ public class InfuserRecipe implements Recipe<RecipeWrapper> {
                 buf.writeResourceLocation(id == null ? new ResourceLocation("empty") : id);
             });
             recipe.container.toNetwork(buffer);
-            buffer.writeItemStack(recipe.getResultItem(), false);
+            buffer.writeItemStack(recipe.output, false);
         }
     }
 }

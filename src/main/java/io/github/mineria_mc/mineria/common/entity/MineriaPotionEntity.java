@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -114,7 +113,7 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
             for (LivingEntity livingentity : list) {
                 double d0 = this.distanceToSqr(livingentity);
                 if (d0 < 16.0D && livingentity.isSensitiveToWater()) {
-                    livingentity.hurt(DamageSource.indirectMagic(livingentity, this.getOwner()), 1.0F);
+                    livingentity.hurt(damageSources().indirectMagic(livingentity, this.getOwner()), 1.0F);
                 }
             }
         }

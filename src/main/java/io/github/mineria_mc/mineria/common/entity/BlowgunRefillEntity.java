@@ -2,7 +2,7 @@ package io.github.mineria_mc.mineria.common.entity;
 
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaEntities;
-import io.github.mineria_mc.mineria.util.DamageSourceUtil;
+import io.github.mineria_mc.mineria.util.MineriaDamageSourceBuilder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -171,7 +171,7 @@ public class BlowgunRefillEntity extends Projectile {
         int damage = Mth.ceil(Mth.clamp((double) motionLength * 3.5D, 0.0D, 2.147483647E9D));
 
         Entity owner = this.getOwner();
-        DamageSource source = DamageSourceUtil.bambooBlowgun(this, owner == null ? this : owner);
+        DamageSource source = MineriaDamageSourceBuilder.get(level).bambooBlowgun(this, owner == null ? this : owner);
 
         if (owner instanceof LivingEntity)
             ((LivingEntity) owner).setLastHurtMob(hit);
@@ -182,8 +182,7 @@ public class BlowgunRefillEntity extends Projectile {
             if (isEnderman)
                 return;
 
-            if (hit instanceof LivingEntity) {
-                LivingEntity living = (LivingEntity) hit;
+            if (hit instanceof LivingEntity living) {
                 doPostHurtEffects(living);
 
                 if (!this.level.isClientSide)

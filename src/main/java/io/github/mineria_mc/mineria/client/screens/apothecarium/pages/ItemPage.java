@@ -1,21 +1,21 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium.pages;
 
 import com.google.common.collect.ImmutableList;
-import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class ItemPage extends ApothecariumPage {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         PoseStack modelView = RenderSystem.getModelViewStack();
         modelView.pushPose();
-        modelView.translate(x, y, 100.0F + itemRenderer.blitOffset);
+        modelView.translate(x, y, 100.0F);
         modelView.translate(size / 2f, size / 2f, 0.0F);
         modelView.scale(1, -1, 1);
         modelView.scale(size, size, size);
@@ -86,7 +86,7 @@ public class ItemPage extends ApothecariumPage {
             Lighting.setupForFlatItems();
         }
 
-        itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
+        itemRenderer.render(stack, ItemDisplayContext.GUI, false, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
         bufferSource.endBatch();
         RenderSystem.enableDepthTest();
         if (blockLight) {

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.mineria_mc.mineria.common.blocks.apothecary_table.ApothecaryTableInventoryWrapper;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -31,17 +32,19 @@ public class ApothecaryTableRecipe extends AbstractApothecaryTableRecipe {
         return input.test(wrapper.getItem(1)) && poisonSource.equals(wrapper.getPoisonSource());
     }
 
+    @Nonnull
     @Override
-    public ItemStack assemble(ApothecaryTableInventoryWrapper wrapper) {
+    public ItemStack assemble(@Nonnull ApothecaryTableInventoryWrapper wrapper, @Nonnull RegistryAccess access) {
         return this.output.copy();
     }
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getOutputStack() {
         return this.output;
     }
 
+    @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return MineriaRecipeSerializers.APOTHECARY_TABLE.get();
@@ -71,7 +74,7 @@ public class ApothecaryTableRecipe extends AbstractApothecaryTableRecipe {
         public void toNetwork(FriendlyByteBuf buf, ApothecaryTableRecipe recipe) {
             recipe.input.toNetwork(buf);
             buf.writeResourceLocation(recipe.poisonSource.getId());
-            buf.writeItemStack(recipe.getResultItem(), false);
+            buf.writeItemStack(recipe.output, false);
         }
     }
 }

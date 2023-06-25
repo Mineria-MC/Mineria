@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -331,7 +332,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return source == DamageSource.LIGHTNING_BOLT || super.isInvulnerableTo(source);
+        return source.is(DamageTypeTags.IS_LIGHTNING) || super.isInvulnerableTo(source);
     }
 
     protected abstract Int2ObjectMap<List<VillagerTrades.ItemListing>> getTrades();

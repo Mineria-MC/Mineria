@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -104,7 +105,7 @@ public class DiamondFluidBarrelBlock extends AbstractWaterBarrelBlock {
 
         @Override
         public boolean canBeHurtBy(ItemStack stack, DamageSource source) {
-            return !isFireResistant(stack) || !source.isFire();
+            return !isFireResistant(stack) || !source.is(DamageTypeTags.IS_FIRE);
         }
     }
 }

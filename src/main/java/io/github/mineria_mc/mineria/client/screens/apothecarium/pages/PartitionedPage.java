@@ -1,20 +1,20 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium.pages;
 
 import com.google.common.collect.ImmutableList;
-import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumScreen;
-import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumScreen;
+import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import it.unimi.dsi.fastutil.floats.FloatUnaryOperator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -24,7 +24,9 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
@@ -99,7 +101,7 @@ public abstract class PartitionedPage extends ApothecariumPage {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         PoseStack modelView = RenderSystem.getModelViewStack();
         modelView.pushPose();
-        modelView.translate(stackX, stackY, 100.0F + itemRenderer.blitOffset);
+        modelView.translate(stackX, stackY, 100.0F);
         modelView.translate(stackSize / 2f, stackSize / 2f, 0);
         modelView.scale(1, -1, 1);
         modelView.scale(stackSize, stackSize, stackSize);
@@ -110,7 +112,7 @@ public abstract class PartitionedPage extends ApothecariumPage {
             Lighting.setupForFlatItems();
         }
 
-        itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, new PoseStack(), bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
+        itemRenderer.render(stack, ItemDisplayContext.GUI, false, new PoseStack(), bufferSource, 15728880, OverlayTexture.NO_OVERLAY, model);
         bufferSource.endBatch();
         RenderSystem.enableDepthTest();
         if (blockLight) {
@@ -124,10 +126,14 @@ public abstract class PartitionedPage extends ApothecariumPage {
             PoseStack poseStack1 = new PoseStack();
             String count = String.valueOf(stack.getCount());
             float fontScale = stackSize / 16;
-            poseStack1.translate(Math.floor(x + size - client.font.width(count) * fontScale), Math.floor(y + size - client.font.lineHeight * fontScale), itemRenderer.blitOffset + 200);
+            Font font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
+            if(font == null) {
+                font = client.font;
+            }
+            poseStack1.translate(Math.floor(x + size - font.width(count) * fontScale), Math.floor(y + size - font.lineHeight * fontScale), 200);
             poseStack1.scale(fontScale, fontScale, 1);
             MultiBufferSource.BufferSource bufferSource1 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-            client.font.drawInBatch(count, 0, 0, 16777215, true, poseStack1.last().pose(), bufferSource1, false, 0, 15728880);
+            font.drawInBatch(count, 0, 0, 16777215, true, poseStack1.last().pose(), bufferSource1, Font.DisplayMode.NORMAL, 0, 15728880);
             bufferSource1.endBatch();
         }
 

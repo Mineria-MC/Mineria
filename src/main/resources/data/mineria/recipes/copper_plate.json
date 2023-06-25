@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:smithing",
+  "type": "mineria:smithing",
   "base": {
     "item": "minecraft:copper_ingot"
   },

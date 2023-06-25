@@ -4,16 +4,15 @@ import com.google.common.collect.Lists;
 import io.github.mineria_mc.mineria.common.effects.util.IPoisonEffect;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.damagesource.DamageSource;
 
 import java.util.List;
 import java.util.Random;
@@ -30,14 +29,14 @@ public class PoisonEffect extends MobEffect implements IPoisonEffect {
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier) {
         if (living.getHealth() > 1.0F) {
-            living.hurt(DamageSource.MAGIC, getDamageToDeal(living.getHealth(), 0));
+            living.hurt(living.damageSources().magic(), getDamageToDeal(living.getHealth(), 0));
         }
     }
 
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier, int duration, int maxDuration, int potionClass) {
         if (living.getHealth() > 1.0F || potionClass >= 3) {
-            living.hurt(DamageSource.MAGIC, getDamageToDeal(living.getHealth(), potionClass));
+            living.hurt(living.damageSources().magic(), getDamageToDeal(living.getHealth(), potionClass));
         }
 
         Random rand = new Random();

@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.common.effects.util;
 
-import io.github.mineria_mc.mineria.common.init.MineriaEffectInstanceSerializers;
 import com.mojang.serialization.Dynamic;
+import io.github.mineria_mc.mineria.common.init.MineriaEffectInstanceSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,7 +13,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-@SuppressWarnings("deprecation")
 public class MobEffectInstanceSerializer implements IMobEffectInstanceSerializer<MobEffectInstance> {
     @Override
     public void encodePacket(MobEffectInstance effect, FriendlyByteBuf buf) {
@@ -28,7 +27,7 @@ public class MobEffectInstanceSerializer implements IMobEffectInstanceSerializer
         buf.writeBoolean(effect.isAmbient());
         buf.writeBoolean(effect.isVisible());
         buf.writeBoolean(effect.showIcon());
-        buf.writeOptional(effect.getFactorData(), (otherBuffer, factorData) -> otherBuffer.writeWithCodec(MobEffectInstance.FactorData.CODEC, factorData));
+        buf.writeOptional(effect.getFactorData(), (otherBuffer, factorData) -> otherBuffer.writeJsonWithCodec(MobEffectInstance.FactorData.CODEC, factorData));
     }
 
     @Override
@@ -44,7 +43,7 @@ public class MobEffectInstanceSerializer implements IMobEffectInstanceSerializer
         boolean isAmbient = buf.readBoolean();
         boolean doesShowParticles = buf.readBoolean();
         boolean doesShowIcon = buf.readBoolean();
-        Optional<MobEffectInstance.FactorData> factorData = buf.readOptional(otherBuffer -> otherBuffer.readWithCodec(MobEffectInstance.FactorData.CODEC));
+        Optional<MobEffectInstance.FactorData> factorData = buf.readOptional(otherBuffer -> otherBuffer.readJsonWithCodec(MobEffectInstance.FactorData.CODEC));
 
         return new MobEffectInstance(effect, duration, amplifier, isAmbient, doesShowParticles, doesShowIcon, null, factorData);
     }

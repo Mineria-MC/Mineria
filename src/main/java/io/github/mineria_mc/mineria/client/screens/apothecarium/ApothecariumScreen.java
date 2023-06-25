@@ -337,13 +337,13 @@ public class ApothecariumScreen extends Screen {
         RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
 
         if (currentPage < 0) {
-            blit(stack, leftPos + bookWidth - scaledWidth(146), topPos, 0, 0, 146, 180);
+            draw(stack, leftPos + bookWidth - scaledWidth(146), topPos, 0, 0, 146, 180);
         } else if(currentPage >= getPagesCount()) {
-            blit(stack, leftPos, topPos, 147, 0, 146, 180);
+            draw(stack, leftPos, topPos, 147, 0, 146, 180);
         } else {
-            blit(stack, leftPos, topPos, 0, 181, 279, 180);
+            draw(stack, leftPos, topPos, 0, 181, 279, 180);
             if(Integer.valueOf(currentPage).equals(playerBookmark)) {
-                blit(stack, leftPos + scaledWidth(136), topPos + scaledHeight(8), 280, 181, 7, 162);
+                draw(stack, leftPos + scaledWidth(136), topPos + scaledHeight(8), 280, 181, 7, 162);
             }
             pages.get(this.currentPage * 2).render(stack, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(14));
             pages.get(this.currentPage * 2 + 1).render(stack, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(143));
@@ -352,8 +352,7 @@ public class ApothecariumScreen extends Screen {
         super.render(stack, mouseX, mouseY, partialTicks);
     }
 
-    @Override
-    public void blit(@Nonnull PoseStack stack, int x, int y, int u, int v, int width, int height) {
+    public void draw(@Nonnull PoseStack stack, int x, int y, int u, int v, int width, int height) {
         blit(stack, x, y, scaledWidth(width), scaledHeight(height), u, v, width, height, 512, 512);
     }
 
@@ -407,7 +406,7 @@ public class ApothecariumScreen extends Screen {
         }
 
         @Override
-        public void renderButton(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        public void renderWidget(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
@@ -420,7 +419,7 @@ public class ApothecariumScreen extends Screen {
                 textureY += 13;
             }
 
-            ApothecariumScreen.this.blit(stack, this.getX(), this.getY(), textureX, textureY, 23, 13);
+            ApothecariumScreen.this.draw(stack, this.getX(), this.getY(), textureX, textureY, 23, 13);
         }
 
         @Override
@@ -439,7 +438,7 @@ public class ApothecariumScreen extends Screen {
         }
 
         @Override
-        public void renderButton(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        public void renderWidget(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -462,7 +461,7 @@ public class ApothecariumScreen extends Screen {
                 textureY += 23;
             }
 
-            ApothecariumScreen.this.blit(stack, x, y, textureX, textureY, width, 22);
+            ApothecariumScreen.this.draw(stack, x, y, textureX, textureY, width, 22);
 
             float itemSize = scaledWidth(21) / 1.5f;
             if (ApothecariumScreen.this.minecraft != null) {
@@ -481,7 +480,7 @@ public class ApothecariumScreen extends Screen {
         }
 
         @Override
-        public void renderButton(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTick) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
             RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -495,7 +494,7 @@ public class ApothecariumScreen extends Screen {
                 height = 18;
             }
 
-            ApothecariumScreen.this.blit(stack, getX(), getY(), 280, textureY, 7, height);
+            ApothecariumScreen.this.draw(stack, getX(), getY(), 280, textureY, 7, height);
 
             if(isHovered) {
                 Component tooltip;

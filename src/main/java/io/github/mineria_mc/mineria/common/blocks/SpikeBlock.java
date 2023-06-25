@@ -1,9 +1,10 @@
 package io.github.mineria_mc.mineria.common.blocks;
 
 import io.github.mineria_mc.mineria.common.init.MineriaCriteriaTriggers;
+import io.github.mineria_mc.mineria.common.init.MineriaDamageTypes;
+import io.github.mineria_mc.mineria.util.MineriaDamageSourceBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,7 +28,7 @@ public class SpikeBlock extends Block {
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        boolean damaged = entityIn.hurt(new DamageSource("onSpike"), this.attackDamage);
+        boolean damaged = entityIn.hurt(MineriaDamageSourceBuilder.get(worldIn).ofType(MineriaDamageTypes.SPIKE), this.attackDamage);
         if (damaged && entityIn instanceof ServerPlayer) {
             MineriaCriteriaTriggers.DAMAGE_FROM_SPIKE.trigger((ServerPlayer) entityIn, this, this.attackDamage);
         }

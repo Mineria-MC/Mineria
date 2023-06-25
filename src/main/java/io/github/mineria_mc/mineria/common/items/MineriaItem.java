@@ -5,7 +5,6 @@ import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -134,13 +133,13 @@ public class MineriaItem extends Item {
         }
 
         @Override
-        public int getDurabilityForSlot(EquipmentSlot slotIn) {
-            return HEALTH_PER_SLOT[slotIn.getIndex()] * durability;
+        public int getDurabilityForType(ArmorItem.Type type) {
+            return HEALTH_PER_SLOT[type.getSlot().getIndex()] * durability;
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlot slotIn) {
-            return this.damageReductionAmount[slotIn.getIndex()];
+        public int getDefenseForType(ArmorItem.Type type) {
+            return this.damageReductionAmount[type.getSlot().getIndex()];
         }
 
         @Override

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class RitualTableBlockEntityRenderer implements BlockEntityRenderer<RitualTableBlockEntity> {
@@ -28,7 +29,7 @@ public class RitualTableBlockEntityRenderer implements BlockEntityRenderer<Ritua
             stack.mulPose(Axis.XP.rotationDegrees(90));
             stack.mulPose(Axis.ZP.rotationDegrees(35));
             packedLight = tile.getLevel() == null ? 15728880 : LevelRenderer.getLightColor(tile.getLevel(), tile.getBlockPos().above());
-            this.itemRenderer.renderStatic(placedItem, ItemTransforms.TransformType.FIXED, packedLight, overlay, stack, buffer, 0);
+            this.itemRenderer.renderStatic(placedItem, ItemDisplayContext.FIXED, packedLight, overlay, stack, buffer, null, 0);
         }
         stack.popPose();
     }

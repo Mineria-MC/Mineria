@@ -109,7 +109,7 @@ public class BrownBearEntity extends PathfinderMob {
 
     @Override
     public boolean doHurtTarget(Entity target) {
-        boolean didHurt = target.hurt(DamageSource.mobAttack(this), (float) ((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+        boolean didHurt = target.hurt(damageSources().mobAttack(this), (float) ((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
         if (didHurt)
             this.doEnchantDamageEffects(this, target);
 

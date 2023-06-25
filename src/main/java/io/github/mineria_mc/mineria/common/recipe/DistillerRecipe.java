@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -45,7 +48,7 @@ public class DistillerRecipe implements Recipe<RecipeWrapper> {
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull RecipeWrapper inv) {
+    public ItemStack assemble(@Nonnull RecipeWrapper inv, @Nonnull RegistryAccess access) {
         return this.output.copy();
     }
 
@@ -56,8 +59,13 @@ public class DistillerRecipe implements Recipe<RecipeWrapper> {
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(@Nonnull RegistryAccess access) {
         return this.output;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public ItemStack getOutputStack() {
+        return output;
     }
 
     @Nonnull
@@ -116,7 +124,7 @@ public class DistillerRecipe implements Recipe<RecipeWrapper> {
             ingredients.get(1).toNetwork(buf);
             ingredients.get(2).toNetwork(buf);
             ingredients.get(3).toNetwork(buf);
-            buf.writeItemStack(recipe.getResultItem(), false);
+            buf.writeItemStack(recipe.output, false);
         }
 
         private static Ingredient fromJson(JsonObject json, String type) {

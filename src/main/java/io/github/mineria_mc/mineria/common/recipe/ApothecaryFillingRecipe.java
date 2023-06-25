@@ -6,6 +6,7 @@ import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -51,13 +52,13 @@ public class ApothecaryFillingRecipe implements Recipe<ApothecaryTableInventoryW
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull ApothecaryTableInventoryWrapper inv) {
+    public ItemStack assemble(@Nonnull ApothecaryTableInventoryWrapper inv, @Nonnull RegistryAccess access) {
         return ItemStack.EMPTY;
     }
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(@Nonnull RegistryAccess access) {
         return ItemStack.EMPTY;
     }
 

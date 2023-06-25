@@ -20,7 +20,7 @@ public abstract class HopperBlockEntityMixin {
     }
 
     @Inject(method = "canTakeItemFromContainer", at = @At("HEAD"), cancellable = true)
-    private static void hopperExtractHook(Container container, ItemStack stack, int index, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    private static void hopperExtractHook(Container hopper, Container container, ItemStack stack, int index, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         if (container instanceof HopperHandler handler) {
             cir.setReturnValue(handler.canExtractHopperItem(index, stack));
         }

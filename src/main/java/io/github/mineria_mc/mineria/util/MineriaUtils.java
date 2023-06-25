@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.mineria_mc.mineria.Mineria;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -151,6 +152,18 @@ public class MineriaUtils {
             throw new NullPointerException("Registry object is empty!");
         }
         return key;
+    }
+
+    /**
+     * A method which obtains the holder associated with the specified registry object.
+     * @param obj The registry object.
+     * @return The unique holder of the given registry object.
+     * @throws NullPointerException if the registry object was not registered.
+     * @param <T> The type of the object.
+     */
+    @Nonnull
+    public static <T> Holder<T> holder(RegistryObject<T> obj) {
+        return obj.getHolder().orElseThrow(() -> new NullPointerException("Object '" + obj.getId() + "' is not registered!"));
     }
 
     /**

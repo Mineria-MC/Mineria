@@ -28,8 +28,9 @@ public class MineriaSounds {
     public static final RegistryObject<SoundEvent> AIR_SPIRIT_AMBIENT = register("entity.air_spirit.ambient");
     public static final RegistryObject<SoundEvent> AIR_SPIRIT_HURT = register("entity.air_spirit.hurt");
     public static final RegistryObject<SoundEvent> AIR_SPIRIT_DEATH = register("entity.air_spirit.death");
-    public static final RegistryObject<SoundEvent> WATER_SPIRIT_HURT = register("entity.water_spirit.hurt"); //
-    public static final RegistryObject<SoundEvent> WATER_SPIRIT_DEATH = register("entity.water_spirit.death"); //
+    public static final RegistryObject<SoundEvent> WATER_SPIRIT_HURT = register("entity.water_spirit.hurt");
+    public static final RegistryObject<SoundEvent> WATER_SPIRIT_HURT_FROZEN = register("entity.water_spirit.hurt_frozen");
+    public static final RegistryObject<SoundEvent> WATER_SPIRIT_DEATH = register("entity.water_spirit.death");
     public static final RegistryObject<SoundEvent> DRUIDIC_WOLF_HURT = register("entity.druidic_wolf.hurt"); //
     public static final RegistryObject<SoundEvent> DRUIDIC_WOLF_DEATH = register("entity.druidic_wolf.death"); //
     public static final RegistryObject<SoundEvent> APOTHECARIUM_CUSTOM_PAGE_TURN = register("item.apothecarium.custom_page_turn");

@@ -1,12 +1,12 @@
 package io.github.mineria_mc.mineria.common.entity;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Pair;
 import io.github.mineria_mc.mineria.common.entity.goal.AlertTeamHurtByTargetGoal;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.util.IngredientItemListing;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.Util;
@@ -126,7 +126,7 @@ public class DruidEntity extends AbstractDruidEntity {
             LivingEntity target = DruidEntity.this.getTarget();
             if (!level.isClientSide() && target != null) {
                 ServerLevel world = (ServerLevel) level;
-                MineriaLightningBoltEntity.create(world, new BlockPos(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
+                MineriaLightningBoltEntity.create(world, BlockPos.containing(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
             }
         }
 

@@ -206,7 +206,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements RangedAtta
         public void start() {
             Vec3 destination = this.findPos();
             if (destination != null) {
-                navigation.moveTo(navigation.createPath(new BlockPos(destination), 1), 1.6D);
+                navigation.moveTo(navigation.createPath(BlockPos.containing(destination), 1), 1.6D);
             }
         }
 

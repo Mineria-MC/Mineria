@@ -1,9 +1,9 @@
 {
     "pack": {
         "description": "Mineria Resources",
-        "pack_format": 12,
+        "pack_format": 13,
         "_comment": "Resources from Mineria",
-        "forge:resource_pack_format": 12,
-        "forge:data_pack_format": 10
+        "forge:resource_pack_format": 13,
+        "forge:data_pack_format": 12
     }
 }

@@ -6,9 +6,7 @@
         "element_type": "mineria:single_data_pool_element",
         "ground_level_delta": 1,
         "location": "mineria:wizard_laboratory",
-        "processors": {
-          "processors": []
-        },
+        "processors": "minecraft:empty",
         "projection": "rigid"
       },
       "weight": 1

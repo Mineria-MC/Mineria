@@ -17,7 +17,7 @@ public class FastFreezingEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier) {
-        living.hurt(DamageSource.MAGIC, 1.0F);
+        living.hurt(living.damageSources().magic(), 1.0F);
     }
 
     @Override

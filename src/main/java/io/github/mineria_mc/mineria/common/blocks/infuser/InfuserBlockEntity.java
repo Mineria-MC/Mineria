@@ -114,7 +114,7 @@ public class InfuserBlockEntity extends MineriaLockableBlockEntity {
         if (this.canInfuse(recipe)) {
             ItemStack input = this.inventory.getStackInSlot(0);
             ItemStack secondaryInput = this.inventory.getStackInSlot(1);
-            ItemStack result = recipe.getResultItem();
+            ItemStack result = recipe.getResultItem(level.registryAccess());
             ItemStack output = this.inventory.getStackInSlot(3);
 
             if (recipe.getContainer().test(output)) {
@@ -133,11 +133,11 @@ public class InfuserBlockEntity extends MineriaLockableBlockEntity {
         ItemStack secondaryInput = this.inventory.getStackInSlot(1);
         ItemStack output = this.inventory.getStackInSlot(3);
 
-        if (recipe == null || input.isEmpty() || !recipe.secondaryInputTest().test(secondaryInput) || output.isEmpty()) {
+        if (recipe == null || input.isEmpty() || !recipe.secondaryInputPredicate().test(secondaryInput) || output.isEmpty()) {
             return false;
         }
 
-        ItemStack result = recipe.getResultItem();
+        ItemStack result = recipe.getResultItem(level.registryAccess());
 
         if (result.isEmpty() || output.getCount() != 1) {
             return false;

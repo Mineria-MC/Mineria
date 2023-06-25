@@ -6,10 +6,9 @@ import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaEffects;
-import io.github.mineria_mc.mineria.util.DamageSourceUtil;
+import io.github.mineria_mc.mineria.util.MineriaDamageSourceBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -103,7 +102,7 @@ public class FourElementsEnchantment extends Enchantment {
                     case FIRE -> {
                         if (!living.fireImmune()) {
                             living.setSecondsOnFire(10);
-                            living.hurt(DamageSourceUtil.elementalOrb(owner), 2);
+                            living.hurt(MineriaDamageSourceBuilder.get(world).elementalOrb(owner), 2);
                         }
                     }
                     case WATER -> {
@@ -113,18 +112,18 @@ public class FourElementsEnchantment extends Enchantment {
                             living.addEffect(new MobEffectInstance(MineriaEffects.DROWNING.get(), 32770));
                         } else {
                             living.setAirSupply(living.getAirSupply() - 60);
-                            living.hurt(DamageSource.DROWN, 1);
+                            living.hurt(world.damageSources().drown(), 1);
                         }
                     }
                     case AIR -> {
-                        living.hurt(DamageSourceUtil.elementalOrb(owner), 1);
+                        living.hurt(MineriaDamageSourceBuilder.get(world).elementalOrb(owner), 1);
                         living.setDeltaMovement(living.getDeltaMovement().add(0, 1.25, 0));
                     }
                     case GROUND -> {
                         if (!PoisonMobEffectInstance.isEntityAffected(living)) {
                             PoisonMobEffectInstance.applyPoisonEffect(living, 1, 24000, 0, PoisonSource.UNKNOWN);
                         }
-                        living.hurt(DamageSourceUtil.elementalOrb(owner), 1);
+                        living.hurt(MineriaDamageSourceBuilder.get(world).elementalOrb(owner), 1);
                     }
                 }
             });

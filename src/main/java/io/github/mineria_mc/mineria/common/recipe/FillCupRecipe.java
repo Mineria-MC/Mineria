@@ -4,6 +4,7 @@ import io.github.mineria_mc.mineria.common.blocks.apothecary_table.ApothecaryTab
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaRecipeSerializers;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -36,17 +37,18 @@ public class FillCupRecipe extends AbstractApothecaryTableRecipe {
     }
 
     @Override
-    public ItemStack assemble(ApothecaryTableInventoryWrapper wrapper) {
+    public ItemStack assemble(ApothecaryTableInventoryWrapper wrapper, @Nonnull RegistryAccess access) {
         PoisonSource poisonSource = wrapper.getPoisonSource();
         return poisonSource == null ? new ItemStack(MineriaItems.CUP.get()) : new ItemStack(POISON_SOURCE_TO_CUP.get().get(poisonSource));
     }
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getOutputStack() {
         return new ItemStack(MineriaItems.STRYCHNOS_TOXIFERA_TEA.get());
     }
 
+    @Nonnull
     @Override
     public RecipeSerializer<?> getSerializer() {
         return MineriaRecipeSerializers.FILL_CUP.get();

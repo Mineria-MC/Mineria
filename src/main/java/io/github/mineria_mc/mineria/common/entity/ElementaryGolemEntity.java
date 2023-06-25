@@ -1,6 +1,7 @@
 package io.github.mineria_mc.mineria.common.entity;
 
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,16 +19,6 @@ public abstract class ElementaryGolemEntity extends AbstractGolem implements Ene
         this.xpReward = 20;
     }
 
-    @Override
-    public boolean isInvulnerableTo(@Nonnull DamageSource source) {
-        return source == DamageSource.FALL || super.isInvulnerableTo(source);
-    }
-
-    @Override
-    public boolean causeFallDamage(float distance, float multiplier, @Nonnull DamageSource source) {
-        return false;
-    }
-
     public float getAttackDamage(RandomSource random) {
         return Math.max(0, getMinAttackDamage() + random.nextFloat() * (getMaxAttackDamage() - getMinAttackDamage()));
     }
@@ -40,7 +31,7 @@ public abstract class ElementaryGolemEntity extends AbstractGolem implements Ene
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        boolean hurt = entity.hurt(DamageSource.mobAttack(this), this.getAttackDamage(this.random));
+        boolean hurt = entity.hurt(damageSources().mobAttack(this), this.getAttackDamage(this.random));
 
         if (hurt) {
             this.doEnchantDamageEffects(this, entity);
@@ -52,7 +43,7 @@ public abstract class ElementaryGolemEntity extends AbstractGolem implements Ene
 
     @Override
     protected void actuallyHurt(DamageSource source, float dmg) {
-        if (source.isExplosion()) {
+        if (source.is(DamageTypeTags.IS_EXPLOSION)) {
             dmg = CombatRules.getDamageAfterMagicAbsorb(dmg, getBlastProtectionValue() * 2);
         }
 
