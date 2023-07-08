@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Deprecated
 class PoisonCapabilityImpl implements IPoisonCapability {
     private final Map<PoisonSource, Pair<Long, Integer>> exposureMap = new HashMap<>();
 

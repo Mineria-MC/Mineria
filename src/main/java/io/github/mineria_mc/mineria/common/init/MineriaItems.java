@@ -6,6 +6,7 @@ import io.github.mineria_mc.mineria.common.effects.instances.ModdedMobEffectInst
 import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.items.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -303,5 +304,8 @@ public class MineriaItems {
         public static final TagKey<Item> POISONOUS_TEAS = ITEMS.createTagKey("poisonous_teas");
         public static final TagKey<Item> TEAS = ITEMS.createTagKey("teas");
         public static final TagKey<Item> ALLOWED_BLOCKS_RITUAL_TABLE = ITEMS.createTagKey("allowed_blocks_ritual_table");
+
+        public static final TagKey<Item> TOOLS_DAGGERS = ITEMS.createTagKey(new ResourceLocation("forge", "tools/daggers"));
+        public static final TagKey<Item> TOOLS_DOUBLE_AXES = ITEMS.createTagKey(new ResourceLocation("forge", "tools/double_axes"));
     }
 }

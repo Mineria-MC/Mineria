@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
+import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
@@ -135,7 +136,7 @@ public class PoisonCommand {
             if (target instanceof LivingEntity living) {
                 PoisonMobEffectInstance.applyPoisonEffect(living, potionClass, duration * 20, amplifier, source);
                 if(countPoisoning) {
-                    living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> cap.applyPoison(source));
+                    living.getCapability(MineriaCapabilities.TICKING_DATA).ifPresent(cap -> cap.store(TickingDataTypes.POISON_EXPOSURE, source));
                 }
                 ret.incrementAndGet();
             }
@@ -161,7 +162,7 @@ public class PoisonCommand {
 
         for (Entity target : targets) {
             if (target instanceof LivingEntity living) {
-                living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> {
+                living.getCapability(MineriaCapabilities.TICKING_DATA).ifPresent(cap -> {
                     if ((living.hasEffect(MobEffects.POISON) && living.getEffect(MobEffects.POISON) instanceof PoisonMobEffectInstance) || living.getActiveEffects().stream().anyMatch(PoisoningHiddenEffectInstance.class::isInstance)) {
                         if (living.removeEffect(MobEffects.POISON)) {
                             ret.getAndIncrement();

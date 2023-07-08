@@ -1,14 +1,14 @@
 package io.github.mineria_mc.mineria.common.effects.instances;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
-import io.github.mineria_mc.mineria.common.effects.PoisonEffect;
+import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.util.EffectUpdater;
 import io.github.mineria_mc.mineria.common.effects.util.IMobEffectInstanceSerializer;
 import io.github.mineria_mc.mineria.common.effects.util.IPoisonEffect;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaEffectInstanceSerializers;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.nbt.CompoundTag;
@@ -23,9 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class PoisonMobEffectInstance extends ModdedMobEffectInstance {
     private int potionClass;
@@ -136,7 +134,7 @@ public class PoisonMobEffectInstance extends ModdedMobEffectInstance {
     @Override
     public void onEffectRemoved(LivingEntity living) {
         this.potion.removeMovementSpeedModifier(living);
-        living.getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(cap -> cap.removePoison(this.poisonSource));
+        living.getCapability(MineriaCapabilities.TICKING_DATA).ifPresent(cap -> cap.remove(TickingDataTypes.POISON_EXPOSURE, this.poisonSource));
     }
 
     @Override

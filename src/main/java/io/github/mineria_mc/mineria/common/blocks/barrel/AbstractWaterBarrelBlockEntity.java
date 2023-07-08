@@ -16,11 +16,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-// TODO Add IFluidHandler capability
-public abstract class AbstractWaterBarrelBlockEntity extends BlockEntity {
+public abstract class AbstractWaterBarrelBlockEntity extends BlockEntity implements IFluidHandler {
     protected int capacity;
     protected int buckets;
     protected boolean destroyedByCreativePlayer;
@@ -122,6 +122,59 @@ public abstract class AbstractWaterBarrelBlockEntity extends BlockEntity {
     protected boolean isValidFluid(Fluid fluid) {
         Fluid contained = getContainedFluid();
         return contained == Fluids.EMPTY || contained.isSame(fluid);
+    }
+
+    // IFluidHandler implementation
+
+    @Override
+    public int getTanks() {
+        return 1;
+    }
+
+    @Override
+    public @NotNull FluidStack getFluidInTank(int tank) {
+        if(tank != 0 || isEmpty()) {
+            return FluidStack.EMPTY;
+        }
+        return new FluidStack(getContainedFluid(), getBuckets() * 1000);
+    }
+
+    @Override
+    public int getTankCapacity(int tank) {
+        return tank == 0 ? getCapacity() : 0;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return tank == 0 && stack.getAmount() == FluidType.BUCKET_VOLUME && isValidFluid(stack.getFluid());
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
+        if(!isFluidValid(0, resource) || isFull()) {
+            return 0;
+        }
+        if(action.execute()) {
+            this.buckets++;
+        }
+        return FluidType.BUCKET_VOLUME;
+    }
+
+    @Override
+    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        if(isEmpty() || !isFluidValid(0, resource)) {
+            return FluidStack.EMPTY;
+        }
+        Fluid stored = getContainedFluid();
+        if(action.execute()) {
+            this.buckets--;
+        }
+        return new FluidStack(stored, FluidType.BUCKET_VOLUME);
+
+    }
+    @Override
+    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        return drain(new FluidStack(getContainedFluid(), maxDrain), action);
     }
 
     public static boolean checkFluidFromStack(ItemStack barrel) {

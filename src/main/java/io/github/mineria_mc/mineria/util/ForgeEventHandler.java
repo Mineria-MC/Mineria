@@ -4,6 +4,7 @@ import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableBlockEntity;
 import io.github.mineria_mc.mineria.common.capabilities.IElementCapability;
 import io.github.mineria_mc.mineria.common.capabilities.IPoisonCapability;
+import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
 import io.github.mineria_mc.mineria.common.effects.instances.ModdedMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
@@ -58,10 +59,12 @@ import java.util.Map;
  */
 @Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeEventHandler {
+    @SuppressWarnings({"deprecation", "removal"})
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         event.getEntity().getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(IPoisonCapability::tick);
         event.getEntity().getCapability(MineriaCapabilities.ELEMENT_EXPOSURE).ifPresent(IElementCapability::tick);
+        event.getEntity().getCapability(MineriaCapabilities.TICKING_DATA).ifPresent(ITickingDataCapability::tick);
     }
 
     @SubscribeEvent

@@ -1,8 +1,9 @@
 package io.github.mineria_mc.mineria.common.enchantments;
 
 import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.capabilities.IElementCapability;
+import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
+import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaEffects;
@@ -91,13 +92,13 @@ public class FourElementsEnchantment extends Enchantment {
                 if(living.invulnerableTime > 0) {
                     return;
                 }
-                Optional<IElementCapability> optCap = entity.getCapability(MineriaCapabilities.ELEMENT_EXPOSURE).resolve();
+                Optional<ITickingDataCapability> optCap = entity.getCapability(MineriaCapabilities.TICKING_DATA).resolve();
                 if(optCap.isEmpty()) {
                     return;
                 }
-                IElementCapability cap = optCap.get();
+                ITickingDataCapability cap = optCap.get();
 
-                cap.applyElement(enchantment.getElementType());
+                cap.store(TickingDataTypes.ELEMENT_EXPOSURE, enchantment.getElementType());
                 switch (enchantment.getElementType()) {
                     case FIRE -> {
                         if (!living.fireImmune()) {
@@ -106,8 +107,8 @@ public class FourElementsEnchantment extends Enchantment {
                         }
                     }
                     case WATER -> {
-                        if (cap.applicationCount(ElementType.WATER) >= 5) {
-                            cap.removeElement(ElementType.WATER);
+                        if (cap.occurrences(TickingDataTypes.ELEMENT_EXPOSURE, ElementType.WATER) >= 5) {
+                            cap.remove(TickingDataTypes.ELEMENT_EXPOSURE, ElementType.WATER);
                             living.setAirSupply(-650);
                             living.addEffect(new MobEffectInstance(MineriaEffects.DROWNING.get(), 32770));
                         } else {

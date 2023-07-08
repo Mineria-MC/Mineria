@@ -1,8 +1,9 @@
 package io.github.mineria_mc.mineria.common.effects.util;
 
-import com.google.common.collect.ImmutableList;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
+import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability;
+import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.init.MineriaEffects;
@@ -11,15 +12,17 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-public class PoisonSource {
+public class PoisonSource implements ITickingDataCapability.Candidate {
     private static final Map<ResourceLocation, PoisonSource> BY_NAME = new HashMap<>();
     private static final Int2ObjectMap<PoisonSource> ORDINAL = new Int2ObjectOpenHashMap<>();
 
@@ -130,16 +133,26 @@ public class PoisonSource {
         return this.exposureTime;
     }
 
+    @Override
+    public long getTickLimit() {
+        return getMaxExposureTime();
+    }
+
+    @Override
+    public String getSerializationString() {
+        return getId().toString();
+    }
+
     public boolean applyPoisoning(LivingEntity living) {
-        return living.getCapability(MineriaCapabilities.POISON_EXPOSURE).map(cap -> {
+        return living.getCapability(MineriaCapabilities.TICKING_DATA).map(cap -> {
             boolean appliedPoison = false;
-            if(cap.getTickCount(this) < this.exposureTime) {
-                for (MobEffectInstance effect : this.poisonApplier.getEffects(living, this, cap.exposureCount(this))) {
+            if(cap.ticksSinceStore(TickingDataTypes.POISON_EXPOSURE, this) < this.exposureTime) {
+                for (MobEffectInstance effect : this.poisonApplier.getEffects(living, this, cap.occurrences(TickingDataTypes.POISON_EXPOSURE, this))) {
                     living.addEffect(effect);
                     appliedPoison = true;
                 }
             }
-            cap.applyPoison(this);
+            cap.store(TickingDataTypes.POISON_EXPOSURE, this);
             return appliedPoison;
         }).orElse(false);
     }

@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Deprecated
 class ElementCapabilityImpl implements IElementCapability {
     private static final int APPLICATION_TIME = 400; // 20 seconds
 

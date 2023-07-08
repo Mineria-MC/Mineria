@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public interface IElementCapability extends INBTSerializable<CompoundTag> {
     void applyElement(@Nonnull ElementType element);
 
