@@ -1,11 +1,10 @@
 package io.github.mineria_mc.mineria.client.screens;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.containers.DiamondFluidBarrelMenu;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,22 +30,20 @@ public class DiamondFluidBarrelScreen extends AbstractContainerScreen<DiamondFlu
     }
 
     @Override
-    public void render(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+    public void render(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    protected void renderBg(@Nonnull GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        this.blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
         for(int i = 0; i < 3; i++) {
             if(menu.isInventoryActive(i)) {
-                this.blit(poseStack, this.leftPos + 40, this.topPos + 17 + 18 * i, 0, 167, 144, 18);
+                graphics.blit(TEXTURE, this.leftPos + 40, this.topPos + 17 + 18 * i, 0, 167, 144, 18);
             }
         }
     }

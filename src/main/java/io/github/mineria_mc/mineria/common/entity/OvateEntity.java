@@ -109,7 +109,7 @@ public class OvateEntity extends AbstractDruidEntity {
 
     @Override
     public boolean isClientSide() {
-        return level.isClientSide();
+        return level().isClientSide();
     }
 
     class PoisonSpellGoal extends UseSpellGoal {

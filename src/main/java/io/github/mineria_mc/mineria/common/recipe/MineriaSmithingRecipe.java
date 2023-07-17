@@ -49,6 +49,11 @@ public class MineriaSmithingRecipe extends SmithingTransformRecipe {
         return MineriaRecipeSerializers.SMITHING.get();
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<MineriaSmithingRecipe> {
         @Override
         public MineriaSmithingRecipe fromJson(ResourceLocation id, JsonObject json) {

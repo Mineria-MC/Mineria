@@ -275,14 +275,14 @@ public class MineriaAdvancementProvider extends ForgeAdvancementProvider {
                                                         .children(b2 -> {
                                                             b2.create("fill_fluid_barrel")
                                                                     .icon(MineriaBlocks.WATER_BARREL)
-                                                                    .singleCriterion(new FluidBarrelFilledTrigger.Instance(EntityPredicate.Composite.ANY, null, new FluidBarrelCapacityPredicate(-1, -1, true)));
+                                                                    .singleCriterion(new FluidBarrelFilledTrigger.Instance(ContextAwarePredicate.ANY, null, new FluidBarrelCapacityPredicate(-1, -1, true)));
                                                             b2.create("extract_titane")
                                                                     .icon(MineriaItems.TITANE_NUGGET)
-                                                                    .singleCriterion(new ExtractedItemTrigger.Instance(EntityPredicate.Composite.ANY, ItemPredicate.Builder.item().of(MineriaItems.TITANE_NUGGET.get()).build()))
+                                                                    .singleCriterion(new ExtractedItemTrigger.Instance(ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(MineriaItems.TITANE_NUGGET.get()).build()))
                                                                     .children(b3 ->
                                                                             b3.create("craft_titane_with_nuggets")
                                                                                     .icon(MineriaItems.TITANE_INGOT)
-                                                                                    .singleCriterion(new ShapedRecipeUsedTrigger.Instance(EntityPredicate.Composite.ANY, ShapedRecipePredicate.builder("nnn", "nnn", "nnn").key("n", Ingredient.of(MineriaItems.TITANE_NUGGET.get())).result(MineriaItems.TITANE_INGOT)))
+                                                                                    .singleCriterion(new ShapedRecipeUsedTrigger.Instance(ContextAwarePredicate.ANY, ShapedRecipePredicate.builder("nnn", "nnn", "nnn").key("n", Ingredient.of(MineriaItems.TITANE_NUGGET.get())).result(MineriaItems.TITANE_INGOT)))
                                                                     );
                                                             b2.create("make_extractor")
                                                                     .icon(MineriaBlocks.EXTRACTOR)
@@ -291,7 +291,7 @@ public class MineriaAdvancementProvider extends ForgeAdvancementProvider {
                                                                             b3.create("extract_lonsdaleite")
                                                                                     .icon(MineriaItems.LONSDALEITE)
                                                                                     .frame(FrameType.CHALLENGE)
-                                                                                    .singleCriterion(new ExtractedItemTrigger.Instance(EntityPredicate.Composite.ANY, ItemPredicate.Builder.item().of(MineriaItems.LONSDALEITE.get()).build()))
+                                                                                    .singleCriterion(new ExtractedItemTrigger.Instance(ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(MineriaItems.LONSDALEITE.get()).build()))
                                                                     );
                                                         })
                                         );
@@ -325,7 +325,7 @@ public class MineriaAdvancementProvider extends ForgeAdvancementProvider {
                                                                                             );
                                                                                     b4.create("apply_four_elements")
                                                                                             .icon(Items.ENCHANTED_BOOK)
-                                                                                            .singleCriterion(new UsedAnvilTrigger.Instance(EntityPredicate.Composite.ANY, ItemPredicate.ANY, ItemPredicate.Builder.item().hasStoredEnchantment(new EnchantmentPredicate(MineriaEnchantments.FOUR_ELEMENTS.get(), MinMaxBounds.Ints.ANY)).build(), ItemPredicate.ANY));
+                                                                                            .singleCriterion(new UsedAnvilTrigger.Instance(ContextAwarePredicate.ANY, ItemPredicate.ANY, ItemPredicate.Builder.item().hasStoredEnchantment(new EnchantmentPredicate(MineriaEnchantments.FOUR_ELEMENTS.get(), MinMaxBounds.Ints.ANY)).build(), ItemPredicate.ANY));
                                                                                 })
                                                                 );
                                                         b2.create("get_billhook")
@@ -363,7 +363,7 @@ public class MineriaAdvancementProvider extends ForgeAdvancementProvider {
         }
 
         public static TradeTrigger.TriggerInstance tradedWithVillager(EntityPredicate villagerPredicate) {
-            return new TradeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.wrap(villagerPredicate), ItemPredicate.ANY);
+            return new TradeTrigger.TriggerInstance(ContextAwarePredicate.ANY, EntityPredicate.wrap(villagerPredicate), ItemPredicate.ANY);
         }
     }
 }

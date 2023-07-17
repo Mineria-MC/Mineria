@@ -29,11 +29,11 @@ public class AlertTeamHurtByTargetGoal extends HurtByTargetGoal {
     protected void alertOthers() {
         double followDistance = this.getFollowDistance();
         AABB aabb = AABB.unitCubeFromLowerCorner(this.mob.position()).inflate(followDistance, 10.0D, followDistance);
-        List<Mob> entities = Lists.newArrayList(this.mob.level.getEntitiesOfClass(this.mob.getClass(), aabb));
+        List<Mob> entities = Lists.newArrayList(this.mob.level().getEntitiesOfClass(this.mob.getClass(), aabb));
 
         if(entitiesToAlert != null) {
             for (Class<? extends Mob> clazz : entitiesToAlert) {
-                entities.addAll(this.mob.level.getEntitiesOfClass(clazz, aabb));
+                entities.addAll(this.mob.level().getEntitiesOfClass(clazz, aabb));
             }
         }
 

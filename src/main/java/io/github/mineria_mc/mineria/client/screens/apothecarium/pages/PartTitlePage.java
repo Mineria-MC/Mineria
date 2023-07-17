@@ -1,9 +1,10 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium.pages;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumBookmarkInfo;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.PageSet;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.Lazy;
@@ -21,12 +22,14 @@ public class PartTitlePage extends ApothecariumPage {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x) {
+        PoseStack stack = graphics.pose();
+
         stack.pushPose();
         float scaleFactor = findFittingScale(title, height / 90f, width / 12f);
         stack.translate(x + (width - font.width(title) * scaleFactor) / 2f, y + (height - (font.lineHeight - 1)) / 2f, 0);
         stack.scale(scaleFactor, scaleFactor, 1);
-        font.draw(stack, title, 0, 0, 0);
+        font.draw(graphics, title, 0, 0, 0);
         stack.popPose();
     }
 

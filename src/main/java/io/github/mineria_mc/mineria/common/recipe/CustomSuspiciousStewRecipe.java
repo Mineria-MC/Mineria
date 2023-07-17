@@ -16,6 +16,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +26,7 @@ public class CustomSuspiciousStewRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level world) {
+    public boolean matches(CraftingContainer inv, @NotNull Level world) {
         ItemStack mushroom1 = ItemStack.EMPTY;
         ItemStack mushroom2 = ItemStack.EMPTY;
         boolean hasFlower = false;
@@ -36,7 +37,7 @@ public class CustomSuspiciousStewRecipe extends CustomRecipe {
             if (!slotStack.isEmpty()) {
                 if (slotStack.is(Tags.Items.MUSHROOMS) && mushroom1.isEmpty()) {
                     mushroom1 = slotStack;
-                } else if (slotStack.is(Tags.Items.MUSHROOMS) && !slotStack.sameItem(mushroom1) && mushroom2.isEmpty()) {
+                } else if (slotStack.is(Tags.Items.MUSHROOMS) && !ItemStack.isSameItem(slotStack, mushroom1) && mushroom2.isEmpty()) {
                     mushroom2 = slotStack;
                 } else if (slotStack.is(ItemTags.SMALL_FLOWERS) && !hasFlower) {
                     hasFlower = true;
@@ -54,7 +55,7 @@ public class CustomSuspiciousStewRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, @Nonnull RegistryAccess access) {
+    public @NotNull ItemStack assemble(CraftingContainer inv, @Nonnull RegistryAccess access) {
         ItemStack flower = ItemStack.EMPTY;
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {

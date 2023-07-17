@@ -41,7 +41,7 @@ public abstract class MineriaMenu<T extends BlockEntity> extends AbstractContain
     protected static <T extends BlockEntity> T getTileEntity(Class<T> clazz, Inventory playerInv, FriendlyByteBuf data) {
         Objects.requireNonNull(playerInv, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final BlockEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
+        final BlockEntity tileAtPos = playerInv.player.level().getBlockEntity(data.readBlockPos());
         if (tileAtPos != null) {
             if (tileAtPos.getClass().equals(clazz)) {
                 return (T) tileAtPos;

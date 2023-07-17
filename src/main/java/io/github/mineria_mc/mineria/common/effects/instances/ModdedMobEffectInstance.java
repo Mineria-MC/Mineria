@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.common.effects.instances;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -214,8 +214,8 @@ public abstract class ModdedMobEffectInstance extends MobEffectInstance {
         return nbt;
     }
 
-    public void drawPotionName(Font font, PoseStack matrixStack, float x, float y) {
-        font.drawShadow(matrixStack, Component.translatable(this.getDescriptionId()), x, y, 16777215);
+    public void drawPotionName(Font font, GuiGraphics graphics, float x, float y) {
+        graphics.drawString(font, Component.translatable(this.getDescriptionId()).getVisualOrderText(), x, y, 16777215, true);
     }
 
     public int getColor() {

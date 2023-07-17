@@ -1,8 +1,9 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium.pages;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.PageSet;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -26,18 +27,21 @@ public class FontTestingPage extends ApothecariumPage {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x) {
-        font.draw(stack, Component.literal(fontLocation.getPath()), x, y, 0);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x) {
+        font.draw(graphics, Component.literal(fontLocation.getPath()), x, y, 0);
 
         float scaleFactor = height / 90f;
         int maxLength = (int) (width / scaleFactor);
         List<FormattedCharSequence> processed = font.split(text, maxLength);
         for (int i = 0; i < processed.size(); i++) {
             FormattedCharSequence chars = processed.get(i);
+
+            PoseStack stack = graphics.pose();
+
             stack.pushPose();
             stack.translate(x, y + 20 + (font.lineHeight - 1) * scaleFactor * i, 0);
             stack.scale(scaleFactor, scaleFactor, 1);
-            font.draw(stack, chars, 0, 0, 0);
+            font.draw(graphics, chars, 0, 0, 0);
             stack.popPose();
         }
     }

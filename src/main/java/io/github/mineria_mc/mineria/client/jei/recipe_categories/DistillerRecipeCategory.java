@@ -3,7 +3,6 @@ package io.github.mineria_mc.mineria.client.jei.recipe_categories;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.recipe.DistillerRecipe;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -14,6 +13,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -76,8 +76,8 @@ public class DistillerRecipeCategory implements IRecipeCategory<DistillerRecipe>
     }
 
     @Override
-    public void draw(@Nonnull DistillerRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
-        this.animatedFlame.draw(stack, 87 - 5, 42 - 6);
-        this.animatedBubbles.draw(stack, 105 - 5, 11 - 6);
+    public void draw(@Nonnull DistillerRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.animatedFlame.draw(graphics, 87 - 5, 42 - 6);
+        this.animatedBubbles.draw(graphics, 105 - 5, 11 - 6);
     }
 }

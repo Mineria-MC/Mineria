@@ -12,17 +12,18 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.Instance> {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "mined_block");
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser) {
+    protected @NotNull Instance createInstance(JsonObject json, @NotNull ContextAwarePredicate andPredicate, @NotNull DeserializationContext parser) {
         BlockStatePredicate block = BlockStatePredicate.fromJson(json.get("block"));
         LocationPredicate location = LocationPredicate.fromJson(json.get("location"));
         ItemPredicate item = ItemPredicate.fromJson(json.get("item"));
@@ -30,7 +31,7 @@ public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.
     }
 
     public void trigger(ServerPlayer player, BlockState state, BlockPos pos, ItemStack stack) {
-        this.trigger(player, instance -> instance.matches(state, player.getLevel(), pos, stack));
+        this.trigger(player, instance -> instance.matches(state, player.serverLevel(), pos, stack));
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
@@ -38,7 +39,7 @@ public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.
         private final LocationPredicate location;
         private final ItemPredicate item;
 
-        public Instance(EntityPredicate.Composite andPredicate, BlockStatePredicate block, LocationPredicate location, ItemPredicate item) {
+        public Instance(ContextAwarePredicate andPredicate, BlockStatePredicate block, LocationPredicate location, ItemPredicate item) {
             super(ID, andPredicate);
             this.block = block;
             this.location = location;
@@ -46,11 +47,11 @@ public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.
         }
 
         public static Instance minedBlock(Block block) {
-            return new Instance(EntityPredicate.Composite.ANY, new BlockStatePredicate(null, block, StatePropertiesPredicate.ANY), LocationPredicate.ANY, ItemPredicate.ANY);
+            return new Instance(ContextAwarePredicate.ANY, new BlockStatePredicate(null, block, StatePropertiesPredicate.ANY), LocationPredicate.ANY, ItemPredicate.ANY);
         }
 
         public static Instance minedBlock(TagKey<Block> tag) {
-            return new Instance(EntityPredicate.Composite.ANY, new BlockStatePredicate(tag, null, StatePropertiesPredicate.ANY), LocationPredicate.ANY, ItemPredicate.ANY);
+            return new Instance(ContextAwarePredicate.ANY, new BlockStatePredicate(tag, null, StatePropertiesPredicate.ANY), LocationPredicate.ANY, ItemPredicate.ANY);
         }
 
         private boolean matches(BlockState state, ServerLevel world, BlockPos pos, ItemStack stack) {
@@ -63,7 +64,7 @@ public class MinedBlockTrigger extends SimpleCriterionTrigger<MinedBlockTrigger.
         }
 
         @Override
-        public JsonObject serializeToJson(SerializationContext serializer) {
+        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.add("block", this.block.serializeToJson());
             json.add("location", this.location.serializeToJson());

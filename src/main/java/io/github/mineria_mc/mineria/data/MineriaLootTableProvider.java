@@ -1,6 +1,5 @@
 package io.github.mineria_mc.mineria.data;
 
-import io.github.mineria_mc.mineria.data.loot.MineriaBlockLoot;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;

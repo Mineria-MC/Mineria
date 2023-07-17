@@ -3,7 +3,6 @@ package io.github.mineria_mc.mineria.client.jei.recipe_categories;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.recipe.ExtractorRecipe;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -16,6 +15,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -82,7 +82,7 @@ public class ExtractorRecipeCategory implements IRecipeCategory<ExtractorRecipe>
     }
 
     @Override
-    public void draw(@Nonnull ExtractorRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
-        animation.draw(stack, 13 - 4, 37 - 5);
+    public void draw(@Nonnull ExtractorRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull GuiGraphics graphics, double mouseX, double mouseY) {
+        animation.draw(graphics, 13 - 4, 37 - 5);
     }
 }

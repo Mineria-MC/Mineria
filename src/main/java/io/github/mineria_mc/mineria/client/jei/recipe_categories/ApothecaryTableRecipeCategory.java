@@ -1,5 +1,6 @@
 package io.github.mineria_mc.mineria.client.jei.recipe_categories;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
@@ -7,8 +8,6 @@ import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import io.github.mineria_mc.mineria.common.recipe.AbstractApothecaryTableRecipe;
 import io.github.mineria_mc.mineria.common.recipe.ApothecaryFillingRecipe;
 import io.github.mineria_mc.mineria.common.recipe.ApothecaryTableRecipe;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -20,7 +19,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -88,10 +87,10 @@ public class ApothecaryTableRecipeCategory implements IRecipeCategory<AbstractAp
     }
 
     @Override
-    public void draw(@Nonnull AbstractApothecaryTableRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
-        this.animatedArrow.draw(stack, 101, 29);
+    public void draw(@Nonnull AbstractApothecaryTableRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull GuiGraphics graphics, double mouseX, double mouseY) {
+        this.animatedArrow.draw(graphics, 101, 29);
         if (recipe instanceof ApothecaryTableRecipe) {
-            drawPoisonSource(stack, 6, 2, ((ApothecaryTableRecipe) recipe).getPoisonSource());
+            drawPoisonSource(graphics, 6, 2, ((ApothecaryTableRecipe) recipe).getPoisonSource());
         }
     }
 
@@ -109,12 +108,11 @@ public class ApothecaryTableRecipeCategory implements IRecipeCategory<AbstractAp
         return tooltip;
     }
 
-    private static void drawPoisonSource(PoseStack stack, int x, int y, PoisonSource poisonSource) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
+    private static void drawPoisonSource(GuiGraphics graphics, int x, int y, PoisonSource poisonSource) {
         int color = poisonSource.getColor();
         RenderSystem.setShaderColor(red(color) / 255.0F, green(color) / 255.0F, blue(color) / 255.0F, 1.0f);
-        GuiComponent.blit(stack, x + 1, y + 1, 1, 177, 18, 15, 69, 256, 256);
+        graphics.blit(TEXTURE, x + 1, y + 1, 1, 177, 18, 15, 69, 256, 256);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        GuiComponent.blit(stack, x, y, 2, 192, 17, 17, 71, 256, 256);
+        graphics.blit(TEXTURE, x, y, 2, 192, 17, 17, 71, 256, 256);
     }
 }

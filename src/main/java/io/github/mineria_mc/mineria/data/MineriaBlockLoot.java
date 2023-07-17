@@ -1,4 +1,4 @@
-package io.github.mineria_mc.mineria.data.loot;
+package io.github.mineria_mc.mineria.data;
 
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.util.DeferredRegisterUtil;

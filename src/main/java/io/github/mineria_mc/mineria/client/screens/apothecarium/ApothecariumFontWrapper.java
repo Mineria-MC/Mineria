@@ -1,8 +1,8 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium;
 
 import io.github.mineria_mc.mineria.Mineria;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,16 +25,16 @@ public class ApothecariumFontWrapper {
         this.customFontId = customFontId;
     }
 
-    public void draw(PoseStack stack, Component component, float x, float y, int color) {
-        wrapped.draw(stack, tryApplyFont(component), x, y, color);
+    public void draw(GuiGraphics graphics, Component component, float x, float y, int color) {
+        graphics.drawString(wrapped, tryApplyFont(component).getVisualOrderText(), x, y, color, false);
     }
 
-    public void draw(PoseStack stack, String text, float x, float y, int color) {
-        draw(stack, Component.literal(text), x, y, color);
+    public void draw(GuiGraphics graphics, String text, float x, float y, int color) {
+        graphics.drawString(wrapped, tryApplyFont(Component.literal(text)).getVisualOrderText(), x, y, color, false);
     }
 
-    public void draw(PoseStack stack, FormattedCharSequence text, float x, float y, int color) {
-        wrapped.draw(stack, text, x, y, color);
+    public void draw(GuiGraphics graphics, FormattedCharSequence text, float x, float y, int color) {
+        graphics.drawString(wrapped, text, x, y, color, false);
     }
 
     public List<FormattedCharSequence> split(FormattedText text, int maxWidth) {

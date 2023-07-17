@@ -16,7 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
 
 public class ApothecaryTableBlock extends Block implements EntityBlock {
     public ApothecaryTableBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD).strength(3.5F).sound(SoundType.WOOD));
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).ignitedByLava().strength(3.5F).sound(SoundType.WOOD));
     }
 
     @Nullable

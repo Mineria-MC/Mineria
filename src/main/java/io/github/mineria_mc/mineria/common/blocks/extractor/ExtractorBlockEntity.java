@@ -90,7 +90,7 @@ public class ExtractorBlockEntity extends MineriaLockableBlockEntity {
 
                 if (output.isEmpty()) {
                     continue;
-                } else if (!output.sameItem(result)) {
+                } else if (!ItemStack.isSameItem(output, result)) {
                     return false;
                 }
 
@@ -149,7 +149,7 @@ public class ExtractorBlockEntity extends MineriaLockableBlockEntity {
         List<Integer> ints = new ArrayList<>(map.keySet());
         ints.sort(Comparator.reverseOrder());
         for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
-            if (entry.getValue().sameItem(stack)) {
+            if (ItemStack.isSameItem(entry.getValue(), stack)) {
                 return ints.indexOf(entry.getKey()) + 3;
             }
         }

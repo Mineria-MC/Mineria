@@ -18,9 +18,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -29,11 +31,11 @@ public class DebugBlock extends Block {
     private static final int ZONE_HEIGHT = 16;
 
     public DebugBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE).strength(-1, 3600000).sound(SoundType.ANCIENT_DEBRIS).noLootTable().isValidSpawn((a, b, c, d) -> false));
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(-1, 3600000).sound(SoundType.ANCIENT_DEBRIS).noLootTable().isValidSpawn((a, b, c, d) -> false));
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!world.isClientSide && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
             BlockPos startPos = pos.offset(-ZONE_WIDTH / 2, 0, -ZONE_WIDTH / 2);
 

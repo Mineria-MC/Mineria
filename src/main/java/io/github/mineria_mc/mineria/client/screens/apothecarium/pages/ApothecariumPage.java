@@ -4,14 +4,13 @@ import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumBook
 import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumFontWrapper;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumScreen;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.FormattedText;
 
 import javax.annotation.Nullable;
 
-public abstract class ApothecariumPage extends GuiComponent {
+public abstract class ApothecariumPage {
     protected final Minecraft client;
     protected final ApothecariumFontWrapper font;
     protected final int y, width, height;
@@ -26,7 +25,7 @@ public abstract class ApothecariumPage extends GuiComponent {
         this.parentScreen = ctx.parentScreen();
     }
 
-    public abstract void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x);
+    public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x);
 
     @Nullable
     public ApothecariumBookmarkInfo bookmarkInfo() {

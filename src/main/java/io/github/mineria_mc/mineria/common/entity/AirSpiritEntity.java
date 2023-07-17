@@ -174,9 +174,9 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements RangedAtta
         double y = target.getY(0.3333333333333333D) - arrow.getY();
         double z = target.getZ() - this.getZ();
         double dist = Math.sqrt(x * x + z * z);
-        arrow.shoot(x, y + dist * (double) 0.2F, z, 1.6F, (float) (14 - this.level.getDifficulty().getId() * 4));
+        arrow.shoot(x, y + dist * (double) 0.2F, z, 1.6F, (float) (14 - this.level().getDifficulty().getId() * 4));
         this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(arrow);
+        this.level().addFreshEntity(arrow);
     }
 
     protected void setTranslucent(boolean translucent) {
@@ -328,7 +328,7 @@ public class AirSpiritEntity extends ElementaryGolemEntity implements RangedAtta
                 yBodyRot = getYRot();
 
                 float impulse;
-                if (isOnGround()) {
+                if (onGround()) {
                     impulse = (float) (this.speedModifier * getAttributeValue(Attributes.MOVEMENT_SPEED));
                 } else {
                     impulse = (float) (this.speedModifier * getAttributeValue(Attributes.FLYING_SPEED));

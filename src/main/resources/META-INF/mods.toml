@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[45,)"
+loaderVersion="[47,)"
 license="MIT License"
 issueTracker="https://github.com/Mineria-MC/Mineria/issues"
 
 [[mods]]
 modId="mineria"
-version="${mineria_version}"
+version="${mc_version}-${mineria_version}"
 displayName="Mineria"
 displayURL="https://github.com/Mineria-MC/Mineria"
 logoFile="logo.png"
@@ -19,20 +19,20 @@ displayTest="MATCH_VERSION"
 [[dependencies.mineria]]
     modId="terrablender"
     mandatory=false
-    versionRange="[2.2,)"
+    versionRange="[3.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.mineria]]
     modId="forge"
     mandatory=true
-    versionRange="[45,)"
+    versionRange="[47,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.mineria]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.4,1.20)"
+    versionRange="[1.20.1,1.21)"
     ordering="NONE"
     side="BOTH"

@@ -46,6 +46,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GreatDruidOfGaulsEntity extends Monster {
@@ -113,7 +113,7 @@ public class GreatDruidOfGaulsEntity extends Monster {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("CurrentWave", this.getCurrentWave());
         nbt.putBoolean("DoTrigger", this.doTrigger);
@@ -125,7 +125,7 @@ public class GreatDruidOfGaulsEntity extends Monster {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         setCurrentWave(nbt.getInt("CurrentWave"));
         this.doTrigger = nbt.getBoolean("DoTrigger");
@@ -146,23 +146,23 @@ public class GreatDruidOfGaulsEntity extends Monster {
     @Override
     public void tick() {
         if (this.summonedEntities.isEmpty()) {
-            if (this.level instanceof ServerLevel) {
-                this.summonedEntitiesUUIDs.stream().map(id -> ((ServerLevel) this.level).getEntity(id)).map(Mob.class::cast).filter(Objects::nonNull).forEach(this.summonedEntities::add);
+            if (this.level() instanceof ServerLevel serverLevel) {
+                this.summonedEntitiesUUIDs.stream().map(serverLevel::getEntity).map(Mob.class::cast).filter(Objects::nonNull).forEach(this.summonedEntities::add);
             }
         }
         summonedEntities.removeIf(entity -> !entity.isAlive());
         summonedEntities.forEach(this::tickEntity);
         super.tick();
         if (isCurrentWaveOver() && getCurrentWave() >= 5) {
-            this.level.getNearbyPlayers(TargetingConditions.forNonCombat(), this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
+            this.level().getNearbyPlayers(TargetingConditions.forNonCombat(), this, this.getBoundingBox().inflate(this.getAttributeValue(Attributes.FOLLOW_RANGE), 8, this.getAttributeValue(Attributes.FOLLOW_RANGE)))
                     .forEach(playerEntity -> playerEntity.awardKillScore(this, this.deathScore, damageSources().magic()));
             this.kill();
         }
         if (triggerCooldown > 0) --triggerCooldown;
         if (doTrigger && getTarget() != null) {
             LivingEntity target = getTarget();
-            if (!level.isClientSide()) {
-                ServerLevel world = (ServerLevel) level;
+            if (!level().isClientSide()) {
+                ServerLevel world = (ServerLevel) level();
                 MineriaLightningBoltEntity.create(world, BlockPos.containing(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
             }
             target.addEffect(new MobEffectInstance(MineriaEffects.HALLUCINATIONS.get(), 600));
@@ -212,22 +212,22 @@ public class GreatDruidOfGaulsEntity extends Monster {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return super.getHurtSound(source);
     }
 
     @Override
-    public void makeStuckInBlock(BlockState state, Vec3 vec3) {
+    public void makeStuckInBlock(@NotNull BlockState state, @NotNull Vec3 vec3) {
     }
 
     @Override
-    public void startSeenByPlayer(ServerPlayer player) {
+    public void startSeenByPlayer(@NotNull ServerPlayer player) {
         super.startSeenByPlayer(player);
         this.bossEvent.addPlayer(player);
     }
 
     @Override
-    public void stopSeenByPlayer(ServerPlayer player) {
+    public void stopSeenByPlayer(@NotNull ServerPlayer player) {
         super.stopSeenByPlayer(player);
         this.bossEvent.removePlayer(player);
     }
@@ -238,17 +238,17 @@ public class GreatDruidOfGaulsEntity extends Monster {
     }
 
     @Override
-    protected boolean canRide(Entity entity) {
+    protected boolean canRide(@NotNull Entity entity) {
         return false;
     }
 
     @Override
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
         return false;
     }
 
     @Override
-    public boolean addEffect(MobEffectInstance effect, @Nullable Entity entity) {
+    public boolean addEffect(@NotNull MobEffectInstance effect, @Nullable Entity entity) {
         return false;
     }
 
@@ -256,9 +256,10 @@ public class GreatDruidOfGaulsEntity extends Monster {
     public void push(double x, double y, double z) {
     }
 
+    @SuppressWarnings({"deprecation", "OverrideOnly"})
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
         setInvulnerable(true);
         setNoGravity(true);
         setPersistenceRequired();
@@ -319,14 +320,13 @@ public class GreatDruidOfGaulsEntity extends Monster {
 
         public boolean summonEntities() {
             if (isCurrentWaveOver()) {
-                if (level instanceof ServerLevel) {
+                if (level() instanceof ServerLevel world) {
                     List<Mob> toAdd = new ArrayList<>();
-                    ServerLevel world = (ServerLevel) level;
                     List<BlockPos> spawnRange = getPoses(blockPosition());
 
                     for (Object2IntMap.Entry<EntityType<? extends Mob>> entry : entitiesByWave.get(getCurrentWave() + 1).object2IntEntrySet()) {
                         SpawnPlacements.Type type = SpawnPlacements.getPlacementType(entry.getKey());
-                        List<BlockPos> spawnPositions = spawnRange.stream().filter(position -> NaturalSpawner.isSpawnPositionOk(type, world, position, entry.getKey())).collect(Collectors.toList());
+                        List<BlockPos> spawnPositions = spawnRange.stream().filter(position -> NaturalSpawner.isSpawnPositionOk(type, world, position, entry.getKey())).toList();
 
                         if (spawnPositions.isEmpty())
                             return false;

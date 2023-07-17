@@ -54,6 +54,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
@@ -87,7 +88,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         MerchantOffers offers = this.getOffers();
         if (!offers.isEmpty())
@@ -117,7 +118,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.contains("Offers", 10))
             this.offers = new MerchantOffers(nbt.getCompound("Offers"));
@@ -136,7 +137,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
             setRitualTablePosition(new BlockPos(ritualTablePosNbt.getInt("X"), ritualTablePosNbt.getInt("Y"), ritualTablePosNbt.getInt("Z")));
         }
 
-        if (!level.isClientSide) readPersistentAngerSaveData((ServerLevel) level, nbt);
+        readPersistentAngerSaveData(level(), nbt);
     }
 
     @Override
@@ -166,14 +167,14 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
 
         if (shouldRestock()) restock();
 
-        for (LivingEntity living : this.level.getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, this, this.getBoundingBox().inflate(20, 8, 20))) {
+        for (LivingEntity living : this.level().getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, this, this.getBoundingBox().inflate(20, 8, 20))) {
             if (living.isInWater() && !living.equals(this.getTarget())) {
                 living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50));
             }
         }
 
         if (getRitualTablePosition().isPresent()) {
-            BlockEntity tile = this.level.getBlockEntity(this.getRitualTablePosition().get());
+            BlockEntity tile = this.level().getBlockEntity(this.getRitualTablePosition().get());
             if (!(tile instanceof RitualTableBlockEntity)) {
                 setRitualTablePosition(null);
                 setRitualPosition(null);
@@ -184,7 +185,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     @Override
     public void tick() {
         super.tick();
-        if (this.level.isClientSide && this.isCastingSpell()) {
+        if (this.level().isClientSide && this.isCastingSpell()) {
             SpellType spell = this.getCurrentSpell();
             double red = spell.spellColor[0];
             double green = spell.spellColor[1];
@@ -192,8 +193,8 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
             float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
             float dx = Mth.cos(f);
             float dz = Mth.sin(f);
-            this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double) dx * 0.6D, this.getY() + 1.8D, this.getZ() + (double) dz * 0.6D, red, green, blue);
-            this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double) dx * 0.6D, this.getY() + 1.8D, this.getZ() - (double) dz * 0.6D, red, green, blue);
+            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double) dx * 0.6D, this.getY() + 1.8D, this.getZ() + (double) dz * 0.6D, red, green, blue);
+            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double) dx * 0.6D, this.getY() + 1.8D, this.getZ() - (double) dz * 0.6D, red, green, blue);
         }
     }
 
@@ -218,12 +219,12 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public boolean isAlliedTo(Entity entity) {
+    public boolean isAlliedTo(@NotNull Entity entity) {
         return entity instanceof AbstractDruidEntity || super.isAlliedTo(entity);
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return MineriaSounds.DRUID_HURT.get();
     }
 
@@ -244,7 +245,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     public boolean isCastingSpell() {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             return this.entityData.get(DATA_SPELL_CASTING_ID) > 0;
         } else {
             return this.spellCastingTickCount > 0;
@@ -257,7 +258,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     public SpellType getCurrentSpell() {
-        return level.isClientSide ? SpellType.byId(this.entityData.get(DATA_SPELL_CASTING_ID)) : this.currentSpell;
+        return level().isClientSide ? SpellType.byId(this.entityData.get(DATA_SPELL_CASTING_ID)) : this.currentSpell;
     }
 
     protected int getSpellCastingTime() {
@@ -277,29 +278,29 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public void die(DamageSource source) {
+    public void die(@NotNull DamageSource source) {
         super.die(source);
         stopTrading();
     }
 
     @Nullable
     @Override
-    public Entity changeDimension(ServerLevel p_241206_1_, ITeleporter teleporter) {
+    public Entity changeDimension(@NotNull ServerLevel p_241206_1_, @NotNull ITeleporter teleporter) {
         stopTrading();
         return getRitualPosition().isPresent() ? null : super.changeDimension(p_241206_1_, teleporter);
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (isAlive() && !isTrading() && !player.isSecondaryUseActive() && !player.equals(this.getTarget()) && !getRitualPosition().isPresent()) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if (isAlive() && !isTrading() && !player.isSecondaryUseActive() && !player.equals(this.getTarget()) && getRitualPosition().isEmpty()) {
             if (!this.getOffers().isEmpty()) {
-                if (!this.level.isClientSide) {
+                if (!this.level().isClientSide) {
                     this.setTradingPlayer(player);
                     this.openTradingScreen(player, this.getDisplayName(), this.tradeLevel);
                 }
 
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
         return super.mobInteract(player, hand);
     }
@@ -347,7 +348,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
         }
 
         if (offer.shouldRewardExp()) {
-            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), xp));
+            this.level().addFreshEntity(new ExperienceOrb(this.level(), this.getX(), this.getY() + 0.5D, this.getZ(), xp));
         }
     }
 
@@ -410,7 +411,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public MerchantOffers getOffers() {
+    public @NotNull MerchantOffers getOffers() {
         if (offers == null) {
             offers = new MerchantOffers();
             updateTrades();
@@ -469,16 +470,11 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public void notifyTradeUpdated(ItemStack stack) {
-        if (!this.level.isClientSide && this.ambientSoundTime > -this.getAmbientSoundInterval() + 20) {
+    public void notifyTradeUpdated(@NotNull ItemStack stack) {
+        if (!this.level().isClientSide && this.ambientSoundTime > -this.getAmbientSoundInterval() + 20) {
             this.ambientSoundTime = -this.getAmbientSoundInterval();
             this.playSound(this.getTradeUpdatedSound(!stack.isEmpty()), this.getSoundVolume(), this.getVoicePitch());
         }
-    }
-
-    @Override
-    public Level getLevel() {
-        return this.level;
     }
 
     @Override
@@ -505,11 +501,11 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
             offer.resetUses();
         }
 
-        this.lastRestockGameTime = this.level.getGameTime();
+        this.lastRestockGameTime = this.level().getGameTime();
     }
 
     public boolean shouldRestock() {
-        return needsToRestock() && this.level.getGameTime() > this.lastRestockGameTime + 60000L;
+        return needsToRestock() && this.level().getGameTime() > this.lastRestockGameTime + 60000L;
     }
 
     private boolean needsToRestock() {
@@ -521,7 +517,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
     }
 
     @Override
-    public SoundEvent getNotifyTradeSound() {
+    public @NotNull SoundEvent getNotifyTradeSound() {
         return MineriaSounds.DRUID_YES.get();
     }
 
@@ -537,9 +533,10 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
         }
     }
 
+    @SuppressWarnings({"deprecation", "OverrideOnly"})
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
         setDropChance(EquipmentSlot.MAINHAND, 0.0F);
         this.restrictTo(this.blockPosition(), 16);
         return super.finalizeSpawn(world, difficulty, reason, data, nbt);
@@ -553,26 +550,21 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
         BlockPos topFrontLeft = patternHelper.getFrontTopLeft();
         setRitualTablePosition(topFrontLeft.offset(3, -1, 3));
         switch (index) {
-            case 0:
+            case 0 ->
 //                navigation.moveTo(topFrontLeft.getX() + 3.5, topFrontLeft.getY() - 1, topFrontLeft.getZ() + 1.5, 1.2F);
-                setRitualPosition(topFrontLeft.offset(3, -1, 1));
-                break;
-            case 1:
+                    setRitualPosition(topFrontLeft.offset(3, -1, 1));
+            case 1 ->
 //                navigation.moveTo(topFrontLeft.getX() + 5.5, topFrontLeft.getY() - 1, topFrontLeft.getZ() + 2.5, 1.2F);
-                setRitualPosition(topFrontLeft.offset(5, -1, 2));
-                break;
-            case 2:
+                    setRitualPosition(topFrontLeft.offset(5, -1, 2));
+            case 2 ->
 //                navigation.moveTo(topFrontLeft.getX() + 4.5, topFrontLeft.getY() - 1, topFrontLeft.getZ() + 5.5, 1.2F);
-                setRitualPosition(topFrontLeft.offset(4, -1, 5));
-                break;
-            case 3:
+                    setRitualPosition(topFrontLeft.offset(4, -1, 5));
+            case 3 ->
 //                navigation.moveTo(topFrontLeft.getX() + 2.5, topFrontLeft.getY() - 1, topFrontLeft.getZ() + 5.5, 1.2F);
-                setRitualPosition(topFrontLeft.offset(2, -1, 5));
-                break;
-            case 4:
+                    setRitualPosition(topFrontLeft.offset(2, -1, 5));
+            case 4 ->
 //                navigation.moveTo(topFrontLeft.getX() + 1.5, topFrontLeft.getY() - 1, topFrontLeft.getZ() + 2.5, 1.2F);
-                setRitualPosition(topFrontLeft.offset(1, -1, 2));
-                break;
+                    setRitualPosition(topFrontLeft.offset(1, -1, 2));
         }
 //        navigation.moveTo(this.ritualPosition.getX() + 0.5, this.ritualPosition.getY() + 0.5, this.ritualPosition.getZ() + 0.5, 1.2F);
     }
@@ -734,7 +726,7 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
 
         @Override
         public boolean canUse() {
-            return super.canUse() && !getRitualPosition().isPresent();
+            return super.canUse() && getRitualPosition().isEmpty();
         }
     }
 
@@ -749,12 +741,12 @@ public abstract class AbstractDruidEntity extends Monster implements Merchant, N
 
         @Override
         public boolean canUse() {
-            return super.canUse() && !getRitualPosition().isPresent();
+            return super.canUse() && getRitualPosition().isEmpty();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return super.canContinueToUse() && !getRitualPosition().isPresent();
+            return super.canContinueToUse() && getRitualPosition().isEmpty();
         }
     }
 

@@ -27,6 +27,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -55,7 +56,7 @@ public class WizardEntity extends Monster implements RangedAttackMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return MineriaSounds.WIZARD_HURT.get();
     }
 
@@ -65,7 +66,7 @@ public class WizardEntity extends Monster implements RangedAttackMob {
     }
 
     @Override
-    protected float getDamageAfterMagicAbsorb(DamageSource source, float damage) {
+    protected float getDamageAfterMagicAbsorb(@NotNull DamageSource source, float damage) {
         damage = super.getDamageAfterMagicAbsorb(source, damage);
         if (source.getEntity() == this) {
             damage = 0.0F;
@@ -95,26 +96,27 @@ public class WizardEntity extends Monster implements RangedAttackMob {
             potion = Potions.WEAKNESS;
         }
 
-        MineriaPotionEntity entity = new MineriaPotionEntity(this.level, this);
+        MineriaPotionEntity entity = new MineriaPotionEntity(this.level(), this);
         entity.setItem(PotionUtils.setPotion(new ItemStack(MineriaItems.MINERIA_SPLASH_POTION.get()), potion));
         entity.setXRot(getXRot() + 20.0F);
-        entity.shoot(xDistance, yDistance + (double) (distance * 0.2F), zDistance, 0.75F, 8.0F);
+        entity.shoot(xDistance, yDistance + (distance * 0.2F), zDistance, 0.75F, 8.0F);
 
         if (!this.isSilent()) {
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
+            this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
         }
 
-        this.level.addFreshEntity(entity);
+        this.level().addFreshEntity(entity);
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose p_213348_1_, EntityDimensions p_213348_2_) {
+    protected float getStandingEyeHeight(@NotNull Pose p_213348_1_, @NotNull EntityDimensions p_213348_2_) {
         return 1.62F;
     }
 
+    @SuppressWarnings({"deprecation", "OverrideOnly"})
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
         if (reason.equals(MobSpawnType.REINFORCEMENT)) {
             ((ServerLevel) world).sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 1.2, this.getZ(), 150, 0.3, 1, 0.3, 0.03);
         }

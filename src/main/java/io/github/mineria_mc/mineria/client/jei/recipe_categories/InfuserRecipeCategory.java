@@ -3,7 +3,6 @@ package io.github.mineria_mc.mineria.client.jei.recipe_categories;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.recipe.InfuserRecipe;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -16,6 +15,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -77,11 +77,11 @@ public class InfuserRecipeCategory implements IRecipeCategory<InfuserRecipe> {
     }
 
     @Override
-    public void draw(@Nonnull InfuserRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull PoseStack stack, double mouseX, double mouseY) {
+    public void draw(@Nonnull InfuserRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull GuiGraphics graphics, double mouseX, double mouseY) {
         Component resultText = Component.translatable("recipe_category.mineria.infuser.result");
         Font font = Minecraft.getInstance().font;
-        font.draw(stack, resultText,93 - font.width(resultText) / 2f, 1, 0xFF7C7C7C);
-        animatedFlame.draw(stack, 149 - 8, 36 - 4);
-        animatedBubbles.draw(stack, 64 - 8, 36 - 4);
+        graphics.drawString(font, resultText.getVisualOrderText(), 93 - font.width(resultText) / 2f, 1, 0xFF7C7C7C, false);
+        animatedFlame.draw(graphics, 149 - 8, 36 - 4);
+        animatedBubbles.draw(graphics, 64 - 8, 36 - 4);
     }
 }

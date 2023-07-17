@@ -106,14 +106,14 @@ public class BardEntity extends AbstractDruidEntity {
 
     @Override
     public boolean isClientSide() {
-        return level.isClientSide();
+        return level().isClientSide();
     }
 
     class WeakenSpellGoal extends UseSpellGoal {
         @Override
         protected void performSpellCasting() {
             LivingEntity target = BardEntity.this.getTarget();
-            Level world = BardEntity.this.getLevel();
+            Level world = BardEntity.this.level();
 
             if (target != null && !world.isClientSide()) {
                 target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 3 * 60 * 20));

@@ -1,13 +1,13 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium.pages;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.PageSet;
 import io.github.mineria_mc.mineria.common.entity.ElementaryGolemEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -64,37 +64,37 @@ public class ElementaryBeingPage<E extends ElementaryGolemEntity> extends Partit
         int iDetailsScale = Mth.floor(detailsScale);
         int iDetailsY = Mth.floor(detailsY);
         Component healthComponent = Component.literal(floatToString(entity.getMaxHealth() / 2f));
-        parts.add(partial((stack, x) -> {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        parts.add(partial((graphics, x) -> {
             RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderSystem.setShaderTexture(0, ICONS);
-            blit(stack, x, iDetailsY, iDetailsScale, iDetailsScale, 16, 0, 9, 9, 256, 256);
-            blit(stack, x, iDetailsY, iDetailsScale, iDetailsScale, 52, 0, 9, 9, 256, 256);
+            graphics.blit(ICONS, x, iDetailsY, iDetailsScale, iDetailsScale, 16, 0, 9, 9, 256, 256);
+            graphics.blit(ICONS, x, iDetailsY, iDetailsScale, iDetailsScale, 52, 0, 9, 9, 256, 256);
+
+            PoseStack stack = graphics.pose();
 
             stack.pushPose();
             stack.translate(x + detailsScale * 1.1f, detailsY, 0);
             stack.scale(detailsTextScale, detailsTextScale, detailsTextScale);
-            font.draw(stack, healthComponent, 0, 0, 0);
+            font.draw(graphics, healthComponent, 0, 0, 0);
             stack.popPose();
         }));
         Component attackDamageComponent = Component.literal(floatToString(entity.getMinAttackDamage())).append("-").append(floatToString(entity.getMaxAttackDamage()));
         int detailsWidth = Mth.floor(detailsScale * 1.1f + font.width(attackDamageComponent) * detailsTextScale);
-        parts.add(partial((stack, x) -> {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        parts.add(partial((graphics, x) -> {
             RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderSystem.setShaderTexture(0, IRON_SWORD);
-            blit(stack, x + width - detailsWidth, iDetailsY, iDetailsScale, iDetailsScale, 0, 0, 16, 16, 16, 16);
+            graphics.blit(IRON_SWORD, x + width - detailsWidth, iDetailsY, iDetailsScale, iDetailsScale, 0, 0, 16, 16, 16, 16);
+
+            PoseStack stack = graphics.pose();
 
             stack.pushPose();
             stack.translate(x + width - detailsWidth + detailsScale * 1.1f, detailsY, 0);
             stack.scale(detailsTextScale, detailsTextScale, detailsTextScale);
-            font.draw(stack, attackDamageComponent, 0, 0, 0);
+            font.draw(graphics, attackDamageComponent, 0, 0, 0);
             stack.popPose();
         }));
 
         // Entity
         EntityDimensions dimensions = entity.getDimensions(entity.getPose());
-        parts.add((stack, mouseX, mouseY, partialTicks, x) -> {
+        parts.add((graphics, mouseX, mouseY, partialTicks, x) -> {
             if(stateUpdater != null) {
                 if(!Screen.hasControlDown()) {
                     time += partialTicks;

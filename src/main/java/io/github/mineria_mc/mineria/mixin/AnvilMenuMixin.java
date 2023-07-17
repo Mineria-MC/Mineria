@@ -13,6 +13,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.RegistryObject;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -31,28 +32,30 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     }
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
-    public void mineria$createResult(CallbackInfo ci) {
+    public void mineria$inject_createResult(CallbackInfo ci) {
         ItemStack toRepair = this.inputSlots.getItem(0);
         ItemStack repairItem = this.inputSlots.getItem(1);
 
-        if (toRepair.is(MineriaItems.KUNAI.get()) && toRepair.sameItem(repairItem)) {
+        if (toRepair.is(MineriaItems.KUNAI.get()) && ItemStack.isSameItem(toRepair, repairItem)) {
             ci.cancel();
         }
     }
 
-    private final Random rand = new Random();
-    private static List<FourElementsEnchantment> enchantments;
+    @Unique
+    private final Random mineria$rand = new Random();
+    @Unique
+    private static List<FourElementsEnchantment> mineria$enchantments;
 
     @Redirect(method = "createResult()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;setEnchantments(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"))
-    private void mineria$replaceFourElements(Map<Enchantment, Integer> map, ItemStack stack) {
-        rand.setSeed(this.player.getEnchantmentSeed());
+    private void mineria$redirect_replaceFourElements(Map<Enchantment, Integer> map, ItemStack stack) {
+        mineria$rand.setSeed(this.player.getEnchantmentSeed());
 
         if (map.containsKey(MineriaEnchantments.FOUR_ELEMENTS.get())) {
             map.remove(MineriaEnchantments.FOUR_ELEMENTS.get());
-            if (enchantments == null) {
-                enchantments = Stream.of(MineriaEnchantments.FIRE_ELEMENT, MineriaEnchantments.WATER_ELEMENT, MineriaEnchantments.AIR_ELEMENT, MineriaEnchantments.GROUND_ELEMENT).map(RegistryObject::get).toList();
+            if (mineria$enchantments == null) {
+                mineria$enchantments = Stream.of(MineriaEnchantments.FIRE_ELEMENT, MineriaEnchantments.WATER_ELEMENT, MineriaEnchantments.AIR_ELEMENT, MineriaEnchantments.GROUND_ELEMENT).map(RegistryObject::get).toList();
             }
-            map.put(enchantments.get(rand.nextInt(enchantments.size())), 1);
+            map.put(mineria$enchantments.get(mineria$rand.nextInt(mineria$enchantments.size())), 1);
         }
         EnchantmentHelper.setEnchantments(map, stack);
     }

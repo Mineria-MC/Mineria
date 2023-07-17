@@ -80,5 +80,6 @@
       "shot_belladonna_dart",
       "shot_mandrake_dart"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

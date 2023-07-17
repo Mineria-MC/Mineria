@@ -46,16 +46,14 @@ public class ExtractorRecipe {
         ints.sort(Comparator.reverseOrder());
         List<ItemStack> stacks = new ArrayList<>();
 
-        ints.forEach(integer -> {
-            stacks.add(ints.indexOf(integer), outputs.get(integer));
-        });
+        ints.forEach(integer -> stacks.add(ints.indexOf(integer), outputs.get(integer)));
 
         return stacks;
     }
 
     public float chance(ItemStack stack) {
         for (Map.Entry<Integer, ItemStack> entry : outputs.entrySet()) {
-            if (entry.getValue().sameItem(stack)) {
+            if (ItemStack.isSameItem(entry.getValue(), stack)) {
                 return (float) entry.getKey() / 10;
             }
         }

@@ -24,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +63,7 @@ public class KunaiEntity extends AbstractArrow {
                 this.discard();
             else if (entity != null) {
                 if (!this.isAcceptibleReturnOwner()) {
-                    if (!this.level.isClientSide && this.pickup == AbstractArrow.Pickup.ALLOWED) {
+                    if (!this.level().isClientSide && this.pickup == AbstractArrow.Pickup.ALLOWED) {
                         this.spawnAtLocation(this.getPickupItem(), 0.1F);
                     }
 
@@ -72,7 +73,7 @@ public class KunaiEntity extends AbstractArrow {
                     Vec3 vec3 = new Vec3(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
                     this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.075D, this.getZ());
 
-                    if (this.level.isClientSide) {
+                    if (this.level().isClientSide) {
                         this.yOld = this.getY();
                     }
 
@@ -116,7 +117,7 @@ public class KunaiEntity extends AbstractArrow {
 
     @Override
     @Nullable
-    protected EntityHitResult findHitEntity(Vec3 vec0, Vec3 vec1) {
+    protected EntityHitResult findHitEntity(@NotNull Vec3 vec0, @NotNull Vec3 vec1) {
         return this.dealtDamage ? null : super.findHitEntity(vec0, vec1);
     }
 
@@ -129,15 +130,14 @@ public class KunaiEntity extends AbstractArrow {
         }
 
         Entity owner = this.getOwner();
-        DamageSource source = MineriaDamageSourceBuilder.get(level).kunai(this, (owner == null ? this : owner));
+        DamageSource source = MineriaDamageSourceBuilder.get(level()).kunai(this, (owner == null ? this : owner));
         this.dealtDamage = true;
         if (target.hurt(source, dmg)) {
             if (target.getType() == EntityType.ENDERMAN) {
                 return;
             }
 
-            if (target instanceof LivingEntity) {
-                LivingEntity livingTarget = (LivingEntity) target;
+            if (target instanceof LivingEntity livingTarget) {
                 if (owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(livingTarget, owner);
                     EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingTarget);

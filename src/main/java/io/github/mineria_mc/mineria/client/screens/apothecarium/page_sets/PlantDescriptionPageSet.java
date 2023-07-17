@@ -10,6 +10,7 @@ import io.github.mineria_mc.mineria.util.PlantBiomes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -94,11 +95,13 @@ public class PlantDescriptionPageSet implements PageSet {
 
                 Pair<List<FormattedCharSequence>, Float> textLines = splitAndResize(entry.getValue(), sectionHeight * 2, titleScale);
 
-                result.add(((stack, x) -> {
+                result.add(((graphics, x) -> {
+                    PoseStack stack = graphics.pose();
+
                     stack.pushPose();
                     stack.translate(x, categoryStartY, 0);
                     stack.scale(titleScale, titleScale, 1);
-                    font.draw(stack, title, 0, 0, 0);
+                    font.draw(graphics, title, 0, 0, 0);
                     stack.popPose();
 
                     float textSize = textLines.getSecond();
@@ -107,7 +110,7 @@ public class PlantDescriptionPageSet implements PageSet {
                         stack.pushPose();
                         stack.translate(x, categoryStartY + sectionHeight + (textSize * (font.lineHeight - 1)) * i, 0);
                         stack.scale(textSize, textSize, 1);
-                        font.draw(stack, line, 0, 0, 0);
+                        font.draw(graphics, line, 0, 0, 0);
                         stack.popPose();
                     }
                 }));
@@ -118,8 +121,8 @@ public class PlantDescriptionPageSet implements PageSet {
         }
 
         @Override
-        public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x) {
-            this.drawingLines.forEach(text -> text.draw(stack, x));
+        public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x) {
+            this.drawingLines.forEach(text -> text.draw(graphics, x));
         }
 
         protected Pair<List<FormattedCharSequence>, Float> splitAndResize(Component component, final float textAreaSize, float textScale) {
@@ -161,7 +164,7 @@ public class PlantDescriptionPageSet implements PageSet {
 
         @FunctionalInterface
         private interface RenderedText {
-            void draw(PoseStack stack, int x);
+            void draw(GuiGraphics graphics, int x);
         }
     }
 }

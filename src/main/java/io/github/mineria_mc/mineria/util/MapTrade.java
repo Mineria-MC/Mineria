@@ -43,7 +43,7 @@ public class MapTrade implements VillagerTrades.ItemListing {
     @Nullable
     @Override
     public MerchantOffer getOffer(Entity entity, @Nonnull RandomSource rand) {
-        if (entity.level instanceof ServerLevel world) {
+        if (entity.level() instanceof ServerLevel world) {
             BlockPos pos = world.findNearestMapStructure(this.structure, entity.blockPosition(), 100, true);
             if (pos != null) {
                 ItemStack map = MapItem.create(world, pos.getX(), pos.getZ(), (byte) 2, true, true);

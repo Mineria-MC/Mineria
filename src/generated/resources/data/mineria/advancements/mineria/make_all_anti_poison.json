@@ -108,5 +108,6 @@
     [
       "get_miracle_anti_poison"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

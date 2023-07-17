@@ -25,7 +25,7 @@ public class SummaryPage extends PartitionedPage {
         float maxTextWidth = width / textScale;
         int dotWidth = font.width(Component.literal("."));
         int digitWidth = font.width(Component.literal("0"));
-        parts.add(partial((stack, x) -> {
+        parts.add(partial((graphics, x) -> {
             float partY = y + titleScale + height * 2.5f / 10;
 
             for (Int2ObjectMap.Entry<ApothecariumBookmarkInfo> entry : parentScreen.getBookmarks().int2ObjectEntrySet()) {
@@ -34,7 +34,7 @@ public class SummaryPage extends PartitionedPage {
                 int numberWidth = page < 10 ? digitWidth : digitWidth * 2;
                 int dotsWidth = Math.max(0, Mth.floor(maxTextWidth) - font.width(partName) - numberWidth);
                 int dotCount = (int) (dotsWidth / 2.5f);
-                scaledText(partName.copy().append(".".repeat(dotCount)).append(Integer.toString(page)), partY, textScale).render(stack, x);
+                scaledText(partName.copy().append(".".repeat(dotCount)).append(Integer.toString(page)), partY, textScale).render(graphics, x);
                 partY += textScale * font.lineHeight;
             }
         }));

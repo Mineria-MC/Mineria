@@ -1,4 +1,4 @@
-package io.github.mineria_mc.mineria.data;
+package io.github.mineria_mc.mineria.data.tags;
 
 import io.github.mineria_mc.mineria.Mineria;
 import net.minecraft.core.HolderLookup;

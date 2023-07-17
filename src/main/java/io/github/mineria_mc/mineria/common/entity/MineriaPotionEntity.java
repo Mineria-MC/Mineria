@@ -28,6 +28,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,11 +44,6 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
         super(MineriaEntities.MINERIA_POTION.get(), living, world);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public MineriaPotionEntity(Level world, double x, double y, double z) {
-        super(MineriaEntities.MINERIA_POTION.get(), x, y, z, world);
-    }
-
     @Nonnull
     @Override
     protected Item getDefaultItem() {
@@ -60,9 +56,9 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult rayTraceResult) {
+    protected void onHitBlock(@NotNull BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             ItemStack itemstack = this.getItem();
             Potion potion = PotionUtils.getPotion(itemstack);
             List<MobEffectInstance> list = PotionUtils.getMobEffects(itemstack);
@@ -71,11 +67,11 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
             BlockPos blockpos = rayTraceResult.getBlockPos();
             BlockPos blockpos1 = blockpos.relative(direction);
             if (flag) {
-                this.dowseFire(blockpos1, direction);
-                this.dowseFire(blockpos1.relative(direction.getOpposite()), direction);
+                this.dowseFire(blockpos1);
+                this.dowseFire(blockpos1.relative(direction.getOpposite()));
 
                 for (Direction direction1 : Direction.Plane.HORIZONTAL) {
-                    this.dowseFire(blockpos1.relative(direction1), direction1);
+                    this.dowseFire(blockpos1.relative(direction1));
                 }
             }
 
@@ -83,9 +79,9 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
     }
 
     @Override
-    protected void onHit(HitResult rayTraceResult) {
+    protected void onHit(@NotNull HitResult rayTraceResult) {
         super.onHit(rayTraceResult);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             ItemStack itemstack = this.getItem();
             Potion potion = PotionUtils.getPotion(itemstack);
             List<MobEffectInstance> list = PotionUtils.getMobEffects(itemstack);
@@ -101,14 +97,14 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
             }
 
             int i = potion.hasInstantEffects() ? 2007 : 2002;
-            this.level.levelEvent(i, this.blockPosition(), PotionUtils.getColor(itemstack));
+            this.level().levelEvent(i, this.blockPosition(), PotionUtils.getColor(itemstack));
             this.discard();
         }
     }
 
     private void applyWater() {
         AABB axisalignedbb = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
-        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, axisalignedbb, LivingEntity::isSensitiveToWater);
+        List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, axisalignedbb, LivingEntity::isSensitiveToWater);
         if (!list.isEmpty()) {
             for (LivingEntity livingentity : list) {
                 double d0 = this.distanceToSqr(livingentity);
@@ -121,7 +117,7 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
 
     private void applySplash(List<MobEffectInstance> effects, @Nullable Entity target) {
         AABB boundingBox = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
-        List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, boundingBox);
+        List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, boundingBox);
 
         if (!entities.isEmpty()) {
             for (LivingEntity living : entities) {
@@ -156,7 +152,7 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
     }
 
     private void makeAreaOfEffectCloud(ItemStack stack, Potion potion) {
-        MineriaAreaEffectCloudEntity effectCloud = new MineriaAreaEffectCloudEntity(this.level, this.getX(), this.getY(), this.getZ());
+        MineriaAreaEffectCloudEntity effectCloud = new MineriaAreaEffectCloudEntity(this.level(), this.getX(), this.getY(), this.getZ());
         Entity owner = this.getOwner();
 
         if (owner instanceof LivingEntity) {
@@ -178,21 +174,21 @@ public class MineriaPotionEntity extends ThrowableItemProjectile implements Item
             effectCloud.setFixedColor(nbt.getInt("CustomPotionColor"));
         }
 
-        this.level.addFreshEntity(effectCloud);
+        this.level().addFreshEntity(effectCloud);
     }
 
     private boolean isLingering() {
         return this.getItem().is(MineriaItems.MINERIA_LINGERING_POTION.get());
     }
 
-    private void dowseFire(BlockPos pos, Direction direction) {
-        BlockState state = this.level.getBlockState(pos);
+    private void dowseFire(BlockPos pos) {
+        BlockState state = this.level().getBlockState(pos);
         if (state.is(BlockTags.FIRE)) {
-            this.level.removeBlock(pos, false);
+            this.level().removeBlock(pos, false);
         } else if (CampfireBlock.isLitCampfire(state)) {
-            this.level.levelEvent(null, 1009, pos, 0);
-            CampfireBlock.dowse(this.getOwner(), this.level, pos, state);
-            this.level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
+            this.level().levelEvent(null, 1009, pos, 0);
+            CampfireBlock.dowse(this.getOwner(), this.level(), pos, state);
+            this.level().setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
         }
     }
 }

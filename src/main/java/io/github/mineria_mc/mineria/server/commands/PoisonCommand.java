@@ -119,10 +119,10 @@ public class PoisonCommand {
             throw ERROR_APPLY_POISON_FAILED.create();
         } else {
             if (targets.size() == 1) {
-                executor.sendSuccess(Component.translatable("commands.mineria.poison.apply.success.single", Component.translatable(source.getTranslationKey()), targets.iterator().next().getDisplayName()), true);
+                executor.sendSuccess(() ->  Component.translatable("commands.mineria.poison.apply.success.single", Component.translatable(source.getTranslationKey()), targets.iterator().next().getDisplayName()), true);
             }
             else {
-                executor.sendSuccess(Component.translatable("commands.mineria.poison.apply.success.multiple", Component.translatable(source.getTranslationKey()), targets.size()), true);
+                executor.sendSuccess(() -> Component.translatable("commands.mineria.poison.apply.success.multiple", Component.translatable(source.getTranslationKey()), targets.size()), true);
             }
 
             return code;
@@ -147,10 +147,10 @@ public class PoisonCommand {
             throw ERROR_CREATE_POISON_FAILED.create();
         } else {
             if (targets.size() == 1) {
-                executor.sendSuccess(Component.translatable("commands.mineria.poison.create.success.single", Component.translatable(source.getTranslationKey()), targets.iterator().next().getDisplayName(), duration), true);
+                executor.sendSuccess(() -> Component.translatable("commands.mineria.poison.create.success.single", Component.translatable(source.getTranslationKey()), targets.iterator().next().getDisplayName(), duration), true);
             }
             else {
-                executor.sendSuccess(Component.translatable("commands.mineria.poison.create.success.multiple", Component.translatable(source.getTranslationKey()), targets.size(), duration), true);
+                executor.sendSuccess(() -> Component.translatable("commands.mineria.poison.create.success.multiple", Component.translatable(source.getTranslationKey()), targets.size(), duration), true);
             }
 
             return code;
@@ -183,9 +183,9 @@ public class PoisonCommand {
             throw ERROR_REMOVE_POISON_FAILED.create();
         } else {
             if (targets.size() == 1)
-                executor.sendSuccess(Component.translatable("commands.mineria.poison.remove.success.single", targets.iterator().next().getDisplayName()), true);
+                executor.sendSuccess(() -> Component.translatable("commands.mineria.poison.remove.success.single", targets.iterator().next().getDisplayName()), true);
             else
-                executor.sendSuccess(Component.translatable("commands.mineria.poison.remove.success.multiple", targets.size()), true);
+                executor.sendSuccess(() -> Component.translatable("commands.mineria.poison.remove.success.multiple", targets.size()), true);
 
             return code;
         }

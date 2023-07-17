@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -28,6 +28,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -38,22 +39,22 @@ public class TNTBarrelBlock extends Block {
     private static final Function<Integer, VoxelShape> SHAPE = (gunpowder) -> Shapes.join(Shapes.block(), box(1, 1 + gunpowder * 2, 1, 15, 16, 15), BooleanOp.ONLY_FIRST);
 
     public TNTBarrelBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD).strength(4f, 0f).sound(SoundType.WOOD));
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(4f, 0f).sound(SoundType.WOOD));
         registerDefaultState(this.stateDefinition.any().setValue(GUNPOWDER, 0));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return SHAPE.apply(state.getValue(GUNPOWDER));
     }
 
     @Override
-    public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+    public @NotNull VoxelShape getInteractionShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos) {
         return INSIDE;
     }
 
     @Override
-    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!oldState.is(state.getBlock())) {
             if (worldIn.hasNeighborSignal(pos) && state.getValue(GUNPOWDER) != 0) {
                 this.explode(worldIn, pos.getX(), pos.getY(), pos.getZ(), state);
@@ -63,7 +64,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
         if (worldIn.hasNeighborSignal(pos) && state.getValue(GUNPOWDER) != 0) {
             this.explode(worldIn, pos.getX(), pos.getY(), pos.getZ(), state);
             worldIn.removeBlock(pos, isMoving);
@@ -71,7 +72,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    public void wasExploded(Level worldIn, BlockPos pos, Explosion explosionIn) {
+    public void wasExploded(Level worldIn, @NotNull BlockPos pos, @NotNull Explosion explosionIn) {
         if (!worldIn.isEmptyBlock(pos) && !worldIn.isClientSide) {
             BlockState previousState = worldIn.getBlockState(pos);
             this.explode(worldIn, pos.getX(), pos.getY(), pos.getZ(), previousState);
@@ -80,7 +81,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
 
         if (heldItem.getItem() == Items.FLINT_AND_STEEL || heldItem.getItem() == Items.FIRE_CHARGE) {
@@ -112,7 +113,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    public void onProjectileHit(Level worldIn, BlockState state, BlockHitResult hit, Projectile projectile) {
+    public void onProjectileHit(Level worldIn, @NotNull BlockState state, @NotNull BlockHitResult hit, @NotNull Projectile projectile) {
         if (!worldIn.isClientSide) {
             if (projectile.isOnFire()) {
                 BlockPos blockpos = hit.getBlockPos();
@@ -123,7 +124,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         if (!worldIn.isClientSide) {
             int count = state.getValue(GUNPOWDER);
             if (count != 0)
@@ -139,7 +140,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    public boolean dropFromExplosion(Explosion explosionIn) {
+    public boolean dropFromExplosion(@NotNull Explosion explosionIn) {
         return false;
     }
 
@@ -149,7 +150,7 @@ public class TNTBarrelBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(GUNPOWDER);
     }

@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 public class BrownBearEntity extends PathfinderMob {
     private static final EntityDataAccessor<Boolean> DATA_STANDING_ID = SynchedEntityData.defineId(BrownBearEntity.class, EntityDataSerializers.BOOLEAN);
@@ -59,7 +60,7 @@ public class BrownBearEntity extends PathfinderMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.POLAR_BEAR_HURT;
     }
 
@@ -69,7 +70,7 @@ public class BrownBearEntity extends PathfinderMob {
     }
 
     @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState state) {
         this.playSound(SoundEvents.POLAR_BEAR_STEP, 0.15F, 1.0F);
     }
 
@@ -82,7 +83,7 @@ public class BrownBearEntity extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             if (this.clientSideStandAnimation != this.clientSideStandAnimationO) {
                 this.refreshDimensions();
             }
@@ -97,7 +98,7 @@ public class BrownBearEntity extends PathfinderMob {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
         if (this.clientSideStandAnimation > 0.0F) {
             float heightValue = this.clientSideStandAnimation / 6.0F;
             float heightScaleFactor = 1.0F + heightValue;
@@ -139,7 +140,7 @@ public class BrownBearEntity extends PathfinderMob {
             super(BrownBearEntity.this, 1.25D, true);
         }
 
-        protected void checkAndPerformAttack(LivingEntity target, double distance) {
+        protected void checkAndPerformAttack(@NotNull LivingEntity target, double distance) {
             double reach = this.getAttackReachSqr(target);
             if (distance <= reach && this.isTimeToAttack()) {
                 this.resetAttackCooldown();

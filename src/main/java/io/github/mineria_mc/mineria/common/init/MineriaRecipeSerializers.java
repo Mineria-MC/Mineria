@@ -19,6 +19,4 @@ public class MineriaRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<PoisonousJarRecipe>> POISONOUS_JAR = RECIPE_SERIALIZERS.register("poisonous_jar", () -> new MineriaRecipeSerializer<>(PoisonousJarRecipe::new));
     public static final RegistryObject<RecipeSerializer<FillCupRecipe>> FILL_CUP = RECIPE_SERIALIZERS.register("fill_cup", () -> new MineriaRecipeSerializer<>(FillCupRecipe::new));
     public static final RegistryObject<RecipeSerializer<MineriaSmithingRecipe>> SMITHING = RECIPE_SERIALIZERS.register("smithing", MineriaSmithingRecipe.Serializer::new);
-    @Deprecated(forRemoval = true)
-    public static final RegistryObject<RecipeSerializer<MineriaLegacySmithingRecipe>> LEGACY_SMITHING = RECIPE_SERIALIZERS.register("legacy_smithing", MineriaLegacySmithingRecipe.Serializer::new);
 }

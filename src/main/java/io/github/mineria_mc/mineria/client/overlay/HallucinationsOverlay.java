@@ -1,11 +1,15 @@
 package io.github.mineria_mc.mineria.client.overlay;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaEffects;
 import io.github.mineria_mc.mineria.util.MineriaConfig;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PostChain;
@@ -17,7 +21,7 @@ public class HallucinationsOverlay implements IGuiOverlay {
     private static boolean usingHallucinationShader = false;
 
     @Override
-    public void render(ForgeGui gui, PoseStack mStack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         int windowWidth = mc.getWindow().getGuiScaledWidth();

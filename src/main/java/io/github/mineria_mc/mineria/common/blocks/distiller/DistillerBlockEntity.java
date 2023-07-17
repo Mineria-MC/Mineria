@@ -119,7 +119,7 @@ public class DistillerBlockEntity extends MineriaLockableBlockEntity {
                 return false;
             }
 
-            if (output.isEmpty() || output.sameItem(result)) {
+            if (output.isEmpty() || ItemStack.isSameItem(output, result)) {
                 int res = output.getCount() + result.getCount();
                 return res <= 64 && res <= output.getMaxStackSize();
             }
@@ -137,7 +137,7 @@ public class DistillerBlockEntity extends MineriaLockableBlockEntity {
             if (output.isEmpty()) {
                 this.inventory.setStackInSlot(5, result.copy());
             }
-            else if (output.sameItem(result)) {
+            else if (ItemStack.isSameItem(output, result)) {
                 output.grow(result.getCount());
             }
 

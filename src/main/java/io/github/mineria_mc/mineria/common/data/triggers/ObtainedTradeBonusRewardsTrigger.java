@@ -2,29 +2,25 @@ package io.github.mineria_mc.mineria.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.mineria_mc.mineria.Mineria;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import org.jetbrains.annotations.NotNull;
 
 public class ObtainedTradeBonusRewardsTrigger extends SimpleCriterionTrigger<ObtainedTradeBonusRewardsTrigger.Instance> {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "obtained_trade_bonus_rewards");
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser) {
-        EntityPredicate.Composite entity = EntityPredicate.Composite.fromJson(json, "entity", parser);
+    protected @NotNull Instance createInstance(@NotNull JsonObject json, @NotNull ContextAwarePredicate andPredicate, @NotNull DeserializationContext parser) {
+        ContextAwarePredicate entity = EntityPredicate.fromJson(json, "entity", parser);
         ItemPredicate bonus = ItemPredicate.fromJson(json.get("bonus"));
         return new Instance(andPredicate, entity, bonus);
     }
@@ -35,17 +31,17 @@ public class ObtainedTradeBonusRewardsTrigger extends SimpleCriterionTrigger<Obt
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance {
-        private final EntityPredicate.Composite entity;
+        private final ContextAwarePredicate entity;
         private final ItemPredicate bonus;
 
-        public Instance(EntityPredicate.Composite andPredicate, EntityPredicate.Composite entity, ItemPredicate bonus) {
+        public Instance(ContextAwarePredicate andPredicate, ContextAwarePredicate entity, ItemPredicate bonus) {
             super(ID, andPredicate);
             this.entity = entity;
             this.bonus = bonus;
         }
 
         public static Instance obtainedRewardsFrom(EntityPredicate predicate) {
-            return new Instance(EntityPredicate.Composite.ANY, EntityPredicate.Composite.wrap(predicate), ItemPredicate.ANY);
+            return new Instance(ContextAwarePredicate.ANY, EntityPredicate.wrap(predicate), ItemPredicate.ANY);
         }
 
         private boolean matches(LootContext ctx, ItemStack stack) {
@@ -53,7 +49,7 @@ public class ObtainedTradeBonusRewardsTrigger extends SimpleCriterionTrigger<Obt
         }
 
         @Override
-        public JsonObject serializeToJson(SerializationContext serializer) {
+        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.add("entity", this.entity.toJson(serializer));
             json.add("bonus", this.bonus.serializeToJson());

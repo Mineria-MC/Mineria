@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class DirtGolemEntity extends ElementaryGolemEntity {
     public DirtGolemEntity(EntityType<? extends DirtGolemEntity> type, Level world) {
@@ -47,12 +48,12 @@ public class DirtGolemEntity extends ElementaryGolemEntity {
             boolean fertilizedDirt = false;
 
             for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))) {
-                BlockState state = this.level.getBlockState(blockPos);
+                BlockState state = this.level().getBlockState(blockPos);
 
                 if (state.getBlock() instanceof BonemealableBlock growable) {
-                    if (growable.isValidBonemealTarget(this.level, blockPos, state, this.level.isClientSide)) {
-                        if (this.level instanceof ServerLevel && growable.isBonemealSuccess(this.level, this.level.random, blockPos, state)) {
-                            growable.performBonemeal((ServerLevel) this.level, this.level.random, blockPos, state);
+                    if (growable.isValidBonemealTarget(this.level(), blockPos, state, this.level().isClientSide)) {
+                        if (this.level() instanceof ServerLevel && growable.isBonemealSuccess(this.level(), this.level().random, blockPos, state)) {
+                            growable.performBonemeal((ServerLevel) this.level(), this.level().random, blockPos, state);
                         }
 
                         fertilizedDirt = true;
@@ -61,7 +62,7 @@ public class DirtGolemEntity extends ElementaryGolemEntity {
             }
 
             if (fertilizedDirt) {
-                this.level.playSound(null, pos, SoundEvents.COMPOSTER_READY, SoundSource.HOSTILE, 1.0F, 1.0F);
+                this.level().playSound(null, pos, SoundEvents.COMPOSTER_READY, SoundSource.HOSTILE, 1.0F, 1.0F);
             }
         }
     }
@@ -77,7 +78,7 @@ public class DirtGolemEntity extends ElementaryGolemEntity {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return MineriaSounds.DIRT_GOLEM_HURT.get();
     }
 

@@ -1,8 +1,8 @@
 package io.github.mineria_mc.mineria.common.blocks.ritual_table;
 
 import io.github.mineria_mc.mineria.common.blocks.ElementaryStoneBlock;
-import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -19,9 +19,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,18 +37,18 @@ public class RitualTableBlock extends Block implements EntityBlock {
     private static BlockPattern protectionShape;
 
     public RitualTableBlock() {
-        super(Properties.of(Material.STONE).strength(-1, 3600000.0F).noLootTable());
+        super(Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(-1, 3600000.0F).noLootTable());
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new RitualTableBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
         return blockEntityType != MineriaBlockEntities.RITUAL_TABLE.get() ? null : (level1, pos, state1, blockEntity) -> {
             if(level1.isClientSide()) {
                 ((RitualTableBlockEntity) blockEntity).clientTick(level1, pos);
@@ -69,7 +71,7 @@ public class RitualTableBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult result) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof RitualTableBlockEntity ritualTable) {
             boolean emptyPlacedItem = ritualTable.getPlacedItem().isEmpty();

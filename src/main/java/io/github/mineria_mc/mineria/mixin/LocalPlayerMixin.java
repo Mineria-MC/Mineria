@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -28,17 +29,13 @@ public abstract class LocalPlayerMixin extends LivingEntity {
         }
     }
 
-    @ModifyConstant(method = "handleNetherPortalClient", constant = @Constant(floatValue = 1.0F, ordinal = 2))
+    @ModifyConstant(method = "handleNetherPortalClient", constant = @Constant(floatValue = 1.0F, ordinal = 0))
     private float modifyMaxTime(float constant) {
-        return calculateMaxPortalTime();
+        return hasEffect(MobEffects.CONFUSION) ? mineria$calculateMaxPortalTime() : 1.0f;
     }
 
-    @ModifyConstant(method = "handleNetherPortalClient", constant = @Constant(floatValue = 1.0F, ordinal = 3))
-    private float modifyMaxTime2(float constant) {
-        return calculateMaxPortalTime();
-    }
-
-    private float calculateMaxPortalTime() {
+    @Unique
+    private float mineria$calculateMaxPortalTime() {
         return 0.4F * (Optional.ofNullable(getEffect(MobEffects.CONFUSION)).map(MobEffectInstance::getAmplifier).orElse(0) + 1);
     }
 }

@@ -2,7 +2,6 @@ package io.github.mineria_mc.mineria.common.effects;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +25,7 @@ public class DrowningEffect extends MobEffect {
                 double dx = rand.nextDouble() - rand.nextDouble();
                 double dy = rand.nextDouble() - rand.nextDouble();
                 double dz = rand.nextDouble() - rand.nextDouble();
-                living.level.addParticle(ParticleTypes.BUBBLE, living.getX() + dx, living.getY() + dy, living.getZ() + dz, delta.x, delta.y, delta.z);
+                living.level().addParticle(ParticleTypes.BUBBLE, living.getX() + dx, living.getY() + dy, living.getZ() + dz, delta.x, delta.y, delta.z);
             }
 
             living.hurt(living.damageSources().drown(), 2);

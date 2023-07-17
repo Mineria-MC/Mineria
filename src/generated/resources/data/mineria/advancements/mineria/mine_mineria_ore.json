@@ -56,5 +56,6 @@
       "mine_titane",
       "mine_lonsdaleite"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

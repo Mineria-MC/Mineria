@@ -57,5 +57,6 @@
       "drink_strong_vampire",
       "drink_very_strong_vampire"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

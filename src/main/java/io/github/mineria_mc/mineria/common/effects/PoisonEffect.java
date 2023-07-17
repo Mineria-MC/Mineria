@@ -49,7 +49,7 @@ public class PoisonEffect extends MobEffect implements IPoisonEffect {
         } else if (doSpasms(duration, maxDuration, potionClass) && !isImmune(living)) {
             float x = rand.nextFloat() / 4;
             float z = rand.nextFloat() / 4;
-            living.setDeltaMovement(living.getDeltaMovement().add(rand.nextBoolean() ? x : -x, living.isOnGround() ? 0.5 : -0.5, rand.nextBoolean() ? z : -z));
+            living.setDeltaMovement(living.getDeltaMovement().add(rand.nextBoolean() ? x : -x, living.onGround() ? 0.5 : -0.5, rand.nextBoolean() ? z : -z));
         }
     }
 

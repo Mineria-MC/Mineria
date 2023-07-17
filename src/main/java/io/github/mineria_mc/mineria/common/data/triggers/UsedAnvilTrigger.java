@@ -2,26 +2,22 @@ package io.github.mineria_mc.mineria.common.data.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.mineria_mc.mineria.Mineria;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class UsedAnvilTrigger extends SimpleCriterionTrigger<UsedAnvilTrigger.Instance> {
     private static final ResourceLocation ID = new ResourceLocation(Mineria.MODID, "used_anvil");
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.Composite andPredicate, DeserializationContext parser) {
+    protected @NotNull Instance createInstance(JsonObject json, @NotNull ContextAwarePredicate andPredicate, @NotNull DeserializationContext parser) {
         ItemPredicate left = ItemPredicate.fromJson(json.get("left"));
         ItemPredicate right = ItemPredicate.fromJson(json.get("right"));
         ItemPredicate output = ItemPredicate.fromJson(json.get("output"));
@@ -37,7 +33,7 @@ public class UsedAnvilTrigger extends SimpleCriterionTrigger<UsedAnvilTrigger.In
         private final ItemPredicate right;
         private final ItemPredicate output;
 
-        public Instance(EntityPredicate.Composite andPredicate, ItemPredicate left, ItemPredicate right, ItemPredicate output) {
+        public Instance(ContextAwarePredicate andPredicate, ItemPredicate left, ItemPredicate right, ItemPredicate output) {
             super(ID, andPredicate);
             this.left = left;
             this.right = right;
@@ -49,7 +45,7 @@ public class UsedAnvilTrigger extends SimpleCriterionTrigger<UsedAnvilTrigger.In
         }
 
         @Override
-        public JsonObject serializeToJson(SerializationContext serializer) {
+        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext serializer) {
             JsonObject json = super.serializeToJson(serializer);
             json.add("left", this.left.serializeToJson());
             json.add("right", this.right.serializeToJson());

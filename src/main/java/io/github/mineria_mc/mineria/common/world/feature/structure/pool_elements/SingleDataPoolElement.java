@@ -1,11 +1,11 @@
 package io.github.mineria_mc.mineria.common.world.feature.structure.pool_elements;
 
-import io.github.mineria_mc.mineria.common.init.MineriaRegistries;
-import io.github.mineria_mc.mineria.common.init.MineriaSPETypes;
-import io.github.mineria_mc.mineria.common.world.feature.structure.data_markers.IDataMarkerHandler;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.mineria_mc.mineria.common.init.MineriaRegistries;
+import io.github.mineria_mc.mineria.common.init.MineriaSPETypes;
+import io.github.mineria_mc.mineria.common.world.feature.structure.data_markers.IDataMarkerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -54,9 +54,9 @@ public class SingleDataPoolElement extends SinglePoolElement {
     public void handleDataMarker(@Nonnull LevelAccessor level, StructureTemplate.StructureBlockInfo info, @Nonnull BlockPos pos, @Nonnull Rotation rotation, @Nonnull RandomSource random, BoundingBox box) {
         // IMPORTANT : The structure is very likely to generate on multiple chunks so multiple threads may call this method.
         // We want to only handle data markers that are in the bounding box (in the part of the structure that is being generated)
-        if (!box.isInside(info.pos)) return;
+        if (!box.isInside(info.pos())) return;
         if (level instanceof WorldGenLevel) {
-            this.dataHandler.handleDataMarker((WorldGenLevel) level, info.nbt.getString("metadata"), info.pos, info, pos, box, this, rotation, random);
+            this.dataHandler.handleDataMarker((WorldGenLevel) level, info.nbt().getString("metadata"), info.pos(), info, pos, box, this, rotation, random);
         }
     }
 

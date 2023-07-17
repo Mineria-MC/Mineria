@@ -1,11 +1,15 @@
 package io.github.mineria_mc.mineria.client.overlay;
 
-import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +19,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class PoisonOverlay implements IGuiOverlay {
     @Override
-    public void render(ForgeGui gui, PoseStack stack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         int windowWidth = mc.getWindow().getGuiScaledWidth();
@@ -24,14 +28,14 @@ public class PoisonOverlay implements IGuiOverlay {
         if (player != null && player.hasEffect(MobEffects.POISON) && player.getEffect(MobEffects.POISON) instanceof PoisonMobEffectInstance poison) {
             gui.setupOverlayRenderState(true, false);
             renderVignette(windowWidth, windowHeight);
-            if (!mc.options.hideGui) renderText(mc.font, stack, windowWidth, poison);
+            if (!mc.options.hideGui) renderText(mc.font, graphics, windowWidth, poison);
         }
     }
 
-    private void renderText(Font font, PoseStack stack, float windowWidth, PoisonMobEffectInstance poison) {
+    private void renderText(Font font, GuiGraphics graphics, float windowWidth, PoisonMobEffectInstance poison) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        poison.drawPotionName(font, stack, windowWidth / 2, 12);
+        poison.drawPotionName(font, graphics, windowWidth / 2, 12);
         RenderSystem.disableBlend();
     }
 

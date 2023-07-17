@@ -137,7 +137,7 @@ public class AsiaticHerbalistEntity extends AbstractVillager {
         }
 
         if (offer.shouldRewardExp()) {
-            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), xp));
+            this.level().addFreshEntity(new ExperienceOrb(this.level(), this.getX(), this.getY() + 0.5D, this.getZ(), xp));
         }
     }
 
@@ -167,13 +167,13 @@ public class AsiaticHerbalistEntity extends AbstractVillager {
                 player.awardStat(Stats.TALKED_TO_VILLAGER);
 
             if (!this.getOffers().isEmpty()) {
-                if (!this.level.isClientSide) {
+                if (!this.level().isClientSide) {
                     this.setTradingPlayer(player);
                     this.openTradingScreen(player, this.getDisplayName(), tradeLevel);
                 }
             }
 
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else
             return super.mobInteract(player, hand);
     }

@@ -32,6 +32,7 @@ import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,13 +71,13 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
 
         if(!isFrozen()) {
             for (BlockPos pos : BlockPos.betweenClosed(blockPosition().offset(-1, -1, -1), blockPosition().offset(1, 1, 1))) {
-                if(level.getBlockState(pos).is(Blocks.FIRE)) {
-                    level.removeBlock(pos, false);
+                if(level().getBlockState(pos).is(Blocks.FIRE)) {
+                    level().removeBlock(pos, false);
                 }
             }
         }
 
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             if (frozenTicks > 0) {
                 frozenTicks--;
                 if (!isFrozen()) {
@@ -92,8 +93,8 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
         if(frozenTicks != 0) {
             frozenTicks = 0;
         }
-        level.broadcastEntityEvent(this, (byte) 61);
-        level.playSound(null, this, SoundEvents.GLASS_BREAK, SoundSource.HOSTILE, 1f, 1.0f);
+        level().broadcastEntityEvent(this, (byte) 61);
+        level().playSound(null, this, SoundEvents.GLASS_BREAK, SoundSource.HOSTILE, 1f, 1.0f);
         setFrozen(false);
     }
 
@@ -109,14 +110,14 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Frozen", isFrozen());
         nbt.putInt("FrozenTicks", this.frozenTicks);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         this.setFrozen(nbt.getBoolean("Frozen"));
         this.frozenTicks = nbt.getInt("FrozenTicks");
@@ -146,7 +147,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
                     frozenTicks += 40;
                 }
                 this.invulnerableTime = 0;
-                this.level.broadcastEntityEvent(this, (byte) 60);
+                this.level().broadcastEntityEvent(this, (byte) 60);
             }
             return true;
         }
@@ -154,7 +155,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
     }
 
     @Override
-    protected float getDamageAfterMagicAbsorb(DamageSource source, float amount) {
+    protected float getDamageAfterMagicAbsorb(@NotNull DamageSource source, float amount) {
         float damage = super.getDamageAfterMagicAbsorb(source, amount);
         if(!isFrozen()) {
             return damage;
@@ -163,14 +164,14 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
         if(source.getEntity() instanceof LivingEntity living) {
             if(EnchantmentHelper.getFireAspect(living) > 0) {
                 melt();
-                level.playSound(null, this, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1f, 1.0f);
+                level().playSound(null, this, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1f, 1.0f);
                 return damage * 2;
             }
         }
         Entity directEntity = source.getDirectEntity();
         if(directEntity != null && directEntity.isOnFire()) {
             melt();
-            level.playSound(null, this, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1f, 1.0f);
+            level().playSound(null, this, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, 1f, 1.0f);
             return damage * 2;
         }
         return damage;
@@ -182,7 +183,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
             this.invulnerableTime = 0;
         }
         if(type == 61) {
-            MineriaUtils.addParticles(level, new BlockParticleOption(ParticleTypes.BLOCK, Blocks.PACKED_ICE.defaultBlockState()), getX(), getY() + 1.5, getZ(), 0.275, 0.6, 0.275, 0, 50, false);
+            MineriaUtils.addParticles(level(), new BlockParticleOption(ParticleTypes.BLOCK, Blocks.PACKED_ICE.defaultBlockState()), getX(), getY() + 1.5, getZ(), 0.275, 0.6, 0.275, 0, 50, false);
         }
         super.handleEntityEvent(type);
     }
@@ -242,7 +243,7 @@ public class WaterSpiritEntity extends ElementaryGolemEntity {
     }
 
     public boolean isFrozen() {
-        return level.isClientSide ? this.entityData.get(FROZEN) : this.frozen;
+        return level().isClientSide ? this.entityData.get(FROZEN) : this.frozen;
     }
 
     public void setFrozen(boolean value) {

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -41,7 +42,7 @@ public class DruidicWolfEntity extends PathfinderMob {
     }
 
     @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState state) {
         this.playSound(SoundEvents.WOLF_STEP, 0.15F, 1.0F);
     }
 
@@ -53,7 +54,7 @@ public class DruidicWolfEntity extends PathfinderMob {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return MineriaSounds.DRUIDIC_WOLF_HURT.get();
     }
 
@@ -95,8 +96,8 @@ public class DruidicWolfEntity extends PathfinderMob {
         public void tick() {
             if (tickCount >= this.nextAttackTickCount) {
                 LivingEntity target = DruidicWolfEntity.this.getTarget();
-                if (!level.isClientSide() && target != null) {
-                    ServerLevel world = (ServerLevel) level;
+                if (!level().isClientSide() && target != null) {
+                    ServerLevel world = (ServerLevel) level();
                     MineriaLightningBoltEntity.create(world, BlockPos.containing(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
                 }
 

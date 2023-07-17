@@ -111,7 +111,7 @@ public class XpBlockEntity extends MineriaLockableBlockEntity {
     }
 
     private boolean canStack(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && ItemStack.tagMatches(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < getMaxStackSize();
+        return stack1.getItem() == stack2.getItem() && ItemStack.isSameItemSameTags(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < getMaxStackSize();
     }
 
     public void setActive(boolean state) {

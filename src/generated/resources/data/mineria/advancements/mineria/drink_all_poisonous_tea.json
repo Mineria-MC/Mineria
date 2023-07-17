@@ -84,5 +84,6 @@
     [
       "drink_mandrake_tea"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

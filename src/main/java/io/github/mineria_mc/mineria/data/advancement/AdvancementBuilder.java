@@ -125,8 +125,8 @@ public class AdvancementBuilder {
     }
 
     private Advancement internalBuild(@Nullable ResourceLocation background) {
-        Advancement parent = parentId != null ? new Advancement(parentId, null, null, AdvancementRewards.EMPTY, Maps.newHashMap(), new String[0][]) : null;
-        return new Advancement(id, parent, makeDisplay(background), rewards, criteria.getCriteria(), criteria.getRequirements());
+        Advancement parent = parentId != null ? new Advancement(parentId, null, null, AdvancementRewards.EMPTY, Maps.newHashMap(), new String[0][], false) : null;
+        return new Advancement(id, parent, makeDisplay(background), rewards, criteria.getCriteria(), criteria.getRequirements(), false);
     }
 
     private DisplayInfo makeDisplay(@Nullable ResourceLocation background) {

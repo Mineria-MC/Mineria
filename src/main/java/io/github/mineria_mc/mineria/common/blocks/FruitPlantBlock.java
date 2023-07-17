@@ -20,8 +20,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -31,14 +33,14 @@ public class FruitPlantBlock extends PlantBlock implements BonemealableBlock {
     private final int chance;
 
     public FruitPlantBlock(Supplier<Item> fruit, int chance, boolean isBushBlock) {
-        super(BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().strength(isBushBlock ? 0.5F : 0).sound(SoundType.GRASS).isSuffocating((a, b, c) -> false).isViewBlocking((a, b, c) -> false), isBushBlock);
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).pushReaction(PushReaction.DESTROY).noCollission().randomTicks().strength(isBushBlock ? 0.5F : 0).sound(SoundType.GRASS).isSuffocating((a, b, c) -> false).isViewBlocking((a, b, c) -> false), isBushBlock);
         this.fruit = fruit;
         this.chance = chance;
         registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public @NotNull InteractionResult use(BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (state.getValue(AGE) == 1) {
             popResource(worldIn, pos, new ItemStack(fruit.get()));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
@@ -49,7 +51,7 @@ public class FruitPlantBlock extends PlantBlock implements BonemealableBlock {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
+    public void randomTick(@NotNull BlockState state, ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         if (world.random.nextInt(this.chance) == 0 && world.isAreaLoaded(pos, 4)) {
             int age = state.getValue(AGE);
             if (age == 0)
@@ -58,22 +60,22 @@ public class FruitPlantBlock extends PlantBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(@NotNull LevelReader worldIn, @NotNull BlockPos pos, BlockState state, boolean isClient) {
         return state.getValue(AGE) < 1;
     }
 
     @Override
-    public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(@NotNull Level worldIn, @NotNull RandomSource rand, @NotNull BlockPos pos, @NotNull BlockState state) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerLevel worldIn, RandomSource rand, BlockPos pos, BlockState state) {
+    public void performBonemeal(ServerLevel worldIn, @NotNull RandomSource rand, @NotNull BlockPos pos, BlockState state) {
         worldIn.setBlock(pos, state.setValue(AGE, 1), 2);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(AGE);
     }

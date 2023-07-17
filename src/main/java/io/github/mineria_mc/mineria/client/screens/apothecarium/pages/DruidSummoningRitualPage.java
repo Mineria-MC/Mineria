@@ -72,7 +72,7 @@ public class DruidSummoningRitualPage extends PartitionedPage {
             if(druid == null) {
                 createDruid(client.level);
             }
-            parts.add(partial((stack, x) -> renderEntity(druid, x + width / 2f, y + height * 6f / 10f, (height * 4f / 10f) / druid.getDimensions(druid.getPose()).height)));
+            parts.add(partial((graphics, x) -> renderEntity(druid, x + width / 2f, y + height * 6f / 10f, (height * 4f / 10f) / druid.getDimensions(druid.getPose()).height)));
         }
     }
 

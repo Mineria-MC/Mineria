@@ -2,8 +2,8 @@ package io.github.mineria_mc.mineria.client.screens.apothecarium;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.client.ClientProxy;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.AntiPoisonDescriptionPageSet;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.BossSummoningRitualPages;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets.PageSet;
@@ -22,7 +22,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -330,34 +330,34 @@ public class ApothecariumScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
+    public void render(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
 
         if (currentPage < 0) {
-            draw(stack, leftPos + bookWidth - scaledWidth(146), topPos, 0, 0, 146, 180);
+            draw(graphics, leftPos + bookWidth - scaledWidth(146), topPos, 0, 0, 146, 180);
         } else if(currentPage >= getPagesCount()) {
-            draw(stack, leftPos, topPos, 147, 0, 146, 180);
+            draw(graphics, leftPos, topPos, 147, 0, 146, 180);
         } else {
-            draw(stack, leftPos, topPos, 0, 181, 279, 180);
+            draw(graphics, leftPos, topPos, 0, 181, 279, 180);
             if(Integer.valueOf(currentPage).equals(playerBookmark)) {
-                draw(stack, leftPos + scaledWidth(136), topPos + scaledHeight(8), 280, 181, 7, 162);
+                draw(graphics, leftPos + scaledWidth(136), topPos + scaledHeight(8), 280, 181, 7, 162);
             }
-            pages.get(this.currentPage * 2).render(stack, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(14));
-            pages.get(this.currentPage * 2 + 1).render(stack, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(143));
+            pages.get(this.currentPage * 2).render(graphics, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(14));
+            pages.get(this.currentPage * 2 + 1).render(graphics, mouseX, mouseY, partialTicks, this.leftPos + scaledWidth(143));
         }
 
-        super.render(stack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 
-    public void draw(@Nonnull PoseStack stack, int x, int y, int u, int v, int width, int height) {
-        blit(stack, x, y, scaledWidth(width), scaledHeight(height), u, v, width, height, 512, 512);
+    public void draw(@Nonnull GuiGraphics graphics, int x, int y, int u, int v, int width, int height) {
+        ClientProxy.blitNoTex(graphics, x, y, scaledWidth(width), scaledHeight(height), u, v, width, height, 512, 512);
     }
 
-    public static void fillGradient(@Nonnull PoseStack stack, int x1, int y1, int x2, int y2, int colorFrom, int colorTo, int blitOffset) {
-        GuiComponent.fillGradient(stack, x1, y1, x2, y2, colorFrom, colorTo, blitOffset);
+    public static void fillGradient(@Nonnull GuiGraphics graphics, int x1, int y1, int x2, int y2, int colorFrom, int colorTo, int blitOffset) {
+        graphics.fillGradient(x1, y1, x2, y2, colorFrom, colorTo, blitOffset);
     }
 
     @Override
@@ -406,7 +406,7 @@ public class ApothecariumScreen extends Screen {
         }
 
         @Override
-        public void renderWidget(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        public void renderWidget(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
@@ -419,7 +419,7 @@ public class ApothecariumScreen extends Screen {
                 textureY += 13;
             }
 
-            ApothecariumScreen.this.draw(stack, this.getX(), this.getY(), textureX, textureY, 23, 13);
+            ApothecariumScreen.this.draw(graphics, this.getX(), this.getY(), textureX, textureY, 23, 13);
         }
 
         @Override
@@ -438,7 +438,7 @@ public class ApothecariumScreen extends Screen {
         }
 
         @Override
-        public void renderWidget(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        public void renderWidget(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -461,15 +461,15 @@ public class ApothecariumScreen extends Screen {
                 textureY += 23;
             }
 
-            ApothecariumScreen.this.draw(stack, x, y, textureX, textureY, width, 22);
+            ApothecariumScreen.this.draw(graphics, x, y, textureX, textureY, width, 22);
 
             float itemSize = scaledWidth(21) / 1.5f;
             if (ApothecariumScreen.this.minecraft != null) {
                 ItemPage.renderGuiItem(ApothecariumScreen.this.minecraft, bookmarkInfo.displayStack(), x + (scaledWidth(width) - itemSize) / 2f, y + (scaledHeight(22) - itemSize) / 2f, itemSize);
-            }
 
-            if(isHovered) {
-                renderTooltip(stack, bookmarkInfo.displayName().copy().withStyle(style -> style.withFont(Style.DEFAULT_FONT)), mouseX, mouseY);
+                if(isHovered) {
+                    graphics.renderTooltip(ApothecariumScreen.this.minecraft.font, bookmarkInfo.displayName().copy().withStyle(style -> style.withFont(Style.DEFAULT_FONT)), mouseX, mouseY);
+                }
             }
         }
     }
@@ -480,7 +480,7 @@ public class ApothecariumScreen extends Screen {
         }
 
         @Override
-        public void renderWidget(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
             RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -494,9 +494,9 @@ public class ApothecariumScreen extends Screen {
                 height = 18;
             }
 
-            ApothecariumScreen.this.draw(stack, getX(), getY(), 280, textureY, 7, height);
+            ApothecariumScreen.this.draw(graphics, getX(), getY(), 280, textureY, 7, height);
 
-            if(isHovered) {
+            if(isHovered && ApothecariumScreen.this.minecraft != null) {
                 Component tooltip;
                 if(ApothecariumScreen.this.playerBookmark == null) {
                     tooltip = Component.translatable("mineria.apothecarium.player_bookmark.mark");
@@ -507,7 +507,7 @@ public class ApothecariumScreen extends Screen {
                 } else {
                     tooltip = Component.translatable("mineria.apothecarium.player_bookmark.go_to_page");
                 }
-                renderTooltip(stack, tooltip, mouseX, mouseY);
+                graphics.renderTooltip(ApothecariumScreen.this.minecraft.font, tooltip, mouseX, mouseY);
             }
         }
     }

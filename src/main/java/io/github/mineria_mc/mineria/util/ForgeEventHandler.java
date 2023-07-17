@@ -139,7 +139,7 @@ public final class ForgeEventHandler {
         if (event.getEntity() instanceof Witch witch) {
             DamageSource source = event.getSource();
 
-            if (witch.level instanceof ServerLevel world) {
+            if (witch.level() instanceof ServerLevel world) {
                 LivingEntity living = witch.getTarget();
                 if (living == null && source.getEntity() instanceof LivingEntity)
                     living = (LivingEntity) source.getEntity();

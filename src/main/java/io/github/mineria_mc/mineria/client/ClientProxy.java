@@ -1,5 +1,6 @@
 package io.github.mineria_mc.mineria.client;
 
+import com.mojang.blaze3d.vertex.*;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.client.models.MineriaArmPoses;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.ApothecariumScreen;
@@ -11,11 +12,13 @@ import io.github.mineria_mc.mineria.network.XpBlockMessageHandler;
 import io.github.mineria_mc.mineria.util.MineriaRendering;
 import io.github.mineria_mc.mineria.util.MineriaUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
+import org.joml.Matrix4f;
 
 public final class ClientProxy implements MineriaProxy {
     @Override
@@ -49,5 +52,23 @@ public final class ClientProxy implements MineriaProxy {
     @Override
     public void onXpBlockContainerOpen(Player player, XpBlockEntity tile) {
         MineriaPacketHandler.PACKET_HANDLER.sendToServer(new XpBlockMessageHandler.XpBlockMessage(tile.getBlockPos()));
+    }
+
+    public static void blitNoTex(GuiGraphics graphics, int x, int y, int width, int height, int u, int v, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+        int x2 = x + width;
+        int y2 = y + height;
+        float u1 = u / (float) textureWidth;
+        float u2 = (u + (float) regionWidth) / (float) textureWidth;
+        float v1 = v / (float) textureHeight;
+        float v2 = (v + (float) regionHeight) / (float) textureHeight;
+
+        Matrix4f matrix4f = graphics.pose().last().pose();
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.vertex(matrix4f, x, y, 0).uv(u1, v1).endVertex();
+        bufferBuilder.vertex(matrix4f, x, y2, 0).uv(u1, v2).endVertex();
+        bufferBuilder.vertex(matrix4f, x2, y2, 0).uv(u2, v2).endVertex();
+        bufferBuilder.vertex(matrix4f, x2, y, 0).uv(u2, v1).endVertex();
+        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 }

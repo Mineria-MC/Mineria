@@ -1,16 +1,14 @@
 package io.github.mineria_mc.mineria.client.events;
 
-import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.enchantments.FourElementsEnchantment;
-import io.github.mineria_mc.mineria.util.MineriaConfig;
-import io.github.mineria_mc.mineria.util.MineriaCreativeModeTabs;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.common.enchantments.FourElementsEnchantment;
+import io.github.mineria_mc.mineria.util.MineriaConfig;
+import io.github.mineria_mc.mineria.common.init.MineriaCreativeModeTabs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -50,8 +48,7 @@ public final class ClientForgeEventHandler {
             Minecraft mc = screen.getMinecraft();
             Window window = mc.getWindow();
 
-            if (MineriaCreativeModeTabs.getApothecaryTab().equals(getSelectedTab())) {
-                RenderSystem.setShaderTexture(0, BRANDING);
+            if (MineriaCreativeModeTabs.APOTHECARY.get().equals(getSelectedTab())) {
                 int startX = 0;
                 int startY = 0;
                 int drawWidth = window.getWidth() / 4;
@@ -60,7 +57,7 @@ public final class ClientForgeEventHandler {
                 int height = 1080;
                 int imageWidth = 3072;
                 int imageHeight = 3072;
-                GuiComponent.blit(event.getPoseStack(), startX, startY, drawWidth, drawHeight, 0, 0, width, height, imageWidth, imageHeight);
+                event.getGuiGraphics().blit(BRANDING, startX, startY, drawWidth, drawHeight, 0, 0, width, height, imageWidth, imageHeight);
             }
         }
     }

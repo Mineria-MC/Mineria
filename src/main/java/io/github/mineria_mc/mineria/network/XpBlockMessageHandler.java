@@ -18,7 +18,7 @@ public class XpBlockMessageHandler implements MessageHandler<XpBlockMessageHandl
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
             if (player != null) {
-                Level world = player.level;
+                Level world = player.level();
                 BlockPos tilePos = msg.pos;
 
                 if (!world.hasChunkAt(tilePos)) {

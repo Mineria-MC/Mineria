@@ -107,13 +107,13 @@ public class DruidEntity extends AbstractDruidEntity {
 
     @Override
     public boolean isClientSide() {
-        return level.isClientSide();
+        return level().isClientSide();
     }
 
     class StrikeSpellGoal extends UseSpellGoal {
         @Override
         public void tick() {
-            Level world = DruidEntity.this.getLevel();
+            Level world = DruidEntity.this.level();
             if (!world.isClientSide()) {
                 ((ServerLevel) world).setWeatherParameters(0, 600, true, true);
             }
@@ -124,8 +124,8 @@ public class DruidEntity extends AbstractDruidEntity {
         @Override
         protected void performSpellCasting() {
             LivingEntity target = DruidEntity.this.getTarget();
-            if (!level.isClientSide() && target != null) {
-                ServerLevel world = (ServerLevel) level;
+            if (!level().isClientSide() && target != null) {
+                ServerLevel world = (ServerLevel) level();
                 MineriaLightningBoltEntity.create(world, BlockPos.containing(target.position()), MobSpawnType.EVENT, false, 0, target::equals).ifPresent(world::addFreshEntityWithPassengers);
             }
         }

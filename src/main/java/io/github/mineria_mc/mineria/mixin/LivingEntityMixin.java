@@ -52,7 +52,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "curePotionEffects", at = @At("HEAD"), remap = false)
     public void curePotionEffects(ItemStack curativeItem, CallbackInfoReturnable<Boolean> cir) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (hasEffect(MobEffects.POISON) && getEffect(MobEffects.POISON) instanceof PoisonMobEffectInstance poison) {
                 if (poison.isCurativeItem(curativeItem)) {
                     getActiveEffects().stream().filter(PoisoningHiddenEffectInstance.class::isInstance).forEach(effect -> effect.setCurativeItems(poison.getCurativeItems()));

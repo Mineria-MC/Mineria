@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -37,12 +38,14 @@ public class ItemPage extends ApothecariumPage {
     private float time;
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x) {
+        PoseStack stack = graphics.pose();
+
         stack.pushPose();
         float scaleFactor = findFittingScale(title, height / 140f, width / 16f);
         stack.translate(x + (width - font.width(this.title) * scaleFactor) / 2f, y, 0);
         stack.scale(scaleFactor, scaleFactor, 1);
-        font.draw(stack, this.title, 0, 0, 0);
+        font.draw(graphics, this.title, 0, 0, 0);
         stack.popPose();
 
         if(renderStacks.isEmpty()) {

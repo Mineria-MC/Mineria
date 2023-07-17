@@ -11,17 +11,18 @@ import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.common.PlantType;
+import org.jetbrains.annotations.NotNull;
 
 public class MineriaMushroomBlock extends MushroomBlock {
-    public MineriaMushroomBlock(MaterialColor color) {
-        super(BlockBehaviour.Properties.of(Material.PLANT, color).noCollission().randomTicks().instabreak().sound(SoundType.GRASS).lightLevel((a) -> 1).hasPostProcess((a, b, c) -> true), null);
+    public MineriaMushroomBlock(MapColor color) {
+        super(BlockBehaviour.Properties.of().mapColor(color).pushReaction(PushReaction.DESTROY).noCollission().randomTicks().instabreak().sound(SoundType.GRASS).lightLevel((a) -> 1).hasPostProcess((a, b, c) -> true), null);
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
+    public void randomTick(@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, RandomSource rand) {
         if (rand.nextInt(25) == 0) {
             int i = 5;
 
@@ -52,19 +53,19 @@ public class MineriaMushroomBlock extends MushroomBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, LevelReader world, BlockPos pos) {
         BlockPos below = pos.below();
         BlockState belowState = world.getBlockState(below);
         return belowState.is(BlockTags.MUSHROOM_GROW_BLOCK) || belowState.canSustainPlant(world, below, Direction.UP, this);
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
+    public boolean isValidBonemealTarget(@NotNull LevelReader pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, boolean pIsClient) {
         return false;
     }
 
     @Override
-    public boolean growMushroom(ServerLevel pLevel, BlockPos pPos, BlockState pState, RandomSource pRandom) {
+    public boolean growMushroom(@NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull RandomSource pRandom) {
         return false;
     }
 }

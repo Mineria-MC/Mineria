@@ -94,5 +94,6 @@
     [
       "get_titane_sword_with_silver_handle"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

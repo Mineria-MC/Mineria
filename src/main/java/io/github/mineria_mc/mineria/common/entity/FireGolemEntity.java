@@ -21,9 +21,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class FireGolemEntity extends ElementaryGolemEntity {
     public FireGolemEntity(EntityType<? extends FireGolemEntity> type, Level world) {
@@ -54,24 +54,24 @@ public class FireGolemEntity extends ElementaryGolemEntity {
             boolean clearedWater = false;
 
             for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))) {
-                if (this.level.getBlockState(blockPos).is(Blocks.WATER)) {
-                    this.level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
+                if (level().getBlockState(blockPos).is(Blocks.WATER)) {
+                    level().setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
                     clearedWater = true;
                 }
             }
 
             if (clearedWater) {
-                this.level.playSound(null, pos, SoundEvents.LAVA_EXTINGUISH, SoundSource.HOSTILE, 1.0F, 1.0F);
+                level().playSound(null, pos, SoundEvents.LAVA_EXTINGUISH, SoundSource.HOSTILE, 1.0F, 1.0F);
             }
         }
     }
 
     @Override
-    public void move(MoverType type, Vec3 vec) {
+    public void move(MoverType type, @NotNull Vec3 vec) {
         if (type.equals(MoverType.SELF)) {
             BlockPos pos = this.blockPosition();
-            if (!this.level.isEmptyBlock(pos.below()) && this.level.isEmptyBlock(pos) || this.level.getBlockState(pos).getMaterial().equals(Material.REPLACEABLE_PLANT))
-                this.level.setBlock(pos, Blocks.FIRE.defaultBlockState(), Block.UPDATE_CLIENTS);
+            if (!level().isEmptyBlock(pos.below()) && level().isEmptyBlock(pos) || level().getBlockState(pos).canBeReplaced())
+                level().setBlock(pos, Blocks.FIRE.defaultBlockState(), Block.UPDATE_CLIENTS);
         }
         super.move(type, vec);
     }
@@ -91,7 +91,7 @@ public class FireGolemEntity extends ElementaryGolemEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float dmg) {
+    public boolean hurt(@NotNull DamageSource source, float dmg) {
         if (super.hurt(source, dmg)) {
             if (source.getDirectEntity() != null && random.nextFloat() < 0.1F) {
                 source.getDirectEntity().setSecondsOnFire(1);
@@ -107,7 +107,7 @@ public class FireGolemEntity extends ElementaryGolemEntity {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return MineriaSounds.FIRE_GOLEM_HURT.get();
     }
 
@@ -117,7 +117,7 @@ public class FireGolemEntity extends ElementaryGolemEntity {
     }
 
     @Override
-    protected void playStepSound(BlockPos pos, BlockState state) {
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState state) {
         this.playSound(SoundEvents.IRON_GOLEM_STEP, 1.0F, 1.0F);
     }
 

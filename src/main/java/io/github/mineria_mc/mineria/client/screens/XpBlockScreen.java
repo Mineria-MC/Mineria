@@ -1,12 +1,12 @@
 package io.github.mineria_mc.mineria.client.screens;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.containers.XpBlockMenu;
 import io.github.mineria_mc.mineria.network.MineriaPacketHandler;
 import io.github.mineria_mc.mineria.network.XpBlockMessageHandler;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class XpBlockScreen extends AbstractContainerScreen<XpBlockMenu> {
-    public static final ResourceLocation TEXTURES = new ResourceLocation(Mineria.MODID, "textures/gui/xp_block_new.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Mineria.MODID, "textures/gui/xp_block_new.png");
 
     private boolean active = false;
     private int sliderValue = 20;
@@ -44,23 +44,23 @@ public class XpBlockScreen extends AbstractContainerScreen<XpBlockMenu> {
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
-        this.font.draw(stack, this.title, (this.imageWidth - font.width(this.title)) / 2F, 6, 4210752);
+    protected void renderLabels(@Nonnull GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(font, this.title.getVisualOrderText(), (this.imageWidth - font.width(this.title)) / 2F, 6, 4210752, false);
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull GuiGraphics stack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int x, int y) {
+    protected void renderBg(@Nonnull GuiGraphics graphics, float partialTicks, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURES);
-        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

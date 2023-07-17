@@ -1,5 +1,6 @@
 package io.github.mineria_mc.mineria.client.screens.apothecarium.page_sets;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.PageCreationContext;
 import io.github.mineria_mc.mineria.client.screens.apothecarium.pages.ApothecariumPage;
@@ -7,9 +8,7 @@ import io.github.mineria_mc.mineria.client.screens.apothecarium.pages.Partitione
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.common.init.MineriaPotions;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -66,11 +65,9 @@ public class BossSummoningRitualPages implements PageSet {
             int imgWidth = 809;
             int imgHeight = 388;
             int scaledImgHeight = Math.min(imgHeight * width / imgWidth, height * 8 / 10);
-            parts.add(partial((stack, x) -> {
-                RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            parts.add(partial((graphics, x) -> {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
-                RenderSystem.setShaderTexture(0, RITUAL_TABLE);
-                blit(stack, x, y + Mth.floor(height * 3.5f / 10), width, scaledImgHeight, 0, 0, imgWidth, imgHeight, imgWidth, imgHeight);
+                graphics.blit(RITUAL_TABLE, x, y + Mth.floor(height * 3.5f / 10), width, scaledImgHeight, 0, 0, imgWidth, imgHeight, imgWidth, imgHeight);
             }));
 
             // Tip
@@ -103,7 +100,7 @@ public class BossSummoningRitualPages implements PageSet {
             }
 
             // Blue Glowstone item
-            parts.add((stack, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, stack, mouseX, mouseY,
+            parts.add((graphics, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, graphics, mouseX, mouseY,
                     new ItemStack(MineriaBlocks.BLUE_GLOWSTONE.get()),
                     x + (width - 2 * height / 10f) / 2f,
                     y + height * 2.25f / 10,
@@ -134,7 +131,7 @@ public class BossSummoningRitualPages implements PageSet {
             // Ritual Ingredients
             float size = Math.min(2 * height / 10f, width / 3f);
             float spacing = (width - 3 * size) / 4;
-            parts.add((stack, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, stack, mouseX, mouseY,
+            parts.add((graphics, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, graphics, mouseX, mouseY,
                     new ItemStack(MineriaItems.MISTLETOE.get(), 16),
                     x + spacing,
                     y + height * 8.25f / 10,
@@ -142,7 +139,7 @@ public class BossSummoningRitualPages implements PageSet {
                     true,
                     parentScreen
             ));
-            parts.add((stack, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, stack, mouseX, mouseY,
+            parts.add((graphics, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, graphics, mouseX, mouseY,
                     new ItemStack(MineriaItems.VANADIUM_INGOT.get()),
                     x + spacing * 2 + size,
                     y + height * 8.25f / 10,
@@ -150,7 +147,7 @@ public class BossSummoningRitualPages implements PageSet {
                     true,
                     parentScreen
             ));
-            parts.add((stack, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, stack, mouseX, mouseY,
+            parts.add((graphics, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, graphics, mouseX, mouseY,
                     new ItemStack(Items.LAPIS_LAZULI, 64),
                     x + spacing * 3 + size * 2,
                     y + height * 8.25f / 10,
@@ -178,7 +175,7 @@ public class BossSummoningRitualPages implements PageSet {
                 parts.add(scaledText(step4Content.get(i), y + (font.lineHeight - 1) * textScale * i, textScale));
             }
 
-            parts.add((stack, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, stack, mouseX, mouseY,
+            parts.add((graphics, mouseX, mouseY, partialTicks, x) -> renderItemWithSlotBackground(client, graphics, mouseX, mouseY,
                     PotionUtils.setPotion(new ItemStack(MineriaItems.MINERIA_POTION.get()), MineriaPotions.YEW_POISONING.get()),
                     x + (width - 2 * height / 10f) / 2f,
                     y + height * 1.75f / 10,

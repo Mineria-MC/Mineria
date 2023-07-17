@@ -21,6 +21,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -48,7 +49,7 @@ public class GoldenSilverfishEntity extends Silverfish {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
         } else {
@@ -77,10 +78,10 @@ public class GoldenSilverfishEntity extends Silverfish {
             } else {
                 RandomSource random = this.mob.getRandom();
 
-                if (ForgeEventFactory.getMobGriefingEvent(this.mob.level, this.mob) && random.nextInt(10) == 0) {
+                if (ForgeEventFactory.getMobGriefingEvent(this.mob.level(), this.mob) && random.nextInt(10) == 0) {
                     this.facing = Direction.getRandom(random);
                     BlockPos pos = (BlockPos.containing(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
-                    BlockState state = this.mob.level.getBlockState(pos);
+                    BlockState state = this.mob.level().getBlockState(pos);
 
                     if (GoldenSilverfishBlock.canContainGoldenSilverfish(state)) {
                         this.doMerge = true;
@@ -101,7 +102,7 @@ public class GoldenSilverfishEntity extends Silverfish {
             if (!this.doMerge) {
                 super.start();
             } else {
-                LevelAccessor world = this.mob.level;
+                LevelAccessor world = this.mob.level();
                 BlockPos pos = (BlockPos.containing(this.mob.getX(), this.mob.getY() + 0.5D, this.mob.getZ())).relative(this.facing);
                 BlockState state = world.getBlockState(pos);
 
@@ -136,7 +137,7 @@ public class GoldenSilverfishEntity extends Silverfish {
         public void tick() {
             --this.lookForFriends;
             if (this.lookForFriends <= 0) {
-                Level world = this.goldenSilverfish.level;
+                Level world = this.goldenSilverfish.level();
                 RandomSource random = this.goldenSilverfish.getRandom();
                 BlockPos pos = this.goldenSilverfish.blockPosition();
 

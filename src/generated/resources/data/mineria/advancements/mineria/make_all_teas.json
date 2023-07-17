@@ -289,5 +289,6 @@
     [
       "get_pulsatilla_chinensis_root_tea"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

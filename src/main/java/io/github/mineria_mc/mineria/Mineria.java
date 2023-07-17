@@ -10,7 +10,7 @@ import io.github.mineria_mc.mineria.data.MineriaDataGatherer;
 import io.github.mineria_mc.mineria.network.MineriaPacketHandler;
 import io.github.mineria_mc.mineria.server.commands.PoisonCommand;
 import io.github.mineria_mc.mineria.util.MineriaConfig;
-import io.github.mineria_mc.mineria.util.MineriaCreativeModeTabs;
+import io.github.mineria_mc.mineria.common.init.MineriaCreativeModeTabs;
 import io.github.mineria_mc.mineria.util.MineriaProxyProvider;
 import io.github.mineria_mc.mineria.util.MineriaMissingMappings;
 import net.minecraftforge.common.MinecraftForge;
@@ -72,6 +72,7 @@ public class Mineria {
         MineriaEntities.ENTITY_TYPES.register(bus);
         MineriaPOITypes.POI_TYPES.register(bus);
         MineriaProfessions.PROFESSIONS.register(bus);
+        MineriaCreativeModeTabs.CREATIVE_TABS.register(bus);
         MineriaHeightProviderTypes.PROVIDER_TYPES.register(bus);
         MineriaTreeDecoratorTypes.TREE_DECORATORS.register(bus);
         MineriaDataMarkerHandlers.HANDLERS.register(bus);
@@ -85,8 +86,6 @@ public class Mineria {
         bus.addListener(MineriaEntities::registerEntityAttributes);
         bus.addListener(MineriaEntities::registerSpawnPlacements);
         bus.addListener(MineriaCapabilities::registerCapabilities);
-        bus.addListener(MineriaCreativeModeTabs::registerCreativeTabs);
-        bus.addListener(MineriaCreativeModeTabs::buildTabsContent);
         MineriaMissingMappings.initialize();
 
         instance = this;

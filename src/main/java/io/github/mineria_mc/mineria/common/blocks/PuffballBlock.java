@@ -7,19 +7,18 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
 public class PuffballBlock extends MineriaMushroomBlock {
     public PuffballBlock() {
-        super(MaterialColor.COLOR_LIGHT_GRAY);
+        super(MapColor.COLOR_LIGHT_GRAY);
     }
 
     private void bounceUp(Entity entity) {
@@ -41,7 +40,7 @@ public class PuffballBlock extends MineriaMushroomBlock {
                     if (world.random.nextInt(3) == 0) {
                         BlockPos adjacentPos = pos.relative(direction);
                         BlockState adjacent = world.getBlockState(adjacentPos);
-                        if (adjacent.getMaterial().isReplaceable() && MineriaBlocks.PUFFBALL_POWDER.get().defaultBlockState().canSurvive(world, adjacentPos))
+                        if (adjacent.canBeReplaced() && MineriaBlocks.PUFFBALL_POWDER.get().defaultBlockState().canSurvive(world, adjacentPos))
                             world.setBlock(adjacentPos, MineriaBlocks.PUFFBALL_POWDER.get().defaultBlockState(), Block.UPDATE_ALL);
                     }
                 }

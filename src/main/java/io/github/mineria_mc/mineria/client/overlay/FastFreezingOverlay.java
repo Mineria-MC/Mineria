@@ -1,10 +1,14 @@
 package io.github.mineria_mc.mineria.client.overlay;
 
-import io.github.mineria_mc.mineria.common.init.MineriaEffects;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import io.github.mineria_mc.mineria.common.init.MineriaEffects;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +18,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class FastFreezingOverlay implements IGuiOverlay {
     @Override
-    public void render(ForgeGui gui, PoseStack stack, float partialTicks, int width, int height) {
+    public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         int windowWidth = mc.getWindow().getGuiScaledWidth();

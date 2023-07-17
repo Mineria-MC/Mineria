@@ -77,7 +77,7 @@ public class FourElementsEnchantment extends Enchantment {
     @SubscribeEvent
     public static void onEnchantmentApplied(LivingEvent.LivingTickEvent event) {
         LivingEntity owner = event.getEntity();
-        Level world = owner.getLevel();
+        Level world = owner.level();
         if(world.isClientSide() || !owner.isAlive() || owner.isSpectator()) {
             return;
         }

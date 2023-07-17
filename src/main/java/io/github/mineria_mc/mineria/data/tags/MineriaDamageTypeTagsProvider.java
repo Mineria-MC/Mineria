@@ -1,4 +1,4 @@
-package io.github.mineria_mc.mineria.data;
+package io.github.mineria_mc.mineria.data.tags;
 
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaDamageTypes;
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class MineriaDamageTypeTagsProvider extends TagsProvider<DamageType> {
-    protected MineriaDamageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+    public MineriaDamageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.DAMAGE_TYPE, provider, Mineria.MODID, existingFileHelper);
     }
 

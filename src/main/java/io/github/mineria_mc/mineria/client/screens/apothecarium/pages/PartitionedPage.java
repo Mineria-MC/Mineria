@@ -12,8 +12,8 @@ import it.unimi.dsi.fastutil.floats.FloatUnaryOperator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -42,11 +42,11 @@ public abstract class PartitionedPage extends ApothecariumPage {
     protected abstract void initParts(List<RenderPart> parts);
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x) {
         if(renderParts == null) {
             renderParts = ImmutableList.copyOf(Util.make(new ArrayList<>(), this::initParts));
         }
-        this.renderParts.forEach(renderPart -> renderPart.render(stack, mouseX, mouseY, partialTicks, x));
+        this.renderParts.forEach(renderPart -> renderPart.render(graphics, mouseX, mouseY, partialTicks, x));
     }
 
     protected PartialRenderPart scaledText(Component text, float y, float scale) {
@@ -66,11 +66,13 @@ public abstract class PartitionedPage extends ApothecariumPage {
     }
 
     protected PartialRenderPart scaledText(FormattedCharSequence seq, FloatUnaryOperator xTransformer, float y, float scale, int color) {
-        return (stack, x) -> {
+        return (graphics, x) -> {
+            PoseStack stack = graphics.pose();
+
             stack.pushPose();
             stack.translate(xTransformer.apply(x), y, 0);
             stack.scale(scale, scale, 1);
-            font.draw(stack, seq, 0, 0, color);
+            font.draw(graphics, seq, 0, 0, color);
             stack.popPose();
         };
     }
@@ -79,12 +81,9 @@ public abstract class PartitionedPage extends ApothecariumPage {
         return part;
     }
 
-    public static void renderItemWithSlotBackground(Minecraft client, PoseStack poseStack, int mouseX, int mouseY, ItemStack stack, float x, float y, float size, boolean drawSlot, ApothecariumScreen parentScreen) {
+    public static void renderItemWithSlotBackground(Minecraft client, GuiGraphics graphics, int mouseX, int mouseY, ItemStack stack, float x, float y, float size, boolean drawSlot, ApothecariumScreen parentScreen) {
         if(drawSlot) {
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderSystem.setShaderTexture(0, ApothecariumScreen.BOOK_TEXTURE);
-            GuiComponent.blit(poseStack, Mth.floor(x), Mth.floor(y), Mth.ceil(size), Mth.ceil(size), 341, 0, 18, 18, 512, 512);
+            graphics.blit(ApothecariumScreen.BOOK_TEXTURE, Mth.floor(x), Mth.floor(y), Mth.ceil(size), Mth.ceil(size), 341, 0, 18, 18, 512, 512);
         }
 
         float stackSize = 16 * size / 18;
@@ -106,7 +105,7 @@ public abstract class PartitionedPage extends ApothecariumPage {
         modelView.scale(1, -1, 1);
         modelView.scale(stackSize, stackSize, stackSize);
         RenderSystem.applyModelViewMatrix();
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource bufferSource = client.renderBuffers().bufferSource();
         boolean blockLight = !model.usesBlockLight();
         if (blockLight) {
             Lighting.setupForFlatItems();
@@ -140,9 +139,9 @@ public abstract class PartitionedPage extends ApothecariumPage {
         if(mouseX > x && mouseX < x + size && mouseY > y && mouseY < y + size) {
             RenderSystem.disableDepthTest();
             RenderSystem.colorMask(true, true, true, false);
-            ApothecariumScreen.fillGradient(poseStack, Mth.floor(x), Mth.floor(y), Mth.ceil(x + size), Mth.ceil(y + size), -2130706433, -2130706433, 0);
+            ApothecariumScreen.fillGradient(graphics, Mth.floor(x), Mth.floor(y), Mth.ceil(x + size), Mth.ceil(y + size), -2130706433, -2130706433, 0);
             RenderSystem.colorMask(true, true, true, true);
-            parentScreen.renderTooltip(poseStack, parentScreen.getTooltipFromItem(stack), stack.getTooltipImage(), mouseX, mouseY);
+            graphics.renderTooltip(client.font, Screen.getTooltipFromItem(client, stack), stack.getTooltipImage(), mouseX, mouseY);
             RenderSystem.enableDepthTest();
         }
     }
@@ -179,16 +178,16 @@ public abstract class PartitionedPage extends ApothecariumPage {
 
     @FunctionalInterface
     protected interface PartialRenderPart extends RenderPart {
-        void render(PoseStack stack, int x);
+        void render(GuiGraphics graphics, int x);
 
         @Override
-        default void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x) {
-            render(stack, x);
+        default void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x) {
+            render(graphics, x);
         }
     }
 
     @FunctionalInterface
     protected interface RenderPart {
-        void render(PoseStack stack, int mouseX, int mouseY, float partialTicks, int x);
+        void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int x);
     }
 }

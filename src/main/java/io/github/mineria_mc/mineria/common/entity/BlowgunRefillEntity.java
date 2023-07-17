@@ -31,6 +31,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +67,7 @@ public class BlowgunRefillEntity extends Projectile {
     }
 
     public PoisonSource getPoisonSource() {
-        return this.level.isClientSide ? PoisonSource.byName(ResourceLocation.tryParse(this.entityData.get(POISON_SOURCE_ID))) : this.poisonSource;
+        return this.level().isClientSide ? PoisonSource.byName(ResourceLocation.tryParse(this.entityData.get(POISON_SOURCE_ID))) : this.poisonSource;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -100,7 +101,7 @@ public class BlowgunRefillEntity extends Projectile {
 
         Vec3 pos = this.position();
         Vec3 motionPos = pos.add(motion);
-        HitResult result = this.level.clip(new ClipContext(pos, motionPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        HitResult result = this.level().clip(new ClipContext(pos, motionPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
         if (result.getType() != HitResult.Type.MISS)
             motionPos = result.getLocation();
@@ -141,7 +142,7 @@ public class BlowgunRefillEntity extends Projectile {
         float inertia = 0.99F;
         if (this.isInWater()) {
             for (int j = 0; j < 4; ++j) {
-                this.level.addParticle(ParticleTypes.BUBBLE, modX - moX * 0.25D, modY - moY * 0.25D, modZ - moZ * 0.25D, moX, moY, moZ);
+                this.level().addParticle(ParticleTypes.BUBBLE, modX - moX * 0.25D, modY - moY * 0.25D, modZ - moZ * 0.25D, moX, moY, moZ);
             }
 
             inertia = 0.6F;
@@ -164,14 +165,14 @@ public class BlowgunRefillEntity extends Projectile {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult result) {
+    protected void onHitEntity(@NotNull EntityHitResult result) {
         super.onHitEntity(result);
         Entity hit = result.getEntity();
         float motionLength = (float) this.getDeltaMovement().length();
         int damage = Mth.ceil(Mth.clamp((double) motionLength * 3.5D, 0.0D, 2.147483647E9D));
 
         Entity owner = this.getOwner();
-        DamageSource source = MineriaDamageSourceBuilder.get(level).bambooBlowgun(this, owner == null ? this : owner);
+        DamageSource source = MineriaDamageSourceBuilder.get(level()).bambooBlowgun(this, owner == null ? this : owner);
 
         if (owner instanceof LivingEntity)
             ((LivingEntity) owner).setLastHurtMob(hit);
@@ -185,7 +186,7 @@ public class BlowgunRefillEntity extends Projectile {
             if (hit instanceof LivingEntity living) {
                 doPostHurtEffects(living);
 
-                if (!this.level.isClientSide)
+                if (!this.level().isClientSide)
                     living.setArrowCount(living.getArrowCount() + 1);
 
                 if (living != owner && living instanceof Player && owner instanceof ServerPlayer && !this.isSilent())
@@ -199,13 +200,13 @@ public class BlowgunRefillEntity extends Projectile {
             setYRot(getYRot() + 180.0F);
             this.yRotO += 180.0F;
 
-            if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D)
+            if (!this.level().isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D)
                 this.discard();
         }
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult result) {
+    protected void onHitBlock(@NotNull BlockHitResult result) {
         super.onHitBlock(result);
         this.playSound(SoundEvents.ARROW_HIT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         this.discard();
@@ -213,7 +214,7 @@ public class BlowgunRefillEntity extends Projectile {
 
     @Nullable
     protected EntityHitResult findHitEntity(Vec3 p_213866_1_, Vec3 p_213866_2_) {
-        return ProjectileUtil.getEntityHitResult(this.level, this, p_213866_1_, p_213866_2_, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
+        return ProjectileUtil.getEntityHitResult(this.level(), this, p_213866_1_, p_213866_2_, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
 
     protected void doPostHurtEffects(LivingEntity living) {
@@ -221,7 +222,7 @@ public class BlowgunRefillEntity extends Projectile {
     }
 
     @Override
-    protected MovementEmission getMovementEmission() {
+    protected @NotNull MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
     }
 
@@ -231,13 +232,13 @@ public class BlowgunRefillEntity extends Projectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag nbt) {
+    protected void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putShort("life", (short) this.life);
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag nbt) {
+    protected void readAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         this.life = nbt.getShort("life");
     }

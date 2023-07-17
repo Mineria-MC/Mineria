@@ -1,7 +1,6 @@
 package io.github.mineria_mc.mineria.common.effects.instances;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
 import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.util.EffectUpdater;
@@ -11,6 +10,7 @@ import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.init.MineriaEffectInstanceSerializers;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -120,10 +120,10 @@ public class PoisonMobEffectInstance extends ModdedMobEffectInstance {
     }
 
     @Override
-    public void drawPotionName(Font font, PoseStack matrixStack, float x, float y) {
+    public void drawPotionName(Font font, GuiGraphics graphics, float x, float y) {
         Component txt = this.poisonSource.getDescription(this.potionClass, this.amplifier).append(" - ").append(MobEffectUtil.formatDuration(this, 1.0F));
         int width = font.width(txt);
-        font.drawShadow(matrixStack, txt, x - (int) (width / 2), y, 16727643);
+        graphics.drawString(font, txt.getVisualOrderText(), x - width / 2f, y, 16727643, true);
     }
 
     @Override

@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -27,6 +27,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -34,23 +35,23 @@ public class DistillerBlock extends Block implements EntityBlock {
     private static final VoxelShape SHAPE = makeShape();
 
     public DistillerBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL).strength(7f, 9f).sound(SoundType.METAL).requiresCorrectToolForDrops());
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(7f, 9f).sound(SoundType.METAL).requiresCorrectToolForDrops());
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new DistillerBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
         return level.isClientSide || blockEntityType != MineriaBlockEntities.DISTILLER.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> DistillerBlockEntity.serverTick(pLevel, pPos, pState, (DistillerBlockEntity) pBlockEntity);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult rayTraceResult) {
         if (!world.isClientSide) {
             BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof DistillerBlockEntity)
@@ -61,7 +62,7 @@ public class DistillerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean hasFlags) {
+    public void onRemove(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull BlockState newState, boolean hasFlags) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof DistillerBlockEntity)
             Containers.dropContents(world, pos, ((DistillerBlockEntity) tile).getInventory().toNonNullList());
@@ -70,12 +71,12 @@ public class DistillerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
+    public @NotNull BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirror) {
         return super.mirror(state, mirror);
     }
 
@@ -86,17 +87,17 @@ public class DistillerBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext ctx) {
         return super.getStateForPlacement(ctx);
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+    public void animateTick(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull RandomSource random) {
         super.animateTick(state, world, pos, random);
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState p_220053_1_, @NotNull BlockGetter p_220053_2_, @NotNull BlockPos p_220053_3_, @NotNull CollisionContext p_220053_4_) {
         return SHAPE;
     }
 

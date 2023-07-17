@@ -26,7 +26,7 @@ public class EntityMixin {
         }
     }
 
-    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;deserializeCaps(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;deserializeCaps(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER, remap = false))
     private void mineria$inject_load(CompoundTag nbt, CallbackInfo ci) {
         if((Entity) (Object) this instanceof LivingEntity living) {
             CompoundTag caps = nbt.getCompound("ForgeCaps");

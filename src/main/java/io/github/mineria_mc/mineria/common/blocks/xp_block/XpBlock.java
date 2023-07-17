@@ -16,31 +16,32 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class XpBlock extends Block implements EntityBlock {
     public XpBlock() {
-        super(BlockBehaviour.Properties.of(Material.METAL).strength(2.5F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops());
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops());
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new XpBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
         return level.isClientSide || blockEntityType != MineriaBlockEntities.XP_BLOCK.get() ? null : (pLevel, pPos, pState, pBlockEntity) -> XpBlockEntity.serverTick(pLevel, pPos, pState, (XpBlockEntity) pBlockEntity);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         XpBlockEntity xpTile = (XpBlockEntity) worldIn.getBlockEntity(pos);
         if (!worldIn.isClientSide) {
             NetworkHooks.openScreen((ServerPlayer) player, xpTile, pos);
@@ -50,7 +51,7 @@ public class XpBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
         BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof XpBlockEntity && state.getBlock() != newState.getBlock())
             Containers.dropContents(worldIn, pos, ((XpBlockEntity) tile).getInventory().toNonNullList());

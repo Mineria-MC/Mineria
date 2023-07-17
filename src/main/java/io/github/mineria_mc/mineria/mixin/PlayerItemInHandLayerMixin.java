@@ -11,7 +11,6 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
@@ -46,12 +45,13 @@ public class PlayerItemInHandLayerMixin<T extends Player, M extends EntityModel<
     @Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
     private void mineria$inject_renderArmWithItem(LivingEntity living, ItemStack stack, ItemDisplayContext displayContext, HumanoidArm arm, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
         if(mineria$blowgunModel != null && stack.getItem() instanceof IMineriaItem mineriaItem && mineriaItem.rendersOnHead() && living.getUseItem() == stack && living.swingTime == 0) {
-            renderArmWithItem(poseStack, buffer, packedLight);
+            mineria$renderArmWithItem(poseStack, buffer, packedLight);
             ci.cancel();
         }
     }
 
-    private void renderArmWithItem(PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    @Unique
+    private void mineria$renderArmWithItem(PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
         ModelPart modelpart = getParentModel().getHead();
         float f = modelpart.xRot;

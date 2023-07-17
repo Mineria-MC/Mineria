@@ -52,24 +52,24 @@ public class JarEntity extends ThrowableItemProjectile implements ItemSupplier {
     protected void onHit(HitResult rayTraceResult) {
         super.onHit(rayTraceResult);
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             ItemStack stack = this.getItem();
             PoisonSource poisonSource = JarItem.getPoisonSourceFromStack(stack);
 
             if (this.isLingering()) {
-//                this.makeAreaOfEffectCloud(stack, potion);
+//                this.makeAreaOfEffectCloud(stack, potion); TODO: Implement or not lingering on Jars
             } else {
                 this.applySplash(poisonSource, rayTraceResult.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) rayTraceResult).getEntity() : null);
             }
 
-            this.level.levelEvent(2002, this.blockPosition(), poisonSource.getColor());
+            this.level().levelEvent(2002, this.blockPosition(), poisonSource.getColor());
             this.discard();
         }
     }
 
     private void applySplash(PoisonSource poisonSource, @Nullable Entity target) {
         AABB boundingBox = this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
-        List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, boundingBox);
+        List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, boundingBox);
 
         if (!entities.isEmpty()) {
             for (LivingEntity living : entities) {

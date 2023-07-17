@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.data;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.init.MineriaDamageTypes;
 import io.github.mineria_mc.mineria.common.init.datagen.*;
+import io.github.mineria_mc.mineria.data.tags.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -19,7 +20,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-// TODO
 public final class MineriaDataGatherer implements Consumer<GatherDataEvent> {
     @Override
     public void accept(GatherDataEvent event) {

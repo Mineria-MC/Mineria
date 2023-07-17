@@ -2,8 +2,8 @@ package io.github.mineria_mc.mineria.common.blocks.apothecary_table;
 
 import io.github.mineria_mc.mineria.common.containers.ApothecaryTableMenu;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
-import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
+import io.github.mineria_mc.mineria.common.init.MineriaRecipeTypes;
 import io.github.mineria_mc.mineria.common.recipe.AbstractApothecaryTableRecipe;
 import io.github.mineria_mc.mineria.common.recipe.ApothecaryFillingRecipe;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
@@ -143,7 +143,7 @@ public class ApothecaryTableBlockEntity extends MineriaLockableBlockEntity {
             if (result.isEmpty())
                 return false;
 
-            if (output.isEmpty() || output.sameItem(result) && ItemStack.tagMatches(output, result)) {
+            if (output.isEmpty() || ItemStack.isSameItem(output, result) && ItemStack.isSameItemSameTags(output, result)) {
                 int res = output.getCount() + result.getCount();
                 return res <= 64 && res <= output.getMaxStackSize();
             }
@@ -162,7 +162,7 @@ public class ApothecaryTableBlockEntity extends MineriaLockableBlockEntity {
 
             if (output.isEmpty())
                 this.inventory.setStackInSlot(2, result);
-            else if (output.sameItem(result) && ItemStack.tagMatches(output, result))
+            else if (ItemStack.isSameItem(output, result) && ItemStack.isSameItemSameTags(output, result))
                 output.grow(result.getCount());
 
             input.shrink(1);

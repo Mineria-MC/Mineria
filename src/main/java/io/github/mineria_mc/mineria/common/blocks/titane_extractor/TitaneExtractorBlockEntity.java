@@ -2,9 +2,9 @@ package io.github.mineria_mc.mineria.common.blocks.titane_extractor;
 
 import io.github.mineria_mc.mineria.common.blocks.barrel.AbstractWaterBarrelBlockEntity;
 import io.github.mineria_mc.mineria.common.containers.TitaneExtractorMenu;
+import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.common.init.MineriaBlocks;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
-import io.github.mineria_mc.mineria.common.init.MineriaBlockEntities;
 import io.github.mineria_mc.mineria.util.MineriaItemStackHandler;
 import io.github.mineria_mc.mineria.util.MineriaLockableBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -80,11 +80,11 @@ public class TitaneExtractorBlockEntity extends MineriaLockableBlockEntity {
         boolean hasWater = AbstractWaterBarrelBlockEntity.checkFluidFromStack(input1, Fluids.WATER);
 
         if (!input0.isEmpty() && !input1.isEmpty() && !input2.isEmpty() && hasWater) {
-            if (input0.sameItem(new ItemStack(MineriaBlocks.MINERAL_SAND.get())) && input2.sameItem(new ItemStack(MineriaItems.FILTER.get()))) {
+            if (ItemStack.isSameItem(input0, new ItemStack(MineriaBlocks.MINERAL_SAND.get())) && ItemStack.isSameItem(input2, new ItemStack(MineriaItems.FILTER.get()))) {
                 ItemStack output = this.inventory.getStackInSlot(3);
                 ItemStack result = new ItemStack(MineriaItems.TITANE_NUGGET.get(), 1);
 
-                if (!output.sameItem(result) && !output.isEmpty()) {
+                if (!ItemStack.isSameItem(output, result) && !output.isEmpty()) {
                     return false;
                 }
 

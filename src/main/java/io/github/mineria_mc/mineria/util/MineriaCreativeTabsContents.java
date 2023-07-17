@@ -1,23 +1,21 @@
 package io.github.mineria_mc.mineria.util;
 
 import io.github.mineria_mc.mineria.common.effects.potions.MineriaPotion;
+import io.github.mineria_mc.mineria.common.init.MineriaCreativeModeTabs;
 import io.github.mineria_mc.mineria.common.init.MineriaPotions;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.function.Consumer;
-
-import static io.github.mineria_mc.mineria.common.init.MineriaItems.*;
 import static io.github.mineria_mc.mineria.common.init.MineriaBlocks.*;
+import static io.github.mineria_mc.mineria.common.init.MineriaItems.*;
 
 public final class MineriaCreativeTabsContents {
-    static final Consumer<CreativeModeTabEvent.BuildContents> MINERIA_TAB_ITEMS = event -> {
-        acceptAll(event,
+    public static final CreativeModeTab.DisplayItemsGenerator MINERIA_TAB_ITEMS = (display, output) -> {
+        acceptAll(output,
                 // Crafting Materials
                 GOLD_STICK,
                 IRON_STICK,
@@ -140,7 +138,7 @@ public final class MineriaCreativeTabsContents {
                 AIR_ELEMENTARY_STONE,
                 GROUND_ELEMENTARY_STONE,
                 GOLDEN_SILVERFISH_NETHERRACK,
-                event.hasPermissions() ? DEBUG_BLOCK : null,
+                display.hasPermissions() ? DEBUG_BLOCK : null,
 
                 // Water Barrels
                 ItemStackProvider.defaultInstance(WATER_BARREL),
@@ -174,14 +172,14 @@ public final class MineriaCreativeTabsContents {
                 BUDDHIST_SPAWN_EGG,
                 ASIATIC_HERBALIST_SPAWN_EGG,
 
-                ItemStackProvider.potions(MINERIA_POTION, event.getTab()),
-                ItemStackProvider.potions(MINERIA_SPLASH_POTION, event.getTab()),
-                ItemStackProvider.potions(MINERIA_LINGERING_POTION, event.getTab())
+                ItemStackProvider.potions(MINERIA_POTION, MineriaCreativeModeTabs.MINERIA.get()),
+                ItemStackProvider.potions(MINERIA_SPLASH_POTION, MineriaCreativeModeTabs.MINERIA.get()),
+                ItemStackProvider.potions(MINERIA_LINGERING_POTION, MineriaCreativeModeTabs.MINERIA.get())
         );
     };
 
-    static final Consumer<CreativeModeTabEvent.BuildContents> APOTHECARY_TAB_ITEMS = event -> {
-        acceptAll(event,
+    public static final CreativeModeTab.DisplayItemsGenerator APOTHECARY_TAB_ITEMS = (display, output) -> {
+        acceptAll(output,
                 // Apothecarium
                 APOTHECARIUM,
 
@@ -268,26 +266,25 @@ public final class MineriaCreativeTabsContents {
         );
     };
 
-    private static CreativeModeTabEvent.BuildContents acceptAll(CreativeModeTabEvent.BuildContents event, Object... items) {
+    private static void acceptAll(CreativeModeTab.Output output, Object... items) {
         for(Object obj : items) {
             if(obj == null) {
                 continue;
             }
             if(obj instanceof ItemLike item) {
-                event.accept(item);
+                output.accept(item);
                 continue;
             }
             if(obj instanceof RegistryObject<?> reg && reg.isPresent() && reg.get() instanceof ItemLike item) {
-                event.accept(item);
+                output.accept(item);
                 continue;
             }
             if(obj instanceof ItemStackProvider stackProvider) {
                 for (ItemStack stack : stackProvider.stacks()) {
-                    event.accept(stack);
+                    output.accept(stack);
                 }
             }
         }
-        return event;
     }
 
     @FunctionalInterface
