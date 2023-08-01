@@ -2,8 +2,8 @@ package io.github.mineria_mc.mineria.common.effects.util;
 
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
-import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability;
-import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.ITickingDataCapability;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.init.MineriaEffects;

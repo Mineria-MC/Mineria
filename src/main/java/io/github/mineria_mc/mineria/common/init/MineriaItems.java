@@ -3,10 +3,12 @@ package io.github.mineria_mc.mineria.common.init;
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.effects.instances.BowelSoundMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.ModdedMobEffectInstance;
+import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.items.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -14,6 +16,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -98,6 +101,15 @@ public class MineriaItems {
     public static final RegistryObject<Item> JAR = ITEMS.register("jar", JarItem::new);
     public static final RegistryObject<Item> MAGIC_POTION = ITEMS.register("magic_potion", MagicPotionItem::new);
     public static final RegistryObject<Item> WIZARD_HAT = ITEMS.register("wizard_hat", WizardHatItem::new);
+    public static final RegistryObject<Item> FUGU = ITEMS.register("fugu", () -> new CallbackFoodItem(new Properties().food(new FoodProperties.Builder().nutrition(1).saturationMod(0.1F).build()), (stack, level, entity) -> {
+        PoisonMobEffectInstance.applyPoisonEffect(entity, 3, 100, 0, PoisonSource.UNKNOWN);
+    }));
+    public static final RegistryObject<Item> FUGU_BUCKET = ITEMS.register("fugu_bucket", () -> new MobBucketItem(MineriaEntities.FUGU, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Properties().stacksTo(1)));
+    public static final RegistryObject<Item> RED_TUNA = ITEMS.register("red_tuna", () -> new Item(new Properties().food(new FoodProperties.Builder().nutrition(3).saturationMod(0.2f).meat().build())));
+    public static final RegistryObject<Item> COOKED_RED_TUNA = ITEMS.register("cooked_red_tuna", () -> new Item(new Properties().food(new FoodProperties.Builder().nutrition(7).saturationMod(0.85F).build())));
+    public static final RegistryObject<Item> RED_TUNA_BUCKET = ITEMS.register("red_tuna_bucket", () -> new MobBucketItem(MineriaEntities.RED_TUNA, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY_FISH, new Properties().stacksTo(1)));
+    public static final RegistryObject<Item> RICE_PLANTS = ITEMS.register("rice_plants", MineriaItem::new);
+    public static final RegistryObject<Item> RICE_GRAINS = ITEMS.register("rice_grains", () -> new ItemNameBlockItem(MineriaBlocks.RICE.get(), new Properties().food(new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).fast().build())));
 
     // Barrel upgrades
     public static final RegistryObject<Item> BARREL_INVENTORY_UPGRADE = ITEMS.register("barrel_inventory_upgrade", () -> new DiamondBarrelUpgradeItem(true));
@@ -282,6 +294,8 @@ public class MineriaItems {
     public static final RegistryObject<Item> BROWN_BEAR_SPAWN_EGG = ITEMS.register("brown_bear_spawn_egg", () -> new ForgeSpawnEggItem(MineriaEntities.BROWN_BEAR, 0x563B30, 0x372620, new Properties()));
     public static final RegistryObject<Item> BUDDHIST_SPAWN_EGG = ITEMS.register("buddhist_spawn_egg", () -> new ForgeSpawnEggItem(MineriaEntities.BUDDHIST, 16097063, 12401429, new Properties()));
     public static final RegistryObject<Item> ASIATIC_HERBALIST_SPAWN_EGG = ITEMS.register("asiatic_herbalist_spawn_egg", () -> new ForgeSpawnEggItem(MineriaEntities.ASIATIC_HERBALIST, 15377433, 13816530, new Properties()));
+    public static final RegistryObject<Item> FUGU_SPAWN_EGG = ITEMS.register("fugu_spawn_egg", () -> new ForgeSpawnEggItem(MineriaEntities.FUGU, 0x7A798B, 3654642, new Properties()));
+    public static final RegistryObject<Item> RED_TUNA_SPAWN_EGG = ITEMS.register("red_tuna_spawn_egg", () -> new ForgeSpawnEggItem(MineriaEntities.RED_TUNA, 0x3A4032, 951412, new Properties()));
 
     private static RegistryObject<Item> registerCompostable(String name, Supplier<Item> instance, float compostValue) {
         RegistryObject<Item> item = ITEMS.register(name, instance);
@@ -307,5 +321,11 @@ public class MineriaItems {
 
         public static final TagKey<Item> TOOLS_DAGGERS = ITEMS.createTagKey(new ResourceLocation("forge", "tools/daggers"));
         public static final TagKey<Item> TOOLS_DOUBLE_AXES = ITEMS.createTagKey(new ResourceLocation("forge", "tools/double_axes"));
+
+        public static final TagKey<Item> INGOTS_LEAD = ITEMS.createTagKey(new ResourceLocation("forge", "ingots/lead"));
+        public static final TagKey<Item> INGOTS_SILVER = ITEMS.createTagKey(new ResourceLocation("forge", "ingots/silver"));
+        public static final TagKey<Item> INGOTS_TITANIUM = ITEMS.createTagKey(new ResourceLocation("forge", "ingots/titanium"));
+        public static final TagKey<Item> INGOTS_VANADIUM = ITEMS.createTagKey(new ResourceLocation("forge", "ingots/vanadium"));
+        public static final TagKey<Item> GEMS_LONSDALEITE = ITEMS.createTagKey(new ResourceLocation("forge", "gems/lonsdaleite"));
     }
 }

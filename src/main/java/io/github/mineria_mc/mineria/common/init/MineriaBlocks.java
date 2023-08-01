@@ -139,6 +139,8 @@ public class MineriaBlocks {
     public static final RegistryObject<Block> AIR_ELEMENTARY_STONE = register("air_elementary_stone", ElementaryStoneBlock::new);
     public static final RegistryObject<Block> GROUND_ELEMENTARY_STONE = register("ground_elementary_stone", ElementaryStoneBlock::new);
     public static final RegistryObject<Block> PUFFBALL_POWDER = registerBlock("puffball_powder", PuffballPowderBlock::new, null);
+    public static final RegistryObject<Block> MUDDY_FARMLAND = register("muddy_farmland", MuddyFarmlandBlock::new);
+    public static final RegistryObject<Block> RICE = registerBlock("rice", RiceBlock::new, null);
 
     private static RegistryObject<Block> register(String name, Supplier<Block> instance) {
         return registerBlock(name, instance, block -> new BlockItem(block, new Item.Properties()));

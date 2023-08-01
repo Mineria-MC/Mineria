@@ -52,10 +52,10 @@ public class DrinkItem extends Item {
             serverPlayer.awardStat(Stats.ITEM_USED.get(this));
         }
 
-        if (!worldIn.isClientSide && this.drinkProperties.immediateCureEffects) {
-            entityLiving.curePotionEffects(stack);
-        }
         if (!worldIn.isClientSide) {
+            if (this.drinkProperties.immediateCureEffects) {
+                entityLiving.curePotionEffects(stack);
+            }
             this.drinkProperties.foodEatenCallback.onFoodEaten(stack, worldIn, entityLiving);
         }
 

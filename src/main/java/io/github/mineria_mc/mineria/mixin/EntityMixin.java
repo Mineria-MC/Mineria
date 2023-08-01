@@ -1,7 +1,7 @@
 package io.github.mineria_mc.mineria.mixin;
 
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
-import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffects;

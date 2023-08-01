@@ -55,6 +55,7 @@ public class MineriaConfig {
         public final BooleanValue useHallucinationsShader;
         public final BooleanValue renderFourElementsFP;
         public final ConfigValue<String> apothecariumFont;
+        public final BooleanValue showKiPerksButton;
 
         private Client(Builder builder) {
             builder.comment("Client side config for Mineria.")
@@ -78,6 +79,9 @@ public class MineriaConfig {
                     "Available fonts: 'default' (vanilla), 'lcallig' (Lucida Calligraphy), 'lhandw' (Lucida Handwriting), ",
                     "'pristina', 'segoesc' (Segoe Script), 'tempsitc' (Tempus Sans ITC)."
             ).define("apothecariumFont", "lcallig", o -> o instanceof String str && availableFonts.contains(str));
+
+            showKiPerksButton = builder.comment("Wether the 'Ki Perks' button should appear in the player's inventory when those are unlocked.")
+                            .define("showKiPerksButton", true);
 
             builder.pop();
         }

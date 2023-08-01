@@ -1,5 +1,6 @@
 package io.github.mineria_mc.mineria.data;
 
+import io.github.mineria_mc.mineria.common.blocks.RiceBlock;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import io.github.mineria_mc.mineria.util.DeferredRegisterUtil;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -9,6 +10,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
@@ -89,6 +92,13 @@ public class MineriaBlockLoot extends BlockLootSubProvider {
                 XP_WALL,
                 TNT_BARREL
         );
+        dropOther(MUDDY_FARMLAND.get(), Blocks.MUD);
+        add(RICE.get(), applyExplosionDecay(RICE.get(), LootTable.lootTable()
+                .withPool(LootPool.lootPool().add(LootItem.lootTableItem(MineriaItems.RICE_PLANTS.get())))
+                .withPool(LootPool.lootPool()
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(RICE.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RiceBlock.AGE, 7)))
+                        .add(LootItem.lootTableItem(MineriaItems.RICE_PLANTS.get())
+                                .apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3))))));
         dropLonsdaleiteOre(LONSDALEITE_ORE);
         dropLonsdaleiteOre(DEEPSLATE_LONSDALEITE_ORE);
         dropWithShears(SENNA_BUSH);

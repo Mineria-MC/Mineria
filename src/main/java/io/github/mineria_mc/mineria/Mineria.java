@@ -8,6 +8,7 @@ import io.github.mineria_mc.mineria.common.items.MineriaItem;
 import io.github.mineria_mc.mineria.common.world.terrablender.MineriaTerraBlenderApi;
 import io.github.mineria_mc.mineria.data.MineriaDataGatherer;
 import io.github.mineria_mc.mineria.network.MineriaPacketHandler;
+import io.github.mineria_mc.mineria.server.commands.KiCommand;
 import io.github.mineria_mc.mineria.server.commands.PoisonCommand;
 import io.github.mineria_mc.mineria.util.MineriaConfig;
 import io.github.mineria_mc.mineria.common.init.MineriaCreativeModeTabs;
@@ -115,6 +116,7 @@ public class Mineria {
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         PoisonCommand.register(event.getDispatcher());
+        KiCommand.register(event.getDispatcher());
     }
 
     public static Mineria getInstance() {

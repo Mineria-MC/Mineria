@@ -1,7 +1,7 @@
-package io.github.mineria_mc.mineria.common.capabilities;
+package io.github.mineria_mc.mineria.common.capabilities.ticking_data;
 
 import io.github.mineria_mc.mineria.Mineria;
-import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability.DataType;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.ITickingDataCapability.DataType;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
 import io.github.mineria_mc.mineria.common.enchantments.ElementType;
 import net.minecraft.resources.ResourceLocation;

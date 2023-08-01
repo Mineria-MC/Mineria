@@ -1,5 +1,8 @@
 package io.github.mineria_mc.mineria.common.capabilities;
 
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.ITickingDataCapability;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.TickInfo;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.TickingDataTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 

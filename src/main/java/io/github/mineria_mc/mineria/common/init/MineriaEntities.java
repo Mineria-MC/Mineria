@@ -7,6 +7,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.SpawnPlacements.SpawnPredicate;
 import net.minecraft.world.entity.SpawnPlacements.Type;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -39,6 +41,8 @@ public class MineriaEntities {
     public static final RegistryObject<EntityType<BuddhistEntity>> BUDDHIST = register("buddhist", EntityType.Builder.of(BuddhistEntity::new, MobCategory.CREATURE).sized(0.6F, 1.95F).clientTrackingRange(10));
     public static final RegistryObject<EntityType<AsiaticHerbalistEntity>> ASIATIC_HERBALIST = register("asiatic_herbalist", EntityType.Builder.of(AsiaticHerbalistEntity::new, MobCategory.CREATURE).sized(0.6F, 1.95F).clientTrackingRange(10));
     public static final RegistryObject<EntityType<TemporaryItemFrameEntity>> TEMPORARY_ITEM_FRAME = register("temporary_item_frame", EntityType.Builder.<TemporaryItemFrameEntity>of(TemporaryItemFrameEntity::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE));
+    public static final RegistryObject<EntityType<FuguEntity>> FUGU = register("fugu", EntityType.Builder.of(FuguEntity::new, MobCategory.WATER_AMBIENT).sized(0.7F, 0.7F).clientTrackingRange(4));
+    public static final RegistryObject<EntityType<RedTunaEntity>> RED_TUNA = register("red_tuna", EntityType.Builder.of(RedTunaEntity::new, MobCategory.WATER_AMBIENT).sized(0.91F, 0.52F).clientTrackingRange(4));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> builder) {
         return ENTITY_TYPES.register(name, () -> builder.build(Mineria.MODID.concat(":").concat(name)));
@@ -59,6 +63,8 @@ public class MineriaEntities {
         event.put(GREAT_DRUID_OF_GAULS.get(), GreatDruidOfGaulsEntity.createAttributes().build());
         event.put(BUDDHIST.get(), Mob.createMobAttributes().build());
         event.put(ASIATIC_HERBALIST.get(), Mob.createMobAttributes().build());
+        event.put(FUGU.get(), AbstractFish.createAttributes().build());
+        event.put(RED_TUNA.get(), AbstractFish.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
@@ -74,6 +80,8 @@ public class MineriaEntities {
         newPlacement(event, WATER_SPIRIT, Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         newPlacement(event, BUDDHIST, Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
         newPlacement(event, ASIATIC_HERBALIST, Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules);
+        newPlacement(event, FUGU, SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
+        newPlacement(event, RED_TUNA, SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
     }
 
     private static <E extends Entity> void newPlacement(SpawnPlacementRegisterEvent event, RegistryObject<EntityType<E>> type, Type spawnPlacementType, Heightmap.Types heightmapType, SpawnPredicate<E> predicate) {

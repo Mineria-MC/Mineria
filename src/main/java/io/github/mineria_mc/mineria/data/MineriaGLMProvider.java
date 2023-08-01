@@ -1,6 +1,7 @@
 package io.github.mineria_mc.mineria.data;
 
 import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.common.data.FishFishingModifier;
 import io.github.mineria_mc.mineria.common.data.OakLeavesBillhookModifier;
 import io.github.mineria_mc.mineria.common.init.MineriaItems;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -13,6 +14,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 
+import java.util.Map;
+
 public class MineriaGLMProvider extends GlobalLootModifierProvider {
     public MineriaGLMProvider(PackOutput output) {
         super(output, Mineria.MODID);
@@ -24,5 +27,9 @@ public class MineriaGLMProvider extends GlobalLootModifierProvider {
                 new MatchTool(ItemPredicate.Builder.item().of(MineriaItems.BILLHOOK.get()).build()),
                 new LootItemBlockStatePropertyCondition.Builder(Blocks.OAK_LEAVES).build()
         }, 0.5f, new ItemStack(Items.APPLE)));
+        add("fish_fishing", new FishFishingModifier(Map.of(
+                new ItemStack(MineriaItems.FUGU.get()), 10,
+                new ItemStack(MineriaItems.RED_TUNA.get()), 15
+        )));
     }
 }

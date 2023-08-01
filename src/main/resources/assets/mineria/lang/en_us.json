@@ -84,6 +84,7 @@
   "block.mineria.air_elementary_stone": "Air Elementary Stone",
   "block.mineria.ground_elementary_stone": "Ground Elementary Stone",
   "block.mineria.puffball_powder": "Puffball Powder",
+  "block.mineria.muddy_farmland": "Muddy Farmland",
 
   "block.mineria.debug_block": "Debug Block",
 
@@ -151,6 +152,13 @@
   "item.mineria.jar.poison_source": "Contains %s poisoning.",
   "item.mineria.magic_potion": "Magic Potion",
   "item.mineria.wizard_hat": "Wizard Hat",
+  "item.mineria.fugu": "Fugu",
+  "item.mineria.fugu_bucket": "Bucket of Fugu",
+  "item.mineria.red_tuna": "Red Tuna",
+  "item.mineria.cooked_red_tuna": "Cooked Red Tuna",
+  "item.mineria.red_tuna_bucket": "Bucket of Red Tuna",
+  "item.mineria.rice_plants": "Rice Plants",
+  "item.mineria.rice_grains": "Rice Grains",
 
   "item.mineria.barrel_inventory_upgrade": "Barrel Inventory Upgrade",
   "item.mineria.barrel_fluid_upgrade": "Barrel Fluid Upgrade",
@@ -253,6 +261,8 @@
   "item.mineria.brown_bear_spawn_egg": "Brown Bear Spawn Egg",
   "item.mineria.buddhist_spawn_egg": "Buddhist Spawn Egg",
   "item.mineria.asiatic_herbalist_spawn_egg": "Asiatic Herbalist Spawn Egg",
+  "item.mineria.fugu_spawn_egg": "Fugu Spawn Egg",
+  "item.mineria.red_tuna_spawn_egg": "Red Tuna Spawn Egg",
 
   "filled_map.mineria:ritual_structure": "Ritual Structure Explorer Map",
 
@@ -292,11 +302,13 @@
   "entity.mineria.buddhist": "Buddhist",
   "entity.mineria.asiatic_herbalist": "Asiatic Herbalist",
   "entity.mineria.temporary_item_frame": "Temporary Item Frame",
+  "entity.mineria.fugu": "Fugu",
 
   "screen.mineria.xp_block.inactive": "OFF",
   "screen.mineria.xp_block.active": "ON",
   "screen.mineria.xp_block.delay": "Delay",
   "screen.mineria.xp_block.delay_unit": "Ticks",
+  "screen.mineria.ki_perks": "Ki Perks",
 
   "recipe_category.mineria.infuser": "Infuser",
   "recipe_category.mineria.infuser.result": "Result",
@@ -335,6 +347,23 @@
   "effect.mineria.no_natural_regeneration": "No Natural Regeneration",
   "effect.mineria.hallucinations": "Hallucinations",
   "effect.mineria.fast_freezing": "Fast Freezing",
+  "effect.mineria.swimming_speed": "Swimming Speed",
+  "effect.mineria.knockback_resistance": "Knockback Resistance",
+  "effect.mineria.explosion_resistance": "Explosion Resistance",
+  "effect.mineria.fall_damage_resistance": "Fall Damage Resistance",
+  "effect.mineria.nutrition_quality": "Nutrition Quality",
+  "effect.mineria.health_boost": "Health Boost",
+
+  "ki_effect_category.mineria.movement_speed": "Movement Speed",
+  "ki_effect_category.mineria.jump_boost": "Jump Boost",
+  "ki_effect_category.mineria.luck": "Luck",
+  "ki_effect_category.mineria.swimming_speed": "Swimming Speed",
+  "ki_effect_category.mineria.night_vision": "Night Vision",
+  "ki_effect_category.mineria.resistance": "Damage Resistance",
+  "ki_effect_category.mineria.haste": "Haste",
+  "ki_effect_category.mineria.water_breathing": "Water Breathing",
+  "ki_effect_category.mineria.nutrition_quality": "Nutrition Quality",
+  "ki_effect_category.mineria.health_boost": "Health Boost",
 
   "commands.mineria.poison.apply.success.single": "Applied %s poisoning to %s",
   "commands.mineria.poison.apply.success.multiple": "Applied %s poisoning to %d targets",
@@ -345,6 +374,12 @@
   "commands.mineria.poison.remove.success.single": "Removed poison from %s",
   "commands.mineria.poison.remove.success.multiple": "Removed poison from %d targets",
   "commands.mineria.poison.remove.failed": "Target has no poisonings to remove",
+  "commands.mineria.ki.no_capability": "Unable to alter target's ki (capability is missing).",
+  "commands.mineria.ki.set": "Updated %s's ki to %d",
+  "commands.mineria.ki.set_level": "Updated %s's ki level to %d",
+  "commands.mineria.ki.get": "%d ki currently flows into %s",
+  "commands.mineria.ki.get_max": "%s's ki capacity is at %d",
+  "commands.mineria.ki.get_level": "%s has leveled up his ki to %d",
 
   "death.attack.on_spike": "%1$s perished from spikes",
   "death.attack.on_spike.player": "%1$s perished from spikes whilst running from %2$s",

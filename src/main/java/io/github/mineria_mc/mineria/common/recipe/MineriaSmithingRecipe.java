@@ -9,7 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.SmithingTransformRecipe;
+import net.minecraftforge.common.ForgeHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,13 +55,13 @@ public class MineriaSmithingRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public boolean isSpecial() {
-        return true;
+    public boolean isIncomplete() { // makes the recipes appear in JEI
+        return ForgeHooks.hasNoElements(base) && ForgeHooks.hasNoElements(addition);
     }
 
     public static class Serializer implements RecipeSerializer<MineriaSmithingRecipe> {
         @Override
-        public MineriaSmithingRecipe fromJson(ResourceLocation id, JsonObject json) {
+        public @NotNull MineriaSmithingRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
             Ingredient template = json.has("template") ? Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "template")) : Ingredient.EMPTY;
             Ingredient base = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "base"));
             Ingredient addition = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "addition"));
@@ -67,7 +72,7 @@ public class MineriaSmithingRecipe extends SmithingTransformRecipe {
 
         @Nullable
         @Override
-        public MineriaSmithingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
+        public MineriaSmithingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
             Ingredient template = Ingredient.fromNetwork(buffer);
             Ingredient base = Ingredient.fromNetwork(buffer);
             Ingredient addition = Ingredient.fromNetwork(buffer);
@@ -77,7 +82,7 @@ public class MineriaSmithingRecipe extends SmithingTransformRecipe {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, MineriaSmithingRecipe recipe) {
+        public void toNetwork(@NotNull FriendlyByteBuf buffer, MineriaSmithingRecipe recipe) {
             recipe.template.toNetwork(buffer);
             recipe.base.toNetwork(buffer);
             recipe.addition.toNetwork(buffer);

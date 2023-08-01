@@ -1,8 +1,8 @@
 {
   "values": [
-    "mineria:lead_ingot",
-    "mineria:silver_ingot",
-    "mineria:titane_ingot",
-    "mineria:vanadium_ingot"
+    "#forge:ingots/lead",
+    "#forge:ingots/silver",
+    "#forge:ingots/titanium",
+    "#forge:ingots/vanadium"
   ]
 }

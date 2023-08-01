@@ -1,6 +1,6 @@
 package io.github.mineria_mc.mineria.common.enchantments;
 
-import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.ITickingDataCapability;
 
 import java.util.Locale;
 

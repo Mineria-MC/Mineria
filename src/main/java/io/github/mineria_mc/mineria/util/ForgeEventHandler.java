@@ -2,10 +2,8 @@ package io.github.mineria_mc.mineria.util;
 
 import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.blocks.ritual_table.RitualTableBlockEntity;
-import io.github.mineria_mc.mineria.common.capabilities.IElementCapability;
-import io.github.mineria_mc.mineria.common.capabilities.IPoisonCapability;
-import io.github.mineria_mc.mineria.common.capabilities.ITickingDataCapability;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.ITickingDataCapability;
 import io.github.mineria_mc.mineria.common.effects.instances.ModdedMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;
@@ -17,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -35,11 +34,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
@@ -59,11 +61,8 @@ import java.util.Map;
  */
 @Mod.EventBusSubscriber(modid = Mineria.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeEventHandler {
-    @SuppressWarnings({"deprecation", "removal"})
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        event.getEntity().getCapability(MineriaCapabilities.POISON_EXPOSURE).ifPresent(IPoisonCapability::tick);
-        event.getEntity().getCapability(MineriaCapabilities.ELEMENT_EXPOSURE).ifPresent(IElementCapability::tick);
         event.getEntity().getCapability(MineriaCapabilities.TICKING_DATA).ifPresent(ITickingDataCapability::tick);
     }
 
@@ -140,16 +139,16 @@ public final class ForgeEventHandler {
             DamageSource source = event.getSource();
 
             if (witch.level() instanceof ServerLevel world) {
-                LivingEntity living = witch.getTarget();
-                if (living == null && source.getEntity() instanceof LivingEntity)
-                    living = (LivingEntity) source.getEntity();
+                LivingEntity target = witch.getTarget();
+                if (target == null && source.getEntity() instanceof LivingEntity)
+                    target = (LivingEntity) source.getEntity();
 
                 int x = Mth.floor(witch.getX());
                 int y = Mth.floor(witch.getY());
                 int z = Mth.floor(witch.getZ());
                 RandomSource random = world.getRandom();
 
-                if (living != null && random.nextFloat() < 0.05F && world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
+                if (target != null && random.nextFloat() < 0.05F && world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
                     WizardEntity wizard = MineriaEntities.WIZARD.get().create(world);
 
                     for (int count = 0; count < 50; ++count) {
@@ -161,8 +160,8 @@ public final class ForgeEventHandler {
                         if (NaturalSpawner.isSpawnPositionOk(placementType, world, pos, MineriaEntities.WIZARD.get())/* && EntitySpawnPlacementRegistry.checkSpawnRules(MineriaEntities.WIZARD.get(), world, SpawnReason.REINFORCEMENT, pos, random)*/) {
                             wizard.setPos(x1, y1, z1);
                             if (!world.hasNearbyAlivePlayer(x1, y1, z1, 7.0D) && world.isUnobstructed(wizard) && world.noCollision(wizard) && !world.containsAnyLiquid(wizard.getBoundingBox())) {
-                                if (!(living instanceof Player && ((Player) living).getAbilities().instabuild))
-                                    wizard.setTarget(living);
+                                if (!(target instanceof Player && ((Player) target).getAbilities().instabuild))
+                                    wizard.setTarget(target);
                                 wizard.finalizeSpawn(world, world.getCurrentDifficultyAt(wizard.blockPosition()), MobSpawnType.REINFORCEMENT, null, null);
                                 world.addFreshEntityWithPassengers(wizard);
                                 break;
@@ -171,6 +170,28 @@ public final class ForgeEventHandler {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingAttack(LivingAttackEvent event) {
+        LivingEntity living = event.getEntity();
+        DamageSource source = event.getSource();
+
+        if(!living.isInvulnerableTo(source)) {
+            if(source.is(DamageTypeTags.IS_EXPLOSION) && living.hasEffect(MineriaEffects.EXPLOSION_RESISTANCE.get())) {
+                event.setCanceled(true);
+            }
+            if(source.is(DamageTypeTags.IS_FALL) && living.hasEffect(MineriaEffects.FALL_DAMAGE_RESISTANCE.get())) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onToolUsed(BlockEvent.BlockToolModificationEvent event) {
+        if(ToolActions.HOE_TILL.equals(event.getToolAction()) && event.getState().is(Blocks.MUD)) {
+            event.setFinalState(MineriaBlocks.MUDDY_FARMLAND.get().defaultBlockState());
         }
     }
 

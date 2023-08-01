@@ -127,6 +127,13 @@ public final class MineriaCreativeTabsContents {
                 SUPER_DUPER_COMPRESSED_XP_ORB,
                 MYSTERY_DISC,
                 MUSIC_DISC_PIPPIN_THE_HUNCHBACK,
+                FUGU,
+                FUGU_BUCKET,
+                RED_TUNA,
+                COOKED_RED_TUNA,
+                RED_TUNA_BUCKET,
+                RICE_PLANTS,
+                RICE_GRAINS,
 
                 // Random Blocks
                 BLUE_GLOWSTONE,
@@ -171,6 +178,8 @@ public final class MineriaCreativeTabsContents {
                 BROWN_BEAR_SPAWN_EGG,
                 BUDDHIST_SPAWN_EGG,
                 ASIATIC_HERBALIST_SPAWN_EGG,
+                FUGU_SPAWN_EGG,
+                RED_TUNA_SPAWN_EGG,
 
                 ItemStackProvider.potions(MINERIA_POTION, MineriaCreativeModeTabs.MINERIA.get()),
                 ItemStackProvider.potions(MINERIA_SPLASH_POTION, MineriaCreativeModeTabs.MINERIA.get()),

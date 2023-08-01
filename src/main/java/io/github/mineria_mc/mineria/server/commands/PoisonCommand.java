@@ -7,7 +7,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
-import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisonMobEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.instances.PoisoningHiddenEffectInstance;
 import io.github.mineria_mc.mineria.common.effects.util.PoisonSource;

@@ -5,16 +5,22 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import io.github.mineria_mc.mineria.Mineria;
+import io.github.mineria_mc.mineria.client.screens.KiPerksScreen;
 import io.github.mineria_mc.mineria.common.enchantments.FourElementsEnchantment;
-import io.github.mineria_mc.mineria.util.MineriaConfig;
 import io.github.mineria_mc.mineria.common.init.MineriaCreativeModeTabs;
+import io.github.mineria_mc.mineria.util.MineriaConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,6 +80,25 @@ public final class ClientForgeEventHandler {
         } catch (IllegalAccessException ignored) {
         }
         return null;
+    }
+
+    private static final ResourceLocation KI_PERKS_TEXTURE = new ResourceLocation(Mineria.MODID, "textures/gui/ki_perks.png");
+
+    @SubscribeEvent
+    public static void onScreenPostInit(ScreenEvent.Init.Post event) {
+        if(!MineriaConfig.CLIENT.showKiPerksButton.get()) {
+            return;
+        }
+        // TODO: Creative inventory access ?
+        if(event.getScreen() instanceof InventoryScreen inv && !inv.getRecipeBookComponent().isVisible()) {
+            EffectRenderingInventoryScreen<?> screen = (EffectRenderingInventoryScreen<?>) event.getScreen();
+            ImageButton kiPerksBtn = new ImageButton(screen.getGuiLeft() - 28, screen.getGuiTop() + screen.getYSize() - 48, 20, 20, 236, 216, KI_PERKS_TEXTURE, btn -> {
+                event.getScreen().getMinecraft().setScreen(new KiPerksScreen());
+            });
+            kiPerksBtn.setTooltip(Tooltip.create(Component.translatable("screen.mineria.ki_perks")));
+            kiPerksBtn.setTooltipDelay(100);
+            event.addListener(kiPerksBtn);
+        }
     }
 
     private static final ResourceLocation ELEMENTAL_ORB_TEXTURE = new ResourceLocation(Mineria.MODID, "textures/entity/elemental_orb.png");

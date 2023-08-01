@@ -1,4 +1,4 @@
-package io.github.mineria_mc.mineria.common.capabilities;
+package io.github.mineria_mc.mineria.common.capabilities.ticking_data;
 
 import net.minecraft.nbt.CompoundTag;
 

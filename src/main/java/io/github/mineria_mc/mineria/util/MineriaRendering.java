@@ -42,9 +42,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * A client class where everything related to rendering is registered.
@@ -92,6 +93,8 @@ public class MineriaRendering {
         event.registerEntityRenderer(MineriaEntities.BUDDHIST.get(), BuddhistRenderer::new);
         event.registerEntityRenderer(MineriaEntities.ASIATIC_HERBALIST.get(), AsiaticHerbalistRenderer::new);
         event.registerEntityRenderer(MineriaEntities.TEMPORARY_ITEM_FRAME.get(), ItemFrameRenderer::new);
+        event.registerEntityRenderer(MineriaEntities.FUGU.get(), FuguRenderer::new);
+        event.registerEntityRenderer(MineriaEntities.RED_TUNA.get(), RedTunaRenderer::new);
     }
 
     private static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -128,29 +131,28 @@ public class MineriaRendering {
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
         for (String skin : event.getSkins()) {
             LivingEntityRenderer<?, ?> renderer = event.getSkin(skin);
-            RenderLayer<?, ?> itemInHandLayer = getRenderLayer(renderer, 1);
-            if(itemInHandLayer instanceof PlayerItemInHandLayerExtension extension) {
-                extension.mineria$createBlowgunModel(event.getEntityModels());
-            } else {
-                Mineria.LOGGER.debug("Failed to create blowgun model; PlayerItemInHandLayerExtension didn't apply on {}", itemInHandLayer);
-            }
+            getRenderLayer(renderer, layer -> layer instanceof PlayerItemInHandLayerExtension)
+                    .map(PlayerItemInHandLayerExtension.class::cast)
+                    .ifPresentOrElse(
+                            ext -> ext.mineria$createBlowgunModel(event.getEntityModels()),
+                            () -> Mineria.LOGGER.debug("Failed to create blowgun model; PlayerItemInHandLayerExtension didn't apply.")
+                    );
         }
     }
 
     private static Field LAYERS;
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    private static <T extends LivingEntity, M extends EntityModel<T>> RenderLayer<T, M> getRenderLayer(LivingEntityRenderer<T, M> renderer, int index) {
+    private static <T extends LivingEntity, M extends EntityModel<T>> Optional<RenderLayer<T, M>> getRenderLayer(LivingEntityRenderer<T, M> renderer, Predicate<RenderLayer<T, M>> predicate) {
         if(LAYERS == null) {
             LAYERS = ObfuscationReflectionHelper.findField(LivingEntityRenderer.class, "f_115291_");
         }
         try {
             List<RenderLayer<T, M>> lst = (List<RenderLayer<T, M>>) LAYERS.get(renderer);
-            return lst.get(index);
+            return lst.stream().filter(predicate).findFirst();
         } catch (Throwable ignored) {
         }
-        return null;
+        return Optional.empty();
     }
 
     public static void registerItemModelsProperties() {

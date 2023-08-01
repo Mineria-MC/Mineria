@@ -53,13 +53,19 @@ public class MineriaItemTagsProvider extends ItemTagsProvider {
         addObjects(AXES, SILVER_AXE, TITANE_AXE, LONSDALEITE_AXE);
         addObjects(SHOVELS, SILVER_SHOVEL, TITANE_SHOVEL, LONSDALEITE_SHOVEL);
         addObjects(HOES, SILVER_HOE, TITANE_HOE, LONSDALEITE_HOE);
+        addObjects(FISHES, FUGU, RED_TUNA);
 
         // Forge
         tag(MUSHROOMS).add(getItemFromBlock(GIROLLE.get()), getItemFromBlock(HORN_OF_PLENTY.get()), getItemFromBlock(PUFFBALL.get()));
         addObjects(NUGGETS, LEAD_NUGGET, SILVER_NUGGET, TITANE_NUGGET);
         addObjects(RODS, GOLD_STICK, IRON_STICK, COPPER_STICK, SILVER_STICK);
-        addObjects(INGOTS, LEAD_INGOT, SILVER_INGOT, TITANE_INGOT, VANADIUM_INGOT);
-        addObjects(GEMS, LONSDALEITE);
+        addObjects(INGOTS_LEAD, LEAD_INGOT);
+        addObjects(INGOTS_SILVER, SILVER_INGOT);
+        addObjects(INGOTS_TITANIUM, TITANE_INGOT);
+        addObjects(INGOTS_VANADIUM, VANADIUM_INGOT);
+        tag(INGOTS).addTags(INGOTS_LEAD, INGOTS_SILVER, INGOTS_TITANIUM, INGOTS_VANADIUM);
+        addObjects(GEMS_LONSDALEITE, LONSDALEITE);
+        tag(GEMS).addTags(GEMS_LONSDALEITE);
         addObjects(TOOLS_BOWS, COPPER_BOW);
         tag(Tags.Items.TOOLS).addTags(TOOLS_DAGGERS, TOOLS_DOUBLE_AXES);
     }

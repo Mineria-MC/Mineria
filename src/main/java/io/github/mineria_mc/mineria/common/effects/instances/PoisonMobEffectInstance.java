@@ -2,7 +2,7 @@ package io.github.mineria_mc.mineria.common.effects.instances;
 
 import com.google.common.collect.ImmutableList;
 import io.github.mineria_mc.mineria.common.capabilities.MineriaCapabilities;
-import io.github.mineria_mc.mineria.common.capabilities.TickingDataTypes;
+import io.github.mineria_mc.mineria.common.capabilities.ticking_data.TickingDataTypes;
 import io.github.mineria_mc.mineria.common.effects.util.EffectUpdater;
 import io.github.mineria_mc.mineria.common.effects.util.IMobEffectInstanceSerializer;
 import io.github.mineria_mc.mineria.common.effects.util.IPoisonEffect;

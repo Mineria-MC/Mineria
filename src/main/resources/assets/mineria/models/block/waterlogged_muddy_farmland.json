@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "minecraft:block/mud",
+    "top": "mineria:block/waterlogged_muddy_farmland"
+  }
+}

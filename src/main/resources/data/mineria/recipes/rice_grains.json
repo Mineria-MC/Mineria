@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mineria:rice_plants"
+    }
+  ],
+  "result": {
+    "item": "mineria:rice_grains",
+    "count": 1
+  }
+}

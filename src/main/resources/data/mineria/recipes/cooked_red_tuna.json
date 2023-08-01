@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "ingredient": {
+    "item": "mineria:red_tuna"
+  },
+  "result": "mineria:cooked_red_tuna",
+  "experience": 0.35,
+  "cookingtime": 200
+}
