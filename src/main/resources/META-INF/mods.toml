@@ -5,7 +5,7 @@ issueTracker="https://github.com/Mineria-MC/Mineria/issues"
 
 [[mods]]
 modId="mineria"
-version="${mineria_version}"
+version="${mc_version}-${mineria_version}"
 displayName="Mineria"
 displayURL="https://github.com/Mineria-MC/Mineria"
 logoFile="logo.png"
