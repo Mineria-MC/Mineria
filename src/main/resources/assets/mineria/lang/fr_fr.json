@@ -1,4 +1,10 @@
 {
+  "block.mineria.lead_ore": "Minerai de Plomb",
+  "block.mineria.titane_ore": "Minerai de Titane",
+  "block.mineria.copper_ore": "Minerai de Cuivre",
+  "block.mineria.lonsdaleite_ore": "Minerai de Lonsdaléite",
+  "block.mineria.silver_ore": "Minerai d'Argent",
+
   "block.mineria.lead_block": "Bloc de Plomb",
   "block.mineria.titane_block": "Bloc de Titane",
   "block.mineria.copper_block": "Bloc de Cuivre",

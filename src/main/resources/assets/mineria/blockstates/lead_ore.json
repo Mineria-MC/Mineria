@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "mineria:block/ore/lead_ore" }
+    }
+}

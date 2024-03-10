@@ -20,16 +20,20 @@ public class MineriaItemGroupRegistry {
     private static final DisplayItemsGenerator MINERIA_TAB_ITEMS = (display, output) -> {
         acceptAll(output, 
             // Lead
+            LEAD_ORE,
             LEAD_BLOCK,
             COMPRESSED_LEAD_BLOCK,
 
             // Silver
+            SILVER_ORE,
             SILVER_BLOCK,
 
             // Titane
+            TITANE_ORE,
             TITANE_BLOCK,
 
             // Lonsdaleite
+            LONSDALEITE_ORE,
             LONSDALEITE_BLOCK
         );
     };

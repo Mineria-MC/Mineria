@@ -10,11 +10,14 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 
 @SuppressWarnings("unused")
@@ -22,6 +25,12 @@ public class MineriaBlockRegistry {
 
     private static final Map<String, Block> BLOCKS = new HashMap<String, Block>();
     private static final Map<String, Item> BLOCK_ITEMS = new HashMap<String, Item>();
+
+    // Stone Ores
+    public static final Block LEAD_ORE = register("lead_ore", new DropExperienceBlock(stoneOre(4f, 5f)));
+    public static final Block TITANE_ORE = register("titane_ore", new DropExperienceBlock(stoneOre(6f, 10f)));
+    public static final Block LONSDALEITE_ORE = register("lonsdaleite_ore", new DropExperienceBlock(stoneOre(6f, 10f), UniformInt.of(4, 10)));
+    public static final Block SILVER_ORE = register("silver_ore", new DropExperienceBlock(stoneOre(3f, 5f)));
 
     // Ores Blocks
     public static final Block LEAD_BLOCK = register("lead_block", new Block(properties(MapColor.METAL, 6.5f, 20f, SoundType.METAL)));
@@ -46,6 +55,12 @@ public class MineriaBlockRegistry {
         BLOCKS.put(blockName, block);
         BLOCK_ITEMS.put(blockName, new BlockItem(block, new FabricItemSettings()));
         return block;
+    }
+
+    // Properties quick functions
+
+    private static Properties stoneOre(float hardness, float resistance) {
+        return Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(hardness, resistance).sound(SoundType.STONE).requiresCorrectToolForDrops();
     }
 
     private static Properties properties(MapColor color, float hardness, float resistance, SoundType sound) {

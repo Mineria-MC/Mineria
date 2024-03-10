@@ -1,4 +1,9 @@
 {
+  "block.mineria.lead_ore": "Lead Ore",
+  "block.mineria.titane_ore": "Titane Ore",
+  "block.mineria.lonsdaleite_ore": "Lonsdaleite Ore",
+  "block.mineria.silver_ore": "Silver Ore",
+
   "block.mineria.lead_block": "Lead Block",
   "block.mineria.titane_block": "Titane Block",
   "block.mineria.lonsdaleite_block": "Lonsdaleite Block",
