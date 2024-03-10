@@ -23,6 +23,13 @@ public class MineriaBlockRegistry {
     private static final Map<String, Block> BLOCKS = new HashMap<String, Block>();
     private static final Map<String, Item> BLOCK_ITEMS = new HashMap<String, Item>();
 
+    // Ores Blocks
+    public static final Block LEAD_BLOCK = register("lead_block", new Block(properties(MapColor.METAL, 6.5f, 20f, SoundType.METAL)));
+    public static final Block TITANE_BLOCK = register("titane_block", new Block(properties(MapColor.METAL, 10f, 15f, SoundType.METAL)));
+    public static final Block LONSDALEITE_BLOCK = register("lonsdaleite_block", new Block(properties(MapColor.METAL, 10f, 17.5f, SoundType.METAL)));
+    public static final Block SILVER_BLOCK = register("silver_block", new Block(properties(MapColor.METAL, 5f, 10f, SoundType.METAL)));
+    public static final Block COMPRESSED_LEAD_BLOCK = register("compressed_lead_block", new Block(properties(MapColor.METAL, 2.5f, 2f, SoundType.METAL)));
+
     public static void register() {
         // Register Blocks
         for(Map.Entry<String, Block> entry : BLOCKS.entrySet()) {
