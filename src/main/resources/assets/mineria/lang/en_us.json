@@ -3,5 +3,7 @@
   "block.mineria.titane_block": "Titane Block",
   "block.mineria.lonsdaleite_block": "Lonsdaleite Block",
   "block.mineria.silver_block": "Silver Block",
-  "block.mineria.compressed_lead_block": "Compressed Lead Block"
+  "block.mineria.compressed_lead_block": "Compressed Lead Block",
+
+  "itemGroup.mineria.mineria": "Mineria"
 }

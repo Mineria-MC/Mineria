@@ -4,5 +4,7 @@
   "block.mineria.copper_block": "Bloc de Cuivre",
   "block.mineria.lonsdaleite_block": "Bloc de Lonsdaléite",
   "block.mineria.silver_block": "Bloc d'Argent",
-  "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé"
+  "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé",
+
+  "itemGroup.mineria.mineria": "Mineria"
 }
