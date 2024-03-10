@@ -43,6 +43,10 @@ public class MineriaItemGroupRegistry {
             SILVER_AXE,
             SILVER_SHOVEL,
             SILVER_HOE,
+            SILVER_HELMET,
+            SILVER_CHESTPLATE,
+            SILVER_LEGGINGS,
+            SILVER_BOOTS,
             SILVER_APPLE,
 
             // Titane
@@ -57,6 +61,10 @@ public class MineriaItemGroupRegistry {
             TITANE_SHOVEL,
             TITANE_HOE,
             TITANE_DOUBLE_AXE,
+            TITANE_HELMET,
+            TITANE_CHESTPLATE,
+            TITANE_LEGGINGS,
+            TITANE_BOOTS,
 
             // Lonsdaleite
             LONSDALEITE_ORE,
@@ -68,7 +76,11 @@ public class MineriaItemGroupRegistry {
             LONSDALEITE_AXE,
             LONSDALEITE_SHOVEL,
             LONSDALEITE_HOE,
-            LONSDALEITE_DOUBLE_AXE
+            LONSDALEITE_DOUBLE_AXE,
+            LONSDALEITE_HELMET,
+            LONSDALEITE_CHESTPLATE,
+            LONSDALEITE_LEGGINGS,
+            LONSDALEITE_BOOTS
         );
     };
 

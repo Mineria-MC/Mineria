@@ -27,6 +27,10 @@
   "item.mineria.lonsdaleite_shovel": "Pelle en Lonsdaléite",
   "item.mineria.lonsdaleite_sword": "Epée en Lonsdaléite",
   "item.mineria.lonsdaleite_hoe": "Houe en Lonsdaléite",
+  "item.mineria.lonsdaleite_boots": "Bottes en Lonsdaléite",
+  "item.mineria.lonsdaleite_leggings": "Jambières en Lonsdaléite",
+  "item.mineria.lonsdaleite_chestplate": "Plastron en Lonsdaléite",
+  "item.mineria.lonsdaleite_helmet": "Casque en Lonsdaléite",
 
   "item.mineria.silver_ingot": "Lingot d'Argent",
   "item.mineria.silver_apple": "Pomme en Argent",
@@ -37,6 +41,10 @@
   "item.mineria.silver_shovel": "Pelle en Argent",
   "item.mineria.silver_sword": "Epée en Argent",
   "item.mineria.silver_hoe": "Houe en Argent",
+  "item.mineria.silver_boots": "Bottes en Argent",
+  "item.mineria.silver_leggings": "Jambières en Argent",
+  "item.mineria.silver_chestplate": "Plastron en Argent",
+  "item.mineria.silver_helmet": "Casque en Argent",
 
   "item.mineria.titane_ingot": "Lingot de Titane",
   "item.mineria.titane_nugget": "Pépite de Titane",
@@ -45,5 +53,9 @@
   "item.mineria.titane_hoe": "Houe en Titane",
   "item.mineria.titane_pickaxe": "Pioche en Titane",
   "item.mineria.titane_shovel": "Pelle en Titane",
-  "item.mineria.titane_sword": "Epée en Titane"
+  "item.mineria.titane_sword": "Epée en Titane",
+  "item.mineria.titane_boots": "Bottes en Titane",
+  "item.mineria.titane_leggings": "Jambières en Titane",
+  "item.mineria.titane_chestplate": "Plastron en Titane",
+  "item.mineria.titane_helmet": "Casque en Titane"
 }

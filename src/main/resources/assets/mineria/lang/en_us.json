@@ -30,6 +30,10 @@
   "item.mineria.lonsdaleite_shovel": "Lonsdaleite Shovel",
   "item.mineria.lonsdaleite_sword": "Lonsdaleite Sword",
   "item.mineria.lonsdaleite_hoe": "Lonsdaleite Hoe",
+  "item.mineria.lonsdaleite_boots": "Lonsdaleite Boots",
+  "item.mineria.lonsdaleite_leggings": "Lonsdaleite Leggings",
+  "item.mineria.lonsdaleite_chestplate": "Lonsdaleite Chestplate",
+  "item.mineria.lonsdaleite_helmet": "Lonsdaleite Helmet",
 
   "item.mineria.silver_ingot": "Silver Ingot",
   "item.mineria.silver_apple": "Silver Apple",
@@ -40,6 +44,10 @@
   "item.mineria.silver_shovel": "Silver Shovel",
   "item.mineria.silver_sword": "Silver Sword",
   "item.mineria.silver_hoe": "Silver Hoe",
+  "item.mineria.silver_boots": "Silver Boots",
+  "item.mineria.silver_leggings": "Silver Leggings",
+  "item.mineria.silver_chestplate": "Silver Chestplate",
+  "item.mineria.silver_helmet": "Silver Helmet",
 
   "item.mineria.titane_ingot": "Titane Ingot",
   "item.mineria.titane_nugget": "Titane Nugget",
@@ -50,5 +58,9 @@
   "item.mineria.titane_shovel": "Titane Shovel",
   "item.mineria.titane_sword": "Titane Sword",
   "item.mineria.mrlulu_sword": "Mrlulu's Sword",
-  "item.mineria.mathys_craft_sword": "Mathys Craft's Sword"
+  "item.mineria.mathys_craft_sword": "Mathys Craft's Sword",
+  "item.mineria.titane_boots": "Titane Boots",
+  "item.mineria.titane_leggings": "Titane Leggings",
+  "item.mineria.titane_chestplate": "Titane Chestplate",
+  "item.mineria.titane_helmet": "Titane Helmet"
 }
