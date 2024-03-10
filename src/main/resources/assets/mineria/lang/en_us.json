@@ -16,6 +16,13 @@
   "item.mineria.compressed_lead_ingot": "Compressed Lead Ingot",
 
   "item.mineria.lonsdaleite": "Lonsdaleite",
+  "item.mineria.lonsdaleite_axe": "Lonsdaleite Axe",
+  "item.mineria.lonsdaleite_double_axe": "Lonsdaleite Double Axe",
+  "item.mineria.lonsdaleite_pickaxe": "Lonsdaleite Pickaxe",
+  "item.mineria.lonsdaleite_shovel": "Lonsdaleite Shovel",
+  "item.mineria.lonsdaleite_sword": "Lonsdaleite Sword",
+  "item.mineria.lonsdaleite_hoe": "Lonsdaleite Hoe",
+
 
   "item.mineria.silver_ingot": "Silver Ingot",
 

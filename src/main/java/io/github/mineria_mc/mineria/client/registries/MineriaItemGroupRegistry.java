@@ -40,7 +40,13 @@ public class MineriaItemGroupRegistry {
             // Lonsdaleite
             LONSDALEITE_ORE,
             LONSDALEITE,
-            LONSDALEITE_BLOCK
+            LONSDALEITE_BLOCK,
+            LONSDALEITE_SWORD,
+            LONSDALEITE_PICKAXE,
+            LONSDALEITE_AXE,
+            LONSDALEITE_SHOVEL,
+            LONSDALEITE_HOE,
+            LONSDALEITE_DOUBLE_AXE
         );
     };
 
