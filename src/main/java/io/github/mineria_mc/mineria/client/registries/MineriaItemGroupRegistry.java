@@ -36,6 +36,14 @@ public class MineriaItemGroupRegistry {
             DEEPSLATE_SILVER_ORE,
             SILVER_INGOT,
             SILVER_BLOCK,
+            SILVER_NUGGET,
+            SILVER_STICK,
+            SILVER_SWORD,
+            SILVER_PICKAXE,
+            SILVER_AXE,
+            SILVER_SHOVEL,
+            SILVER_HOE,
+            SILVER_APPLE,
 
             // Titane
             TITANE_ORE,

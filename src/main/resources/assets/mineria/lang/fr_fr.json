@@ -29,6 +29,14 @@
   "item.mineria.lonsdaleite_hoe": "Houe en Lonsdaléite",
 
   "item.mineria.silver_ingot": "Lingot d'Argent",
+  "item.mineria.silver_apple": "Pomme en Argent",
+  "item.mineria.silver_nugget": "Pépite d'Argent",
+  "item.mineria.silver_stick": "Bâton en Argent",
+  "item.mineria.silver_axe": "Hache en Argent",
+  "item.mineria.silver_pickaxe": "Pioche en Argent",
+  "item.mineria.silver_shovel": "Pelle en Argent",
+  "item.mineria.silver_sword": "Epée en Argent",
+  "item.mineria.silver_hoe": "Houe en Argent",
 
   "item.mineria.titane_ingot": "Lingot de Titane"
 }
