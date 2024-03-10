@@ -4,6 +4,11 @@
   "block.mineria.lonsdaleite_ore": "Lonsdaleite Ore",
   "block.mineria.silver_ore": "Silver Ore",
 
+  "block.mineria.deepslate_lead_ore": "Deepslate Lead Ore",
+  "block.mineria.deepslate_titane_ore": "Deepslate Titane Ore",
+  "block.mineria.deepslate_lonsdaleite_ore": "Deepslate Lonsdaleite Ore",
+  "block.mineria.deepslate_silver_ore": "Deepslate Silver Ore",
+
   "block.mineria.lead_block": "Lead Block",
   "block.mineria.titane_block": "Titane Block",
   "block.mineria.lonsdaleite_block": "Lonsdaleite Block",
@@ -22,7 +27,6 @@
   "item.mineria.lonsdaleite_shovel": "Lonsdaleite Shovel",
   "item.mineria.lonsdaleite_sword": "Lonsdaleite Sword",
   "item.mineria.lonsdaleite_hoe": "Lonsdaleite Hoe",
-
 
   "item.mineria.silver_ingot": "Silver Ingot",
 

@@ -32,6 +32,12 @@ public class MineriaBlockRegistry {
     public static final Block LONSDALEITE_ORE = register("lonsdaleite_ore", new DropExperienceBlock(stoneOre(6f, 10f), UniformInt.of(4, 10)));
     public static final Block SILVER_ORE = register("silver_ore", new DropExperienceBlock(stoneOre(3f, 5f)));
 
+    // Deepslate Ores
+    public static final Block DEEPSLATE_LEAD_ORE = register("deepslate_lead_ore", new DropExperienceBlock(deepslateOre(5.5f, 5.0f)));
+    public static final Block DEEPSLATE_TITANE_ORE = register("deepslate_titane_ore", new DropExperienceBlock(deepslateOre(7.5f, 10f)));
+    public static final Block DEEPSLATE_LONSDALEITE_ORE = register("deepslate_lonsdaleite_ore", new DropExperienceBlock(deepslateOre(7.5f, 10f), UniformInt.of(4, 10)));
+    public static final Block DEEPSLATE_SILVER_ORE = register("deepslate_silver_ore", new DropExperienceBlock(deepslateOre(4.5f, 5f)));
+
     // Ores Blocks
     public static final Block LEAD_BLOCK = register("lead_block", new Block(properties(MapColor.METAL, 6.5f, 20f, SoundType.METAL)));
     public static final Block TITANE_BLOCK = register("titane_block", new Block(properties(MapColor.METAL, 10f, 15f, SoundType.METAL)));
@@ -61,6 +67,10 @@ public class MineriaBlockRegistry {
 
     private static Properties stoneOre(float hardness, float resistance) {
         return Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(hardness, resistance).sound(SoundType.STONE).requiresCorrectToolForDrops();
+    }
+
+    private static Properties deepslateOre(float hardness, float resistance) {
+        return Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).strength(hardness, resistance).sound(SoundType.DEEPSLATE).requiresCorrectToolForDrops();
     }
 
     private static Properties properties(MapColor color, float hardness, float resistance, SoundType sound) {

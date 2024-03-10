@@ -22,6 +22,7 @@ public class MineriaItemGroupRegistry {
         acceptAll(output, 
             // Lead
             LEAD_ORE,
+            DEEPSLATE_LEAD_ORE,
             LEAD_INGOT,
             LEAD_BLOCK,
             COMPRESSED_LEAD_INGOT,
@@ -29,16 +30,19 @@ public class MineriaItemGroupRegistry {
 
             // Silver
             SILVER_ORE,
+            DEEPSLATE_SILVER_ORE,
             SILVER_INGOT,
             SILVER_BLOCK,
 
             // Titane
             TITANE_ORE,
+            DEEPSLATE_TITANE_ORE,
             TITANE_INGOT,
             TITANE_BLOCK,
 
             // Lonsdaleite
             LONSDALEITE_ORE,
+            DEEPSLATE_LONSDALEITE_ORE,
             LONSDALEITE,
             LONSDALEITE_BLOCK,
             LONSDALEITE_SWORD,
