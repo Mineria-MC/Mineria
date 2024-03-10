@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "mineria:item/mathys_craft_sword"
+    }
+}

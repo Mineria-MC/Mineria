@@ -59,6 +59,13 @@ public class MineriaItemRegistry {
 
     // Titane
     public static final Item TITANE_INGOT = register("titane_ingot", new MineriaItem());
+    public static final Item TITANE_NUGGET = register("titane_nugget", new MineriaItem());
+    public static final Item TITANE_AXE = register("titane_axe", new AxeItem(MineriaItem.ItemTier.TITANE, 1.0f, -3.0f, new Properties()));
+    public static final Item TITANE_DOUBLE_AXE = register("titane_double_axe", new AxeItem(MineriaItem.ItemTier.TITANE, 10.5f - MineriaItem.ItemTier.TITANE.getAttackDamageBonus(), -3.6f, new Properties()));
+    public static final Item TITANE_HOE = register("titane_hoe", new HoeItem(MineriaItem.ItemTier.TITANE, -4, 0, new Properties()));
+    public static final Item TITANE_PICKAXE = register("titane_pickaxe", new PickaxeItem(MineriaItem.ItemTier.TITANE, 1, -2.8f, new Properties()));
+    public static final Item TITANE_SHOVEL = register("titane_shovel", new ShovelItem(MineriaItem.ItemTier.TITANE, 1.5f, -3.0f, new Properties()));
+    public static final Item TITANE_SWORD = register("titane_sword", new SwordItem(MineriaItem.ItemTier.TITANE, 3, -2.4f, new Properties()));
 
     public static void register() {
         for(Map.Entry<String, Item> entry : ITEMS.entrySet()) {

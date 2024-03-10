@@ -38,5 +38,12 @@
   "item.mineria.silver_sword": "Epée en Argent",
   "item.mineria.silver_hoe": "Houe en Argent",
 
-  "item.mineria.titane_ingot": "Lingot de Titane"
+  "item.mineria.titane_ingot": "Lingot de Titane",
+  "item.mineria.titane_nugget": "Pépite de Titane",
+  "item.mineria.titane_axe": "Hache en Titane",
+  "item.mineria.titane_double_axe": "Double Hache en Titane",
+  "item.mineria.titane_hoe": "Houe en Titane",
+  "item.mineria.titane_pickaxe": "Pioche en Titane",
+  "item.mineria.titane_shovel": "Pelle en Titane",
+  "item.mineria.titane_sword": "Epée en Titane"
 }

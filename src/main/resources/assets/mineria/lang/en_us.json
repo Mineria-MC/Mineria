@@ -41,5 +41,14 @@
   "item.mineria.silver_sword": "Silver Sword",
   "item.mineria.silver_hoe": "Silver Hoe",
 
-  "item.mineria.titane_ingot": "Titane Ingot"
+  "item.mineria.titane_ingot": "Titane Ingot",
+  "item.mineria.titane_nugget": "Titane Nugget",
+  "item.mineria.titane_axe": "Titane Axe",
+  "item.mineria.titane_double_axe": "Titane Double Axe",
+  "item.mineria.titane_hoe": "Titane Hoe",
+  "item.mineria.titane_pickaxe": "Titane Pickaxe",
+  "item.mineria.titane_shovel": "Titane Shovel",
+  "item.mineria.titane_sword": "Titane Sword",
+  "item.mineria.mrlulu_sword": "Mrlulu's Sword",
+  "item.mineria.mathys_craft_sword": "Mathys Craft's Sword"
 }

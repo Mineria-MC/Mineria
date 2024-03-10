@@ -50,6 +50,13 @@ public class MineriaItemGroupRegistry {
             DEEPSLATE_TITANE_ORE,
             TITANE_INGOT,
             TITANE_BLOCK,
+            TITANE_NUGGET,
+            TITANE_SWORD,
+            TITANE_PICKAXE,
+            TITANE_AXE,
+            TITANE_SHOVEL,
+            TITANE_HOE,
+            TITANE_DOUBLE_AXE,
 
             // Lonsdaleite
             LONSDALEITE_ORE,
