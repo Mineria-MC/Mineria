@@ -6,12 +6,16 @@ import java.util.Map;
 import io.github.mineria_mc.mineria.util.Constants;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.material.MapColor;
 
 @SuppressWarnings("unused")
 public class MineriaBlockRegistry {
@@ -22,12 +26,12 @@ public class MineriaBlockRegistry {
     public static void register() {
         // Register Blocks
         for(Map.Entry<String, Block> entry : BLOCKS.entrySet()) {
-            Registry.register(Registries.BLOCK, new Identifier(Constants.MODID, entry.getKey()), entry.getValue());
+            Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(Constants.MODID, entry.getKey()), entry.getValue());
         }
 
         // Register BlockItems
         for(Map.Entry<String, Item> entry : BLOCK_ITEMS.entrySet()) {
-            Registry.register(Registries.ITEM, new Identifier(Constants.MODID, entry.getKey()), entry.getValue());
+            Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Constants.MODID, entry.getKey()), entry.getValue());
         }
     }
 
@@ -35,5 +39,9 @@ public class MineriaBlockRegistry {
         BLOCKS.put(blockName, block);
         BLOCK_ITEMS.put(blockName, new BlockItem(block, new FabricItemSettings()));
         return block;
+    }
+
+    private static Properties properties(MapColor color, float hardness, float resistance, SoundType sound) {
+        return Properties.of().mapColor(color).strength(hardness, resistance).sound(sound).requiresCorrectToolForDrops();
     }
 }
