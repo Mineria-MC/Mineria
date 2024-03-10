@@ -15,7 +15,10 @@
   "itemGroup.mineria.mineria": "Mineria",
 
   "item.mineria.lead_ingot": "Lingot de Plomb",
+  "item.mineria.lead_sword": "Epée en Plomb",
+  "item.mineria.lead_nugget": "Pépite de Plomb",
   "item.mineria.compressed_lead_ingot": "Lingot de Plomb Compressé",
+  "item.mineria.compressed_lead_sword": "Epée en Plomb Compressé",
 
   "item.mineria.lonsdaleite": "Lonsdaléite",
   "item.mineria.lonsdaleite_axe": "Hache en Lonsdaléite",

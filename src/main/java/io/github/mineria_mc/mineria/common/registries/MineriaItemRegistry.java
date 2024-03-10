@@ -14,6 +14,7 @@ import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Item.Properties;
 
 @SuppressWarnings("unused")
@@ -23,8 +24,11 @@ public class MineriaItemRegistry {
 
     // Lead
     public static final Item LEAD_INGOT = register("lead_ingot", new MineriaItem());
+    public static final Item LEAD_SWORD = register("lead_sword", new SwordItem(MineriaItem.ItemTier.LEAD, 3, -2.4f, new Properties()));
+    public static final Item LEAD_NUGGET = register("lead_nugget", new MineriaItem());
     public static final Item COMPRESSED_LEAD_INGOT = register("compressed_lead_ingot", new MineriaItem());
-    
+    public static final Item COMPRESSED_LEAD_SWORD = register("compressed_lead_sword", new SwordItem(MineriaItem.ItemTier.COMPRESSED_LEAD, 3, -2.4f, new Properties()));
+
     // Lonsdaleite
     public static final Item LONSDALEITE = register("lonsdaleite", new MineriaItem());
     public static final Item LONSDALEITE_AXE = register("lonsdaleite_axe", new AxeItem(MineriaItem.ItemTier.LONSDALEITE, -2.0f, -3.0f, new Properties()));

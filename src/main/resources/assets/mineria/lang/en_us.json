@@ -18,7 +18,10 @@
   "itemGroup.mineria.mineria": "Mineria",
 
   "item.mineria.lead_ingot": "Lead Ingot",
+  "item.mineria.lead_sword": "Lead Sword",
+  "item.mineria.lead_nugget": "Lead Nugget",
   "item.mineria.compressed_lead_ingot": "Compressed Lead Ingot",
+  "item.mineria.compressed_lead_sword": "Compressed Lead Sword",
 
   "item.mineria.lonsdaleite": "Lonsdaleite",
   "item.mineria.lonsdaleite_axe": "Lonsdaleite Axe",

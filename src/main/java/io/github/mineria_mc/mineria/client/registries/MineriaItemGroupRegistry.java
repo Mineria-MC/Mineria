@@ -25,8 +25,11 @@ public class MineriaItemGroupRegistry {
             DEEPSLATE_LEAD_ORE,
             LEAD_INGOT,
             LEAD_BLOCK,
+            LEAD_NUGGET,
+            LEAD_SWORD,
             COMPRESSED_LEAD_INGOT,
             COMPRESSED_LEAD_BLOCK,
+            COMPRESSED_LEAD_SWORD,
 
             // Silver
             SILVER_ORE,
