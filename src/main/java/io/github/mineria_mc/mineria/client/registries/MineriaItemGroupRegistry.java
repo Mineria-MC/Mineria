@@ -14,6 +14,7 @@ import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.level.ItemLike;
 
 import static io.github.mineria_mc.mineria.common.registries.MineriaBlockRegistry.*;
+import static io.github.mineria_mc.mineria.common.registries.MineriaItemRegistry.*;
 
 public class MineriaItemGroupRegistry {
     
@@ -21,19 +22,24 @@ public class MineriaItemGroupRegistry {
         acceptAll(output, 
             // Lead
             LEAD_ORE,
+            LEAD_INGOT,
             LEAD_BLOCK,
+            COMPRESSED_LEAD_INGOT,
             COMPRESSED_LEAD_BLOCK,
 
             // Silver
             SILVER_ORE,
+            SILVER_INGOT,
             SILVER_BLOCK,
 
             // Titane
             TITANE_ORE,
+            TITANE_INGOT,
             TITANE_BLOCK,
 
             // Lonsdaleite
             LONSDALEITE_ORE,
+            LONSDALEITE,
             LONSDALEITE_BLOCK
         );
     };

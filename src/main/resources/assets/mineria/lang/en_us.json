@@ -10,5 +10,14 @@
   "block.mineria.silver_block": "Silver Block",
   "block.mineria.compressed_lead_block": "Compressed Lead Block",
 
-  "itemGroup.mineria.mineria": "Mineria"
+  "itemGroup.mineria.mineria": "Mineria",
+
+  "item.mineria.lead_ingot": "Lead Ingot",
+  "item.mineria.compressed_lead_ingot": "Compressed Lead Ingot",
+
+  "item.mineria.lonsdaleite": "Lonsdaleite",
+
+  "item.mineria.silver_ingot": "Silver Ingot",
+
+  "item.mineria.titane_ingot": "Titane Ingot"
 }

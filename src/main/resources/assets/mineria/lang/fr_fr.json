@@ -12,5 +12,14 @@
   "block.mineria.silver_block": "Bloc d'Argent",
   "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé",
 
-  "itemGroup.mineria.mineria": "Mineria"
+  "itemGroup.mineria.mineria": "Mineria",
+
+  "item.mineria.lead_ingot": "Lingot de Plomb",
+  "item.mineria.compressed_lead_ingot": "Lingot de Plomb Compressé",
+
+  "item.mineria.lonsdaleite": "Lonsdaléite",
+
+  "item.mineria.silver_ingot": "Lingot d'Argent",
+
+  "item.mineria.titane_ingot": "Lingot de Titane"
 }
