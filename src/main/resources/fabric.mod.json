@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "mineria",
+	"version": "${version}",
+	"name": "Mineria",
+	"description": "New ores, old machinery, druidic magic, medicinal plants, deadly poisons and final boss",
+	"authors": [
+		"mrlulu51",
+		"LGatodu47",
+		"Mathys_craft"
+	],
+	"contact": {
+		"sources": "https://github.com/Mineria-MC/Mineria"
+	},
+	"license": "MIT",
+	"icon": "assets/mineria/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.mineria_mc.mineria.Mineria"
+		],
+		"client": [
+			"io.github.mineria_mc.mineria.client.MineriaClient"
+		]
+	},
+	"mixins": [
+		"mineria.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
