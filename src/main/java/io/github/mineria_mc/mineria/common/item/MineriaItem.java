@@ -2,7 +2,6 @@ package io.github.mineria_mc.mineria.common.item;
 
 import java.util.function.Supplier;
 
-import io.github.mineria_mc.mineria.Mineria;
 import io.github.mineria_mc.mineria.common.registries.MineriaItemRegistry;
 import io.github.mineria_mc.mineria.util.Constants;
 import net.minecraft.sounds.SoundEvent;

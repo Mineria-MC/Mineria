@@ -25,6 +25,7 @@
 
   "item.mineria.lonsdaleite": "Lonsdaleite",
   "item.mineria.lonsdaleite_axe": "Lonsdaleite Axe",
+  "item.mineria.lonsdaleite_dagger": "Lonsdaleite Dagger",
   "item.mineria.lonsdaleite_double_axe": "Lonsdaleite Double Axe",
   "item.mineria.lonsdaleite_pickaxe": "Lonsdaleite Pickaxe",
   "item.mineria.lonsdaleite_shovel": "Lonsdaleite Shovel",
@@ -52,6 +53,7 @@
   "item.mineria.titane_ingot": "Titane Ingot",
   "item.mineria.titane_nugget": "Titane Nugget",
   "item.mineria.titane_axe": "Titane Axe",
+  "item.mineria.titane_dagger": "Titane Dagger",
   "item.mineria.titane_double_axe": "Titane Double Axe",
   "item.mineria.titane_hoe": "Titane Hoe",
   "item.mineria.titane_pickaxe": "Titane Pickaxe",

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.mineria_mc.mineria.common.item.ArmorBuilder;
+import io.github.mineria_mc.mineria.common.item.CustomWeaponItem;
 import io.github.mineria_mc.mineria.common.item.LonsdaleiteSwordItem;
 import io.github.mineria_mc.mineria.common.item.MineriaItem;
 import io.github.mineria_mc.mineria.util.Constants;
@@ -36,6 +37,7 @@ public class MineriaItemRegistry {
     // Lonsdaleite
     public static final Item LONSDALEITE = register("lonsdaleite", new MineriaItem());
     public static final Item LONSDALEITE_AXE = register("lonsdaleite_axe", new AxeItem(MineriaItem.ItemTier.LONSDALEITE, -2.0f, -3.0f, new Properties()));
+    public static final Item LONSDALEITE_DAGGER = register("lonsdaleite_dagger", new CustomWeaponItem(MineriaItem.ItemTier.LONSDALEITE, 7.5f, -1.75f, 15, new Properties()));
     public static final Item LONSDALEITE_DOUBLE_AXE = register("lonsdaleite_double_axe", new AxeItem(MineriaItem.ItemTier.LONSDALEITE, 13.5f - MineriaItem.ItemTier.LONSDALEITE.getAttackDamageBonus(), -3.4f, new Properties()));
     public static final Item LONSDALEITE_PICKAXE = register("lonsdaleite_pickaxe", new PickaxeItem(MineriaItem.ItemTier.LONSDALEITE, 1, -2.8f, new Properties()));
     public static final Item LONSDALEITE_SHOVEL = register("lonsdaleite_shovel", new ShovelItem(MineriaItem.ItemTier.LONSDALEITE, 1.5f, -3.0f, new Properties()));
@@ -71,6 +73,7 @@ public class MineriaItemRegistry {
     public static final Item TITANE_INGOT = register("titane_ingot", new MineriaItem());
     public static final Item TITANE_NUGGET = register("titane_nugget", new MineriaItem());
     public static final Item TITANE_AXE = register("titane_axe", new AxeItem(MineriaItem.ItemTier.TITANE, 1.0f, -3.0f, new Properties()));
+    public static final Item TITANE_DAGGER = register("titane_dagger", new CustomWeaponItem(MineriaItem.ItemTier.TITANE, 4.5f, -2.0f, 17, new Properties()));
     public static final Item TITANE_DOUBLE_AXE = register("titane_double_axe", new AxeItem(MineriaItem.ItemTier.TITANE, 10.5f - MineriaItem.ItemTier.TITANE.getAttackDamageBonus(), -3.6f, new Properties()));
     public static final Item TITANE_HOE = register("titane_hoe", new HoeItem(MineriaItem.ItemTier.TITANE, -4, 0, new Properties()));
     public static final Item TITANE_PICKAXE = register("titane_pickaxe", new PickaxeItem(MineriaItem.ItemTier.TITANE, 1, -2.8f, new Properties()));

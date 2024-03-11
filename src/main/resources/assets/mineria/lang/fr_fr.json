@@ -22,6 +22,7 @@
 
   "item.mineria.lonsdaleite": "Lonsdaléite",
   "item.mineria.lonsdaleite_axe": "Hache en Lonsdaléite",
+  "item.mineria.lonsdaleite_dagger": "Dague en Lonsdaléite",
   "item.mineria.lonsdaleite_double_axe": "Double Hache en Lonsdaléite",
   "item.mineria.lonsdaleite_pickaxe": "Pioche en Lonsdaléite",
   "item.mineria.lonsdaleite_shovel": "Pelle en Lonsdaléite",
@@ -49,6 +50,7 @@
   "item.mineria.titane_ingot": "Lingot de Titane",
   "item.mineria.titane_nugget": "Pépite de Titane",
   "item.mineria.titane_axe": "Hache en Titane",
+  "item.mineria.titane_dagger": "Dague en Titane",
   "item.mineria.titane_double_axe": "Double Hache en Titane",
   "item.mineria.titane_hoe": "Houe en Titane",
   "item.mineria.titane_pickaxe": "Pioche en Titane",
