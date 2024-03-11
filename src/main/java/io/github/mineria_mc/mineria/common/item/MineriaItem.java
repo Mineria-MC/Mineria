@@ -76,7 +76,8 @@ public class MineriaItem extends Item {
     public enum ArmorMaterial implements net.minecraft.world.item.ArmorMaterial {
         LONSDALEITE("lonsdaleite", 62, new int[]{6, 9, 11, 7}, 8, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(MineriaItemRegistry.LONSDALEITE), 4.0F, 0.3F),
         SILVER("silver", 17, new int[]{2, 6, 6, 3}, 16, SoundEvents.ARMOR_EQUIP_GOLD, () -> Ingredient.of(MineriaItemRegistry.SILVER_INGOT), 0.5F, 0F),
-        TITANE("titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(MineriaItemRegistry.TITANE_INGOT), 1.0F, 0.05F);
+        TITANE("titane", 45, new int[]{4, 7, 9, 4}, 12, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(MineriaItemRegistry.TITANE_INGOT), 1.0F, 0.05F),
+        VANADIUM("vanadium", 37, new int[]{0, 0, 0, 4}, 10, SoundEvents.ARMOR_EQUIP_DIAMOND, () -> Ingredient.of(MineriaItemRegistry.VANADIUM_INGOT), 0.0F, 0F);
 
         private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
         private final String name;

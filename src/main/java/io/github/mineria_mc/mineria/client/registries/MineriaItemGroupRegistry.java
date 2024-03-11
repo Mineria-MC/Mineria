@@ -66,7 +66,9 @@ public class MineriaItemGroupRegistry {
             TITANE_CHESTPLATE,
             TITANE_LEGGINGS,
             TITANE_BOOTS,
-
+            VANADIUM_INGOT,
+            VANADIUM_HELMET,
+            
             // Lonsdaleite
             LONSDALEITE_ORE,
             DEEPSLATE_LONSDALEITE_ORE,

@@ -14,6 +14,9 @@
 
   "itemGroup.mineria.mineria": "Mineria",
 
+  "item.mineria.vanadium_ingot": "Lingot de Vanadium",
+  "item.mineria.vanadium_helmet": "Casque en Vanadium",
+
   "item.mineria.lead_ingot": "Lingot de Plomb",
   "item.mineria.lead_sword": "Epée en Plomb",
   "item.mineria.lead_nugget": "Pépite de Plomb",

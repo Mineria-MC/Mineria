@@ -27,6 +27,10 @@ public class MineriaItemRegistry {
     
     private static final Map<String, Item> ITEMS = new HashMap<String, Item>();
 
+    // Misc
+    public static final Item VANADIUM_INGOT = register("vanadium_ingot", new MineriaItem());
+    public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, ArmorItem.Type.HELMET).build()); // TODO: Add NightVision effect on VANADIUM_HELMET (fix onArmorTick function)
+
     // Lead
     public static final Item LEAD_INGOT = register("lead_ingot", new MineriaItem());
     public static final Item LEAD_SWORD = register("lead_sword", new SwordItem(MineriaItem.ItemTier.LEAD, 3, -2.4f, new Properties()));
