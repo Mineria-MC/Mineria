@@ -2,6 +2,7 @@ package io.github.mineria_mc.mineria.common.item;
 
 import org.apache.logging.log4j.util.TriConsumer;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -48,9 +49,13 @@ public class ArmorBuilder {
             return builder.hasEffect || super.isFoil(itemStack);
         }
 
-        /*@Override
-        public void onArmorTick(ItemStack stack, Level world, Player player) {
-            builder.function.accept(stack, world, player);
-        }*/
+        @Override
+        public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slot, boolean bl) {
+            if(entity instanceof Player) {
+                if(slot == builder.type.getSlot().getIndex()) {
+                    builder.function.accept(itemStack, level, (Player) entity);
+                }
+            }
+        }
     }
 }
