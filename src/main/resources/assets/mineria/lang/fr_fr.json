@@ -12,8 +12,14 @@
   "block.mineria.silver_block": "Bloc d'Argent",
   "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé",
 
+  "block.mineria.xp_block": "Bloc d'XP",
+
   "itemGroup.mineria.mineria": "Mineria",
 
+  "item.mineria.xp_orb": "Orbe d'XP",
+  "item.mineria.compressed_xp_orb": "Orbe d'XP Compressée",
+  "item.mineria.super_compressed_xp_orb": "Orbe d'XP Super Compressée",
+  "item.mineria.super_duper_compressed_xp_orb": "Orbe d'XP Supra Méga Compressée",
   "item.mineria.vanadium_ingot": "Lingot de Vanadium",
   "item.mineria.vanadium_helmet": "Casque en Vanadium",
 
@@ -62,5 +68,12 @@
   "item.mineria.titane_boots": "Bottes en Titane",
   "item.mineria.titane_leggings": "Jambières en Titane",
   "item.mineria.titane_chestplate": "Plastron en Titane",
-  "item.mineria.titane_helmet": "Casque en Titane"
+  "item.mineria.titane_helmet": "Casque en Titane",
+
+  "tile_entity.mineria.xp_block": "Block d'XP",
+
+  "screen.mineria.xp_block.inactive": "OFF",
+  "screen.mineria.xp_block.active": "ON",
+  "screen.mineria.xp_block.delay": "Délai",
+  "screen.mineria.xp_block.delay_unit": "Ticks"
 }

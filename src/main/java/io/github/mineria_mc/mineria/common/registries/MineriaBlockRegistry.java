@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.common.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.mineria_mc.mineria.common.block.xp_block.XpBlock;
 import io.github.mineria_mc.mineria.util.Constants;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -44,6 +45,9 @@ public class MineriaBlockRegistry {
     public static final Block LONSDALEITE_BLOCK = register("lonsdaleite_block", new Block(properties(MapColor.METAL, 10f, 17.5f, SoundType.METAL)));
     public static final Block SILVER_BLOCK = register("silver_block", new Block(properties(MapColor.METAL, 5f, 10f, SoundType.METAL)));
     public static final Block COMPRESSED_LEAD_BLOCK = register("compressed_lead_block", new Block(properties(MapColor.METAL, 2.5f, 2f, SoundType.METAL)));
+
+    // Machines
+    public static final Block XP_BLOCK = register("xp_block", new XpBlock());
 
     public static void register() {
         // Register Blocks

@@ -7,6 +7,7 @@ import io.github.mineria_mc.mineria.common.item.ArmorBuilder;
 import io.github.mineria_mc.mineria.common.item.CustomWeaponItem;
 import io.github.mineria_mc.mineria.common.item.LonsdaleiteSwordItem;
 import io.github.mineria_mc.mineria.common.item.MineriaItem;
+import io.github.mineria_mc.mineria.common.item.XpOrbItem;
 import io.github.mineria_mc.mineria.util.Constants;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Item.Properties;
@@ -28,8 +30,12 @@ public class MineriaItemRegistry {
     private static final Map<String, Item> ITEMS = new HashMap<String, Item>();
 
     // Misc
+    public static final Item XP_ORB = register("xp_orb", new XpOrbItem(1, new Properties()));
+    public static final Item COMPRESSED_XP_ORB = register("compressed_xp_orb", new XpOrbItem(4, new Properties().rarity(Rarity.UNCOMMON)));
+    public static final Item SUPER_COMPRESSED_XP_ORB = register("super_compressed_xp_orb", new XpOrbItem(16, new Properties().rarity(Rarity.RARE)));
+    public static final Item SUPER_DUPER_COMPRESSED_XP_ORB = register("super_duper_compressed_xp_orb", new XpOrbItem(64, new Properties().rarity(Rarity.EPIC)));
     public static final Item VANADIUM_INGOT = register("vanadium_ingot", new MineriaItem());
-    public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, ArmorItem.Type.HELMET).onArmorTick((stack, world, player) -> player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build()); // TODO: Add NightVision effect on VANADIUM_HELMET (fix onArmorTick function)
+    public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, ArmorItem.Type.HELMET).onArmorTick((stack, world, player) -> player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
 
     // Lead
     public static final Item LEAD_INGOT = register("lead_ingot", new MineriaItem());

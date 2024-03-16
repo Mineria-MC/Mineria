@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "particle": "mineria:block/machine/xp_block/xp_block_side",
+        "up": "mineria:block/machine/xp_block/xp_block_top",
+        "down": "mineria:block/machine/xp_block/xp_block_bottom",
+        "north": "mineria:block/machine/xp_block/xp_block_side",
+        "east": "mineria:block/machine/xp_block/xp_block_side",
+        "south": "mineria:block/machine/xp_block/xp_block_side",
+        "west": "mineria:block/machine/xp_block/xp_block_side"
+    }
+}

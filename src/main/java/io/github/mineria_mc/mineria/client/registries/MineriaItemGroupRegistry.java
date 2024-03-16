@@ -84,7 +84,16 @@ public class MineriaItemGroupRegistry {
             LONSDALEITE_HELMET,
             LONSDALEITE_CHESTPLATE,
             LONSDALEITE_LEGGINGS,
-            LONSDALEITE_BOOTS
+            LONSDALEITE_BOOTS,
+
+            // Machines
+            XP_BLOCK,
+
+            // Random Items
+            XP_ORB,
+            COMPRESSED_XP_ORB,
+            SUPER_COMPRESSED_XP_ORB,
+            SUPER_DUPER_COMPRESSED_XP_ORB
         );
     };
 
