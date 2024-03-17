@@ -25,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 
 public class ExtractorBlockEntity extends MineriaLockableBlockEntity implements ExtendedScreenHandlerFactory {
     public int extractTime;

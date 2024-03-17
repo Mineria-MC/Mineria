@@ -3,9 +3,11 @@ package io.github.mineria_mc.mineria.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
+import io.github.mineria_mc.mineria.client.MineriaClient;
 import io.github.mineria_mc.mineria.client.models.ExtractorGearModel;
 import io.github.mineria_mc.mineria.common.block.extractor.ExtractorBlock;
 import io.github.mineria_mc.mineria.common.block.extractor.ExtractorBlockEntity;
+import io.github.mineria_mc.mineria.common.config.MineriaConfigOptions;
 import io.github.mineria_mc.mineria.util.Constants;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,8 +32,7 @@ public class ExtractorBlockEntityRenderer implements BlockEntityRenderer<Extract
             moveFromDirection(tileEntity.getBlockState().getValue(ExtractorBlock.FACING), stack);
         } catch (NullPointerException ignored) {
         }
-        // TODO: Implement CatConfigMC
-        if (tileEntity.isExtracting() && true /*MineriaConfig.CLIENT.enableTERAnimations.get()*/) {
+        if (tileEntity.isExtracting() && MineriaClient.config.get(MineriaConfigOptions.ENABLE_TER_ANIMATIONS).orElse(true)) {
             this.gearModel.animate();
         }
         this.gearModel.renderToBuffer(stack, buffer.getBuffer(this.gearModel.renderType(TEXTURE)), packedLight, packedOverlay, 1, 1, 1, 1);
