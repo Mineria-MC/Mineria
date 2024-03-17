@@ -13,7 +13,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -101,12 +100,24 @@ public class MineriaUtil {
             return ((BucketItem) waterSource.getItem()).equals(Fluids.WATER);
         }
 
-        if (checkFluidFromStack(waterSource, fluid)) {
+        if (checkFluidFromStack(waterSource)) {
             Fluid stored = getFluidFromStack(waterSource);
             // if fluid is empty then there is water as we checked earlier if buckets were stored.
             return (stored == Fluids.EMPTY && fluid.isSame(Fluids.WATER)) || stored.isSame(fluid);
         }
         return false;
+    }
+
+    public static boolean checkFluidFromStack(ItemStack barrel) {
+        CompoundTag stackTag = barrel.getTag();
+        if (stackTag == null || !stackTag.contains("BlockEntityTag", 10)) {
+            return false;
+        }
+        CompoundTag blockEntityTag = stackTag.getCompound("BlockEntityTag");
+        if (!blockEntityTag.contains("Buckets")) {
+            return false;
+        }
+        return blockEntityTag.getInt("Buckets") != 0;
     }
 
     public static ItemStack decreaseFluidFromStack(ItemStack waterSource) {

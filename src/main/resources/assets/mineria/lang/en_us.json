@@ -17,6 +17,7 @@
 
   "block.mineria.xp_block": "XP Block",
   "block.mineria.titane_extractor": "Titane Extractor",
+  "block.mineria.extractor": "Extractor",
 
   "block.mineria.mineral_sand": "Mineral Sand",
 
@@ -92,6 +93,7 @@
 
   "tile_entity.mineria.titane_extractor": "Titane Extractor",
   "tile_entity.mineria.xp_block": "XP Block",
+  "tile_entity.mineria.extractor": "Extractor",
 
   "screen.mineria.xp_block.inactive": "OFF",
   "screen.mineria.xp_block.active": "ON",

@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.common.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.mineria_mc.mineria.common.containers.ExtractorMenu;
 import io.github.mineria_mc.mineria.common.containers.TitaneExtractorMenu;
 import io.github.mineria_mc.mineria.common.containers.XpBlockMenu;
 import io.github.mineria_mc.mineria.util.Constants;
@@ -19,6 +20,7 @@ public class MineriaMenuTypesRegistry {
 
     public static final MenuType<XpBlockMenu> XP_BLOCK = register("xp_block", XpBlockMenu::create);
     public static final MenuType<TitaneExtractorMenu> TITANE_EXTRACTOR = register("titane_extractor", TitaneExtractorMenu::create);
+    public static final MenuType<ExtractorMenu> EXTRACTOR = register("extractor", ExtractorMenu::create);
 
     public static void register() {
         for(Map.Entry<String, MenuType<?>> entry : MENU_TYPES.entrySet()) {

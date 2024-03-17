@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.common.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.mineria_mc.mineria.common.block.extractor.ExtractorBlock;
 import io.github.mineria_mc.mineria.common.block.titane_extractor.TitaneExtractorBlock;
 import io.github.mineria_mc.mineria.common.block.xp_block.XpBlock;
 import io.github.mineria_mc.mineria.util.Constants;
@@ -51,6 +52,7 @@ public class MineriaBlockRegistry {
     // Machines
     public static final Block XP_BLOCK = register("xp_block", new XpBlock());
     public static final Block TITANE_EXTRACTOR = register("titane_extractor", new TitaneExtractorBlock());
+    public static final Block EXTRACTOR = register("extractor", new ExtractorBlock());
 
     // Other
     public static final Block MINERAL_SAND = register("mineral_sand", new FallingBlock(Properties.of().mapColor(MapColor.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.5f).sound(SoundType.SAND)));

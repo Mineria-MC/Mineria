@@ -101,6 +101,7 @@ public class MineriaItemGroupRegistry {
 
             // Machines
             TITANE_EXTRACTOR,
+            EXTRACTOR,
             XP_BLOCK,
 
             // Random Items

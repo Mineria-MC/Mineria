@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.common.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.mineria_mc.mineria.common.block.extractor.ExtractorBlockEntity;
 import io.github.mineria_mc.mineria.common.block.titane_extractor.TitaneExtractorBlockEntity;
 import io.github.mineria_mc.mineria.common.block.xp_block.XpBlockEntity;
 import io.github.mineria_mc.mineria.util.Constants;
@@ -19,6 +20,7 @@ public class MineriaBlockEntityRegistry {
 
     public static final BlockEntityType<XpBlockEntity> XP_BLOCK = register("xp_block", MineriaBlockRegistry.XP_BLOCK, XpBlockEntity::new);
     public static final BlockEntityType<TitaneExtractorBlockEntity> TITANE_EXTRACTOR = register("titane_extractor", MineriaBlockRegistry.TITANE_EXTRACTOR, TitaneExtractorBlockEntity::new);
+    public static final BlockEntityType<ExtractorBlockEntity> EXTRACTOR = register("extractor", MineriaBlockRegistry.EXTRACTOR, ExtractorBlockEntity::new);
 
     public static void register() {
         for(Map.Entry<String, BlockEntityType<?>> entry : BLOCK_ENTITIES.entrySet()) {
