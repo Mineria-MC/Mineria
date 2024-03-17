@@ -32,6 +32,12 @@ public class MineriaItemRegistry {
     // Ingredients
     public static final Item FILTER = register("filter", new Item(new Properties().stacksTo(32)));
 
+    // Weapons & Tools
+    public static final Item TITANE_SWORD_WITH_COPPER_HANDLE = register("titane_sword_with_copper_handle", new CustomWeaponItem(MineriaItem.ItemTier.TITANE, 6f, -2.2f, new Properties().durability(4096)));
+    public static final Item TITANE_SWORD_WITH_SILVER_HANDLE = register("titane_sword_with_silver_handle", new CustomWeaponItem(MineriaItem.ItemTier.TITANE, 3f, -1f, new Properties().durability(2048)));
+    public static final Item TITANE_SWORD_WITH_GOLD_HANDLE = register("titane_sword_with_gold_handle", new CustomWeaponItem(MineriaItem.ItemTier.TITANE, 8.5f, -3f, 10, new Properties().durability(2048)));
+    public static final Item TITANE_SWORD_WITH_IRON_HANDLE = register("titane_sword_with_iron_handle", new CustomWeaponItem(MineriaItem.ItemTier.TITANE, 8.5f, -2.4f, new Properties().durability(1024)));
+
     // Misc
     public static final Item XP_ORB = register("xp_orb", new XpOrbItem(1, new Properties()));
     public static final Item COMPRESSED_XP_ORB = register("compressed_xp_orb", new XpOrbItem(4, new Properties().rarity(Rarity.UNCOMMON)));

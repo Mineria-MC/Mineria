@@ -24,6 +24,11 @@
 
   "item.mineria.filter": "Filter",
 
+  "item.mineria.titane_sword_with_copper_handle": "Titane Sword With Copper Handle",
+  "item.mineria.titane_sword_with_silver_handle": "Titane Sword With Silver Handle",
+  "item.mineria.titane_sword_with_gold_handle": "Titane Sword With Gold Handle",
+  "item.mineria.titane_sword_with_iron_handle": "Titane Sword With Iron Handle",
+
   "item.mineria.xp_orb": "XP Orb",
   "item.mineria.compressed_xp_orb": "Compressed XP Orb",
   "item.mineria.super_compressed_xp_orb": "Super Compressed XP Orb",

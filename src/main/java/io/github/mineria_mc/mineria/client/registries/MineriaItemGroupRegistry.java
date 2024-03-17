@@ -69,6 +69,10 @@ public class MineriaItemGroupRegistry {
             TITANE_CHESTPLATE,
             TITANE_LEGGINGS,
             TITANE_BOOTS,
+            TITANE_SWORD_WITH_COPPER_HANDLE,
+            TITANE_SWORD_WITH_SILVER_HANDLE,
+            TITANE_SWORD_WITH_GOLD_HANDLE,
+            TITANE_SWORD_WITH_IRON_HANDLE,
             VANADIUM_INGOT,
             VANADIUM_HELMET,
             

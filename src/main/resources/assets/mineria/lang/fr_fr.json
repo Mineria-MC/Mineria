@@ -21,6 +21,11 @@
 
   "item.mineria.filter": "Filtre",
 
+  "item.mineria.titane_sword_with_copper_handle": "Epée en Titane avec un Manche en Cuivre",
+  "item.mineria.titane_sword_with_silver_handle": "Epée en Titane avec un Manche en Argent",
+  "item.mineria.titane_sword_with_gold_handle": "Epée en Titane avec un Manche en Or",
+  "item.mineria.titane_sword_with_iron_handle": "Epée en Titane avec un Manche en Fer",
+
   "item.mineria.xp_orb": "Orbe d'XP",
   "item.mineria.compressed_xp_orb": "Orbe d'XP Compressée",
   "item.mineria.super_compressed_xp_orb": "Orbe d'XP Super Compressée",
