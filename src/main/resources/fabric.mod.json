@@ -25,8 +25,8 @@
 		"modmenu": [
 			"io.github.mineria_mc.mineria.client.compat.modmenu.MineriaModMenuAPI"
 		],
-		"rei_client": [
-			"io.github.mineria_mc.mineria.client.compat.rei.MineriaREIClientPlugin"
+		"jei_mod_plugin": [
+			"io.github.mineria_mc.mineria.client.compat.jei.MineriaJEIPlugin"
 		]
 	},
 	"mixins": [

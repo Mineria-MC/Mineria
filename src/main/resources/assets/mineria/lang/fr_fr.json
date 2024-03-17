@@ -93,5 +93,8 @@
   "screen.mineria.xp_block.inactive": "OFF",
   "screen.mineria.xp_block.active": "ON",
   "screen.mineria.xp_block.delay": "Délai",
-  "screen.mineria.xp_block.delay_unit": "Ticks"
+  "screen.mineria.xp_block.delay_unit": "Ticks",
+
+  "recipe_category.mineria.titane_extractor": "Extracteur à Titane",
+  "recipe_category.mineria.extractor": "Extracteur"
 }

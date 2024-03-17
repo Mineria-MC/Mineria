@@ -19,7 +19,7 @@ public class ExtractorRecipe {
 
     public static final Supplier<ExtractorRecipe> DEFAULT_RECIPE = Suppliers.memoize(() -> new ExtractorRecipe(new Inputs(
             new ItemStack(MineriaBlockRegistry.MINERAL_SAND),
-            new ItemStack(Items.BARRIER),
+            new ItemStack(Items.WATER_BUCKET),
             new ItemStack(MineriaItemRegistry.FILTER)
     ), Util.make(new HashMap<>(), map -> {
         map.put(800, new ItemStack(Items.IRON_INGOT));
