@@ -3,6 +3,7 @@ package io.github.mineria_mc.mineria.common.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.mineria_mc.mineria.common.block.titane_extractor.TitaneExtractorBlock;
 import io.github.mineria_mc.mineria.common.block.xp_block.XpBlock;
 import io.github.mineria_mc.mineria.util.Constants;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DropExperienceBlock;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -48,6 +50,10 @@ public class MineriaBlockRegistry {
 
     // Machines
     public static final Block XP_BLOCK = register("xp_block", new XpBlock());
+    public static final Block TITANE_EXTRACTOR = register("titane_extractor", new TitaneExtractorBlock());
+
+    // Other
+    public static final Block MINERAL_SAND = register("mineral_sand", new FallingBlock(Properties.of().mapColor(MapColor.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.5f).sound(SoundType.SAND)));
 
     public static void register() {
         // Register Blocks
@@ -79,5 +85,13 @@ public class MineriaBlockRegistry {
 
     private static Properties properties(MapColor color, float hardness, float resistance, SoundType sound) {
         return Properties.of().mapColor(color).strength(hardness, resistance).sound(sound).requiresCorrectToolForDrops();
+    }
+
+    public static Item getItemFromBlock(Block block) {
+        return BLOCKS.entrySet().stream()
+                .filter(e -> e.getValue().equals(block))
+                .map(e -> BLOCK_ITEMS.get(e.getKey()))
+                .findFirst()
+                .orElseThrow(() -> new NullPointerException("There is no block item for this block!"));
     }
 }

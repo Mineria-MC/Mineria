@@ -29,6 +29,9 @@ public class MineriaItemRegistry {
     
     private static final Map<String, Item> ITEMS = new HashMap<String, Item>();
 
+    // Ingredients
+    public static final Item FILTER = register("filter", new Item(new Properties().stacksTo(32)));
+
     // Misc
     public static final Item XP_ORB = register("xp_orb", new XpOrbItem(1, new Properties()));
     public static final Item COMPRESSED_XP_ORB = register("compressed_xp_orb", new XpOrbItem(4, new Properties().rarity(Rarity.UNCOMMON)));

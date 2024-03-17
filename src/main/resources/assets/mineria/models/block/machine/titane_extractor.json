@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "particle": "mineria:block/machine/titane_extractor/titane_extractor",
+        "up": "mineria:block/machine/titane_extractor/titane_extractor_top",
+        "down": "mineria:block/machine/titane_extractor/titane_extractor",
+        "north": "mineria:block/machine/titane_extractor/titane_extractor_front",
+        "east": "mineria:block/machine/titane_extractor/titane_extractor",
+        "south": "mineria:block/machine/titane_extractor/titane_extractor",
+        "west": "mineria:block/machine/titane_extractor/titane_extractor"
+    }
+}

@@ -16,8 +16,13 @@
   "block.mineria.compressed_lead_block": "Compressed Lead Block",
 
   "block.mineria.xp_block": "XP Block",
+  "block.mineria.titane_extractor": "Titane Extractor",
+
+  "block.mineria.mineral_sand": "Mineral Sand",
 
   "itemGroup.mineria.mineria": "Mineria",
+
+  "item.mineria.filter": "Filter",
 
   "item.mineria.xp_orb": "XP Orb",
   "item.mineria.compressed_xp_orb": "Compressed XP Orb",
@@ -75,6 +80,7 @@
   "item.mineria.titane_chestplate": "Titane Chestplate",
   "item.mineria.titane_helmet": "Titane Helmet",
 
+  "tile_entity.mineria.titane_extractor": "Titane Extractor",
   "tile_entity.mineria.xp_block": "XP Block",
 
   "screen.mineria.xp_block.inactive": "OFF",

@@ -9,10 +9,18 @@ import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 @SuppressWarnings({ "unchecked", "resource" })
 public class MineriaUtil {
@@ -71,5 +79,46 @@ public class MineriaUtil {
                 .filter(filter)
                 .sorted(Comparator.comparing(Recipe::getId))
                 .toList() : List.of();
+    }
+
+    public static Fluid getFluidFromStack(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if(tag == null) {
+            return Fluids.EMPTY;
+        }
+        CompoundTag blockEntityTag = tag.getCompound("BlockEntityTag");
+        if(!blockEntityTag.contains("StoredFluid")) {
+            return Fluids.EMPTY;
+        }
+        Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(blockEntityTag.getString("StoredFluid")));
+        return fluid == null ? Fluids.EMPTY : fluid;
+    }
+
+    @SuppressWarnings("unlikely-arg-type")
+    public static boolean checkFluidFromStack(ItemStack waterSource, Fluid fluid) {
+        if (waterSource.getItem() instanceof BucketItem) {
+            return ((BucketItem) waterSource.getItem()).equals(Fluids.WATER);
+        }
+
+        if (checkFluidFromStack(waterSource, fluid)) {
+            Fluid stored = getFluidFromStack(waterSource);
+            // if fluid is empty then there is water as we checked earlier if buckets were stored.
+            return (stored == Fluids.EMPTY && fluid.isSame(Fluids.WATER)) || stored.isSame(fluid);
+        }
+        return false;
+    }
+
+    public static ItemStack decreaseFluidFromStack(ItemStack waterSource) {
+        if (waterSource.getItem() instanceof BucketItem && ((BucketItem) waterSource.getItem()) == Items.WATER_BUCKET) {
+            return new ItemStack(Items.BUCKET);
+        }
+
+        CompoundTag stackTag = waterSource.getTag();
+        if(stackTag != null) {
+            CompoundTag blockEntityTag = stackTag.getCompound("BlockEntityTag");
+            int fluidBuckets = blockEntityTag.getInt("Buckets");
+            blockEntityTag.putInt("Buckets", fluidBuckets < 0 ? fluidBuckets : --fluidBuckets);
+        }
+        return waterSource;
     }
 }

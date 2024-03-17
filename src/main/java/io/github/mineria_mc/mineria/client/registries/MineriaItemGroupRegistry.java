@@ -20,6 +20,9 @@ public class MineriaItemGroupRegistry {
     
     private static final DisplayItemsGenerator MINERIA_TAB_ITEMS = (display, output) -> {
         acceptAll(output, 
+            // Crafting Materials
+            FILTER,
+            
             // Lead
             LEAD_ORE,
             DEEPSLATE_LEAD_ORE,
@@ -87,13 +90,17 @@ public class MineriaItemGroupRegistry {
             LONSDALEITE_BOOTS,
 
             // Machines
+            TITANE_EXTRACTOR,
             XP_BLOCK,
 
             // Random Items
             XP_ORB,
             COMPRESSED_XP_ORB,
             SUPER_COMPRESSED_XP_ORB,
-            SUPER_DUPER_COMPRESSED_XP_ORB
+            SUPER_DUPER_COMPRESSED_XP_ORB,
+
+            // Random Blocks
+            MINERAL_SAND
         );
     };
 

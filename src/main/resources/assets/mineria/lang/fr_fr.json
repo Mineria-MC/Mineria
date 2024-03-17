@@ -13,8 +13,13 @@
   "block.mineria.compressed_lead_block": "Bloc de Plomb Compressé",
 
   "block.mineria.xp_block": "Bloc d'XP",
+  "block.mineria.titane_extractor": "Extracteur à Titane",
+
+  "block.mineria.mineral_sand": "Sable Minéral",
 
   "itemGroup.mineria.mineria": "Mineria",
+
+  "item.mineria.filter": "Filtre",
 
   "item.mineria.xp_orb": "Orbe d'XP",
   "item.mineria.compressed_xp_orb": "Orbe d'XP Compressée",
@@ -70,6 +75,7 @@
   "item.mineria.titane_chestplate": "Plastron en Titane",
   "item.mineria.titane_helmet": "Casque en Titane",
 
+  "tile_entity.mineria.titane_extractor": "Extracteur à Titane",
   "tile_entity.mineria.xp_block": "Block d'XP",
 
   "screen.mineria.xp_block.inactive": "OFF",
