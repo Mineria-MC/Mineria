@@ -6,6 +6,7 @@ import java.util.Map;
 import io.github.mineria_mc.mineria.common.item.ArmorBuilder;
 import io.github.mineria_mc.mineria.common.item.CustomWeaponItem;
 import io.github.mineria_mc.mineria.common.item.LonsdaleiteSwordItem;
+import io.github.mineria_mc.mineria.common.item.MineriaBow;
 import io.github.mineria_mc.mineria.common.item.MineriaItem;
 import io.github.mineria_mc.mineria.common.item.XpOrbItem;
 import io.github.mineria_mc.mineria.util.Constants;
@@ -45,6 +46,12 @@ public class MineriaItemRegistry {
     public static final Item SUPER_DUPER_COMPRESSED_XP_ORB = register("super_duper_compressed_xp_orb", new XpOrbItem(64, new Properties().rarity(Rarity.EPIC)));
     public static final Item VANADIUM_INGOT = register("vanadium_ingot", new MineriaItem());
     public static final Item VANADIUM_HELMET = register("vanadium_helmet", new ArmorBuilder(MineriaItem.ArmorMaterial.VANADIUM, ArmorItem.Type.HELMET).onArmorTick((stack, world, player) -> player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (12 * 20), 0, false, false))).build());
+
+    // Copper
+    public static final Item COPPER_PLATE = register("copper_plate", new MineriaItem());
+    public static final Item COPPER_BOW = register("copper_bow", new MineriaBow(4.0f, 1.15f, 1, new Properties().durability(528)));
+    public static final Item COPPER_STICK = register("copper_stick", new MineriaItem());
+    public static final Item COPPER_SWORD = register("copper_sword", new SwordItem(MineriaItem.ItemTier.COPPER, 3, -2.4f, new Properties()));
 
     // Lead
     public static final Item LEAD_INGOT = register("lead_ingot", new MineriaItem());

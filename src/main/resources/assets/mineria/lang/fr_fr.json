@@ -33,6 +33,11 @@
   "item.mineria.vanadium_ingot": "Lingot de Vanadium",
   "item.mineria.vanadium_helmet": "Casque en Vanadium",
 
+  "item.mineria.copper_ingot": "Lingot de Cuivre",
+  "item.mineria.copper_bow": "Arc en Cuivre",
+  "item.mineria.copper_stick": "Bâton en Cuivre",
+  "item.mineria.copper_sword": "Epée en Cuivre",
+
   "item.mineria.lead_ingot": "Lingot de Plomb",
   "item.mineria.lead_sword": "Epée en Plomb",
   "item.mineria.lead_nugget": "Pépite de Plomb",

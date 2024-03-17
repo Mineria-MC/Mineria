@@ -22,6 +22,12 @@ public class MineriaItemGroupRegistry {
         acceptAll(output, 
             // Crafting Materials
             FILTER,
+
+            // Copper
+            COPPER_PLATE,
+            COPPER_STICK,
+            COPPER_SWORD,
+            COPPER_BOW,
             
             // Lead
             LEAD_ORE,
