@@ -1,4 +1,9 @@
 {
+  "animations": "Animations",
+  "animations.desc": "Category which contains Mineria Animations Settings",
+  "enable_ter_animations": "Extractor Gear animation",
+  "enable_ter_animations.desc": "Enable Extractor Gear rotation animation while running",
+
   "block.mineria.lead_ore": "Lead Ore",
   "block.mineria.titane_ore": "Titane Ore",
   "block.mineria.lonsdaleite_ore": "Lonsdaleite Ore",

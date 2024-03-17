@@ -23,8 +23,7 @@ public class MineriaConfig extends CatConfig {
 
     @Override
     protected @NotNull ConfigOptionAccess getConfigOptions() {
-        // TODO Auto-generated method stub
-        return null;
+        return MineriaConfigOptions.OPTIONS;
     }
 
     @Override
