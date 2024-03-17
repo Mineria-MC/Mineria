@@ -1,4 +1,4 @@
-package io.github.mineria_mc.mineria.client.misc;
+package io.github.mineria_mc.mineria.client.compat.modmenu;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
